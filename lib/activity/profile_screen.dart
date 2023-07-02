@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -17,7 +17,22 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     _getUserEmail();
     _getUserPhoto();
+    _hitExpressEndpoint();
   }
+
+  void _hitExpressEndpoint() async {
+    final url = Uri.parse('http://192.168.101.5:3000/micCheck');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      // Request successful
+      print(response.body);
+    } else {
+      // Request failed
+      print('Failed to hit Express backend endpoint');
+    }
+  }
+
 
   Future<void> _getUserEmail() async {
     final prefs = await SharedPreferences.getInstance();
@@ -30,7 +45,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userPhoto = prefs.getString('googleAccountPhotoUrl');
-      print(userPhoto);
     });
   }
 
