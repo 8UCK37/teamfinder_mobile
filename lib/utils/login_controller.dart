@@ -31,6 +31,7 @@ class LoginController extends GetxController {
     // Save the login state to SharedPreferences
     _saveLoginState();
     // Navigate to HomeScreen
+    // ignore: use_build_context_synchronously
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const HomeScreenWidget()),
@@ -47,8 +48,12 @@ class LoginController extends GetxController {
   Future<void> _saveLoginState() async {
     final prefs = await SharedPreferences.getInstance();
     final email = googleAccount.value?.email;
+    final photoUrl = googleAccount.value?.photoUrl;
     if (email != null) {
       prefs.setString('googleAccountEmail', email);
+    }
+    if (photoUrl != null) {
+      prefs.setString('googleAccountPhotoUrl', photoUrl);
     }
   }
 

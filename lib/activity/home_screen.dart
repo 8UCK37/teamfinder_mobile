@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+
 
 
 
@@ -23,34 +22,13 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
     return GestureDetector(
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFF1F4F8),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: AppBar(
-            backgroundColor: Color(0xFF540980),
-            automaticallyImplyLeading: false,
-            
-            actions: [],
-            flexibleSpace: FlexibleSpaceBar(
-              title: Align(
-                alignment: AlignmentDirectional(0, 0),
-                child: Text(
-                  'Home',
-                  
-                ),
-              ),
-              centerTitle: true,
-              expandedTitleScale: 1.0,
-            ),
-            elevation: 2,
-          ),
-        ),
+        backgroundColor: const Color(0xFFF1F4F8),
         body: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
                 child: Text(
                   'Popular Bookings',
@@ -58,17 +36,17 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 52),
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 52),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               blurRadius: 3,
                               color: Color(0x411D2429),
@@ -78,14 +56,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
+                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.network(
@@ -96,7 +74,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                   ),
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                                 child: Text(
@@ -104,7 +82,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                   
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(16, 4, 8, 0),
                                 child: AutoSizeText(
@@ -113,7 +91,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                  
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),
                                 child: Row(
@@ -144,13 +122,13 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
-                            BoxShadow(
+                            const BoxShadow(
                               blurRadius: 3,
                               color: Color(0x411D2429),
                               offset: Offset(0, 1),
@@ -159,14 +137,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
+                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.network(
@@ -177,7 +155,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                   ),
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                                 child: Text(
@@ -185,7 +163,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                 
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(16, 4, 8, 0),
                                 child: AutoSizeText(
@@ -194,7 +172,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                   
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),
                                 child: Row(
@@ -225,13 +203,13 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
-                            BoxShadow(
+                            const BoxShadow(
                               blurRadius: 3,
                               color: Color(0x411D2429),
                               offset: Offset(0, 1),
@@ -240,14 +218,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
+                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.network(
@@ -258,7 +236,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                   ),
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                                 child: Text(
@@ -266,7 +244,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                  
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(16, 4, 8, 0),
                                 child: AutoSizeText(
@@ -275,7 +253,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                 
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),
                                 child: Row(

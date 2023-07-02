@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:teamfinder_mobile/activity/hidden_drawer.dart';
 import 'package:teamfinder_mobile/utils/login_controller.dart';
-
-import 'activity/home_screen.dart';
 import 'activity/login_screen.dart';
 
 
@@ -30,14 +29,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TeamFinder',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primarySwatch:Colors.deepPurple ,
         useMaterial3: true,
       ),
       home: Obx(() {
         if (LoginController.to.googleAccount.value == null) {
           return const LoginActivity();
         } else {
-          return const HomeScreenWidget();
+          return const HiddenDrawer();
         }
       }),
     );
