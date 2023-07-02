@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teamfinder_mobile/activity/signin_screen.dart';
+import 'activity/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SignInActivity(),
+      home: const LoginActivity(),
     );
   }
 }
