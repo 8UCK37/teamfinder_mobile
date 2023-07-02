@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:teamfinder_mobile/utils/colors.dart';
 import 'package:teamfinder_mobile/utils/login_controller.dart';
-
 import '../reusable_widgets/reusable_widgets.dart';
 
 class SignInActivity extends StatefulWidget {
@@ -49,10 +47,6 @@ class _SignInActivityState extends State<SignInActivity> {
   }
 
   onTap() {
-    print('tapped');
-    // GoogleSignIn().signIn();
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => const HomeActivity()));
     controller.login();
   }
 

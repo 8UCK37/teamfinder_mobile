@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Image logoWidget(String imageName, context) {
   double screenHeight = MediaQuery.of(context).size.height;
+  // ignore: unused_local_variable
   double maxHeight = screenHeight * 0.8; // Adjust the percentage as needed
 
   return Image.asset(
