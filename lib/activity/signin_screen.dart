@@ -36,7 +36,14 @@ class _SignInActivityState extends State<SignInActivity> {
                   const SizedBox(
                     height: 20,
                   ),
-                      signInButton(context, true, onTap)
+                  //signInButton(context, true, onTap)
+                  Obx(() {
+                    if (controller.googleAccount.value == null) {
+                      return signInButton(context, true, onTap);
+                    } else {
+                      return buildHomeScreen();
+                    }
+                  })
                 ],
               ))),
     ));
@@ -48,5 +55,22 @@ class _SignInActivityState extends State<SignInActivity> {
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => const HomeActivity()));
     controller.login();
+  }
+
+  Column buildHomeScreen() {
+    return Column(
+      children: [
+        const Text(
+          'Welcome to the Home Screen!',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 123, 13, 13),
+          ),
+        ),
+        Text(controller.googleAccount.value?.displayName?? ''),
+        // Other widgets
+      ],
+    );
   }
 }
