@@ -1,39 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:teamfinder_mobile/utils/login_controller.dart';
+
+import 'activity/home_screen.dart';
 import 'activity/login_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initSharedPreferences();
+  runApp(MyApp());
+}
+
+Future<void> _initSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  Get.put(prefs);
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(() => LoginController());
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _checkLoginState();
+    });
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TeamFinder',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginActivity(),
+      home: Obx(() {
+        if (LoginController.to.googleAccount.value == null) {
+          return const LoginActivity();
+        } else {
+          return const HomeScreenWidget();
+        }
+      }),
     );
+  }
+
+  void _checkLoginState() {
+  final prefs = Get.find<SharedPreferences>();
+  final email = prefs.getString('googleAccountEmail');
+  if (email != null && Get.context!=null ) {
+    LoginController.to.login(Get.context!);
   }
 }
 
+}

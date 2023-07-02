@@ -64,14 +64,15 @@ class _LoginActivityState extends State<LoginActivity> {
              const SizedBox(
                     height: 20,
                   ),
-                  //signInButton(context, true, onTap)
-                  Obx(() {
-                    if (controller.googleAccount.value == null) {
-                      return signInButton(context, true, onTap);
-                    } else {
-                      return buildHomeScreen();
-                    }
-                  })
+                  signInButton(context, true, onTap)
+                  // Obx(() {
+                  //   if (controller.googleAccount.value == null) {
+                  //     return signInButton(context, true, onTap(context));
+                  //   } else {
+                  //     return Container();
+                  //   }
+                  // }),
+
             ],
           ),
         ),
@@ -103,7 +104,7 @@ class _LoginActivityState extends State<LoginActivity> {
             avatar: const Icon(Icons.logout),
             label: const Text('Logout'),
             onPressed: () {
-              controller.logOut();
+              controller.logout();
             })
       ],
     );
@@ -115,13 +116,13 @@ class _LoginActivityState extends State<LoginActivity> {
         foregroundColor: Colors.blue,
       ),
       onPressed: () {
-        controller.login();
+        
       },
       child: Text('TextButton'),
     );
   }
 
   onTap() {
-    controller.login();
+    controller.login(context);
   }
 }
