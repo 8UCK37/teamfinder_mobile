@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:teamfinder_mobile/activity/home_screen.dart';
 import 'package:teamfinder_mobile/utils/colors.dart';
 import 'package:teamfinder_mobile/utils/login_controller.dart';
 
@@ -59,7 +58,11 @@ class _SignInActivityState extends State<SignInActivity> {
 
   Column buildHomeScreen() {
     return Column(
+      mainAxisSize:MainAxisSize.min,
       children: [
+        CircleAvatar(
+          backgroundImage: Image.network(controller.googleAccount.value?.photoUrl ?? '').image,
+        ),
         const Text(
           'Welcome to the Home Screen!',
           style: TextStyle(
@@ -70,6 +73,13 @@ class _SignInActivityState extends State<SignInActivity> {
         ),
         Text(controller.googleAccount.value?.displayName?? ''),
         // Other widgets
+        const SizedBox(height: 16),
+        ActionChip(
+          avatar:const Icon(Icons.logout),
+          label: const Text('Logout'),
+          onPressed:(){
+          controller.logOut();
+        })
       ],
     );
   }
