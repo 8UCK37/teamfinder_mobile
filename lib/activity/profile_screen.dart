@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
@@ -93,6 +94,26 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+      bottomNavigationBar: const GNav(
+        gap: 10,
+        tabs: [
+          GButton(
+            icon: Icons.home,
+            text: 'Posts',
+            ),
+          GButton(
+            icon: Icons.favorite_outline_rounded,
+            text: 'Games',
+            ),
+          GButton(
+            icon: Icons.verified_user,
+            text: 'Friends',
+            ),
+          GButton(
+            icon: Icons.link,
+            text: 'Linked Acc',
+            ),
+        ]) ,
     );
   }
 }

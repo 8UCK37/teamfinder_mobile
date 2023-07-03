@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 
+import '../activity/hidden_drawer.dart';
 import '../activity/home_screen.dart';
 import '../activity/login_screen.dart';
 
@@ -28,7 +29,7 @@ class AuthService {
       Navigator.push(
         context,
         // ignore: prefer_const_constructors
-        MaterialPageRoute(builder: (context) => HomeScreenWidget()),
+        MaterialPageRoute(builder: (context) => HiddenDrawer()),
       );
     }
   }

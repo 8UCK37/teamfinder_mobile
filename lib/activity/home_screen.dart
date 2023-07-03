@@ -1,5 +1,7 @@
+// ignore: depend_on_referenced_packages
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 
 
@@ -8,6 +10,7 @@ class HomeScreenWidget extends StatefulWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomeScreenWidgetState createState() => _HomeScreenWidgetState();
 }
 
@@ -28,13 +31,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
-                child: Text(
-                  'Popular Bookings',
-                  
-                ),
-              ),
+              
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 52),
                 child: Column(
@@ -127,8 +124,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          boxShadow: [
-                            const BoxShadow(
+                          boxShadow: const [
+                            BoxShadow(
                               blurRadius: 3,
                               color: Color(0x411D2429),
                               offset: Offset(0, 1),
@@ -208,8 +205,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          boxShadow: [
-                            const BoxShadow(
+                          boxShadow: const [
+                            BoxShadow(
                               blurRadius: 3,
                               color: Color(0x411D2429),
                               offset: Offset(0, 1),
@@ -289,6 +286,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
             ],
           ),
         ),
+      
       ),
     );
   }
