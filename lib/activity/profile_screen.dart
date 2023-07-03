@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -9,9 +10,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String? userEmail;
-  String? userPhoto;
-
+  // String? userName = FirebaseAuth.instance.currentUser?.displayName;
+  // String? userPhoto = FirebaseAuth.instance.currentUser?.photoURL;
+  var user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
@@ -24,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (user != null) {
       final idToken = await user.getIdToken();
-      
+
       final response = await http.get(
         url,
         headers: {'Authorization': 'Bearer $idToken'},
@@ -48,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       body: Column(
         children: [
-          Expanded(flex: 2, child: _TopPortion(userPhoto: userPhoto)),
+          Expanded(flex: 2, child: _TopPortion(userPhoto: user?.photoURL)),
           Expanded(
             flex: 3,
             child: Padding(
@@ -56,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 children: [
                   Text(
-                    userEmail ?? '',
+                    user?.displayName ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -157,7 +158,7 @@ class _TopPortion extends StatelessWidget {
   final String? userPhoto;
 
   const _TopPortion({Key? key, this.userPhoto}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -191,7 +192,8 @@ class _TopPortion extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(userPhoto ?? 'https://cdn-icons-png.flaticon.com/512/4885/4885780.png'),
+                      image: NetworkImage(userPhoto ??
+                          'https://cdn-icons-png.flaticon.com/512/4885/4885780.png'),
                     ),
                   ),
                 ),
