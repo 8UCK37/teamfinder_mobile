@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:teamfinder_mobile/reusable_widgets/square_tile.dart';
 import 'package:teamfinder_mobile/services/auth_service.dart';
-import '../utils/login_controller.dart';
+
 
 class LoginActivity extends StatefulWidget {
   const LoginActivity({super.key});
@@ -10,9 +9,6 @@ class LoginActivity extends StatefulWidget {
   @override
   State<LoginActivity> createState() => _LoginActivityState();
 }
-
-final controller = Get.put(LoginController());
-
 class _LoginActivityState extends State<LoginActivity> {
   @override
   Widget build(BuildContext context) {

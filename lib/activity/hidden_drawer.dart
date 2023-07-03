@@ -3,6 +3,9 @@ import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:teamfinder_mobile/activity/home_screen.dart';
 import 'package:teamfinder_mobile/activity/profile_screen.dart';
 
+import '../reusable_widgets/elevated_buttons.dart';
+import '../services/auth_service.dart';
+
 class HiddenDrawer extends StatefulWidget {
   const HiddenDrawer({super.key});
 
@@ -19,19 +22,29 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
     super.initState();
 
     _pages = [
-      ScreenHiddenDrawer(ItemHiddenMenu(
-        name: 'HomePage', 
-        baseStyle: TextStyle(), 
-        selectedStyle: TextStyle()
-        ), 
-      HomeScreenWidget()),
-
-      ScreenHiddenDrawer(ItemHiddenMenu(
-        name: 'ProfilePage', 
-        baseStyle: TextStyle(), 
-        selectedStyle: TextStyle()
-        ), 
-      ProfilePage()),
+      ScreenHiddenDrawer(
+          ItemHiddenMenu(
+              name: 'HomePage',
+              baseStyle: TextStyle(),
+              selectedStyle: TextStyle()),
+          HomeScreenWidget()),
+      
+      ScreenHiddenDrawer(
+          ItemHiddenMenu(
+              name: 'ProfilePage',
+              baseStyle: TextStyle(),
+              selectedStyle: TextStyle()),
+          ProfilePage()),
+      
+      ScreenHiddenDrawer(
+        ItemHiddenMenu(
+            name: 'Logout',
+            baseStyle: TextStyle(),
+            selectedStyle: TextStyle()),
+        ElevatedBtn(onTap: () =>{
+          AuthService().signOut(context),
+        }),
+      ),
     ];
   }
 

@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 
 import '../activity/home_screen.dart';
+import '../activity/login_screen.dart';
 
 class AuthService {
   Future<void> signInWithGoogle(BuildContext context) async {
@@ -30,5 +31,18 @@ class AuthService {
         MaterialPageRoute(builder: (context) => HomeScreenWidget()),
       );
     }
+  }
+
+  Future<void> signOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+
+    // Navigate to the SignInScreen or any other screen you want
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+        context,
+        // ignore: prefer_const_constructors
+        MaterialPageRoute(builder: (context) => LoginActivity()),
+      );
   }
 }

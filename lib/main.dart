@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:teamfinder_mobile/activity/hidden_drawer.dart';
-import 'package:teamfinder_mobile/utils/login_controller.dart';
 import 'activity/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
