@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../reusable_widgets/reusable_widgets.dart';
+import 'package:teamfinder_mobile/reusable_widgets/square_tile.dart';
+import 'package:teamfinder_mobile/services/auth_service.dart';
 import '../utils/login_controller.dart';
 
 class LoginActivity extends StatefulWidget {
@@ -64,14 +64,11 @@ class _LoginActivityState extends State<LoginActivity> {
              const SizedBox(
                     height: 20,
                   ),
-                  signInButton(context, true, onTap)
-                  // Obx(() {
-                  //   if (controller.googleAccount.value == null) {
-                  //     return signInButton(context, true, onTap(context));
-                  //   } else {
-                  //     return Container();
-                  //   }
-                  // }),
+                  //signInButton(context, true, onTap)
+                 SquareTile(
+                  onTap: () => AuthService().signInWithGoogle(context) ,
+                  imagePath: 'assets/images/google.png'
+                  )
 
             ],
           ),
@@ -80,49 +77,5 @@ class _LoginActivityState extends State<LoginActivity> {
     );
   }
 
-  Column buildHomeScreen() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CircleAvatar(
-          backgroundImage:
-              Image.network(controller.googleAccount.value?.photoUrl ?? '')
-                  .image,
-        ),
-        const Text(
-          'Welcome to the Home Screen!',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 123, 13, 13),
-          ),
-        ),
-        Text(controller.googleAccount.value?.displayName ?? ''),
-        // Other widgets
-        const SizedBox(height: 16),
-        ActionChip(
-            avatar: const Icon(Icons.logout),
-            label: const Text('Logout'),
-            onPressed: () {
-              controller.logout();
-            })
-      ],
-    );
-  }
 
-  TextButton loginButton() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.blue,
-      ),
-      onPressed: () {
-        
-      },
-      child: Text('TextButton'),
-    );
-  }
-
-  onTap() {
-    controller.login(context);
-  }
 }

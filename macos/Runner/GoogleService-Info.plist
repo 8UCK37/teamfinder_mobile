@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>760131924547-mgab04bvvvvtltfi1jondttcthvv8eb8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.760131924547-mgab04bvvvvtltfi1jondttcthvv8eb8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>760131924547-55kmb1eh6cq318o8k3tg3shmssfh79kb.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDoFp6LX1nT66m606yYMLWkSoyqO5yPbxo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>760131924547</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.teamfinderMobile.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>teamfinder-e7048</string>
+	<key>STORAGE_BUCKET</key>
+	<string>teamfinder-e7048.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:760131924547:ios:d4fbb3454acad3c79fdaf6</string>
+</dict>
+</plist>

@@ -1,53 +1,57 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/activity/hidden_drawer.dart';
 import 'package:teamfinder_mobile/utils/login_controller.dart';
 import 'activity/login_screen.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _initSharedPreferences();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // ignore: prefer_const_constructors
   runApp(MyApp());
 }
 
-Future<void> _initSharedPreferences() async {
-  final prefs = await SharedPreferences.getInstance();
-  Get.put(prefs);
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
 }
 
-class MyApp extends StatelessWidget {
+class _MyAppState extends State<MyApp> {
+  var auth = FirebaseAuth.instance;
+  var isLogin = false;
+
+  @override
+  void initState() {
+    checkIfLogin();
+    super.initState();
+  }
+
+  checkIfLogin() async {
+    auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        setState(() {
+          isLogin = true;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => LoginController());
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      _checkLoginState();
-    });
-
     return MaterialApp(
-      title: 'TeamFinder',
-      theme: ThemeData(
-        primarySwatch:Colors.deepPurple ,
-        useMaterial3: true,
-      ),
-      home: Obx(() {
-        if (LoginController.to.googleAccount.value == null) {
-          return const LoginActivity();
-        } else {
-          return const HiddenDrawer();
-        }
-      }),
-    );
+        title: 'TeamFinder',
+        theme: ThemeData(
+          primarySwatch: Colors.deepPurple,
+          useMaterial3: true,
+        ),
+        home: isLogin ? const HiddenDrawer() : const LoginActivity());
   }
-
-  void _checkLoginState() {
-  final prefs = Get.find<SharedPreferences>();
-  final email = prefs.getString('googleAccountEmail');
-  if (email != null && Get.context!=null ) {
-    LoginController.to.login(Get.context!);
-  }
-}
-
 }

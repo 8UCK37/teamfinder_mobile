@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "760131924547",
+    "project_id": "teamfinder-e7048",
+    "storage_bucket": "teamfinder-e7048.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760131924547:android:00d43ba950a4cc499fdaf6",
+        "android_client_info": {
+          "package_name": "com.example.teamfinder_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760131924547-55kmb1eh6cq318o8k3tg3shmssfh79kb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.teamfinder_mobile",
+            "certificate_hash": "204ce8e37dbe20847986d097928aae6d137e8af3"
+          }
+        },
+        {
+          "client_id": "760131924547-afsdtquql24254hdh16bkufgetjb58cp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCNCb5boGaOGAi0EmhMcRGiQK-0JBJNA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760131924547-afsdtquql24254hdh16bkufgetjb58cp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "760131924547-lbun8c7ktspmgkqe2bgj7vtqmpju5vfs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.teamfinderMobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
