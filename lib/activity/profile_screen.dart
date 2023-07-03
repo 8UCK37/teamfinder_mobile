@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -15,37 +15,32 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _getUserEmail();
-    _getUserPhoto();
     _hitExpressEndpoint();
   }
 
   void _hitExpressEndpoint() async {
-    final url = Uri.parse('http://192.168.101.5:3000/micCheck');
-    final response = await http.get(url);
+    final url = Uri.parse('http://192.168.101.6:3000/micCheck');
+    final user = FirebaseAuth.instance.currentUser;
 
-    if (response.statusCode == 200) {
-      // Request successful
-      print(response.body);
+    if (user != null) {
+      final idToken = await user.getIdToken();
+      
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $idToken'},
+      );
+
+      if (response.statusCode == 200) {
+        // Request successful
+        print(response.body);
+      } else {
+        // Request failed
+        print('Failed to hit Express backend endpoint');
+      }
     } else {
-      // Request failed
-      print('Failed to hit Express backend endpoint');
+      // User not logged in
+      print('User is not logged in');
     }
-  }
-
-
-  Future<void> _getUserEmail() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userEmail = prefs.getString('googleAccountEmail');
-    });
-  }
-
-  Future<void> _getUserPhoto() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userPhoto = prefs.getString('googleAccountPhotoUrl');
-    });
   }
 
   @override
