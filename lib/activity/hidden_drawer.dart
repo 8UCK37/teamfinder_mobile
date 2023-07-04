@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:teamfinder_mobile/activity/home_screen.dart';
@@ -8,7 +9,8 @@ import 'own_profile_screen.dart';
 
 class HiddenDrawer extends StatefulWidget {
   final int initPositionSelected;
-  const HiddenDrawer({Key? key, this.initPositionSelected = 0}) : super(key: key);
+  const HiddenDrawer({Key? key, this.initPositionSelected = 0})
+      : super(key: key);
 
   @override
   State<HiddenDrawer> createState() => _HiddenDrawerState();
@@ -24,30 +26,55 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
 
     _pages = [
       ScreenHiddenDrawer(
-          ItemHiddenMenu(
-              name: 'HomePage',
-              baseStyle: const TextStyle(),
-              selectedStyle: const TextStyle(),
-              colorLineSelected: Colors.deepPurple
-              ),
-          const HomeScreenWidget()),
-      ScreenHiddenDrawer(
-          ItemHiddenMenu(
-              name: 'ProfilePage',
-              baseStyle: const TextStyle(),
-              selectedStyle: const TextStyle(),
-              colorLineSelected: Colors.deepPurple),
-          const ProfilePage()),
-      ScreenHiddenDrawer(
         ItemHiddenMenu(
             name: 'Logout',
             baseStyle: const TextStyle(),
             selectedStyle: const TextStyle(),
-            colorLineSelected: Colors.deepPurple),
-        ElevatedBtn(
-            onTap: () => {
-                  AuthService().signOut(context),
-                }),
+            colorLineSelected: Colors.deepPurple,
+            onTap: () {
+              AuthService().signOut(context);
+              Navigator.push(
+                context,
+                // ignore: prefer_const_constructors
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HiddenDrawer(initPositionSelected: 1)),
+              );
+            }),
+        const HomeScreenWidget(),
+      ),
+      ScreenHiddenDrawer(
+          ItemHiddenMenu(
+              name: '',
+              baseStyle: const TextStyle(),
+              selectedStyle: const TextStyle(),
+              colorLineSelected: Colors.transparent,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  // ignore: prefer_const_constructors
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          HiddenDrawer(initPositionSelected: 1)),
+                );
+              }),
+          const HomeScreenWidget()),
+      ScreenHiddenDrawer(
+        ItemHiddenMenu(
+            name: '',
+            baseStyle: const TextStyle(),
+            selectedStyle: const TextStyle(),
+            colorLineSelected: Colors.transparent,
+            onTap: () {
+              Navigator.push(
+                context,
+                // ignore: prefer_const_constructors
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HiddenDrawer(initPositionSelected: 1)),
+              );
+            }),
+        const ProfilePage(),
       ),
     ];
   }
@@ -63,22 +90,25 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
         GButton(
           icon: Icons.home,
           onPressed: () {
-            Navigator.push(context,
-            // ignore: prefer_const_constructors
-              MaterialPageRoute(builder: (context) => HiddenDrawer(initPositionSelected: 0)),
-          );
+            Navigator.push(
+              context,
+              // ignore: prefer_const_constructors
+              MaterialPageRoute(
+                  builder: (context) => HiddenDrawer(initPositionSelected: 1)),
+            );
           },
         ),
         GButton(
           icon: Icons.chat,
-          
         ),
         GButton(
           icon: Icons.badge,
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const HiddenDrawer(initPositionSelected: 1)),
+              MaterialPageRoute(
+                  builder: (context) =>
+                      const HiddenDrawer(initPositionSelected: 2)),
             );
           },
         ),
