@@ -98,15 +98,15 @@ class _ProfilePageState extends State<ProfilePage> {
         gap: 10,
         tabs: [
           GButton(
-            icon: Icons.home,
+            icon: Icons.receipt_long,
             text: 'Posts',
             ),
           GButton(
-            icon: Icons.favorite_outline_rounded,
+            icon: Icons.sports_esports,
             text: 'Games',
             ),
           GButton(
-            icon: Icons.verified_user,
+            icon: Icons.diversity_3,
             text: 'Friends',
             ),
           GButton(

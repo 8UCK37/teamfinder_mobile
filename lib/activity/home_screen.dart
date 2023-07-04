@@ -31,7 +31,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 52),
                 child: Column(
