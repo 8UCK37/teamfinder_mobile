@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import '../services/user_service.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -53,7 +54,14 @@ class _ProfilePageState extends State<ProfilePage> {
     final userService = Provider.of<UserService>(context);
     final userData = userService.user;
     return Scaffold(
-      body: Column(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(userData['profileBanner']?? ''),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child:Column(
         children: [
           Expanded(flex: 2, child: _TopPortion(userPhoto: userData['profilePicture'],userBanner: userData['profileBanner'],)),
           Expanded(
@@ -98,6 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ],
+      ),
       ),
       bottomNavigationBar: const GNav(
         gap: 10,
