@@ -1,10 +1,13 @@
 // ignore: depend_on_referenced_packages
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
-
-
+import '../services/user_service.dart';
 
 class HomeScreenWidget extends StatefulWidget {
   const HomeScreenWidget({Key? key}) : super(key: key);
@@ -15,10 +18,40 @@ class HomeScreenWidget extends StatefulWidget {
 }
 
 class _HomeScreenWidgetState extends State<HomeScreenWidget> {
-  
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _saveUser();
+  }
+
+  void _saveUser() async {
+    final url = Uri.parse('http://192.168.101.6:3000/saveuser');
+    final user = FirebaseAuth.instance.currentUser;
+    final userService = Provider.of<UserService>(context, listen: false);
+    if (user != null) {
+      final idToken = await user.getIdToken();
+
+      final response = await http.post(
+        url,
+        headers: {'Authorization': 'Bearer $idToken'},
+      );
+
+      if (response.statusCode == 200) {
+        // Request successful
+        var userData = json.decode(response.body);
+        //print(userData);
+        userService.updateSharedVariable(userData);
+      } else {
+        // Request failed
+        print('Failed to hit Express backend endpoint');
+      }
+    } else {
+      // User not logged in
+      print('User is not logged in');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +70,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -52,14 +86,15 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 1, 1, 1),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.network(
@@ -75,7 +110,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                     EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                                 child: Text(
                                   'Mountain Lake Cabin',
-                                  
                                 ),
                               ),
                               const Padding(
@@ -84,7 +118,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                 child: AutoSizeText(
                                   'Retreat to the natural beauty of the mountains and immerse yourself in the comfort of our luxurious mountain house, an idyllic escape for your perfect mountain getaway.',
                                   textAlign: TextAlign.start,
-                                 
                                 ),
                               ),
                               const Padding(
@@ -101,7 +134,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                       child: Text(
                                         '\$143/night',
                                         textAlign: TextAlign.end,
-                                      
                                       ),
                                     ),
                                     Icon(
@@ -118,7 +150,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -133,14 +166,15 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 1, 1, 1),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.network(
@@ -156,7 +190,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                     EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                                 child: Text(
                                   'Little Mountain House',
-                                
                                 ),
                               ),
                               const Padding(
@@ -165,7 +198,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                 child: AutoSizeText(
                                   'Escape to the serene beauty of the mountains and enjoy a luxurious stay in our cozy mountain house, the perfect destination for your dream mountain getaway.',
                                   textAlign: TextAlign.start,
-                                  
                                 ),
                               ),
                               const Padding(
@@ -182,7 +214,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                       child: Text(
                                         '\$182/night',
                                         textAlign: TextAlign.end,
-                                      
                                       ),
                                     ),
                                     Icon(
@@ -199,7 +230,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -214,14 +246,15 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 1, 1, 1),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
                                   child: Image.network(
@@ -237,7 +270,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                     EdgeInsetsDirectional.fromSTEB(16, 8, 0, 0),
                                 child: Text(
                                   'Ski Cabin',
-                                 
                                 ),
                               ),
                               const Padding(
@@ -246,7 +278,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                 child: AutoSizeText(
                                   'Escape to the serene beauty of the mountains and enjoy a luxurious stay in our cozy mountain house, the perfect destination for your dream mountain getaway.',
                                   textAlign: TextAlign.start,
-                                
                                 ),
                               ),
                               const Padding(
@@ -263,7 +294,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                                       child: Text(
                                         '\$182/night',
                                         textAlign: TextAlign.end,
-                                     
                                       ),
                                     ),
                                     Icon(
@@ -285,7 +315,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
             ],
           ),
         ),
-      
       ),
     );
   }

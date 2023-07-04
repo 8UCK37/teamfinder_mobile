@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import '../services/user_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -23,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _hitExpressEndpoint() async {
     final url = Uri.parse('http://192.168.101.6:3000/micCheck');
     final user = FirebaseAuth.instance.currentUser;
-
+    
     if (user != null) {
       final idToken = await user.getIdToken();
 
@@ -47,10 +50,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+    final userData = userService.user;
     return Scaffold(
       body: Column(
         children: [
-          Expanded(flex: 2, child: _TopPortion(userPhoto: user?.photoURL)),
+          Expanded(flex: 2, child: _TopPortion(userPhoto: userData['profilePicture'],userBanner: userData['profileBanner'],)),
           Expanded(
             flex: 3,
             child: Padding(
@@ -58,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 children: [
                   Text(
-                    user?.displayName ?? '',
+                    userData['name'] ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .headline6
@@ -177,8 +182,8 @@ class ProfileInfoItem {
 
 class _TopPortion extends StatelessWidget {
   final String? userPhoto;
-
-  const _TopPortion({Key? key, this.userPhoto}) : super(key: key);
+  final String? userBanner;
+  const _TopPortion({Key? key, this.userPhoto,this.userBanner}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -187,45 +192,53 @@ class _TopPortion extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 50),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
               colors: [Color(0xff0043ba), Color(0xff006df1)],
             ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(50),
-              bottomRight: Radius.circular(50),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(5),
+              bottomRight: Radius.circular(5),
+            ),
+            image: DecorationImage(
+              image: NetworkImage(userBanner?? 'https://cdn-icons-png.flaticon.com/512/4885/4885780.png'),
+              fit: BoxFit.cover,
             ),
           ),
         ),
         Align(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.bottomLeft,
           child: SizedBox(
-            width: 150,
-            height: 150,
+            width: 100,
+            height: 100,
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(userPhoto ??
-                          'https://cdn-icons-png.flaticon.com/512/4885/4885780.png'),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20), // Added left margin of 25
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(userPhoto ??
+                            'https://cdn-icons-png.flaticon.com/512/4885/4885780.png'),
+                      ),
                     ),
                   ),
                 ),
                 Positioned(
-                  bottom: 0,
-                  right: 0,
+                  bottom: 10,
+                  right: 5,
                   child: CircleAvatar(
-                    radius: 20,
+                    radius: 8,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     child: Container(
-                      margin: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(2),
                       decoration: const BoxDecoration(
                         color: Colors.green,
                         shape: BoxShape.circle,
