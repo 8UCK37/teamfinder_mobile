@@ -39,10 +39,11 @@ class PostWidget extends StatelessWidget {
           ),
 
           const SizedBox(height: 20.0),
-
-          Text(post.description, style: const TextStyle(fontSize: 15.0)),
-
-          const SizedBox(height: 10.0),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(post.description, style: const TextStyle(fontSize: 15.0)),
+          ),
+          const SizedBox(height: 5.0),
           Container(
                   margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
                   height: 200.0,
