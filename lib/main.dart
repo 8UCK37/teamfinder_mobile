@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/activity/hidden_drawer.dart';
+import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/user_service.dart';
 import 'activity/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.deepPurple,
           useMaterial3: true,
         ),
-        home: isLogin ? const HiddenDrawer() : const LoginActivity()
+        home: isLogin ?  HomePage() : const LoginActivity()
       )
     );
   }

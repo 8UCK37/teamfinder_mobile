@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:teamfinder_mobile/pages/home_page.dart';
 
 
 import '../activity/hidden_drawer.dart';
@@ -29,7 +30,7 @@ class AuthService {
       Navigator.push(
         context,
         // ignore: prefer_const_constructors
-        MaterialPageRoute(builder: (context) => HiddenDrawer()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
   }
