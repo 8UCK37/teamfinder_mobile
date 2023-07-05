@@ -144,7 +144,7 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: const DecorationImage(image: AssetImage('assets/samantha.jpg')),
+                              image: const DecorationImage(image: AssetImage('')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
@@ -159,7 +159,7 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: const DecorationImage(image: AssetImage('assets/andrew.jpg')),
+                              image: const DecorationImage(image: AssetImage('')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
@@ -174,7 +174,7 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: const DecorationImage(image: AssetImage('assets/Sam Wilson.jpg'), fit: BoxFit.cover),
+                              image: const DecorationImage(image: AssetImage(''), fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
@@ -198,7 +198,7 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: const DecorationImage(image: AssetImage('assets/steven.jpg')),
+                              image: const DecorationImage(image: AssetImage('')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
@@ -213,7 +213,7 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: const DecorationImage(image: AssetImage('assets/greg.jpg')),
+                              image: const DecorationImage(image: AssetImage('')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
@@ -228,7 +228,7 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: const DecorationImage(image: AssetImage('assets/andy.jpg'), fit: BoxFit.cover),
+                              image: const DecorationImage(image: AssetImage(''), fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
