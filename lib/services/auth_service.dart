@@ -23,7 +23,7 @@ class AuthService {
       
       // Navigate to the HomeScreenWidget
       // ignore: use_build_context_synchronously
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         // ignore: prefer_const_constructors
         MaterialPageRoute(builder: (context) => HomePage()),

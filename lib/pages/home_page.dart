@@ -67,6 +67,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     final userData = userService.user;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
