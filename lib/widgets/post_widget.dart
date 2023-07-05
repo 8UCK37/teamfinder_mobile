@@ -48,10 +48,6 @@ class PostWidget extends StatelessWidget {
                   height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(image: NetworkImage(post.photoUrl), fit: BoxFit.cover),
-                    borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8.0),
-                    bottomRight: Radius.circular(8.0),
-                  ),
                   ),
                 ),
           Row(
