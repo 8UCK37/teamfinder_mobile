@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../services/user_service.dart';
@@ -11,7 +12,10 @@ class ProfileTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
     final userData = userService.user;
-    return SingleChildScrollView(
+    return Column(
+      children:<Widget> [
+        Expanded(child: 
+        SingleChildScrollView(
       child: Column(
         children: <Widget>[
           Container(
@@ -19,7 +23,7 @@ class ProfileTab extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
                   height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(image: NetworkImage(userData['profileBanner']), fit: BoxFit.cover),
@@ -29,11 +33,11 @@ class ProfileTab extends StatelessWidget {
                   ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 5.0,top: 25),
+                      padding: const EdgeInsets.only(left: 5.0,top: 25),
                       child: CircleAvatar(
                         backgroundImage:
                             NetworkImage(userData['profilePicture']),
@@ -44,7 +48,7 @@ class ProfileTab extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Text(userData['name'], style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+                    Text(userData['name'], style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
                     Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -59,32 +63,32 @@ class ProfileTab extends StatelessWidget {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
             child: Divider(height: 40.0),
           ),
 
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(
               children: <Widget>[
-                Row(
+                const Row(
                   children: <Widget>[
                     Icon(Icons.home, color: Colors.grey, size: 30.0),
                     SizedBox(width: 10.0),
                     Text('Lives in New York', style: TextStyle(fontSize: 16.0))
                   ],
                 ),
-                SizedBox(height: 15.0),
-                Row(
+                const SizedBox(height: 15.0),
+                const Row(
                   children: <Widget>[
                     Icon(Icons.location_on, color: Colors.grey, size: 30.0),
                     SizedBox(width: 10.0),
                     Text('From New York', style: TextStyle(fontSize: 16.0))
                   ],
                 ),
-                SizedBox(height: 15.0),
-                Row(
+                const SizedBox(height: 15.0),
+                const Row(
                   children: <Widget>[
                     Icon(Icons.more_horiz, color: Colors.grey, size: 30.0),
                     SizedBox(width: 10.0),
@@ -92,7 +96,7 @@ class ProfileTab extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: 15.0),
+                const SizedBox(height: 15.0),
 
                 Container(
                   height: 40.0,
@@ -100,16 +104,16 @@ class ProfileTab extends StatelessWidget {
                     color: Colors.lightBlueAccent.withOpacity(0.25),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                  child: Center(child: Text('Edit Public Details', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16.0))),
+                  child: const Center(child: Text('Edit Public Details', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16.0))),
                 ),
               ],
             ),
           ),
 
-          Divider(height: 40.0),
+          const Divider(height: 40.0),
 
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(
               children: <Widget>[
                 Row(
@@ -119,12 +123,12 @@ class ProfileTab extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Friends', style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 6.0),
+                        const Text('Friends', style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 6.0),
                         Text('536 friends', style: TextStyle(fontSize: 16.0, color: Colors.grey[800])),
                       ],
                     ),
-                    Text('Find Friends', style: TextStyle(fontSize: 16.0, color: Colors.blue)),
+                    const Text('Find Friends', style: TextStyle(fontSize: 16.0, color: Colors.blue)),
                   ],
                 ),
 
@@ -140,12 +144,12 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/samantha.jpg')),
+                              image: const DecorationImage(image: AssetImage('assets/samantha.jpg')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text('Samantha', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const SizedBox(height: 5.0),
+                          const Text('Samantha', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
                         ],
                       ),
                       Column(
@@ -155,12 +159,12 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/andrew.jpg')),
+                              image: const DecorationImage(image: AssetImage('assets/andrew.jpg')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text('Andrew', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const SizedBox(height: 5.0),
+                          const Text('Andrew', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
                         ],
                       ),
                       Column(
@@ -170,12 +174,12 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/Sam Wilson.jpg'), fit: BoxFit.cover),
+                              image: const DecorationImage(image: AssetImage('assets/Sam Wilson.jpg'), fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text('Sam Wilson', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const SizedBox(height: 5.0),
+                          const Text('Sam Wilson', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
                         ],
                       ),
                     ],
@@ -194,12 +198,12 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/steven.jpg')),
+                              image: const DecorationImage(image: AssetImage('assets/steven.jpg')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text('Steven', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const SizedBox(height: 5.0),
+                          const Text('Steven', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
                         ],
                       ),
                       Column(
@@ -209,12 +213,12 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/greg.jpg')),
+                              image: const DecorationImage(image: AssetImage('assets/greg.jpg')),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text('Greg', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const SizedBox(height: 5.0),
+                          const Text('Greg', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
                         ],
                       ),
                       Column(
@@ -224,12 +228,12 @@ class ProfileTab extends StatelessWidget {
                             height: MediaQuery.of(context).size.width/3 -20 ,
                             width: MediaQuery.of(context).size.width/3 - 20,
                             decoration: BoxDecoration(
-                              image: DecorationImage(image: AssetImage('assets/andy.jpg'), fit: BoxFit.cover),
+                              image: const DecorationImage(image: AssetImage('assets/andy.jpg'), fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(10.0)
                             ),
                           ),
-                          SizedBox(height: 5.0),
-                          Text('Andy', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const SizedBox(height: 5.0),
+                          const Text('Andy', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold))
                         ],
                       ),
                     ],
@@ -237,20 +241,43 @@ class ProfileTab extends StatelessWidget {
                 ),
 
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 15.0),
+                  margin: const EdgeInsets.symmetric(vertical: 15.0),
                   height: 40.0,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                  child: Center(child: Text('See All Friends', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16.0))),
+                  child: const Center(child: Text('See All Friends', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16.0))),
                 ),
               ],
             ),
           ),
-          SeparatorWidget()
-        ],
+          SeparatorWidget(),
+          ],
       )
-    );
+      ),
+    ),
+    const GNav(
+      gap:8,
+      tabs: [
+          GButton(
+            icon: Icons.receipt_long,
+            text: 'Posts',
+            textColor: Colors.deepPurple,
+          ),
+          GButton(
+            icon: Icons.sports_esports,
+            text: 'Games',
+            textColor: Colors.deepOrange,
+          ),
+          GButton(
+            icon: Icons.link,
+            text: 'Linked Acc',
+            textColor: Colors.blue,
+          ),
+        ]),
+    ],
+    )
+    ;
   }
 }
