@@ -42,7 +42,7 @@ class ProfileTab extends StatelessWidget {
                     ),
                   ),
                 Column(
-                  //mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Text(userData['name'], style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
                     Row(
