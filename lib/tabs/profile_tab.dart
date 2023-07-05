@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../services/user_service.dart';
 import '../widgets/separator_widget.dart';
+import '../widgets/write_something_widget.dart';
 
 class ProfileTab extends StatelessWidget {
   @override
@@ -18,44 +19,37 @@ class ProfileTab extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-                  height: 180.0,
+                  margin: EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                  height: 200.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(image: NetworkImage(userData['profileBanner']), fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(10.0)
+                    borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
+                  ),
                   ),
                 ),
-
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(userData['profilePicture']),
-                      radius: 70.0,
+                SizedBox(height: 20.0),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5.0,top: 25),
+                      child: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(userData['profilePicture']),
+                        radius: 50.0,
+                      ),
                     ),
-                    SizedBox(height: 20.0),
+                  ),
+                Column(
+                  //mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
                     Text(userData['name'], style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 20.0),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Container(
-                          height: 40.0,
-                          width: MediaQuery.of(context).size.width - 80,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(5.0)
-                          ),
-                          child: Center(child: Text('Add to Story', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0))),
-                        ),
-                        Container(
-                          height: 40.0,
-                          width: 45.0,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5.0)
-                          ),
-                          child: Icon(Icons.more_horiz),
+                          child: WriteSomethingWidget(),
                         )
                       ],
                     )

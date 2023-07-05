@@ -14,6 +14,7 @@ class HomeTab extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
+          Divider(),
           WriteSomethingWidget(),
           SeparatorWidget(),
           OnlineWidget(),
