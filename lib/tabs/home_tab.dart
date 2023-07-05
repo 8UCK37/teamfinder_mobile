@@ -43,8 +43,7 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
     if (response.statusCode == 200) {
       // Request successful
       var res = response.body;
-      print(res);
-
+      //print(res);
       // Parse the JSON response into a list of PostPojo objects
       List<PostPojo> parsedPosts = postPojoFromJson(res);
       setState(() {

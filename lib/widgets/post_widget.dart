@@ -16,7 +16,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
           Row(
@@ -25,31 +25,41 @@ class PostWidget extends StatelessWidget {
                 backgroundImage: NetworkImage(post.profilePicture),
                 radius: 20.0,
               ),
-              SizedBox(width: 7.0),
+              const SizedBox(width: 7.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(post.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
-                  SizedBox(height: 5.0),
+                  Text(post.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
+                  const SizedBox(height: 5.0),
                   Text(post.author)
                 ],
               ),
             ],
           ),
 
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
 
-          Text(post.description, style: TextStyle(fontSize: 15.0)),
+          Text(post.description, style: const TextStyle(fontSize: 15.0)),
 
-          SizedBox(height: 10.0),
-
+          const SizedBox(height: 10.0),
+          Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: NetworkImage(post.photoUrl), fit: BoxFit.cover),
+                    borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(8.0),
+                    bottomRight: Radius.circular(8.0),
+                  ),
+                  ),
+                ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(FontAwesomeIcons.thumbsUp, size: 15.0, color: Colors.blue),
+                  const Icon(FontAwesomeIcons.thumbsUp, size: 15.0, color: Colors.blue),
                   Text(' ${post.likecount}'),
                 ],
               ),
@@ -62,9 +72,9 @@ class PostWidget extends StatelessWidget {
             ],
           ),
 
-          Divider(height: 30.0),
+          const Divider(height: 30.0),
 
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
