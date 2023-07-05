@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../services/auth_service.dart';
@@ -21,32 +20,32 @@ class MenuTab extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 15.0),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 15.0),
             child: Text('Menu',
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
           ),
           Row(
             children: <Widget>[
-              SizedBox(width: 15.0),
+              const SizedBox(width: 15.0),
               CircleAvatar(
                 radius: 25.0,
                 backgroundImage: NetworkImage(userData['profilePicture']),
               ),
-              SizedBox(width: 20.0),
+              const SizedBox(width: 20.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(userData['name'],
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 18.0)),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   GestureDetector(
                     onTap: () => {
-                     tabController.animateTo(3)
+                     tabController.animateTo(1)
                     },
-                    child:Text(
+                    child:const Text(
                     'See your profile',
                     style: TextStyle(color: Colors.grey),
                   ) ,
@@ -55,23 +54,23 @@ class MenuTab extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.0),
             child: Divider(height: 20.0),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 20,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -86,11 +85,11 @@ class MenuTab extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 30,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -107,18 +106,18 @@ class MenuTab extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 20,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -133,11 +132,11 @@ class MenuTab extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 30,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -153,18 +152,18 @@ class MenuTab extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 20,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -179,11 +178,11 @@ class MenuTab extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 30,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -199,18 +198,18 @@ class MenuTab extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 20,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -226,11 +225,11 @@ class MenuTab extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width / 2 - 30,
                   height: 85.0,
-                  padding: EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -248,7 +247,7 @@ class MenuTab extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: 65.0,
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -256,19 +255,19 @@ class MenuTab extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Icon(Icons.help, size: 40.0, color: Colors.grey[700]),
-                    SizedBox(width: 10.0),
-                    Text('Help & Support', style: TextStyle(fontSize: 17.0)),
+                    const SizedBox(width: 10.0),
+                    const Text('Help & Support', style: TextStyle(fontSize: 17.0)),
                   ],
                 ),
-                Icon(Icons.arrow_drop_down, size: 30.0),
+                const Icon(Icons.arrow_drop_down, size: 30.0),
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
           Container(
             width: MediaQuery.of(context).size.width,
             height: 65.0,
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -276,19 +275,19 @@ class MenuTab extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Icon(Icons.settings, size: 40.0, color: Colors.grey[700]),
-                    SizedBox(width: 10.0),
-                    Text('Settings & Privacy',
+                    const SizedBox(width: 10.0),
+                    const Text('Settings & Privacy',
                         style: TextStyle(fontSize: 17.0)),
                   ],
                 ),
-                Icon(Icons.arrow_drop_down, size: 30.0),
+                const Icon(Icons.arrow_drop_down, size: 30.0),
               ],
             ),
           ),
           Container(
             width: MediaQuery.of(context).size.width,
             height: 65.0,
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -299,8 +298,8 @@ class MenuTab extends StatelessWidget {
                     children: <Widget>[
                       Icon(Icons.exit_to_app,
                           size: 40.0, color: Colors.grey[700]),
-                      SizedBox(width: 10.0),
-                      Text('Logout', style: TextStyle(fontSize: 17.0)),
+                      const SizedBox(width: 10.0),
+                      const Text('Logout', style: TextStyle(fontSize: 17.0)),
                     ],
                   ),
                 ),

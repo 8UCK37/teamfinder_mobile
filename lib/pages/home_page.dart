@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../services/user_service.dart';
 import '../tabs/friends_tab.dart';
@@ -10,7 +9,6 @@ import '../tabs/home_tab.dart';
 import '../tabs/menu_tab.dart';
 import '../tabs/notifications_tab.dart';
 import '../tabs/profile_tab.dart';
-import '../tabs/watch_tab.dart';
 import 'package:http/http.dart' as http;
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,7 +25,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 6);
+    _tabController = TabController(vsync: this, length: 5);
     _saveUser();
   }
 
@@ -51,7 +49,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       if (response.statusCode == 200) {
         // Request successful
         var userData = json.decode(response.body);
-        print(userData);
+        //print(userData);
         userService.updateSharedVariable(userData);
       } else {
         // Request failed
@@ -97,9 +95,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           labelColor: Colors.deepPurple,
           tabs: const [
             Tab(icon: Icon(Icons.home, size: 30.0)),
-            Tab(icon: Icon(Icons.people, size: 30.0)),
-            Tab(icon: Icon(Icons.ondemand_video, size: 30.0)),
-            Tab(icon: Icon(Icons.account_circle, size: 30.0)),
+            Tab(icon: Icon(Icons.badge, size: 30.0)),
+            Tab(icon: Icon(Icons.diversity_3, size: 30.0)),
             Tab(icon: Icon(Icons.notifications, size: 30.0)),
             Tab(icon: Icon(Icons.menu, size: 30.0,key: Key('menuTab')))
           ],
@@ -110,9 +107,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         controller: _tabController,
         children: [
           HomeTab(),
-          FriendsTab(),
-          WatchTab(),
           ProfileTab(),
+          FriendsTab(),
           NotificationsTab(),
           MenuTab(_tabController),
         ]

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 
 import '../models/post.dart';
 
 class PostWidget extends StatelessWidget {
 
-  final Post post;
+  final PostPojo post;
 
   PostWidget({
     required this.post
@@ -21,7 +22,7 @@ class PostWidget extends StatelessWidget {
           Row(
             children: <Widget>[
               CircleAvatar(
-                backgroundImage: AssetImage(post.profileImageUrl),
+                backgroundImage: NetworkImage(post.profilePicture),
                 radius: 20.0,
               ),
               SizedBox(width: 7.0),
@@ -29,9 +30,9 @@ class PostWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(post.username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
+                  Text(post.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
                   SizedBox(height: 5.0),
-                  Text(post.time)
+                  Text(post.author)
                 ],
               ),
             ],
@@ -39,7 +40,7 @@ class PostWidget extends StatelessWidget {
 
           SizedBox(height: 20.0),
 
-          Text(post.content, style: TextStyle(fontSize: 15.0)),
+          Text(post.description, style: TextStyle(fontSize: 15.0)),
 
           SizedBox(height: 10.0),
 
@@ -49,13 +50,13 @@ class PostWidget extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.thumbsUp, size: 15.0, color: Colors.blue),
-                  Text(' ${post.likes}'),
+                  Text(' ${post.likecount}'),
                 ],
               ),
               Row(
                 children: <Widget>[
-                  Text('${post.comments} comments  •  '),
-                  Text('${post.shares} shares'),
+                  Text('${post.hahacount} comments  •  '), //TODO:need to assign real values
+                  Text('${post.lovecount} shares'),
                 ],
               ),
             ],

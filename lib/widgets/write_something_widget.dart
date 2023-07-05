@@ -19,7 +19,7 @@ class WriteSomethingWidget extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 28.0,
-                  backgroundImage: NetworkImage(userData['profilePicture']),
+                  backgroundImage: NetworkImage(userData['profilePicture'] ?? ''),
                 ),
 
                 SizedBox(width: 7.0),

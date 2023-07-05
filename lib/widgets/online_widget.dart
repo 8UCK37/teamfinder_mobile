@@ -44,7 +44,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/samantha.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -63,7 +63,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/Sam Wilson.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -82,7 +82,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/greg.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -101,7 +101,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/james.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -120,7 +120,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/john.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -139,7 +139,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/olivia.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -158,7 +158,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/sophia.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -177,7 +177,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/steven.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -196,7 +196,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/andy.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
@@ -215,7 +215,7 @@ class  OnlineWidget extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
-                backgroundImage: AssetImage('assets/andrew.jpg'),
+                backgroundImage: AssetImage(''),
               ),
               Positioned(
                 right: 1.0,
