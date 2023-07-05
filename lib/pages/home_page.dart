@@ -69,26 +69,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text('TeamFinder', style: TextStyle(color: Colors.deepPurple, fontSize: 27.0, fontWeight: FontWeight.bold)),
-              ],
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text('TeamFinder',
+                      style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 27.0,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 Icon(Icons.search, color: Colors.black),
-
                 SizedBox(width: 15.0),
-
                 Icon(Icons.chat, color: Colors.deepPurple)
-              ]
-            ),
-          ],
-        ),
+              ]),
+            ]),
         backgroundColor: Colors.white,
         elevation: 0.0,
         bottom: TabBar(
@@ -96,15 +93,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           controller: _tabController,
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.deepPurple,
-          tabs: [
-            const Tab(icon: Icon(Icons.home, size: 30.0)),
-            const Tab(icon: Icon(Icons.people, size: 30.0)),
-            const Tab(icon: Icon(Icons.ondemand_video, size: 30.0)),
-            const Tab(icon: Icon(Icons.account_circle, size: 30.0)),
-            const Tab(icon: Icon(Icons.notifications, size: 30.0)),
-            const Tab(icon: Icon(Icons.menu, size: 30.0))
+          tabs: const [
+            Tab(icon: Icon(Icons.home, size: 30.0)),
+            Tab(icon: Icon(Icons.people, size: 30.0)),
+            Tab(icon: Icon(Icons.ondemand_video, size: 30.0)),
+            Tab(icon: Icon(Icons.account_circle, size: 30.0)),
+            Tab(icon: Icon(Icons.notifications, size: 30.0)),
+            Tab(icon: Icon(Icons.menu, size: 30.0))
           ],
-        ), systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: TabBarView(
         controller: _tabController,
