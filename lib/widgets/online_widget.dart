@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-class OnlineWidget extends StatelessWidget {
+class  OnlineWidget extends StatelessWidget {
+  const OnlineWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 75.0,
-      padding: EdgeInsets.symmetric(vertical: 15.0),
+      height: 80.0,
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40.0),
               border: Border.all(
@@ -19,26 +21,26 @@ class OnlineWidget extends StatelessWidget {
                 color: Colors.blue
               )
             ),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Icon(Icons.video_call, size: 30.0, color: Colors.purple),
+                Icon(Icons.video_call, size: 20, color: Colors.purple),
                 SizedBox(width: 5.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Create', style: TextStyle(color: Colors.blue)),
-                    Text('Room', style: TextStyle(color: Colors.blue)),
+                    Text('Post', style: TextStyle(color: Colors.blue)),
+                    Text('Video', style: TextStyle(color: Colors.blue)),
                   ],
                 )
               ],
             ),
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -55,9 +57,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -74,9 +76,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -93,9 +95,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -112,9 +114,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -131,9 +133,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -150,9 +152,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -169,9 +171,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -188,9 +190,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -207,9 +209,9 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
 
-          Stack(
+          const Stack(
             children: <Widget>[
               CircleAvatar(
                 radius: 22.0,
@@ -226,7 +228,7 @@ class OnlineWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
         ],
       ),
     );

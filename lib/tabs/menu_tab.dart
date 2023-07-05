@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../services/auth_service.dart';
+import '../services/user_service.dart';
 
 class MenuTab extends StatelessWidget {
+  final TabController tabController;
+
+  MenuTab(this.tabController);
+  
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+    final userData = userService.user;
     return SingleChildScrollView(
       child: Container(
           child: Column(
@@ -23,21 +31,26 @@ class MenuTab extends StatelessWidget {
               SizedBox(width: 15.0),
               CircleAvatar(
                 radius: 25.0,
-                backgroundImage: AssetImage('assets/Mike Tyler.jpg'),
+                backgroundImage: NetworkImage(userData['profilePicture']),
               ),
               SizedBox(width: 20.0),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Mike Tyler',
+                  Text(userData['name'],
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 18.0)),
                   SizedBox(height: 5.0),
-                  Text(
+                  GestureDetector(
+                    onTap: () => {
+                     tabController.animateTo(3)
+                    },
+                    child:Text(
                     'See your profile',
                     style: TextStyle(color: Colors.grey),
-                  )
+                  ) ,
+                  ),   
                 ],
               ),
             ],
@@ -280,9 +293,7 @@ class MenuTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () => {
-                    AuthService().signOut(context)
-                  },
+                  onTap: () => {AuthService().signOut(context)},
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
