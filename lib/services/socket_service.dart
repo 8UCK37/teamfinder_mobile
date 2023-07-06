@@ -16,13 +16,13 @@ class SocketService {
 
     socket?.on('my broadcast', (data) {
       // incoming msg
-      // print('inc msg from services: $data');
+      print('inc msg from services: $data');
       _incomingMsgSubject.add(data);
     });
 
     socket?.on('notification', (data) {
-      print('incoming notification');
-      print(data);
+      //print('incoming notification');
+      //print(data);
       if (data is Map<String, dynamic>) {
         _incomingNotiSubject.add(data);
       } else if (data is String) {

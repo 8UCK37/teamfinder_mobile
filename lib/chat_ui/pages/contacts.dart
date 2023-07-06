@@ -1,88 +1,135 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/models/chat_model.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
+import 'package:teamfinder_mobile/pojos/user_pojo.dart';
+import 'package:http/http.dart' as http;
 
 class Contacts extends StatefulWidget {
   _ContactsState createState() => _ContactsState();
 }
 
-class _ContactsState extends State<Contacts> {
+class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin {
+  List<UserPojo>? friendList;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getFriendList();
+  }
+
+  void _getFriendList() async {
+    final url = Uri.parse('http://${dotenv.env['server_url']}/friendData');
+    final user = FirebaseAuth.instance.currentUser;
+    print('freind list called');
+    if (user != null) {
+      final idToken = await user.getIdToken();
+
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $idToken'},
+      );
+
+      if (response.statusCode == 200) {
+        // Request successful
+        var res = response.body;
+        //print(res);
+        // Parse the JSON response into a list of PostPojo objects
+        List<UserPojo> parsedFriendList = userPojoFromJson(res);
+        setState(() {
+          friendList = parsedFriendList; // Update the state variable with the parsed list
+        });
+        // Use the postList for further processing or display
+        for (var friend in parsedFriendList) {
+          print(friend);
+          // ... Access other properties as needed
+        }
+      } else {
+        // Request failed
+        print('Failed to hit Express backend endpoint');
+      }
+    } else {
+      // User not logged in
+      print('User is not logged in');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.deepPurple
-        ),
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.deepPurple),
         actions: <Widget>[
           IconButton(
-            icon: new Icon(Icons.search),
+            icon: const Icon(Icons.search),
             color: Colors.deepPurple,
-            onPressed: (){},
+            onPressed: () {},
           ),
           IconButton(
-            icon: new Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             color: Colors.deepPurple,
-            onPressed: (){},
+            onPressed: () {},
           ),
         ],
-        title: new Container(
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text("Contacts", style: new TextStyle(color: Colors.deepPurple)),
-                new Container(
+        // ignore: avoid_unnecessary_containers
+        title: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text("Contacts",
+                  style: TextStyle(color: Colors.deepPurple)),
+              // ignore: avoid_unnecessary_containers
+              Container(
                   // padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: new Text("5 contacts",
-                  style: new TextStyle(
+                  child: Text(
+                'You have ${friendList!.length} Friends',
+                style: const TextStyle(
                     fontSize: 12.0,
                     fontStyle: FontStyle.italic,
-                    color: Colors.deepPurpleAccent
-                  ),
-                  )
-                )
-              ],
-            ),
+                    color: Colors.deepPurpleAccent),
+              ))
+            ],
+          ),
         ),
       ),
-      body: new ListView.builder(
-      itemCount: messageData.length,
-      itemBuilder: (context,i) => new Column(
-        children: <Widget>[
-          new Divider(height: 22.0,),
-          new ListTile(
-            leading: new CircleAvatar(
-              maxRadius: 25,
-              backgroundImage: NetworkImage(messageData[i].imageUrl),
+      body: ListView.builder(
+        itemCount: friendList!.length,
+        itemBuilder: (context, i) => Column(
+          children: <Widget>[
+            const Divider(
+              height: 22.0,
             ),
-            title: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-              new Text(
-              messageData[i].name,
-                style: new TextStyle(
-                fontWeight: FontWeight.bold
+            ListTile(
+              leading: CircleAvatar(
+                maxRadius: 25,
+                backgroundImage: NetworkImage(friendList![i].profilePicture),
               ),
-              ),
-              new Text(
-                'MOBILE',
-                  style: new TextStyle(
-                    color: Colors.green,
-                    fontSize: 16.0
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    friendList![i].name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ),
-              ],
+                  const Text(
+                    'MOBILE',
+                    style: TextStyle(color: Colors.green, fontSize: 16.0),
+                  ),
+                ],
+              ),
+              onTap: () {
+                // var route = MaterialPageRoute(
+                //     builder: (BuildContext context) => ChatScreen(
+                //         name: messageData[i].name,
+                //         profileImage: messageData[i].imageUrl));
+                // Navigator.of(context).push(route);
+              },
             ),
-            onTap: (){
-              var route = new MaterialPageRoute(
-                builder: (BuildContext context) => ChatScreen(name: messageData[i].name, profileImage: messageData[i].imageUrl)
-              );
-              Navigator.of(context).push(route);
-            },
-          ),
-        ],
+          ],
+        ),
       ),
-    ),   
     );
   }
 }
