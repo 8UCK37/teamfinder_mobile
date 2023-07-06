@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:teamfinder_mobile/models/chat_model.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 import 'package:http/http.dart' as http;
 import '../../pojos/user_pojo.dart';
@@ -97,7 +95,8 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  messageData[i].time,
+                  //messageData[i].time,
+                  '',
                   style: const TextStyle(color: Colors.grey, fontSize: 16.0),
                 ),
               ],
@@ -113,6 +112,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
             onTap: () {
               var route = MaterialPageRoute(
                   builder: (BuildContext context) => ChatScreen(
+                      friendId:activeConvoList![i].id,
                       name: activeConvoList![i].name,
                       profileImage: activeConvoList![i].profilePicture));
               Navigator.of(context).push(route);

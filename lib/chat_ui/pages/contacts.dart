@@ -126,6 +126,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
               onTap: () {
                 var route = MaterialPageRoute(
                     builder: (BuildContext context) => ChatScreen(
+                        friendId: friendList![i].id,
                         name: friendList![i].name,
                         profileImage: friendList![i].profilePicture));
                 Navigator.of(context).push(route);

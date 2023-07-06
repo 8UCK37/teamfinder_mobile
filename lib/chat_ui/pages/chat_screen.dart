@@ -1,28 +1,87 @@
+// ignore_for_file: avoid_unnecessary_containers
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/models/chat_model.dart';
+import 'package:http/http.dart' as http;
+
+import '../../pojos/chat_model_pojo.dart';
 
 class ChatScreen extends StatefulWidget {
   final String name;
+  final String friendId;
   final String profileImage;
-  ChatScreen({required this.name, required this.profileImage});
+  ChatScreen(
+      {required this.friendId, required this.name, required this.profileImage});
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
-  final TextEditingController _textController = new TextEditingController();
+  final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
-  bool isType = false;
 
+  List<ChatModel>? chatMsgs = [];
+
+  bool isType = false;
+  @override
+  void initState() {
+    super.initState();
+    _fetchChatMsgs(widget.friendId);
+  }
+
+  Future<void> _fetchChatMsgs(dynamic friendId) async {
+    final url = Uri.parse('http://${dotenv.env['server_url']}/chatData')
+        .replace(queryParameters: {'friendId': friendId.toString()});
+    final user = FirebaseAuth.instance.currentUser;
+    List<dynamic>? chatDump = [];
+    if (user != null) {
+      final idToken = await user.getIdToken();
+
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $idToken'},
+      );
+
+      if (response.statusCode == 200) {
+        // Request successful
+        // var res = response.body;
+        // List<UserPojo> parsedactiveConvoList = userPojoFromJson(res);
+        debugPrint('succ');
+
+        var res = jsonDecode(response.body);
+        debugPrint(res.toString());
+        res.forEach((data) {
+          data = ChatModelPojo(
+              msg: data['msg'],
+              rec: !(data['sender']==user.uid),
+              photoUrl: data['photoUrl'],
+              sender: data['sender'],
+              time: data['createdAt'].toString());
+          
+        });
+        debugPrint(res.toString());
+        // setState(() {
+        //   chatMsgs = List<ChatModelPojo>.from(res).cast<ChatModel>();
+        //   debugPrint(res.toString());
+        // });
+      } else {
+        // Request failed
+        debugPrint('Failed to hit Express backend endpoint');
+      }
+    } else {
+      // User not logged in
+      debugPrint('User is not logged in');
+    }
+  }
 
   void _handleSubmit(String text) {
-
-    ChatMessage message = new ChatMessage(
+    ChatMessage message = ChatMessage(
       text: text,
-      animationController: new AnimationController(
-        duration: new Duration(seconds: 1),
-        vsync: this
-      ),
+      animationController: AnimationController(
+          duration: const Duration(seconds: 1), vsync: this),
       name: widget.name,
     );
     setState(() {
@@ -32,92 +91,102 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     });
     message.animationController.forward();
   }
+
   Widget _buildText() {
-    return new Container(
-      child: new Row(
+    return Container(
+      child: Row(
         children: <Widget>[
-          new Container(
-            child: new Flexible( 
-             child: new TextField(
+          Container(
+            child: Flexible(
+                child: TextField(
               controller: _textController,
-              decoration: new InputDecoration.collapsed(hintText: "Send message"),
-            )
+              decoration:
+                  const InputDecoration.collapsed(hintText: "Send message"),
+            )),
           ),
-          ),
-          new Container(
-            child: new IconButton(
-              icon: new Icon(Icons.send),
-              onPressed: (){
-                _handleSubmit(_textController.text);
-                _textController.clear();
-              } 
-            ),
+          Container(
+            child: IconButton(
+                icon: const Icon(
+                  Icons.send,
+                  color: Color.fromARGB(255, 22, 125, 99),
+                ),
+                onPressed: () {
+                  _handleSubmit(_textController.text);
+                  _textController.clear();
+                }),
           )
         ],
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.white
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.call),
-            onPressed: (){},
-      ),
-          new IconButton(
-            icon: new Icon(Icons.more_vert),
-            onPressed: (){},
-      )
+          IconButton(
+            icon: const Icon(Icons.call),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          )
         ],
-      title: new Container(
-        child: new Row(
+        title: Container(
+            child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Container(
+            Container(
               // padding: const EdgeInsets.fromLTRB(0, 0, 3.0, 0),
-              child: new Center(
-                child: CircleAvatar(
+              child: Center(
+                  child: CircleAvatar(
                 backgroundImage: NetworkImage(widget.profileImage),
                 maxRadius: 22,
-              )
-              ),
+              )),
             ),
-            new Container(
+            Container(
               padding: const EdgeInsets.only(left: 8.0),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Center(
-                      child: new Text(widget.name, style: TextStyle(color: Colors.white, fontSize: 16.0)),
-                    ),
-                    new Text("last seen. 18:00", style: new TextStyle(fontSize: 13.0, color: Colors.white, fontStyle: FontStyle.italic),),
-                  ],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Center(
+                    child: Text(widget.name,
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 16.0)),
+                  ),
+                  const Text(
+                    "last seen. 18:00",
+                    style: TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
             ),
           ],
-        )
+        )),
+        backgroundColor: Colors.tealAccent.shade700,
       ),
-      backgroundColor: Colors.tealAccent.shade700,
-      ),
-      body: new Container(
-        child: new Column(
+      body: Container(
+        child: Column(
           children: <Widget>[
-            new Flexible(
-              child: new ListView.builder(
-                padding: new EdgeInsets.all(8.0),
-                reverse: true,
-                itemBuilder: (context, int index) => _messages[index],
-                itemCount: _messages.length,
-              ),
+            // Flexible(
+            //   child: ListView.builder(
+            //     padding: const EdgeInsets.all(8.0),
+            //     reverse: true,
+            //     // itemBuilder: (context, int index) => chatMsgs![index],
+            //     itemCount: chatMsgs!.length,
+            //   ),
+            // ),
+            const Divider(
+              height: 1.0,
             ),
-            new Divider(height: 1.0,),
-            new Container(
+            Container(
               child: _buildText(),
             )
           ],
@@ -131,42 +200,51 @@ class ChatMessage extends StatelessWidget {
   final String name;
   final AnimationController animationController;
   final String text;
-  ChatMessage({ required this.name, required this.animationController, required this.text});
+  ChatMessage(
+      {required this.name,
+      required this.animationController,
+      required this.text});
 
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      sizeFactor: new CurvedAnimation(
+      sizeFactor: CurvedAnimation(
         parent: animationController,
         curve: Curves.easeOut,
       ),
-    child: new Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          new Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: new CircleAvatar(
-              backgroundImage: NetworkImage("https://avatars2.githubusercontent.com/u/23518097?s=400&u=91ac76bebfb16bdfffa49216ac336a0d615a1444&v=4"),
-              maxRadius: 25.0,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.only(right: 16.0),
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "https://avatars2.githubusercontent.com/u/23518097?s=400&u=91ac76bebfb16bdfffa49216ac336a0d615a1444&v=4"),
+                maxRadius: 25.0,
+              ),
             ),
-          ),
-          new Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Text("El chuy", style: new TextStyle(color: Colors.black, fontSize: 15.0, fontWeight: FontWeight.bold)),
-                new Container(
-                  margin: const EdgeInsets.only(top: 6.0),
-                  child: new Text(text, style: new TextStyle(color: Colors.black, fontSize: 18.0))
-                )
-              ],
-            ),
-          )
-        ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text("El chuy",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold)),
+                  Container(
+                      margin: const EdgeInsets.only(top: 6.0),
+                      child: Text(text,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 18.0)))
+                ],
+              ),
+            )
+          ],
+        ),
       ),
-    ),
     );
   }
 }

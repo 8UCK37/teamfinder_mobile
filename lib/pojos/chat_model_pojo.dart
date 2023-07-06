@@ -7,14 +7,14 @@ String chatModelPojoToJson(List<ChatModelPojo> data) => json.encode(List<dynamic
 
 class ChatModelPojo {
     String msg;
-    String photoUrl;
+    String? photoUrl;
     bool rec;
     String sender;
     String time;
 
     ChatModelPojo({
         required this.msg,
-        required this.photoUrl,
+        this.photoUrl,
         required this.rec,
         required this.sender,
         required this.time,
