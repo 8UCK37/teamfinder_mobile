@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import '../services/user_service.dart';
 import '../tabs/friends_tab.dart';
 import '../tabs/home_tab.dart';
@@ -10,6 +11,7 @@ import '../tabs/menu_tab.dart';
 import '../tabs/notifications_tab.dart';
 import '../tabs/profile_tab.dart';
 import 'package:http/http.dart' as http;
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -18,8 +20,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,6 +36,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _tabController.dispose();
     super.dispose();
   }
+
   void _saveUser() async {
     final url = Uri.parse('http://192.168.101.6:3000/saveuser');
     final user = FirebaseAuth.instance.currentUser;
@@ -68,7 +71,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Row(
+        title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
@@ -82,8 +85,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               ),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 Icon(Icons.search, color: Colors.black),
-                SizedBox(width: 15.0),
-                Icon(Icons.chat, color: Colors.deepPurple)
+                GestureDetector(
+                  onTap: () {
+                    print('goto chat');
+                   
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatHome()),
+                    );
+                  },
+                  child: Icon(Icons.chat, color: Colors.deepPurple),
+                ),
               ]),
             ]),
         backgroundColor: Colors.white,
@@ -99,21 +111,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Tab(icon: Icon(Icons.badge, size: 30.0)),
             Tab(icon: Icon(Icons.diversity_3, size: 30.0)),
             Tab(icon: Icon(Icons.notifications, size: 30.0)),
-            Tab(icon: Icon(Icons.menu, size: 30.0,key: Key('menuTab')))
+            Tab(icon: Icon(Icons.menu, size: 30.0, key: Key('menuTab')))
           ],
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          HomeTab(),
-          ProfileTab(),
-          FriendsTab(),
-          NotificationsTab(),
-          MenuTab(_tabController),
-        ]
-      ),
+      body: TabBarView(controller: _tabController, children: [
+        HomeTab(),
+        ProfileTab(),
+        FriendsTab(),
+        NotificationsTab(),
+        MenuTab(_tabController),
+      ]),
     );
   }
 }
