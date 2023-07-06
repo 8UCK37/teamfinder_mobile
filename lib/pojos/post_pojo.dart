@@ -16,19 +16,19 @@ class PostPojo {
     String photoUrl;
     bool deleted;
     Mention mention;
-    int shared;
+    int? shared;
     String raw;
     dynamic tagnames;
     String name;
     String profilePicture;
     dynamic reactiontype;
     bool noreaction;
-    String likecount;
-    String hahacount;
-    String sadcount;
-    String lovecount;
-    String poopcount;
-    String parentpost;
+    String? likecount;
+    String? hahacount;
+    String? sadcount;
+    String? lovecount;
+    String? poopcount;
+    String? parentpost;
     Parentpostauthor parentpostauthor;
 
     PostPojo({
@@ -60,22 +60,22 @@ class PostPojo {
         author: json["author"],
         createdAt: DateTime.parse(json["createdAt"]),
         description: json["description"],
-        photoUrl: json["photoUrl"] ?? 'null',
+        photoUrl: json["photoUrl"]?? 'null',
         deleted: json["deleted"],
         mention: Mention.fromJson(json["mention"]),
-        shared: json["shared"] ?? 0,
+        shared: json["shared"],
         raw: json["raw"],
         tagnames: json["tagnames"],
         name: json["name"],
         profilePicture: json["profilePicture"],
         reactiontype: json["reactiontype"],
         noreaction: json["noreaction"],
-        likecount: json["likecount"]?? 'null',
-        hahacount: json["hahacount"]?? 'null',
-        sadcount: json["sadcount"]?? 'null',
-        lovecount: json["lovecount"]?? 'null',
-        poopcount: json["poopcount"]?? 'null',
-        parentpost: json["parentpost"] ?? 'null',
+        likecount: json["likecount"],
+        hahacount: json["hahacount"],
+        sadcount: json["sadcount"],
+        lovecount: json["lovecount"],
+        poopcount: json["poopcount"],
+        parentpost: json["parentpost"] ,
         parentpostauthor: Parentpostauthor.fromJson(json["parentpostauthor"]),
     );
 

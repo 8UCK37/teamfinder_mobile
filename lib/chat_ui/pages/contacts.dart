@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:teamfinder_mobile/models/chat_model.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:http/http.dart' as http;
 
 class Contacts extends StatefulWidget {
+  const Contacts({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
   _ContactsState createState() => _ContactsState();
 }
 
@@ -23,7 +26,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
   void _getFriendList() async {
     final url = Uri.parse('http://${dotenv.env['server_url']}/friendData');
     final user = FirebaseAuth.instance.currentUser;
-    print('freind list called');
+    //print('friend list called');
     if (user != null) {
       final idToken = await user.getIdToken();
 
@@ -42,17 +45,18 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
           friendList = parsedFriendList; // Update the state variable with the parsed list
         });
         // Use the postList for further processing or display
+        // ignore: unused_local_variable
         for (var friend in parsedFriendList) {
-          print(friend);
+          //print(friend);
           // ... Access other properties as needed
         }
       } else {
         // Request failed
-        print('Failed to hit Express backend endpoint');
+        //print('Failed to hit Express backend endpoint');
       }
     } else {
       // User not logged in
-      print('User is not logged in');
+      //print('User is not logged in');
     }
   }
 
@@ -120,11 +124,11 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
                 ],
               ),
               onTap: () {
-                // var route = MaterialPageRoute(
-                //     builder: (BuildContext context) => ChatScreen(
-                //         name: messageData[i].name,
-                //         profileImage: messageData[i].imageUrl));
-                // Navigator.of(context).push(route);
+                var route = MaterialPageRoute(
+                    builder: (BuildContext context) => ChatScreen(
+                        name: friendList![i].name,
+                        profileImage: friendList![i].profilePicture));
+                Navigator.of(context).push(route);
               },
             ),
           ],

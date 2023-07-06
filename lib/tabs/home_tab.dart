@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../models/post.dart';
 import '../pojos/post_pojo.dart';
 import '../widgets/online_widget.dart';
 import '../widgets/post_widget.dart';
