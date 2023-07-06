@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
+import 'package:teamfinder_mobile/services/socket_service.dart';
 import '../services/user_service.dart';
 import '../tabs/friends_tab.dart';
 import '../tabs/home_tab.dart';
@@ -24,7 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  final SocketService socketService = SocketService();
   @override
   void initState() {
     super.initState();
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _saveUser() async {
-    final url = Uri.parse('http://${dotenv.env['server_url']}:3000/saveuser');
+    final url = Uri.parse('http://${dotenv.env['server_url']}/saveuser');
     final user = FirebaseAuth.instance.currentUser;
     final userService = Provider.of<UserService>(context, listen: false);
     if (user != null) {
@@ -55,6 +56,8 @@ class _HomePageState extends State<HomePage>
         var userData = json.decode(response.body);
         //print(userData);
         userService.updateSharedVariable(userData);
+        socketService.setupSocketConnection();
+        socketService.setSocketId(userData['id']);
       } else {
         // Request failed
         print('Failed to hit Express backend endpoint');
@@ -89,7 +92,7 @@ class _HomePageState extends State<HomePage>
                 GestureDetector(
                   onTap: () {
                     print('goto chat');
-                   
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ChatHome()),

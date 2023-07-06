@@ -28,7 +28,7 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
   }
 
   void _fetchPosts() async {
-  final url = Uri.parse('http://${dotenv.env['server_url']}:3000/getPost');
+  final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
   final user = FirebaseAuth.instance.currentUser;
   print('fetch post called');
   if (user != null) {

@@ -12,46 +12,47 @@ class _ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
     // debugPrint(messageData.length.toString());
-    return new ListView.builder(
+    return ListView.builder(
       itemCount: messageData.length,
-      itemBuilder: (context,i) => new Column(
+      itemBuilder: (context,i) => Column(
         children: <Widget>[
-          new Divider(height: 22.0,),
-          new ListTile(
-            leading: new CircleAvatar(
+          SizedBox(height: 15,),
+          //const Divider(height: 22.0,),
+          ListTile(
+            leading: CircleAvatar(
               maxRadius: 25,
               backgroundImage: NetworkImage(messageData[i].imageUrl),
             ),
-            title: new Row(
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-              new Text(
+              Text(
               messageData[i].name,
-                style: new TextStyle(
+                style: const TextStyle(
                 fontWeight: FontWeight.bold
               ),
               ),
-              new Text(
+              Text(
                 messageData[i].time,
-                  style: new TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 16.0
                   ),
                 ),
               ],
             ),
-            subtitle: new Container(
+            subtitle: Container(
               padding: const EdgeInsets.only(top: 5.0),
-              child: new Text(
+              child: Text(
                 messageData[i].message,
-                  style: new TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 15.0
                   ),
                 ),
             ),
             onTap: (){
-              var route = new MaterialPageRoute(
+              var route = MaterialPageRoute(
                 builder: (BuildContext context) => ChatScreen(name: messageData[i].name, profileImage: messageData[i].imageUrl)
               );
               Navigator.of(context).push(route);
