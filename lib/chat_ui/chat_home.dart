@@ -17,16 +17,15 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
   @override
   void initState(){
     super.initState();
-    _tabController = TabController(initialIndex: 1, vsync: this, length: 4);
+    _tabController = TabController(initialIndex: 1, vsync: this, length: 2);
 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        title: const Text('Chat', style: TextStyle(color: Colors.white)),
+        title: const Text('Teamfinder Chat', style: TextStyle(color: Colors.white)),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
