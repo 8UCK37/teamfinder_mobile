@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/post.dart';
@@ -10,7 +9,7 @@ import '../widgets/post_widget.dart';
 import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
@@ -29,7 +28,7 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
   }
 
   void _fetchPosts() async {
-  final url = Uri.parse('http://192.168.101.6:3000/getPost');
+  final url = Uri.parse('http://${dotenv.env['server_url']}:3000/getPost');
   final user = FirebaseAuth.instance.currentUser;
   print('fetch post called');
   if (user != null) {

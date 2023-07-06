@@ -6,13 +6,13 @@ import 'package:teamfinder_mobile/services/user_service.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await dotenv.load(fileName: ".env");
   // ignore: prefer_const_constructors
   runApp(MyApp());
 }

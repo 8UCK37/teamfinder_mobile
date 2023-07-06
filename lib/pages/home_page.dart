@@ -11,6 +11,7 @@ import '../tabs/menu_tab.dart';
 import '../tabs/notifications_tab.dart';
 import '../tabs/profile_tab.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _saveUser() async {
-    final url = Uri.parse('http://192.168.101.6:3000/saveuser');
+    final url = Uri.parse('http://${dotenv.env['server_url']}:3000/saveuser');
     final user = FirebaseAuth.instance.currentUser;
     final userService = Provider.of<UserService>(context, listen: false);
     if (user != null) {
