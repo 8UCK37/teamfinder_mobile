@@ -54,6 +54,8 @@ dependencies:
   rxdart: ^0.27.7
   chat_bubbles: ^1.4.1
   intl: ^0.18.1
+  dialog: ^0.8.0
+  material_dialogs: ^1.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

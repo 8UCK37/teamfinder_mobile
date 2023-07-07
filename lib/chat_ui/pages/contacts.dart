@@ -14,7 +14,7 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin {
-  List<UserPojo>? friendList;
+  late List<UserPojo>? friendList=[];
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text("Contacts",
+              const Text("All Friends",
                   style: TextStyle(color: Colors.deepPurple)),
               // ignore: avoid_unnecessary_containers
               Container(
@@ -99,7 +99,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
         ),
       ),
       body: ListView.builder(
-        itemCount: friendList!.length,
+        itemCount: friendList?.length,
         itemBuilder: (context, i) => Column(
           children: <Widget>[
             const Divider(
