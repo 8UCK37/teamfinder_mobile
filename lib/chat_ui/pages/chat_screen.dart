@@ -76,6 +76,25 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     }
   }
 
+  void sendMsg(String text) {
+    final user = FirebaseAuth.instance.currentUser;
+    var newChat = ChatModelPojo(
+        msg: text,
+        rec: false,
+        photoUrl: null,
+        sender: user!.uid,
+        time: 'current time');
+    chatMsgs!.add(newChat);
+    setState(() {
+          chatMsgs = chatMsgs;
+        });
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+  }
+
   void _handleSubmit(String text) {
     ChatMessage message = ChatMessage(
       text: text,
@@ -178,11 +197,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               child: ListView.builder(
                 padding: const EdgeInsets.all(8.0),
                 reverse: false,
-                itemCount: chatMsgs!.length, //TODO:implement msg time and different bubbles for imaged msg
-                itemBuilder: (context, int i) => BubbleSpecialOne( 
+                itemCount: chatMsgs!
+                    .length, //TODO:implement msg time and different bubbles for imaged msg
+                itemBuilder: (context, int i) => BubbleSpecialOne(
                   text: chatMsgs![i].msg,
                   isSender: !(chatMsgs![i].rec),
-                  color: !(chatMsgs![i].rec)? Colors.deepPurple.shade300 :Colors.orangeAccent,
+                  color: !(chatMsgs![i].rec)
+                      ? Colors.deepPurple.shade300
+                      : Colors.orangeAccent,
                   textStyle: const TextStyle(
                     fontSize: 20,
                     color: Colors.white,
@@ -195,10 +217,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
             Container(
               child: MessageBar(
-                onSend: (_) => print(_),
+                onSend: (String typedMsg) {
+                  sendMsg(typedMsg);
+                },
                 actions: [
                   InkWell(
-                    child: Icon(
+                    child: const Icon(
                       Icons.add,
                       color: Colors.black,
                       size: 24,
@@ -206,9 +230,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     onTap: () {},
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 8, right: 8),
+                    padding: const EdgeInsets.only(left: 8, right: 8),
                     child: InkWell(
-                      child: Icon(
+                      child: const Icon(
                         Icons.camera_alt,
                         color: Colors.green,
                         size: 24,
