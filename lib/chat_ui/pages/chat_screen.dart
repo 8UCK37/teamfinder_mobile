@@ -177,7 +177,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             Flexible(
               child: ListView.builder(
                 padding: const EdgeInsets.all(8.0),
-                reverse: true,
+                reverse: false,
                 itemCount: chatMsgs!.length, //TODO:implement msg time and different bubbles for imaged msg
                 itemBuilder: (context, int i) => BubbleSpecialOne( 
                   text: chatMsgs![i].msg,
