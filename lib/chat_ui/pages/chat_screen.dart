@@ -1,12 +1,11 @@
 // ignore_for_file: avoid_unnecessary_containers
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/models/chat_model.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:chat_bubbles/chat_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -23,7 +22,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
 
-  List<ChatModel>? chatMsgs = [];
+  List<ChatModelPojo>? chatMsgs = [];
 
   bool isType = false;
   @override
@@ -36,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final url = Uri.parse('http://${dotenv.env['server_url']}/chatData')
         .replace(queryParameters: {'friendId': friendId.toString()});
     final user = FirebaseAuth.instance.currentUser;
-    List<dynamic>? chatDump = [];
+    List<ChatModelPojo>? chatDump = [];
     if (user != null) {
       final idToken = await user.getIdToken();
 
@@ -52,21 +51,20 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         debugPrint('succ');
 
         var res = jsonDecode(response.body);
-        debugPrint(res.toString());
+        //debugPrint(res.toString());
         res.forEach((data) {
-          data = ChatModelPojo(
+          ChatModelPojo chat = ChatModelPojo(
               msg: data['msg'],
-              rec: !(data['sender']==user.uid),
+              rec: !(data['sender'] == user.uid),
               photoUrl: data['photoUrl'],
               sender: data['sender'],
               time: data['createdAt'].toString());
-          
+          chatDump.add(chat);
         });
-        debugPrint(res.toString());
-        // setState(() {
-        //   chatMsgs = List<ChatModelPojo>.from(res).cast<ChatModel>();
-        //   debugPrint(res.toString());
-        // });
+        debugPrint(chatDump.toString());
+        setState(() {
+          chatMsgs = chatDump;
+        });
       } else {
         // Request failed
         debugPrint('Failed to hit Express backend endpoint');
@@ -187,7 +185,30 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               height: 1.0,
             ),
             Container(
-              child: _buildText(),
+              child: MessageBar(
+                onSend: (_) => print(_),
+                actions: [
+                  InkWell(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                      size: 24,
+                    ),
+                    onTap: () {},
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8, right: 8),
+                    child: InkWell(
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.green,
+                        size: 24,
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),
@@ -248,3 +269,4 @@ class ChatMessage extends StatelessWidget {
     );
   }
 }
+
