@@ -118,7 +118,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const Text(
-                    'MOBILE',
+                    '',
                     style: TextStyle(color: Colors.green, fontSize: 16.0),
                   ),
                 ],

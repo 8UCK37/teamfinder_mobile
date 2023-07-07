@@ -60,11 +60,11 @@ class _HomePageState extends State<HomePage>
         socketService.setSocketId(userData['id']);
       } else {
         // Request failed
-        print('Failed to hit Express backend endpoint');
+        debugPrint('Failed to hit Express backend endpoint');
       }
     } else {
       // User not logged in
-      print('User is not logged in');
+      debugPrint('User is not logged in');
     }
   }
 
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
+              const Row(
                 children: <Widget>[
                   Text('TeamFinder',
                       style: TextStyle(

@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<UserPojo> userPojoFromJson(String str) => List<UserPojo>.from(json.decode(str).map((x) => UserPojo.fromJson(x)));

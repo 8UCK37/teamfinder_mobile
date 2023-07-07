@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<ChatModelPojo> chatModelPojoFromJson(String str) => List<ChatModelPojo>.from(json.decode(str).map((x) => ChatModelPojo.fromJson(x)));
