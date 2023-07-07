@@ -9,6 +9,7 @@ import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
+
 class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
@@ -23,6 +24,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   List<ChatModelPojo>? chatMsgs = [];
   final SocketService socketService = SocketService();
   bool isType = false;
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -33,25 +35,31 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     incMsg();
   }
 
+  void scrollToBottom() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent+200,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.fastOutSlowIn);
+  }
+
   void incMsg() {
     DateTime now = DateTime.now();
-    
+
     socketService.getIncomingMsg().listen((data) {
       // Process the received data here
       debugPrint('Received data from socket: $data');
       // Update your screen state or perform any other actions
-     var newChat = ChatModelPojo(
-        msg: data['msg'],
-        rec: true,
-        photoUrl: null,
-        sender: data['sender'],
-        time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
-    chatMsgs!.add(newChat);
-    setState(() {
-      chatMsgs = chatMsgs;
+      var newChat = ChatModelPojo(
+          msg: data['msg'],
+          rec: true,
+          photoUrl: null,
+          sender: data['sender'],
+          time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
+      chatMsgs!.add(newChat);
+      setState(() {
+        chatMsgs = chatMsgs;
+        scrollToBottom();
+      });
     });
-    });
-   
   }
 
   Future<void> _fetchChatMsgs(dynamic friendId) async {
@@ -86,6 +94,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         debugPrint(chatDump.toString());
         setState(() {
           chatMsgs = chatDump;
+          scrollToBottom();
         });
       } else {
         // Request failed
@@ -99,13 +108,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   void sendMsg(String text) {
     final user = FirebaseAuth.instance.currentUser;
-
+    DateTime now = DateTime.now();
     var newChat = ChatModelPojo(
         msg: text,
         rec: false,
         photoUrl: null,
         sender: user!.uid,
-        time: 'current time');
+        time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
     chatMsgs!.add(newChat);
     setState(() {
       chatMsgs = chatMsgs;
@@ -115,6 +124,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         'sender': user.uid,
         'photo': false
       });
+      scrollToBottom();
     });
     FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -180,13 +190,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           children: <Widget>[
             Flexible(
               child: ListView.builder(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(8.0),
                 reverse: false,
                 itemCount: chatMsgs!
                     .length, //TODO:implement msg time and different bubbles for imaged msg
                 itemBuilder: (context, int i) => ChatBubble(
                   text: chatMsgs![i].msg,
-                  time:chatMsgs![i].time,
+                  time: chatMsgs![i].time,
                   isSender: !(chatMsgs![i].rec),
                   color: !(chatMsgs![i].rec)
                       ? Colors.deepPurple.shade300
@@ -196,9 +207,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     color: Colors.white,
                   ),
                   subtextStyle: const TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic),
+                      fontSize: 13.0,
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic),
                 ),
               ),
             ),
@@ -239,5 +250,3 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 }
-
-
