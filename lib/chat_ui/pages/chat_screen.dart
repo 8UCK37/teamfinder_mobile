@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:teamfinder_mobile/models/chat_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_bubbles/chat_bubbles.dart';
@@ -173,14 +174,22 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       body: Container(
         child: Column(
           children: <Widget>[
-            // Flexible(
-            //   child: ListView.builder(
-            //     padding: const EdgeInsets.all(8.0),
-            //     reverse: true,
-            //     // itemBuilder: (context, int index) => chatMsgs![index],
-            //     itemCount: chatMsgs!.length,
-            //   ),
-            // ),
+            Flexible(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                reverse: true,
+                itemCount: chatMsgs!.length, //TODO:implement msg time and different bubbles for imaged msg
+                itemBuilder: (context, int i) => BubbleSpecialOne( 
+                  text: chatMsgs![i].msg,
+                  isSender: !(chatMsgs![i].rec),
+                  color: !(chatMsgs![i].rec)? Colors.deepPurple.shade300 :Colors.orangeAccent,
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
             const Divider(
               height: 1.0,
             ),
@@ -269,4 +278,3 @@ class ChatMessage extends StatelessWidget {
     );
   }
 }
-
