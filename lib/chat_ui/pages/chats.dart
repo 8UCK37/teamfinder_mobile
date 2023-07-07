@@ -12,7 +12,7 @@ class Chats extends StatefulWidget {
 }
 
 class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
-  List<UserPojo>? activeConvoList;
+  late List<UserPojo> activeConvoList=[];
 
   @override
   void initState() {
@@ -75,10 +75,10 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     // debugPrint(messageData.length.toString());
     return ListView.builder(
-      itemCount: activeConvoList!.length,
+      itemCount: activeConvoList.length,
       itemBuilder: (context, i) => Column(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           //const Divider(height: 22.0,),
@@ -94,7 +94,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
                   activeConvoList![i].name,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
+                const Text(
                   //messageData[i].time,
                   '',
                   style: const TextStyle(color: Colors.grey, fontSize: 16.0),
