@@ -8,7 +8,7 @@ import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
-
+import 'package:intl/intl.dart';
 class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
@@ -34,6 +34,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   void incMsg() {
+    DateTime now = DateTime.now();
+    
     socketService.getIncomingMsg().listen((data) {
       // Process the received data here
       debugPrint('Received data from socket: $data');
@@ -43,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         rec: true,
         photoUrl: null,
         sender: data['sender'],
-        time: 'current time');
+        time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
     chatMsgs!.add(newChat);
     setState(() {
       chatMsgs = chatMsgs;
@@ -190,7 +192,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       ? Colors.deepPurple.shade300
                       : Colors.orangeAccent,
                   textStyle: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     color: Colors.white,
                   ),
                   subtextStyle: const TextStyle(
