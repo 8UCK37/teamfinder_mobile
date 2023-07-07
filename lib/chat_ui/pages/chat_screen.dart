@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
 
@@ -181,7 +182,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 reverse: false,
                 itemCount: chatMsgs!
                     .length, //TODO:implement msg time and different bubbles for imaged msg
-                itemBuilder: (context, int i) => BubbleSpecialOne(
+                itemBuilder: (context, int i) => ChatBubble(
                   text: chatMsgs![i].msg,
                   isSender: !(chatMsgs![i].rec),
                   color: !(chatMsgs![i].rec)
@@ -191,6 +192,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     fontSize: 20,
                     color: Colors.white,
                   ),
+                  subtextStyle: const TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic),
                 ),
               ),
             ),
