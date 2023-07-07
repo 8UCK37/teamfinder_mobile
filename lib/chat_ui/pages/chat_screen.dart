@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
-import 'package:teamfinder_mobile/models/chat_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_bubbles/chat_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
+import '../../services/socket_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final String name;
@@ -20,16 +19,36 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
-  final TextEditingController _textController = TextEditingController();
-  final List<ChatMessage> _messages = <ChatMessage>[];
-
   List<ChatModelPojo>? chatMsgs = [];
-
+  final SocketService socketService = SocketService();
   bool isType = false;
   @override
   void initState() {
     super.initState();
     _fetchChatMsgs(widget.friendId);
+    final user = FirebaseAuth.instance.currentUser;
+    socketService.setupSocketConnection();
+    socketService.setSocketId(user!.uid);
+    incMsg();
+  }
+
+  void incMsg() {
+    socketService.getIncomingMsg().listen((data) {
+      // Process the received data here
+      debugPrint('Received data from socket: $data');
+      // Update your screen state or perform any other actions
+     var newChat = ChatModelPojo(
+        msg: data['msg'],
+        rec: true,
+        photoUrl: null,
+        sender: data['sender'],
+        time: 'current time');
+    chatMsgs!.add(newChat);
+    setState(() {
+      chatMsgs = chatMsgs;
+    });
+    });
+   
   }
 
   Future<void> _fetchChatMsgs(dynamic friendId) async {
@@ -50,7 +69,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         // var res = response.body;
         // List<UserPojo> parsedactiveConvoList = userPojoFromJson(res);
         debugPrint('succ');
-
         var res = jsonDecode(response.body);
         //debugPrint(res.toString());
         res.forEach((data) {
@@ -78,6 +96,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   void sendMsg(String text) {
     final user = FirebaseAuth.instance.currentUser;
+
     var newChat = ChatModelPojo(
         msg: text,
         rec: false,
@@ -86,56 +105,19 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         time: 'current time');
     chatMsgs!.add(newChat);
     setState(() {
-          chatMsgs = chatMsgs;
-        });
+      chatMsgs = chatMsgs;
+      socketService.send({
+        'receiver': widget.friendId,
+        'msg': text,
+        'sender': user.uid,
+        'photo': false
+      });
+    });
     FocusScopeNode currentFocus = FocusScope.of(context);
 
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-  }
-
-  void _handleSubmit(String text) {
-    ChatMessage message = ChatMessage(
-      text: text,
-      animationController: AnimationController(
-          duration: const Duration(seconds: 1), vsync: this),
-      name: widget.name,
-    );
-    setState(() {
-      _messages.insert(0, message);
-      var data = messageData.firstWhere((t) => t.name == widget.name);
-      data.message = message.text;
-    });
-    message.animationController.forward();
-  }
-
-  Widget _buildText() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Container(
-            child: Flexible(
-                child: TextField(
-              controller: _textController,
-              decoration:
-                  const InputDecoration.collapsed(hintText: "Send message"),
-            )),
-          ),
-          Container(
-            child: IconButton(
-                icon: const Icon(
-                  Icons.send,
-                  color: Color.fromARGB(255, 22, 125, 99),
-                ),
-                onPressed: () {
-                  _handleSubmit(_textController.text);
-                  _textController.clear();
-                }),
-          )
-        ],
-      ),
-    );
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 
   @override

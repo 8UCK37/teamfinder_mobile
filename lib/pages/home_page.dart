@@ -71,6 +71,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
+    // ignore: unused_local_variable
     final userData = userService.user;
     return Scaffold(
       appBar: AppBar(
@@ -88,10 +89,17 @@ class _HomePageState extends State<HomePage>
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-                Icon(Icons.search, color: Colors.black),
                 GestureDetector(
                   onTap: () {
-                    print('goto chat');
+                    debugPrint('search clicked');
+
+                    
+                  },
+                  child: const Icon(Icons.search, color: Colors.black),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    debugPrint('goto chat');
 
                     Navigator.push(
                       context,

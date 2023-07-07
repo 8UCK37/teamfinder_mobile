@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,8 +22,8 @@ class SocketService {
     });
 
     socket?.on('notification', (data) {
-      //print('incoming notification');
-      //print(data);
+      debugPrint('incoming notification');
+      debugPrint(data.toString());
       if (data is Map<String, dynamic>) {
         _incomingNotiSubject.add(data);
       } else if (data is String) {
@@ -43,7 +44,7 @@ class SocketService {
   }
 
   void send(dynamic msg) {
-    print('sending this msg: $msg');
+    debugPrint('sending this msg: $msg');
     socket?.emit('my message', msg);
   }
 
