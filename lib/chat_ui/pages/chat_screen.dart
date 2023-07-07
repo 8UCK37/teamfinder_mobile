@@ -184,6 +184,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     .length, //TODO:implement msg time and different bubbles for imaged msg
                 itemBuilder: (context, int i) => ChatBubble(
                   text: chatMsgs![i].msg,
+                  time:chatMsgs![i].time,
                   isSender: !(chatMsgs![i].rec),
                   color: !(chatMsgs![i].rec)
                       ? Colors.deepPurple.shade300
@@ -237,55 +238,4 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 }
 
-class ChatMessage extends StatelessWidget {
-  final String name;
-  final AnimationController animationController;
-  final String text;
-  ChatMessage(
-      {required this.name,
-      required this.animationController,
-      required this.text});
 
-  @override
-  Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: CurvedAnimation(
-        parent: animationController,
-        curve: Curves.easeOut,
-      ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(right: 16.0),
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://avatars2.githubusercontent.com/u/23518097?s=400&u=91ac76bebfb16bdfffa49216ac336a0d615a1444&v=4"),
-                maxRadius: 25.0,
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text("El chuy",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold)),
-                  Container(
-                      margin: const EdgeInsets.only(top: 6.0),
-                      child: Text(text,
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 18.0)))
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

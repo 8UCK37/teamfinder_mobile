@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 ///WhatsApp's chat bubble type
 ///
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 class ChatBubble extends StatelessWidget {
   final bool isSender;
   final String text;
+  final String time;
   final bool tail;
   final Color color;
   final bool sent;
@@ -24,6 +26,7 @@ class ChatBubble extends StatelessWidget {
     Key? key,
     this.isSender = true,
     required this.text,
+    required this.time,
     this.color = Colors.white70,
     this.tail = true,
     this.sent = false,
@@ -33,11 +36,22 @@ class ChatBubble extends StatelessWidget {
       color: Colors.black87,
       fontSize: 16,
     ),
-    this.subtextStyle=const TextStyle(
+    this.subtextStyle = const TextStyle(
       color: Colors.black87,
       fontSize: 16,
     ),
   }) : super(key: key);
+
+  String convertToLocalTime(String time) {
+    String timestamp = time;
+    DateTime dateTime = DateTime.parse(timestamp);
+    DateTime localDateTime = dateTime.toLocal();
+    String formattedTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(localDateTime);
+    var splicedTime = formattedTime.split(" ")[1].split(":");
+
+    return "${splicedTime[0]}:${splicedTime[1]}";
+  }
 
   ///chat bubble builder method
   @override
@@ -95,7 +109,9 @@ class ChatBubble extends StatelessWidget {
                       ? EdgeInsets.only(right: 20)
                       : EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                   child: Column(
-                    crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    crossAxisAlignment: isSender
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
                     children: [
                       Text(
                         text,
@@ -103,9 +119,10 @@ class ChatBubble extends StatelessWidget {
                         textAlign: TextAlign.left,
                       ),
                       Text(
-                        '10:30', // Add your subtext here
-                        style:subtextStyle, // Specify the style for the subtext
-                        textAlign: isSender? TextAlign.end:TextAlign.start,
+                        convertToLocalTime(time), // Add your subtext here
+                        style:
+                            subtextStyle, // Specify the style for the subtext
+                        textAlign: isSender ? TextAlign.end : TextAlign.start,
                       ),
                     ],
                   ),

@@ -53,6 +53,7 @@ dependencies:
   socket_io_client: ^2.0.2
   rxdart: ^0.27.7
   chat_bubbles: ^1.4.1
+  intl: ^0.18.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
