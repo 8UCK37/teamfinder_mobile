@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:teamfinder_mobile/chat_ui/pages/camera.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
@@ -238,7 +239,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         color: Colors.green,
                         size: 24,
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CameraPage()),
+                      );
+                      },
                     ),
                   ),
                 ],

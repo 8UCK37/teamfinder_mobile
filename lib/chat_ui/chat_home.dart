@@ -15,7 +15,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
   @override
   void initState(){
     super.initState();
-    _tabController = TabController(initialIndex: 1, vsync: this, length: 2);
+    _tabController = TabController(initialIndex: 0, vsync: this, length: 1);
 
   }
 
@@ -37,20 +37,20 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
           ),
         ],
         backgroundColor: Colors.deepPurpleAccent.shade400,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const <Widget>[
-            Tab(icon: Icon(Icons.camera_alt, color: Colors.white,)),
-            Tab(child: Text("CHATS", style: TextStyle(color: Colors.white))),
-            // Tab(child: Text("STATUS", style: TextStyle(color: Colors.white))),
-            // Tab(child: Text("CALLS", style: TextStyle(color: Colors.white))),
-          ],
-        ),
+        // bottom: TabBar(
+        //   controller: _tabController,
+        //   tabs: const <Widget>[
+        //     // Tab(icon: Icon(Icons.camera_alt, color: Colors.white,)),
+        //     Tab(child: Text("CHATS", style: TextStyle(color: Colors.white))),
+        //     // Tab(child: Text("STATUS", style: TextStyle(color: Colors.white))),
+        //     // Tab(child: Text("CALLS", style: TextStyle(color: Colors.white))),
+        //   ],
+        // ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          CameraPage(),
+          // CameraPage(),
           Chats(),
           // Status(),
           // Calls()
