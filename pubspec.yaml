@@ -56,6 +56,10 @@ dependencies:
   intl: ^0.18.1
   dialog: ^0.8.0
   material_dialogs: ^1.1.4
+  video_player: ^2.7.0
+  camera: ^0.10.5+2
+  path: ^1.8.3
+  path_provider: ^2.0.15
 dev_dependencies:
   flutter_test:
     sdk: flutter

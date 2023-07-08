@@ -1,14 +1,18 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/user_service.dart';
+import 'chat_ui/camera_ui/CameraScreen.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-void main() async {
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -47,16 +51,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context)=>UserService(),
-      child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-        title: 'TeamFinder',
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-          useMaterial3: true,
-        ),
-        home: isLogin ?  HomePage() : const LoginActivity()
-      )
-    );
+        create: (context) => UserService(),
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'TeamFinder',
+            theme: ThemeData(
+              primarySwatch: Colors.deepPurple,
+              useMaterial3: true,
+            ),
+            home: isLogin ? HomePage() : const LoginActivity()));
   }
 }

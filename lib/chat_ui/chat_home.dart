@@ -50,7 +50,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Camera(),
+          CameraPage(),
           Chats(),
           // Status(),
           // Calls()
