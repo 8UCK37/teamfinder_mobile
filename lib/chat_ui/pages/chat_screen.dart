@@ -225,8 +225,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 actions: [
                   InkWell(
                     child: const Icon(
-                      Icons.add,
-                      color: Colors.black,
+                      Icons.link,
+                      color: Colors.orangeAccent,
                       size: 24,
                     ),
                     onTap: () {},

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/camera.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chats.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/contacts.dart';
 
