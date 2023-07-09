@@ -85,13 +85,13 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
           ListTile(
             leading: CircleAvatar(
               maxRadius: 25,
-              backgroundImage: NetworkImage(activeConvoList![i].profilePicture),
+              backgroundImage: NetworkImage(activeConvoList[i].profilePicture),
             ),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  activeConvoList![i].name,
+                  activeConvoList[i].name,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text(

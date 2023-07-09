@@ -39,6 +39,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     socketService.setupSocketConnection();
     socketService.setSocketId(user!.uid);
     incMsg();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
+    incNoti();
     checkPath();
   }
 
@@ -52,17 +56,16 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   void scrollToBottom() {
-    _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent + 200,
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent+4000,
         duration: const Duration(milliseconds: 200),
         curve: Curves.fastOutSlowIn);
+    debugPrint(_scrollController.position.maxScrollExtent.toString());
   }
 
   void incMsg() {
-    DateTime now = DateTime.now();
-
     socketService.getIncomingMsg().listen((data) {
       // Process the received data here
+      DateTime now = DateTime.now();
       debugPrint('Received data from socket: $data');
       // Update your screen state or perform any other actions
       var newChat = ChatModelPojo(
@@ -76,6 +79,20 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         chatMsgs = chatMsgs;
         scrollToBottom();
       });
+    });
+  }
+
+  void incNoti() {
+    socketService.getIncomingNoti().listen((data) {
+      //DateTime now = DateTime.now();
+      debugPrint('Received noti from socket: $data');
+      if (data['notification'] == 'imageUploadDone') {
+        chatMsgs![chatMsgs!.length - 1].photoUrl = data['data'];
+        setState(() {
+          chatMsgs = chatMsgs;
+          scrollToBottom();
+        });
+      }
     });
   }
 
@@ -226,7 +243,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                           : Colors.orangeAccent,
                       tail: true,
                       delivered: true,
-                      
                     );
                   } else {
                     return ChatBubble(

@@ -106,7 +106,7 @@ class ChatImageBubble extends StatelessWidget {
           child: Container(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * .5,
-                maxHeight: MediaQuery.of(context).size.width * 1),
+                maxHeight: MediaQuery.of(context).size.width * .65),
             child: GestureDetector(
                 // ignore: sort_child_properties_last
                 child: Hero(
