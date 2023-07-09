@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_images_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
@@ -34,6 +35,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final SocketService socketService = SocketService();
   bool isType = false;
   final ScrollController _scrollController = ScrollController();
+  File? _selectedImage;
+  String? selectedImagePath;
   @override
   void initState() {
     super.initState();
@@ -53,7 +56,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (widget.path != '') {
       debugPrint('chatScreen');
       debugPrint(widget.path);
-      sendMsg('');
+      setState(() {
+        //selectedImagePath = widget.path;
+        //_selectedImage = File(selectedImagePath!);
+      });
     } else {
       debugPrint('path is empty');
     }
@@ -130,7 +136,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               time: data['createdAt'].toString());
           chatDump.add(chat);
         });
-        debugPrint(chatDump.toString());
+        //debugPrint(chatDump.toString());
         setState(() {
           chatMsgs = chatDump;
           scrollToBottom();
@@ -145,6 +151,17 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedImage != null) {
+        _selectedImage = File(pickedImage.path);
+        selectedImagePath = pickedImage.path;
+      }
+    });
+  }
+
   Future<void> sendMsg(String text) async {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
@@ -153,20 +170,23 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       'receiver': widget.friendId,
       'msg': text,
       'sender': user!.uid,
-      'photo': widget.path == '' ? false : true
+      'photo': _selectedImage == null ? false : true
     };
 
     var newChat = ChatModelPojo(
         msg: text,
         rec: false,
-        photoUrl: widget.path == '' ? null : widget.path,
+        photoUrl: _selectedImage == null ? null : selectedImagePath,
         sender: user.uid,
         time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
     chatMsgs!.add(newChat);
+    debugPrint('split');
+    debugPrint(selectedImagePath!.split('/')[2]);
+    debugPrint(selectedImagePath!);
     setState(() {
       chatMsgs = chatMsgs;
       socketService.send(data);
-      if (widget.path == '') {
+      if (_selectedImage == null) {
         scrollToBottom();
       }
     });
@@ -182,18 +202,23 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         'Content-Type': 'multipart/form-data',
       },
     );
-    if (widget.path != '') {
+    if (_selectedImage != null) {
       debugPrint('has path');
       final formData = FormData.fromMap({
         'data': jsonEncode({'data': data}),
-        'chatimages': await MultipartFile.fromFile(widget.path),
+        'chatimages': await MultipartFile.fromFile(selectedImagePath!),
       });
       try {
         final response = await dio.post(
-            'http://${dotenv.env['server_url']}/chatImages',
+            'http://${dotenv.env['server_url']}/chat/Images',
             data: formData,
             options: options);
         debugPrint(response.data);
+        setState(() {
+          _selectedImage = null;
+          selectedImagePath = null;
+          scrollToBottom();
+        });
       } catch (e) {
         debugPrint('Error: $e');
       }
@@ -282,7 +307,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     //debugPrint(chatMsgs![i].photoUrl);
                     return ChatImageBubble(
                       id: 'id001',
-                      image: Image.network(chatMsgs![i].photoUrl!),
+                      imageUrl: chatMsgs![i].photoUrl!,
                       isSender: !(chatMsgs![i].rec),
                       text: chatMsgs![i].msg,
                       time: chatMsgs![i].time,
@@ -313,43 +338,67 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 },
               ),
             ),
+            Visibility(
+              visible: _selectedImage != null,
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
+                height: 200.0,
+                decoration: BoxDecoration(
+                  image: _selectedImage != null
+                      ? DecorationImage(
+                          image: FileImage(_selectedImage!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            //if (_selectedImage != null) Image.file(_selectedImage!),
             const Divider(
               height: 1.0,
             ),
             Container(
-              child: MessageBar(
-                onSend: (String typedMsg) {
-                  sendMsg(typedMsg);
-                },
-                actions: [
-                  InkWell(
-                    child: const Icon(
-                      Icons.link,
-                      color: Colors.orangeAccent,
-                      size: 24,
-                    ),
-                    onTap: () {},
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: InkWell(
-                      child: const Icon(
-                        Icons.camera_alt,
-                        color: Colors.green,
-                        size: 24,
+              child: Column(
+                children: [
+                  MessageBar(
+                    onSend: (String typedMsg) {
+                      sendMsg(typedMsg);
+                    },
+                    actions: [
+                      InkWell(
+                        child: const Icon(
+                          Icons.link,
+                          color: Colors.orangeAccent,
+                          size: 24,
+                        ),
+                        onTap: () {
+                          pickImage();
+                        },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CameraScreen(
-                                    friendId: widget.friendId,
-                                    name: widget.name,
-                                    profileImage: widget.profileImage,
-                                  )),
-                        );
-                      },
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: InkWell(
+                          child: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.green,
+                            size: 24,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CameraScreen(
+                                  friendId: widget.friendId,
+                                  name: widget.name,
+                                  profileImage: widget.profileImage,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -1,6 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:io';
 const double BUBBLE_RADIUS_IMAGE = 16;
 
 ///basic image bubble type
@@ -24,7 +26,7 @@ class ChatImageBubble extends StatelessWidget {
   );
 
   final String id;
-  final Widget image;
+  final String imageUrl;
   final String text;
   final String time;
   final double bubbleRadius;
@@ -39,7 +41,7 @@ class ChatImageBubble extends StatelessWidget {
   const ChatImageBubble({
     Key? key,
     required this.id,
-    required this.image,
+    required this.imageUrl,
     required this.text,
     required this.time,
     this.bubbleRadius = BUBBLE_RADIUS_IMAGE,
@@ -60,6 +62,10 @@ class ChatImageBubble extends StatelessWidget {
     var splicedTime = formattedTime.split(" ")[1].split(":");
 
     return "${splicedTime[0]}:${splicedTime[1]}";
+  }
+
+  bool checkIfLocalImage(String url) {
+    return (url.split('/')[2]=='user');
   }
 
   /// image bubble builder method
@@ -137,7 +143,16 @@ class ChatImageBubble extends StatelessWidget {
                                   ? CrossAxisAlignment.end
                                   : CrossAxisAlignment.start,
                               children: [
-                                image,
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 0.0),
+                                  height: 200.0,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: checkIfLocalImage(imageUrl)? FileImage(File(imageUrl)) as ImageProvider<Object> :NetworkImage(imageUrl),
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
                                 Padding(
                                   padding: stateTick
                                       ? const EdgeInsets.only(right: 20)
@@ -197,7 +212,7 @@ class ChatImageBubble extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return _DetailScreen(
                           tag: id,
-                          image: image,
+                          image: Image.network(imageUrl),
                         );
                       }));
                     }),
