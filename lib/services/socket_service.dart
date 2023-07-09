@@ -49,7 +49,7 @@ class SocketService {
   }
 
   void sendNoti(dynamic noti) {
-    print('sending this noti: $noti');
+    debugPrint('sending this noti: $noti');
     socket?.emit('notification', noti);
   }
 

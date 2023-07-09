@@ -66,6 +66,7 @@ class ChatImageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool stateTick = false;
+    // ignore: unused_local_variable
     Icon? stateIcon;
     if (sent) {
       stateTick = true;

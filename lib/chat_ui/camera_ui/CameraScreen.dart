@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +14,9 @@ class CameraScreen extends StatefulWidget {
   final String friendId;
   final String name;
   final String profileImage;
-  CameraScreen({required this.friendId,required this.name, required this.profileImage});
+  const CameraScreen({super.key, required this.friendId,required this.name, required this.profileImage});
   @override
+  // ignore: library_private_types_in_public_api
   _CameraScreenState createState() => _CameraScreenState();
 }
 
@@ -47,12 +50,13 @@ class _CameraScreenState extends State<CameraScreen> {
               future: cameraValue,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
+                  // ignore: sized_box_for_whitespace
                   return Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       child: CameraPreview(_cameraController));
                 } else {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
@@ -61,7 +65,7 @@ class _CameraScreenState extends State<CameraScreen> {
             bottom: 0.0,
             child: Container(
               color: Colors.black,
-              padding: EdgeInsets.only(top: 5, bottom: 5),
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
@@ -109,12 +113,12 @@ class _CameraScreenState extends State<CameraScreen> {
                           if (!isRecoring) takePhoto(context);
                         },
                         child: isRecoring
-                            ? Icon(
+                            ? const Icon(
                                 Icons.radio_button_on,
                                 color: Colors.red,
                                 size: 80,
                               )
-                            : Icon(
+                            : const Icon(
                                 Icons.panorama_fish_eye,
                                 color: Colors.white,
                                 size: 70,
@@ -123,7 +127,7 @@ class _CameraScreenState extends State<CameraScreen> {
                       IconButton(
                           icon: Transform.rotate(
                             angle: transform,
-                            child: Icon(
+                            child: const Icon(
                               Icons.flip_camera_ios,
                               color: Colors.white,
                               size: 28,
@@ -141,10 +145,10 @@ class _CameraScreenState extends State<CameraScreen> {
                           }),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
-                  Text(
+                  const Text(
                     "Hold for Video, tap for photo",
                     style: TextStyle(
                       color: Colors.white,

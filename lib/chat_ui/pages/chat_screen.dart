@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 import 'dart:convert';
+import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +13,7 @@ import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
+import 'package:dio/dio.dart';
 
 class ChatScreen extends StatefulWidget {
   final String name;
@@ -50,16 +53,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (widget.path != '') {
       debugPrint('chatScreen');
       debugPrint(widget.path);
+      sendMsg('');
     } else {
       debugPrint('path is empty');
     }
   }
 
   void scrollToBottom() {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent+4000,
+    _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 4000,
         duration: const Duration(milliseconds: 200),
         curve: Curves.fastOutSlowIn);
-    debugPrint(_scrollController.position.maxScrollExtent.toString());
+    //debugPrint(_scrollController.position.maxScrollExtent.toString());
   }
 
   void incMsg() {
@@ -140,30 +145,73 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     }
   }
 
-  void sendMsg(String text) {
+  Future<void> sendMsg(String text) async {
+    Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     DateTime now = DateTime.now();
+    var data = {
+      'receiver': widget.friendId,
+      'msg': text,
+      'sender': user!.uid,
+      'photo': widget.path == '' ? false : true
+    };
+
     var newChat = ChatModelPojo(
         msg: text,
         rec: false,
-        photoUrl: null,
-        sender: user!.uid,
+        photoUrl: widget.path == '' ? null : widget.path,
+        sender: user.uid,
         time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
     chatMsgs!.add(newChat);
     setState(() {
       chatMsgs = chatMsgs;
-      socketService.send({
-        'receiver': widget.friendId,
-        'msg': text,
-        'sender': user.uid,
-        'photo': false
-      });
-      scrollToBottom();
+      socketService.send(data);
+      if (widget.path == '') {
+        scrollToBottom();
+      }
     });
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
+    }
+    final idToken = await user.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'Content-Type': 'multipart/form-data',
+      },
+    );
+    if (widget.path != '') {
+      debugPrint('has path');
+      final formData = FormData.fromMap({
+        'data': jsonEncode({'data': data}),
+        'chatimages': await MultipartFile.fromFile(widget.path),
+      });
+      try {
+        final response = await dio.post(
+            'http://${dotenv.env['server_url']}/chatImages',
+            data: formData,
+            options: options);
+        debugPrint(response.data);
+      } catch (e) {
+        debugPrint('Error: $e');
+      }
+    } else {
+      debugPrint('no path');
+      debugPrint(jsonEncode({'data': data}));
+      final formData = FormData.fromMap({
+        'data': jsonEncode({'data': data}),
+      });
+      try {
+        final response = await dio.post(
+            'http://${dotenv.env['server_url']}/chat/Images',
+            data: formData,
+            options: options);
+        debugPrint(response.data);
+      } catch (e) {
+        debugPrint('Error: $e');
+      }
     }
   }
 
@@ -231,7 +279,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     .length, //TODO:implement msg time and different bubbles for imaged msg
                 itemBuilder: (context, int i) {
                   if (chatMsgs![i].photoUrl != null) {
-                    debugPrint(chatMsgs![i].photoUrl);
+                    //debugPrint(chatMsgs![i].photoUrl);
                     return ChatImageBubble(
                       id: 'id001',
                       image: Image.network(chatMsgs![i].photoUrl!),
