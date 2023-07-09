@@ -5,18 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_bubbles/chat_bubbles.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/camera.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
+import 'package:teamfinder_mobile/chat_ui/pages/chat_images_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
+import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
   final String profileImage;
+  final String path;
   ChatScreen(
-      {required this.friendId, required this.name, required this.profileImage});
+      {required this.friendId,
+      required this.name,
+      required this.profileImage,
+      required this.path});
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -34,10 +39,21 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     socketService.setupSocketConnection();
     socketService.setSocketId(user!.uid);
     incMsg();
+    checkPath();
+  }
+
+  void checkPath() {
+    if (widget.path != '') {
+      debugPrint('chatScreen');
+      debugPrint(widget.path);
+    } else {
+      debugPrint('path is empty');
+    }
   }
 
   void scrollToBottom() {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent+200,
+    _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 200,
         duration: const Duration(milliseconds: 200),
         curve: Curves.fastOutSlowIn);
   }
@@ -196,22 +212,41 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 reverse: false,
                 itemCount: chatMsgs!
                     .length, //TODO:implement msg time and different bubbles for imaged msg
-                itemBuilder: (context, int i) => ChatBubble(
-                  text: chatMsgs![i].msg,
-                  time: chatMsgs![i].time,
-                  isSender: !(chatMsgs![i].rec),
-                  color: !(chatMsgs![i].rec)
-                      ? Colors.deepPurple.shade300
-                      : Colors.orangeAccent,
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                  subtextStyle: const TextStyle(
-                      fontSize: 13.0,
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic),
-                ),
+                itemBuilder: (context, int i) {
+                  if (chatMsgs![i].photoUrl != null) {
+                    debugPrint(chatMsgs![i].photoUrl);
+                    return ChatImageBubble(
+                      id: 'id001',
+                      image: Image.network(chatMsgs![i].photoUrl!),
+                      isSender: !(chatMsgs![i].rec),
+                      text: chatMsgs![i].msg,
+                      time: chatMsgs![i].time,
+                      color: !(chatMsgs![i].rec)
+                          ? Colors.deepPurple.shade300
+                          : Colors.orangeAccent,
+                      tail: true,
+                      delivered: true,
+                      
+                    );
+                  } else {
+                    return ChatBubble(
+                      text: chatMsgs![i].msg,
+                      time: chatMsgs![i].time,
+                      isSender: !(chatMsgs![i].rec),
+                      color: !(chatMsgs![i].rec)
+                          ? Colors.deepPurple.shade300
+                          : Colors.orangeAccent,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      subtextStyle: const TextStyle(
+                          fontSize: 13.0,
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic),
+                    );
+                  }
+                },
               ),
             ),
             const Divider(
@@ -241,10 +276,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       ),
                       onTap: () {
                         Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CameraPage()),
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CameraScreen(
+                                    friendId: widget.friendId,
+                                    name: widget.name,
+                                    profileImage: widget.profileImage,
+                                  )),
+                        );
                       },
                     ),
                   ),

@@ -60,7 +60,7 @@ class ChatBubble extends StatelessWidget {
     Icon? stateIcon;
     if (sent) {
       stateTick = true;
-      stateIcon = Icon(
+      stateIcon = const Icon(
         Icons.done,
         size: 18,
         color: Color(0xFF97AD8E),
@@ -68,7 +68,7 @@ class ChatBubble extends StatelessWidget {
     }
     if (delivered) {
       stateTick = true;
-      stateIcon = Icon(
+      stateIcon = const Icon(
         Icons.done_all,
         size: 18,
         color: Color(0xFF97AD8E),
@@ -76,7 +76,7 @@ class ChatBubble extends StatelessWidget {
     }
     if (seen) {
       stateTick = true;
-      stateIcon = Icon(
+      stateIcon = const Icon(
         Icons.done_all,
         size: 18,
         color: Color(0xFF92DEDA),
@@ -99,15 +99,15 @@ class ChatBubble extends StatelessWidget {
             ),
             margin: isSender
                 ? stateTick
-                    ? EdgeInsets.fromLTRB(7, 7, 14, 7)
-                    : EdgeInsets.fromLTRB(7, 7, 17, 7)
-                : EdgeInsets.fromLTRB(17, 7, 7, 7),
+                    ? const EdgeInsets.fromLTRB(7, 7, 14, 7)
+                    : const EdgeInsets.fromLTRB(7, 7, 17, 7)
+                : const EdgeInsets.fromLTRB(17, 7, 7, 7),
             child: Stack(
               children: <Widget>[
                 Padding(
                   padding: stateTick
-                      ? EdgeInsets.only(right: 20)
-                      : EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                      ? const EdgeInsets.only(right: 20)
+                      : const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                   child: Column(
                     crossAxisAlignment: isSender
                         ? CrossAxisAlignment.end
@@ -133,7 +133,7 @@ class ChatBubble extends StatelessWidget {
                         right: 0,
                         child: stateIcon,
                       )
-                    : SizedBox(
+                    : const SizedBox(
                         width: 1,
                       ),
               ],
@@ -191,7 +191,7 @@ class SpecialChatBubbleOne extends CustomPainter {
               0.0,
               size.width,
               size.height,
-              topRight: Radius.circular(3),
+              topRight: const Radius.circular(3),
             ),
             Paint()
               ..color = this.color
@@ -238,7 +238,7 @@ class SpecialChatBubbleOne extends CustomPainter {
               0.0,
               _x,
               size.height,
-              topLeft: Radius.circular(3),
+              topLeft: const Radius.circular(3),
             ),
             Paint()
               ..color = this.color

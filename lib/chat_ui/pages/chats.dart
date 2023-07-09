@@ -112,9 +112,11 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
             onTap: () {
               var route = MaterialPageRoute(
                   builder: (BuildContext context) => ChatScreen(
-                      friendId:activeConvoList![i].id,
-                      name: activeConvoList![i].name,
-                      profileImage: activeConvoList![i].profilePicture));
+                      friendId:activeConvoList[i].id,
+                      name: activeConvoList[i].name,
+                      profileImage: activeConvoList[i].profilePicture,
+                      path:'')
+                      );
               Navigator.of(context).push(route);
             },
           ),

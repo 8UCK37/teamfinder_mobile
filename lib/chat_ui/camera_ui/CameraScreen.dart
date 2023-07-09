@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -10,8 +9,10 @@ import 'package:teamfinder_mobile/chat_ui/camera_ui/VideoView.dart';
 List<CameraDescription> cameras=[];
 
 class CameraScreen extends StatefulWidget {
-  CameraScreen({Key? key}) : super(key: key);
-
+  final String friendId;
+  final String name;
+  final String profileImage;
+  CameraScreen({required this.friendId,required this.name, required this.profileImage});
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -161,11 +162,15 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void takePhoto(BuildContext context) async {
     XFile file = await _cameraController.takePicture();
+    // ignore: use_build_context_synchronously
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (builder) => CameraViewPage(
                   path: file.path,
+                  friendId: widget.friendId,
+                  name:widget.name,
+                  profileImage: widget.profileImage,
                 )));
   }
 }

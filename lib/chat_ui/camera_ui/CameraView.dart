@@ -1,10 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 
 class CameraViewPage extends StatelessWidget {
-  const CameraViewPage({ Key? key,  required this.path}) : super(key: key);
   final String path;
+  final String name;
+  final String friendId;
+  final String profileImage;
+  const CameraViewPage(
+      {Key? key,
+      required this.path,
+      required this.friendId,
+      required this.name,
+      required this.profileImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,25 +24,25 @@ class CameraViewPage extends StatelessWidget {
         backgroundColor: Colors.black,
         actions: [
           IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.crop_rotate,
                 size: 27,
               ),
               onPressed: () {}),
           IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.emoji_emotions_outlined,
                 size: 27,
               ),
               onPressed: () {}),
           IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.title,
                 size: 27,
               ),
               onPressed: () {}),
           IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.edit,
                 size: 27,
               ),
@@ -57,9 +67,9 @@ class CameraViewPage extends StatelessWidget {
               child: Container(
                 color: Colors.black38,
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                 child: TextFormField(
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                   ),
@@ -68,22 +78,34 @@ class CameraViewPage extends StatelessWidget {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Add Caption....",
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.add_photo_alternate,
                         color: Colors.white,
                         size: 27,
                       ),
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         color: Colors.white,
                         fontSize: 17,
                       ),
-                      suffixIcon: CircleAvatar(
-                        radius: 27,
-                        backgroundColor: Colors.tealAccent[700],
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 27,
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          debugPrint(path.toString());
+                          var route = MaterialPageRoute(
+                              builder: (BuildContext context) => ChatScreen(
+                                  friendId: friendId,
+                                  name: name,
+                                  profileImage: profileImage,
+                                  path:path));
+                          Navigator.of(context).push(route);
+                        },
+                        child: CircleAvatar(
+                          radius: 27,
+                          backgroundColor: Colors.tealAccent[700],
+                          child: const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 27,
+                          ),
                         ),
                       )),
                 ),
