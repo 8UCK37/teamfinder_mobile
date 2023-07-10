@@ -20,10 +20,7 @@ class ChatScreen extends StatefulWidget {
   final String friendId;
   final String profileImage;
   ChatScreen(
-      {required this.friendId,
-      required this.name,
-      required this.profileImage
-      });
+      {required this.friendId, required this.name, required this.profileImage});
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -47,14 +44,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       scrollToBottom();
     });
     incNoti();
-    
   }
 
   void scrollToBottom() {
-    _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent + 4000,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.fastOutSlowIn);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent + 250,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.fastOutSlowIn);
+      });
+    });
+
     //debugPrint(_scrollController.position.maxScrollExtent.toString());
   }
 
@@ -71,10 +72,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           sender: data['sender'],
           time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
       chatMsgs!.add(newChat);
-      setState(() {
-        chatMsgs = chatMsgs;
-        scrollToBottom();
-      });
+      if (mounted) {
+        setState(() {
+          chatMsgs = chatMsgs;
+          scrollToBottom();
+        });
+      }
     });
   }
 
@@ -84,10 +87,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       debugPrint('Received noti from socket: $data');
       if (data['notification'] == 'imageUploadDone') {
         chatMsgs![chatMsgs!.length - 1].photoUrl = data['data'];
-        setState(() {
-          chatMsgs = chatMsgs;
-          scrollToBottom();
-        });
+        if (mounted) {
+          setState(() {
+            chatMsgs = chatMsgs;
+            scrollToBottom();
+          });
+        }
       }
     });
   }
@@ -122,10 +127,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           chatDump.add(chat);
         });
         //debugPrint(chatDump.toString());
-        setState(() {
-          chatMsgs = chatDump;
-          scrollToBottom();
-        });
+        if (mounted) {
+          setState(() {
+            chatMsgs = chatDump;
+            scrollToBottom();
+          });
+        }
       } else {
         // Request failed
         debugPrint('Failed to hit Express backend endpoint');
@@ -168,13 +175,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     debugPrint('split');
     // debugPrint(selectedImagePath?.split('/')[2]);
     // debugPrint(selectedImagePath);
-    setState(() {
-      chatMsgs = chatMsgs;
-      socketService.send(data);
-      if (_selectedImage == null) {
-        scrollToBottom();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        chatMsgs = chatMsgs;
+        socketService.send(data);
+        if (_selectedImage == null) {
+          scrollToBottom();
+        }
+      });
+    }
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     if (!currentFocus.hasPrimaryFocus) {
