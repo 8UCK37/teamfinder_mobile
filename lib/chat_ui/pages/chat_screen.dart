@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers
 import 'dart:convert';
 import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,12 +19,11 @@ class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
   final String profileImage;
-  final String path;
   ChatScreen(
       {required this.friendId,
       required this.name,
-      required this.profileImage,
-      required this.path});
+      required this.profileImage
+      });
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -49,20 +47,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       scrollToBottom();
     });
     incNoti();
-    checkPath();
-  }
-
-  void checkPath() {
-    if (widget.path != '') {
-      debugPrint('chatScreen');
-      debugPrint(widget.path);
-      setState(() {
-        //selectedImagePath = widget.path;
-        //_selectedImage = File(selectedImagePath!);
-      });
-    } else {
-      debugPrint('path is empty');
-    }
+    
   }
 
   void scrollToBottom() {
@@ -181,8 +166,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
     chatMsgs!.add(newChat);
     debugPrint('split');
-    debugPrint(selectedImagePath!.split('/')[2]);
-    debugPrint(selectedImagePath!);
+    // debugPrint(selectedImagePath?.split('/')[2]);
+    // debugPrint(selectedImagePath);
     setState(() {
       chatMsgs = chatMsgs;
       socketService.send(data);

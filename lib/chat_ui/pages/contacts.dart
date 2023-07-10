@@ -129,7 +129,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
                         friendId: friendList![i].id,
                         name: friendList![i].name,
                         profileImage: friendList![i].profilePicture,
-                        path:''));
+                        ));
                 Navigator.of(context).push(route);
               },
             ),

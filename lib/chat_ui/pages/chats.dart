@@ -115,7 +115,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
                       friendId:activeConvoList[i].id,
                       name: activeConvoList[i].name,
                       profileImage: activeConvoList[i].profilePicture,
-                      path:'')
+                      )
                       );
               Navigator.of(context).push(route);
             },
