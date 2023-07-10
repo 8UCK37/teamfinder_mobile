@@ -32,6 +32,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   File? _selectedImage;
   String? selectedImagePath;
+  String? typedText;
+  final TextEditingController _textController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -62,21 +64,24 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void incMsg() {
     socketService.getIncomingMsg().listen((data) {
       // Process the received data here
-      DateTime now = DateTime.now();
+
       debugPrint('Received data from socket: $data');
       // Update your screen state or perform any other actions
-      var newChat = ChatModelPojo(
-          msg: data['msg'],
-          rec: true,
-          photoUrl: null,
-          sender: data['sender'],
-          time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
-      chatMsgs!.add(newChat);
-      if (mounted) {
-        setState(() {
-          chatMsgs = chatMsgs;
-          scrollToBottom();
-        });
+      if (data['sender'] == widget.friendId) {
+        DateTime now = DateTime.now();
+        var newChat = ChatModelPojo(
+            msg: data['msg'],
+            rec: true,
+            photoUrl: null,
+            sender: data['sender'],
+            time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
+        chatMsgs!.add(newChat);
+        if (mounted) {
+          setState(() {
+            chatMsgs = chatMsgs;
+            scrollToBottom();
+          });
+        }
       }
     });
   }
@@ -359,6 +364,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     onSend: (String typedMsg) {
                       sendMsg(typedMsg);
                     },
+                    // onTextChanged: (String txt) {
+                    //   debugPrint(txt);
+                    //   if (mounted) {
+                    //     setState(() {
+                    //       typedText = txt;
+                    //     });
+                    //   }
+                    // },
                     actions: [
                       InkWell(
                         child: const Icon(
