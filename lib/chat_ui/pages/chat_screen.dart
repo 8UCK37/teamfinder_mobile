@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_bubbles.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/chat_images_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +34,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   File? _selectedImage;
   String? selectedImagePath;
   StreamSubscription<dynamic>? _socketSubscription;
+  // ignore: prefer_final_fields
   TextEditingController _textController = TextEditingController();
   @override
   void initState() {
