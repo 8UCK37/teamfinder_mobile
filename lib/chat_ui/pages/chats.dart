@@ -117,7 +117,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin {
                       profileImage: activeConvoList[i].profilePicture,
                       )
                       );
-              Navigator.of(context).push(route);
+              Navigator.of(context).pushReplacement(route);
             },
           ),
         ],

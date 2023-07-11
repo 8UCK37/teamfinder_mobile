@@ -67,10 +67,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint(_scrollController.position.maxScrollExtent.toString());
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(
-              milliseconds: (_scrollController.position.maxScrollExtent ~/ 20)),
-          curve: Curves.fastOutSlowIn);
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
 
@@ -131,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         // var res = response.body;
         // List<UserPojo> parsedactiveConvoList = userPojoFromJson(res);
         debugPrint('fetched chat');
-        
+
         var res = jsonDecode(response.body);
         //debugPrint(res.toString());
         res.forEach((data) {
@@ -144,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           chatDump.add(chat);
         });
         //debugPrint(chatDump.length.toString());
-        
+
         if (mounted) {
           setState(() {
             if (checkNewChat()) {
@@ -162,24 +159,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             }
             //debugPrint(chatDump.length.toString());
             chatMsgs = chatDump;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              debugPrint(_scrollController.position.maxScrollExtent.toString());
-              if (_scrollController.position.maxScrollExtent > 2000) {
-                _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent - 2000,
-                    duration: Duration(
-                        milliseconds:
-                            ((_scrollController.position.maxScrollExtent -
-                                    2000) ~/
-                                20)),
-                    curve: Curves.fastOutSlowIn);
-              } else {
-                _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.fastOutSlowIn);
-              }
-            });
+            scrollToBottom();
           });
         }
       } else {
@@ -286,176 +266,176 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-    onWillPop: () async {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome()));
-      return false;
-    },
-    child: Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.call),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          )
-        ],
-        title: Container(
-            child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              // padding: const EdgeInsets.fromLTRB(0, 0, 3.0, 0),
-              child: Center(
-                  child: CircleAvatar(
-                backgroundImage: NetworkImage(widget.profileImage),
-                maxRadius: 22,
-              )),
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Center(
-                    child: Text(widget.name,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 16.0)),
-                  ),
-                  const Text(
-                    "last seen. 18:00",
-                    style: TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ],
+        onWillPop: () async {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => ChatHome()));
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.call),
+                onPressed: () {},
               ),
-            ),
-          ],
-        )),
-        backgroundColor: Colors.tealAccent.shade700,
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.all(8.0),
-                reverse: false,
-                itemCount: chatMsgs!
-                    .length, //TODO:implement msg time and different bubbles for imaged msg
-                itemBuilder: (context, int i) {
-                  if (chatMsgs![i].photoUrl != null) {
-                    //debugPrint(chatMsgs![i].photoUrl);
-                    return ChatImageBubble(
-                      id: chatMsgs![i].time,
-                      imageUrl: chatMsgs![i].photoUrl!,
-                      isSender: !(chatMsgs![i].rec),
-                      text: chatMsgs![i].msg,
-                      time: chatMsgs![i].time,
-                      color: !(chatMsgs![i].rec)
-                          ? Colors.deepPurple.shade300
-                          : Colors.orangeAccent,
-                      tail: true,
-                      delivered: true,
-                    );
-                  } else {
-                    return ChatBubble(
-                      text: chatMsgs![i].msg,
-                      time: chatMsgs![i].time,
-                      isSender: !(chatMsgs![i].rec),
-                      color: !(chatMsgs![i].rec)
-                          ? Colors.deepPurple.shade300
-                          : Colors.orangeAccent,
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      subtextStyle: const TextStyle(
-                          fontSize: 13.0,
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic),
-                    );
-                  }
-                },
-              ),
-            ),
-            Visibility(
-              visible: _selectedImage != null,
-              child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
-                height: 200.0,
-                decoration: BoxDecoration(
-                  image: _selectedImage != null
-                      ? DecorationImage(
-                          image: FileImage(_selectedImage!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () {},
+              )
+            ],
+            title: Container(
+                child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  // padding: const EdgeInsets.fromLTRB(0, 0, 3.0, 0),
+                  child: Center(
+                      child: CircleAvatar(
+                    backgroundImage: NetworkImage(widget.profileImage),
+                    maxRadius: 22,
+                  )),
                 ),
-              ),
-            ),
-            //if (_selectedImage != null) Image.file(_selectedImage!),
-            const Divider(
-              height: 1.0,
-            ),
-            Container(
-              child: Column(
-                children: [
-                  ChatMessageBar(
-                    textController: _textController,
-                    onSend: (String typedMsg) {
-                      sendMsg(typedMsg);
-                    },
-                    actions: [
-                      InkWell(
-                        child: const Icon(
-                          Icons.link,
-                          color: Colors.orangeAccent,
-                          size: 24,
-                        ),
-                        onTap: () {
-                          pickImage();
-                        },
+                Container(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Center(
+                        child: Text(widget.name,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 16.0)),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8),
-                        child: InkWell(
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.green,
-                            size: 24,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CameraScreen(
-                                  friendId: widget.friendId,
-                                  name: widget.name,
-                                  profileImage: widget.profileImage,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                      const Text(
+                        "last seen. 18:00",
+                        style: TextStyle(
+                            fontSize: 13.0,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    )
-  );
+                ),
+              ],
+            )),
+            backgroundColor: Colors.tealAccent.shade700,
+          ),
+          body: Container(
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(8.0),
+                    reverse: false,
+                    itemCount: chatMsgs!
+                        .length, //TODO:implement msg time and different bubbles for imaged msg
+                    itemBuilder: (context, int i) {
+                      if (chatMsgs![i].photoUrl != null) {
+                        //debugPrint(chatMsgs![i].photoUrl);
+                        return ChatImageBubble(
+                          id: chatMsgs![i].time,
+                          imageUrl: chatMsgs![i].photoUrl!,
+                          isSender: !(chatMsgs![i].rec),
+                          text: chatMsgs![i].msg,
+                          time: chatMsgs![i].time,
+                          color: !(chatMsgs![i].rec)
+                              ? Colors.deepPurple.shade300
+                              : Colors.orangeAccent,
+                          tail: true,
+                          delivered: true,
+                        );
+                      } else {
+                        return ChatBubble(
+                          text: chatMsgs![i].msg,
+                          time: chatMsgs![i].time,
+                          isSender: !(chatMsgs![i].rec),
+                          color: !(chatMsgs![i].rec)
+                              ? Colors.deepPurple.shade300
+                              : Colors.orangeAccent,
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                          subtextStyle: const TextStyle(
+                              fontSize: 13.0,
+                              color: Colors.white,
+                              fontStyle: FontStyle.italic),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                Visibility(
+                  visible: _selectedImage != null,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 0, vertical: 0.0),
+                    height: 200.0,
+                    decoration: BoxDecoration(
+                      image: _selectedImage != null
+                          ? DecorationImage(
+                              image: FileImage(_selectedImage!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                  ),
+                ),
+                //if (_selectedImage != null) Image.file(_selectedImage!),
+                const Divider(
+                  height: 1.0,
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      ChatMessageBar(
+                        textController: _textController,
+                        onSend: (String typedMsg) {
+                          sendMsg(typedMsg);
+                        },
+                        actions: [
+                          InkWell(
+                            child: const Icon(
+                              Icons.link,
+                              color: Colors.orangeAccent,
+                              size: 24,
+                            ),
+                            onTap: () {
+                              pickImage();
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: InkWell(
+                              child: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.green,
+                                size: 24,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CameraScreen(
+                                      friendId: widget.friendId,
+                                      name: widget.name,
+                                      profileImage: widget.profileImage,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }

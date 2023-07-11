@@ -63,7 +63,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
         ),
         onPressed: (){
           var router = MaterialPageRoute(
-            builder: (BuildContext context) => Contacts());
+            builder: (BuildContext context) =>const Contacts());
             Navigator.of(context).push(router);
         },
       ),
