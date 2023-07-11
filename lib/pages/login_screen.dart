@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sign_button/sign_button.dart';
+// ignore: unused_import
 import 'package:teamfinder_mobile/reusable_widgets/square_tile.dart';
 import 'package:teamfinder_mobile/services/auth_service.dart';
 

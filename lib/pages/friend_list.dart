@@ -85,7 +85,7 @@ class _FriendListState extends State<FriendList>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text("All Friends",
+              const Text("FriendList",
                   style: TextStyle(color: Colors.deepPurple)),
               // ignore: avoid_unnecessary_containers
               Container(
