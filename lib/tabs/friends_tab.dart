@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/contacts.dart';
+import 'package:teamfinder_mobile/pages/friend_list.dart';
 
 class FriendsTab extends StatefulWidget {
   const FriendsTab({super.key});
@@ -77,7 +77,7 @@ class _FriendsTabState extends State<FriendsTab>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Contacts()),
+                            builder: (context) => const FriendList()),
                       );
                     },
                     child: Container(

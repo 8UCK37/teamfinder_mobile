@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sign_button/sign_button.dart';
 import 'package:teamfinder_mobile/reusable_widgets/square_tile.dart';
 import 'package:teamfinder_mobile/services/auth_service.dart';
 
@@ -61,11 +62,15 @@ class _LoginActivityState extends State<LoginActivity> {
                     height: 20,
                   ),
                   //signInButton(context, true, onTap)
-                 SquareTile(
-                  onTap: () => AuthService().signInWithGoogle(context) ,
-                  imagePath: 'assets/images/google.png'
-                  )
-
+                //  SquareTile(
+                //   onTap: () => AuthService().signInWithGoogle(context) ,
+                //   imagePath: 'assets/images/google.png'
+                //   ),
+              SignInButton(
+                  buttonType: ButtonType.google,
+                  onPressed: () {
+                    AuthService().signInWithGoogle(context);
+                  }),
             ],
           ),
         ),
