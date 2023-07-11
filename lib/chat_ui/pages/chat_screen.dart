@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
+import 'package:teamfinder_mobile/chat_ui/pages/chats.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
@@ -284,7 +286,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatHome()));
+      return false;
+    },
+    child: Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         actions: <Widget>[
@@ -449,6 +456,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ],
         ),
       ),
-    );
+    )
+  );
   }
 }

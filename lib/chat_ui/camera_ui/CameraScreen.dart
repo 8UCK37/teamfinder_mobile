@@ -102,7 +102,7 @@ class _CameraScreenState extends State<CameraScreen> {
                             isRecoring = false;
                           });
                           // ignore: use_build_context_synchronously
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (builder) => VideoViewPage(
@@ -167,7 +167,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void takePhoto(BuildContext context) async {
     XFile file = await _cameraController.takePicture();
     // ignore: use_build_context_synchronously
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (builder) => CameraViewPage(
