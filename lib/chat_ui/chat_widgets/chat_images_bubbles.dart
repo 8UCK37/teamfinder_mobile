@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+
 const double BUBBLE_RADIUS_IMAGE = 16;
 
 ///basic image bubble type
@@ -63,7 +64,7 @@ class ChatImageBubble extends StatelessWidget {
   }
 
   bool checkIfLocalImage(String url) {
-    return (url.split('/')[2]=='user');
+    return (url.split('/')[2] == 'user');
   }
 
   /// image bubble builder method
@@ -147,7 +148,10 @@ class ChatImageBubble extends StatelessWidget {
                                   height: 200.0,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                        image: checkIfLocalImage(imageUrl)? FileImage(File(imageUrl)) as ImageProvider<Object> :NetworkImage(imageUrl),
+                                        image: checkIfLocalImage(imageUrl)
+                                            ? FileImage(File(imageUrl))
+                                                as ImageProvider<Object>
+                                            : NetworkImage(imageUrl),
                                         fit: BoxFit.cover),
                                   ),
                                 ),

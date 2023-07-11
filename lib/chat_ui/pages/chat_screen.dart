@@ -20,8 +20,12 @@ class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
   final String profileImage;
+  final dynamic newChat;
   ChatScreen(
-      {required this.friendId, required this.name, required this.profileImage});
+      {required this.friendId,
+      required this.name,
+      required this.profileImage,
+      this.newChat});
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -45,6 +49,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     socketService.setSocketId(user!.uid);
     incMsg();
     incNoti();
+  }
+
+  bool checkNewChat() {
+    return (widget.newChat != null);
   }
 
   @override
@@ -122,6 +130,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         // var res = response.body;
         // List<UserPojo> parsedactiveConvoList = userPojoFromJson(res);
         debugPrint('fetched chat');
+        
         var res = jsonDecode(response.body);
         //debugPrint(res.toString());
         res.forEach((data) {
@@ -133,9 +142,24 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               time: data['createdAt'].toString());
           chatDump.add(chat);
         });
-        //debugPrint(chatDump.toString());
+        //debugPrint(chatDump.length.toString());
+        
         if (mounted) {
           setState(() {
+            if (checkNewChat()) {
+              //debugPrint('from camera');
+              //debugPrint(widget.newChat.toString());
+              DateTime now = DateTime.now();
+              chatDump.add(ChatModelPojo(
+                  msg: widget.newChat['msg'],
+                  rec: false,
+                  sender: user.uid,
+                  photoUrl: widget.newChat['photoUrl'],
+                  time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now)));
+            } else {
+              //debugPrint('from elsewhere');
+            }
+            //debugPrint(chatDump.length.toString());
             chatMsgs = chatDump;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               debugPrint(_scrollController.position.maxScrollExtent.toString());
@@ -151,8 +175,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               } else {
                 _scrollController.animateTo(
                     _scrollController.position.maxScrollExtent,
-                    duration:const Duration(
-                        milliseconds:200),
+                    duration: const Duration(milliseconds: 200),
                     curve: Curves.fastOutSlowIn);
               }
             });

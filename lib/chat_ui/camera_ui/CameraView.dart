@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 import '../../services/socket_service.dart';
+
 class CameraViewPage extends StatefulWidget {
   final String path;
   final String name;
@@ -24,14 +25,15 @@ class CameraViewPage extends StatefulWidget {
   _CameraViewState createState() => _CameraViewState();
 }
 
-class _CameraViewState extends State<CameraViewPage> with TickerProviderStateMixin {
+class _CameraViewState extends State<CameraViewPage>
+    with TickerProviderStateMixin {
   final SocketService socketService = SocketService();
   @override
   void initState() {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
     socketService.setupSocketConnection();
-    socketService.setSocketId(user!.uid);
+    //socketService.setSocketId(user!.uid);
   }
 
   Future<void> sendMsg(String text) async {
@@ -72,22 +74,24 @@ class _CameraViewState extends State<CameraViewPage> with TickerProviderStateMix
       debugPrint(response.data);
       if (response.statusCode == 200) {
         debugPrint('sending succ');
-        
-      // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(context,
-        // ignore: prefer_const_constructors
-        MaterialPageRoute(builder: (context) => ChatScreen(
-                  friendId: widget.friendId,
-                  name: widget.name,
-                  profileImage: widget.profileImage,
-                )));
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            context,
+            // ignore: prefer_const_constructors
+            MaterialPageRoute(
+                builder: (context) => ChatScreen(
+                      friendId: widget.friendId,
+                      name: widget.name,
+                      profileImage: widget.profileImage,
+                      newChat: {'msg':widget.caption,'photoUrl':widget.path},
+                    )));
       }
-      
     } catch (e) {
       debugPrint('Error: $e');
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
