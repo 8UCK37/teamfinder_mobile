@@ -1,12 +1,13 @@
 // ignore_for_file: avoid_unnecessary_containers
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_images_bubbles.dart';
 import '../../pojos/chat_model_pojo.dart';
@@ -33,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   File? _selectedImage;
   String? selectedImagePath;
   String? typedText;
-  final TextEditingController _textController = TextEditingController();
+  StreamSubscription<dynamic>? _socketSubscription;
   @override
   void initState() {
     super.initState();
@@ -42,30 +43,33 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     socketService.setupSocketConnection();
     socketService.setSocketId(user!.uid);
     incMsg();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollToBottom();
-    });
     incNoti();
+  }
+
+  @override
+  void dispose() {
+    // Unsubscribe the listener to avoid memory leaks
+    _socketSubscription?.cancel();
+    super.dispose();
   }
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent + 250,
-            duration: const Duration(milliseconds: 200),
+        debugPrint(_scrollController.position.maxScrollExtent.toString());
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+            duration: Duration(
+                milliseconds:
+                    (_scrollController.position.maxScrollExtent ~/ 20)),
             curve: Curves.fastOutSlowIn);
-      });
     });
-
-    //debugPrint(_scrollController.position.maxScrollExtent.toString());
   }
 
   void incMsg() {
-    socketService.getIncomingMsg().listen((data) {
+    _socketSubscription = socketService.getIncomingMsg().listen((data) {
       // Process the received data here
 
-      debugPrint('Received data from socket: $data');
+      debugPrint('Received msg from socket: $data');
+
       // Update your screen state or perform any other actions
       if (data['sender'] == widget.friendId) {
         DateTime now = DateTime.now();
@@ -75,10 +79,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             photoUrl: null,
             sender: data['sender'],
             time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
-        chatMsgs!.add(newChat);
         if (mounted) {
           setState(() {
-            chatMsgs = chatMsgs;
+            chatMsgs!.add(newChat);
             scrollToBottom();
           });
         }
@@ -87,14 +90,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   void incNoti() {
-    socketService.getIncomingNoti().listen((data) {
+    _socketSubscription = socketService.getIncomingNoti().listen((data) {
       //DateTime now = DateTime.now();
       debugPrint('Received noti from socket: $data');
-      if (data['notification'] == 'imageUploadDone') {
-        chatMsgs![chatMsgs!.length - 1].photoUrl = data['data'];
+      if (data['notification'] == 'imageUploadDone' &&
+          data['sender'] == widget.friendId) {
         if (mounted) {
           setState(() {
-            chatMsgs = chatMsgs;
+            chatMsgs![chatMsgs!.length - 1].photoUrl = data['data'];
             scrollToBottom();
           });
         }
@@ -119,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         // Request successful
         // var res = response.body;
         // List<UserPojo> parsedactiveConvoList = userPojoFromJson(res);
-        debugPrint('succ');
+        debugPrint('fetched chat');
         var res = jsonDecode(response.body);
         //debugPrint(res.toString());
         res.forEach((data) {
@@ -135,7 +138,16 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         if (mounted) {
           setState(() {
             chatMsgs = chatDump;
-            scrollToBottom();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              debugPrint(_scrollController.position.maxScrollExtent.toString());
+              _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent-2000,
+                  duration: Duration(
+                      milliseconds:
+                          ((_scrollController.position.maxScrollExtent-2000) ~/ 20)),
+                  curve: Curves.fastOutSlowIn);
+            });
+            
           });
         }
       } else {
@@ -176,13 +188,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         photoUrl: _selectedImage == null ? null : selectedImagePath,
         sender: user.uid,
         time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
-    chatMsgs!.add(newChat);
-    debugPrint('split');
+
+    // debugPrint('split');
     // debugPrint(selectedImagePath?.split('/')[2]);
     // debugPrint(selectedImagePath);
     if (mounted) {
       setState(() {
-        chatMsgs = chatMsgs;
+        chatMsgs!.add(newChat);
         socketService.send(data);
         if (_selectedImage == null) {
           scrollToBottom();
@@ -305,7 +317,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   if (chatMsgs![i].photoUrl != null) {
                     //debugPrint(chatMsgs![i].photoUrl);
                     return ChatImageBubble(
-                      id: 'id001',
+                      id: chatMsgs![i].time,
                       imageUrl: chatMsgs![i].photoUrl!,
                       isSender: !(chatMsgs![i].rec),
                       text: chatMsgs![i].msg,
@@ -360,7 +372,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             Container(
               child: Column(
                 children: [
-                  MessageBar(
+                  ChatMessageBar(
                     onSend: (String typedMsg) {
                       sendMsg(typedMsg);
                     },
