@@ -1,29 +1,66 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:teamfinder_mobile/pojos/post_pojo.dart';
+import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../services/user_service.dart';
 import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileTab extends StatefulWidget {
-   @override
+  @override
   _ProfileTabState createState() => _ProfileTabState();
-  
 }
-class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
+class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
+  List<PostPojo>? postList;
   @override
   void initState() {
     super.initState();
+    getOwnPost();
   }
-
 
   @override
   void dispose() {
     // Unsubscribe the listener to avoid memory leaks
     super.dispose();
+  }
+
+  Future<void> getOwnPost() async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    //debugPrint(user.uid.toString());
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/getPostById',
+      data: {'uid': user.uid.toString()},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      List<PostPojo> parsedPosts = postPojoFromJson(response.data);
+      setState(() {
+          postList = parsedPosts; // Update the state variable with the parsed list
+        });
+        for (var post in postList!) {
+        debugPrint('Post ID: ${post.id}');
+        debugPrint('Post Author: ${post.author}');
+        // ... Access other properties as needed
+      }
+    }
   }
 
   @override
@@ -119,16 +156,17 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         const Icon(Icons.home, color: Colors.grey, size: 30.0),
                         const SizedBox(width: 10.0),
                         Text('Lives in ${userData['userInfo']['Country']}',
-                            style: const TextStyle(fontSize: 16.0)
-                            )
+                            style: const TextStyle(fontSize: 16.0))
                       ],
                     ),
                     const SizedBox(height: 15.0),
                     Row(
                       children: <Widget>[
-                        const Icon(Icons.record_voice_over, color: Colors.grey, size: 30.0),
+                        const Icon(Icons.record_voice_over,
+                            color: Colors.grey, size: 30.0),
                         const SizedBox(width: 10.0),
-                        Text('Speaks ${userData['userInfo']['Language']}', style: TextStyle(fontSize: 16.0))
+                        Text('Speaks ${userData['userInfo']['Language']}',
+                            style: TextStyle(fontSize: 16.0))
                       ],
                     ),
                     const SizedBox(height: 15.0),
@@ -174,7 +212,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold)),
                             const SizedBox(height: 6.0),
-                            Text('536 friends',
+                            if(postList!=null)
+                            Text('You have ${postList!.length.toString()} posts',
                                 style: TextStyle(
                                     fontSize: 16.0, color: Colors.grey[800])),
                           ],
@@ -184,158 +223,16 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         //         TextStyle(fontSize: 16.0, color: Colors.blue)),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                width:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                        image: AssetImage('')),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              const SizedBox(height: 5.0),
-                              const Text('Samantha',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                width:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                        image: AssetImage('')),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              const SizedBox(height: 5.0),
-                              const Text('Andrew',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                width:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                        image: AssetImage(''),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              const SizedBox(height: 5.0),
-                              const Text('Sam Wilson',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                width:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                        image: AssetImage('')),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              const SizedBox(height: 5.0),
-                              const Text('Steven',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                width:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                        image: AssetImage('')),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              const SizedBox(height: 5.0),
-                              const Text('Greg',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                width:
-                                    MediaQuery.of(context).size.width / 3 - 20,
-                                decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                        image: AssetImage(''),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                              const SizedBox(height: 5.0),
-                              const Text('Andy',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 15.0),
-                      height: 40.0,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: const Center(
-                          child: Text('See All Friends',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0))),
-                    ),
+                    const SizedBox(height: 25),
+                    if (postList != null) // Add a null check here
+                      for (PostPojo post in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                        Column(
+                          children: <Widget>[
+                            SeparatorWidget(),
+                            PostWidget(post: post),
+                          ],
+                        ),
+                    
                   ],
                 ),
               ),
@@ -364,5 +261,3 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     );
   }
 }
-  
-

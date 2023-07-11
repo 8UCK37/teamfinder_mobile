@@ -27,7 +27,7 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
   void _fetchPosts() async {
   final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
   final user = FirebaseAuth.instance.currentUser;
-  print('fetch post called');
+  debugPrint('fetch post called');
   if (user != null) {
     final idToken = await user.getIdToken();
 
@@ -46,18 +46,18 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
           postList = parsedPosts; // Update the state variable with the parsed list
         });
       // Use the postList for further processing or display
-      for (var post in parsedPosts) {
-        print('Post ID: ${post.id}');
-        print('Post Author: ${post.author}');
-        // ... Access other properties as needed
-      }
+      // for (var post in parsedPosts) {
+      //   print('Post ID: ${post.id}');
+      //   print('Post Author: ${post.author}');
+      //   // ... Access other properties as needed
+      // }
     } else {
       // Request failed
-      print('Failed to hit Express backend endpoint');
+      debugPrint('Failed to hit Express backend endpoint');
     }
   } else {
     // User not logged in
-    print('User is not logged in');
+    debugPrint('User is not logged in');
   }
 }
 
