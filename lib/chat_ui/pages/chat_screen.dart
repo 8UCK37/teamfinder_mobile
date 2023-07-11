@@ -138,15 +138,21 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             chatMsgs = chatDump;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               debugPrint(_scrollController.position.maxScrollExtent.toString());
-              if(_scrollController.position.maxScrollExtent>0){
+              if (_scrollController.position.maxScrollExtent > 2000) {
                 _scrollController.animateTo(
-                  _scrollController.position.maxScrollExtent - 2000,
-                  duration: Duration(
-                      milliseconds:
-                          ((_scrollController.position.maxScrollExtent -
-                                  2000) ~/
-                              20)),
-                  curve: Curves.fastOutSlowIn);
+                    _scrollController.position.maxScrollExtent - 2000,
+                    duration: Duration(
+                        milliseconds:
+                            ((_scrollController.position.maxScrollExtent -
+                                    2000) ~/
+                                20)),
+                    curve: Curves.fastOutSlowIn);
+              } else {
+                _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration:const Duration(
+                        milliseconds:200),
+                    curve: Curves.fastOutSlowIn);
               }
             });
           });
@@ -377,7 +383,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     textController: _textController,
                     onSend: (String typedMsg) {
                       sendMsg(typedMsg);
-                      
                     },
                     actions: [
                       InkWell(
