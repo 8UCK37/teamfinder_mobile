@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:http/http.dart' as http;
 import 'package:getwidget/getwidget.dart';
@@ -42,7 +43,7 @@ class _FriendListState extends State<FriendList>
         var res = response.body;
         //print(res);
         // Parse the JSON response into a list of PostPojo objects
-        List<UserPojo> parsedFriendList = userPojoFromJson(res);
+        List<UserPojo> parsedFriendList = userPojoListFromJson(res);
         setState(() {
           friendList =
               parsedFriendList; // Update the state variable with the parsed list
@@ -142,8 +143,16 @@ class _FriendListState extends State<FriendList>
                         ),
                       ),
                       GFButton(
-                        onPressed: () {},
                         text: "GoTo Profile",
+                        onPressed: () {
+                          var route = MaterialPageRoute(
+                                  builder: (BuildContext context) => FriendProfilePage(
+                                        friendId: friendList![i].id,
+                                        friendName: friendList![i].name,
+                                        friendProfileImage:friendList![i].profilePicture,
+                                      ));
+                              Navigator.of(context).push(route);
+                        }
                       ),
                     ],
                   ),

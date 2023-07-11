@@ -40,7 +40,7 @@ class _ContactsState extends State<Contacts> with SingleTickerProviderStateMixin
         var res = response.body;
         //print(res);
         // Parse the JSON response into a list of PostPojo objects
-        List<UserPojo> parsedFriendList = userPojoFromJson(res);
+        List<UserPojo> parsedFriendList = userPojoListFromJson(res);
         setState(() {
           friendList = parsedFriendList; // Update the state variable with the parsed list
         });

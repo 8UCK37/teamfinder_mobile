@@ -7,23 +7,37 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
+import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../services/user_service.dart';
 import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
 
+class FriendProfilePage extends StatefulWidget {
+  final String friendName;
+  final String friendId;
+  final String friendProfileImage;
 
-class ProfileTab extends StatefulWidget {
+  const FriendProfilePage({
+    super.key,
+    required this.friendId,
+    required this.friendName,
+    required this.friendProfileImage,
+  });
   @override
-  _ProfileTabState createState() => _ProfileTabState();
+  // ignore: library_private_types_in_public_api
+  _FriendProfilePageState createState() => _FriendProfilePageState();
 }
 
-class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
+class _FriendProfilePageState extends State<FriendProfilePage>
+    with TickerProviderStateMixin {
   List<PostPojo>? postList;
+  UserPojo? friendProfile;
   @override
   void initState() {
     super.initState();
-    getOwnPost();
+    getProfileData();
+    //getFriendsPosts();
   }
 
   @override
@@ -32,7 +46,32 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> getOwnPost() async {
+  Future<void> getProfileData() async {
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    debugPrint(widget.friendId.toString());
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/getUserInfo',
+      data: {'id': widget.friendId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint('friend data fetched');
+      //debugPrint(response.data);
+      setState(() {
+        friendProfile = userPojoListFromJson(response.data)[0];
+      });
+      debugPrint(friendProfile.toString());
+    }
+  }
+
+  Future<void> getFriendsPosts() async {
     Dio dio = Dio();
 
     final user = FirebaseAuth.instance.currentUser;
@@ -51,9 +90,10 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       setState(() {
-          postList = parsedPosts; // Update the state variable with the parsed list
-        });
-        for (var post in postList!) {
+        postList =
+            parsedPosts; // Update the state variable with the parsed list
+      });
+      for (var post in postList!) {
         debugPrint('Post ID: ${post.id}');
         debugPrint('Post Author: ${post.author}');
         // ... Access other properties as needed
@@ -63,8 +103,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
-    final userData = userService.user;
     return Column(
       children: <Widget>[
         Expanded(
@@ -75,8 +113,9 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                 height: 360.0,
                 child: Stack(
                   children: <Widget>[
+                    if(friendProfile!=null)
                     CachedNetworkImage(
-                        imageUrl: userData['profileBanner'],
+                        imageUrl: friendProfile!.profileBanner,
                         imageBuilder: (context, imageProvider) => Container(
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 0, vertical: 0.0),
@@ -84,7 +123,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image:
-                                        NetworkImage(userData['profileBanner']),
+                                        NetworkImage(friendProfile!.profileBanner),
                                     fit: BoxFit.cover),
                                 borderRadius: const BorderRadius.only(
                                   bottomLeft: Radius.circular(8.0),
@@ -117,7 +156,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         padding: const EdgeInsets.only(left: 5.0, top: 25),
                         child: CircleAvatar(
                           backgroundImage:
-                              NetworkImage(userData['profilePicture']),
+                              NetworkImage(widget.friendProfileImage),
                           radius: 50.0,
                         ),
                       ),
@@ -125,7 +164,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text(userData['name'],
+                        Text(widget.friendName,
                             style: const TextStyle(
                                 fontSize: 24.0, fontWeight: FontWeight.bold)),
                         Row(
@@ -153,7 +192,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       children: <Widget>[
                         const Icon(Icons.home, color: Colors.grey, size: 30.0),
                         const SizedBox(width: 10.0),
-                        Text('Lives in ${userData['userInfo']['Country']}',
+                        Text('Lives in ${friendProfile!.userInfo!.country}',
                             style: const TextStyle(fontSize: 16.0))
                       ],
                     ),
@@ -163,7 +202,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         const Icon(Icons.record_voice_over,
                             color: Colors.grey, size: 30.0),
                         const SizedBox(width: 10.0),
-                        Text('Speaks ${userData['userInfo']['Language']}',
+                        Text('Speaks ${friendProfile!.userInfo!.language}',
                             style: TextStyle(fontSize: 16.0))
                       ],
                     ),
@@ -210,10 +249,11 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold)),
                             const SizedBox(height: 6.0),
-                            if(postList!=null)
-                            Text('You have ${postList!.length.toString()} posts',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.grey[800])),
+                            if (postList != null)
+                              Text(
+                                  'You have ${postList!.length.toString()} posts',
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.grey[800])),
                           ],
                         ),
                         // const Text('Find Friends',
@@ -223,14 +263,14 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 25),
                     if (postList != null) // Add a null check here
-                      for (PostPojo post in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                      for (PostPojo post
+                          in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                         Column(
                           children: <Widget>[
                             SeparatorWidget(),
                             PostWidget(post: post),
                           ],
                         ),
-                    
                   ],
                 ),
               ),
