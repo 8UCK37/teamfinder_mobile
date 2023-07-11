@@ -33,8 +33,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   File? _selectedImage;
   String? selectedImagePath;
-  String? typedText;
   StreamSubscription<dynamic>? _socketSubscription;
+  TextEditingController _textController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -50,26 +50,24 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void dispose() {
     // Unsubscribe the listener to avoid memory leaks
     _socketSubscription?.cancel();
+    _textController.dispose();
     super.dispose();
   }
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        debugPrint(_scrollController.position.maxScrollExtent.toString());
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: Duration(
-                milliseconds:
-                    (_scrollController.position.maxScrollExtent ~/ 20)),
-            curve: Curves.fastOutSlowIn);
+      debugPrint(_scrollController.position.maxScrollExtent.toString());
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(
+              milliseconds: (_scrollController.position.maxScrollExtent ~/ 20)),
+          curve: Curves.fastOutSlowIn);
     });
   }
 
   void incMsg() {
     _socketSubscription = socketService.getIncomingMsg().listen((data) {
       // Process the received data here
-
       debugPrint('Received msg from socket: $data');
-
       // Update your screen state or perform any other actions
       if (data['sender'] == widget.friendId) {
         DateTime now = DateTime.now();
@@ -140,14 +138,17 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             chatMsgs = chatDump;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               debugPrint(_scrollController.position.maxScrollExtent.toString());
-              _scrollController.animateTo(
-                  _scrollController.position.maxScrollExtent-2000,
+              if(_scrollController.position.maxScrollExtent>0){
+                _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent - 2000,
                   duration: Duration(
                       milliseconds:
-                          ((_scrollController.position.maxScrollExtent-2000) ~/ 20)),
+                          ((_scrollController.position.maxScrollExtent -
+                                  2000) ~/
+                              20)),
                   curve: Curves.fastOutSlowIn);
+              }
             });
-            
           });
         }
       } else {
@@ -373,17 +374,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               child: Column(
                 children: [
                   ChatMessageBar(
+                    textController: _textController,
                     onSend: (String typedMsg) {
                       sendMsg(typedMsg);
+                      
                     },
-                    // onTextChanged: (String txt) {
-                    //   debugPrint(txt);
-                    //   if (mounted) {
-                    //     setState(() {
-                    //       typedText = txt;
-                    //     });
-                    //   }
-                    // },
                     actions: [
                       InkWell(
                         child: const Icon(
