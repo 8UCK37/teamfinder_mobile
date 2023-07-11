@@ -1,7 +1,9 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../services/user_service.dart';
 import '../widgets/separator_widget.dart';
@@ -22,7 +24,9 @@ class ProfileTab extends StatelessWidget {
             height: 360.0,
             child: Stack(
               children: <Widget>[
-                Container(
+                CachedNetworkImage(
+                imageUrl: userData['profileBanner'],
+                imageBuilder: (context, imageProvider) => Container(
                   margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
                   height: 200.0,
                   decoration: BoxDecoration(
@@ -32,6 +36,24 @@ class ProfileTab extends StatelessWidget {
                     bottomRight: Radius.circular(8.0),
                   ),
                   ),
+                ),
+                 placeholder: (contex, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 0.0),
+                                height: 200.0,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(8.0),
+                                    bottomRight: Radius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                errorWidget: (context,url,error)=>Image.asset('assets/images/error-404.png')
                 ),
                 const SizedBox(height: 20.0),
                 Align(
