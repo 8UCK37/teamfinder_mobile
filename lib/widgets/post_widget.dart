@@ -47,14 +47,14 @@ class PostWidget extends StatelessWidget {
             imageUrl: post.photoUrl,
             placeholder:(contex,url)=> Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
+              highlightColor: Colors.white,
               child: Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
                 height: 200.0,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(6),
                 ),
               ),
             ),

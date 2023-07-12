@@ -94,7 +94,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                             ),
                         placeholder: (contex, url) => Shimmer.fromColors(
                               baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
+                              highlightColor: Colors.white,
                               child: Container(
                                 margin: const EdgeInsets.symmetric(
                                     horizontal: 0, vertical: 0.0),

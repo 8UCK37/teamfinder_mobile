@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
+import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/socket_service.dart';
 import '../services/user_service.dart';
 import '../tabs/friends_tab.dart';
@@ -81,21 +82,34 @@ class _HomePageState extends State<HomePage>
             children: <Widget>[
               const Row(
                 children: <Widget>[
-                  Text('TeamFinder',
-                      style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 27.0,
-                          fontWeight: FontWeight.bold)),
+                  Row(
+                    children: [
+                      Text('TeamFinder',
+                          style: TextStyle(
+                              color: Colors.deepPurple,
+                              fontSize: 25.0,
+                              fontWeight: FontWeight.bold)),
+                              
+                    ],
+                  ),
                 ],
               ),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 GestureDetector(
                   onTap: () {
                     debugPrint('search clicked');
-
-                    
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SearchPage()),
+                    );
                   },
-                  child: const Icon(Icons.search, color: Colors.black),
+                  child:const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 20,
+                      child: Icon(Icons.search, color: Colors.black),
+                      ),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -106,14 +120,17 @@ class _HomePageState extends State<HomePage>
                       MaterialPageRoute(builder: (context) => ChatHome()),
                     );
                   },
-                  child: Icon(Icons.chat, color: Colors.deepPurple),
+                  child:const CircleAvatar(
+                    radius: 20,
+                    child: Icon(Icons.question_answer, color: Colors.deepPurple),
+                    ),
                 ),
               ]),
             ]),
         backgroundColor: Colors.white,
         elevation: 0.0,
         bottom: TabBar(
-          key: Key('tabBar'),
+          key:const Key('tabBar'),
           indicatorColor: Colors.deepPurple,
           controller: _tabController,
           unselectedLabelColor: Colors.grey,
@@ -129,12 +146,13 @@ class _HomePageState extends State<HomePage>
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: TabBarView(controller: _tabController, children: [
-        HomeTab(),
+        const HomeTab(),
         ProfileTab(),
-        FriendsTab(),
+        const FriendsTab(),
         NotificationsTab(),
         MenuTab(_tabController),
       ]),
     );
   }
 }
+ 
