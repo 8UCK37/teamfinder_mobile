@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:searchbar_animation/searchbar_animation.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/widgets/search_bar.dart';
 
@@ -12,20 +11,15 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  late FocusNode _searchBarFocusNode;
+
   @override
   void initState() {
     super.initState();
-    _searchBarFocusNode = FocusNode();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_searchBarFocusNode);
-    });
     
   }
     
   @override
   void dispose() {
-    _searchBarFocusNode.dispose();
     super.dispose();
   }
   @override
@@ -112,6 +106,7 @@ Widget _buildSearchbarAnimation(context) {
                           textEditingController: TextEditingController(),
                           isOriginalAnimation: true,
                           enableKeyboardFocus: true,
+                          durationInMilliSeconds: 450,
                           onExpansionComplete: () {
                             debugPrint(
                                 'do something just after searchbox is opened.');
