@@ -329,8 +329,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     controller: _scrollController,
                     padding: const EdgeInsets.all(8.0),
                     reverse: false,
-                    itemCount: chatMsgs!
-                        .length, //TODO:implement msg time and different bubbles for imaged msg
+                    itemCount: chatMsgs!.length, 
                     itemBuilder: (context, int i) {
                       if (chatMsgs![i].photoUrl != null) {
                         //debugPrint(chatMsgs![i].photoUrl);

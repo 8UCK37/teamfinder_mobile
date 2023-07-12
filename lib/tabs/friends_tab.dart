@@ -10,7 +10,7 @@ class FriendsTab extends StatefulWidget {
 }
 
 class _FriendsTabState extends State<FriendsTab>
-    with SingleTickerProviderStateMixin {
+  with SingleTickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   GlobalKey _targetWidgetKey = GlobalKey();
   @override

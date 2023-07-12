@@ -182,10 +182,9 @@ class _CustomSearchBarState extends State<CustomSearchBar>
       debugPrint('mounted');
       //_onTapFunction();
       // Programmatically click the search button after a delay
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _onTapFunctionOriginalAnim();
-    });
-      
+      Future.delayed(const Duration(milliseconds: 200), () {
+        _onTapFunctionOriginalAnim();
+      });
     }
   }
 

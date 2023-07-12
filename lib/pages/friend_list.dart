@@ -118,9 +118,9 @@ class _FriendListState extends State<FriendList>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                        friendList![i].name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    friendList![i].name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Row(
                     children: [
                       Padding(
@@ -139,34 +139,27 @@ class _FriendListState extends State<FriendList>
                                       ));
                               Navigator.of(context).push(route);
                             },
-                            child: const Icon(Icons.chat)
-                        ),
+                            child: const Icon(Icons.chat)),
                       ),
                       GFButton(
-                        text: "GoTo Profile",
-                        onPressed: () {
-                          var route = MaterialPageRoute(
-                                  builder: (BuildContext context) => FriendProfilePage(
-                                        friendId: friendList![i].id,
-                                        friendName: friendList![i].name,
-                                        friendProfileImage:friendList![i].profilePicture,
-                                      ));
-                              Navigator.of(context).push(route);
-                        }
-                      ),
+                          text: "GoTo Profile",
+                          onPressed: () {
+                            var route = MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    FriendProfilePage(
+                                      friendId: friendList![i].id,
+                                      friendName: friendList![i].name,
+                                      friendProfileImage:
+                                          friendList![i].profilePicture,
+                                    ));
+                            Navigator.of(context).push(route);
+                          }),
                     ],
                   ),
-                  
                 ],
               ),
               onTap: () {
-                var route = MaterialPageRoute(
-                    builder: (BuildContext context) => ChatScreen(
-                          friendId: friendList![i].id,
-                          name: friendList![i].name,
-                          profileImage: friendList![i].profilePicture,
-                        ));
-                Navigator.of(context).push(route);
+                debugPrint('list tile clicked');
               },
             ),
           ],

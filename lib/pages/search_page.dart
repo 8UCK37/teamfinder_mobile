@@ -1,6 +1,13 @@
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:getwidget/components/button/gf_button.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
+import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
+import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/widgets/search_bar.dart';
 
 class SearchPage extends StatefulWidget {
@@ -11,21 +18,50 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
+  final TextEditingController _textController = TextEditingController();
+  late List<UserPojo>? userList = [];
+  String? userInp;
+  
   @override
   void initState() {
     super.initState();
-    
   }
-    
+
   @override
   void dispose() {
     super.dispose();
   }
+
+  void searchUser() async {
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    debugPrint('from search userinp ${userInp}');
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/searchFriend',
+      data: {'searchTerm': userInp},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint('user data searched');
+      //debugPrint(response.data);
+      setState(() {
+        userList = userPojoListFromJson(response.data);
+      });
+      debugPrint(userList.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +85,6 @@ class _SearchPageState extends State<SearchPage> {
                       GestureDetector(
                         onTap: () {
                           debugPrint('goto chat');
-
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => ChatHome()),
@@ -61,30 +96,26 @@ class _SearchPageState extends State<SearchPage> {
                               color: Colors.deepPurple),
                         ),
                       ),
-                    ]),
+                    ]
+                  ),
               ]),
           backgroundColor: Colors.white,
           elevation: 0.0,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
-      body: _buildSearchbarAnimation(context)
-    );
-  }
-}
-Widget _buildSearchbarAnimation(context) {
-    return  Container(
+        body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0, 1],
-            colors: [
-              Colors.deepPurple,
-              Color.fromARGB(255, 185, 162, 162),
-            ],
-          ),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0, 1],
+              colors: [
+                Colors.deepPurple,
+                Color.fromARGB(255, 185, 162, 162),
+              ],
+            ),
           ),
           child: Column(
             children: [
@@ -103,10 +134,17 @@ Widget _buildSearchbarAnimation(context) {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: CustomSearchBar(
-                          textEditingController: TextEditingController(),
+                          textEditingController: _textController,
                           isOriginalAnimation: true,
                           enableKeyboardFocus: true,
                           durationInMilliSeconds: 450,
+                          onChanged: (String typedTxt) {
+                            debugPrint(typedTxt);
+                            setState(() {
+                              userInp = typedTxt;
+                              searchUser();
+                            });
+                          },
                           onExpansionComplete: () {
                             debugPrint(
                                 'do something just after searchbox is opened.');
@@ -140,8 +178,43 @@ Widget _buildSearchbarAnimation(context) {
                   ),
                 ),
               ),
+              Expanded(child: ListView.builder(
+        itemCount: userList?.length,
+        itemBuilder: (context, i) => Column(
+          children: <Widget>[
+            const Divider(
+              height: 22.0,
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                maxRadius: 25,
+                backgroundImage: NetworkImage(userList![i].profilePicture),
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                        userList![i].name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                  
+                ],
+              ),
+              onTap: () {
+                var route = MaterialPageRoute(builder: (BuildContext context) => FriendProfilePage(
+                          friendId: userList![i].id,
+                          friendName: userList![i].name,
+                          friendProfileImage:userList![i].profilePicture,
+                                      ));
+                        Navigator.of(context).push(route);
+              },
+            ),
+          ],
+        ),
+      ))
             ],
           ),
-        );
-    
+        )
+    );
   }
+}
