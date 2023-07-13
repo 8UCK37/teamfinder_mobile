@@ -41,14 +41,18 @@ class _OnlineWidgetState extends State<OnlineWidget>
       //debugPrint('Received noti from socket: $data');
       if (data['notification'] == 'disc') {
         //debugPrint('${data['sender']} disconnected');
-        setState(() {
-          onlineMap![data['sender']] = false;
-        });
+        if (mounted) {
+          setState(() {
+            onlineMap![data['sender']] = false;
+          });
+        }
       } else if (data['notification'] == 'online') {
         //debugPrint('${data['sender']} is now online');
-        setState(() {
+        if (mounted) {
+          setState(() {
           onlineMap![data['sender']] = true;
         });
+        }
       }
     });
   }

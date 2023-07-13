@@ -63,9 +63,9 @@ Widget build(BuildContext context) {
     child: Column(
       children: <Widget>[
         const Divider(),
-        WriteSomethingWidget(),
-        const SeparatorWidget(),
         const OnlineWidget(),
+        const SeparatorWidget(),
+        const WriteSomethingWidget(),
         //SeparatorWidget(),
         //StoriesWidget(),
         if (postList != null) // Add a null check here
