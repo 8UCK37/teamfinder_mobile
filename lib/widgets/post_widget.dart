@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:newsfeed_multiple_imageview/newsfeed_multiple_imageview.dart';
-
-import 'package:shimmer/shimmer.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
 

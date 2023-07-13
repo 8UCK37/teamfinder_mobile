@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:newsfeed_multiple_imageview/newsfeed_multiple_imageview.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:teamfinder_mobile/widgets/carousel_widget.dart';
 
 class ImageGrid extends StatelessWidget {
   final List<String> imageUrls;
@@ -18,14 +19,8 @@ class ImageGrid extends StatelessWidget {
         children:
             imageUrls.map((url) => _buildCachedNetworkImage(url)).toList(),
       );
-    } else if (imageUrls.length == 2) {
-      return GridView.count(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        children:
-            imageUrls.map((url) => _buildCachedNetworkImage(url)).toList(),
-      );
+    } else if (imageUrls.length > 1 && imageUrls.length <= 3) {
+      return CustomCarousel(images:imageUrls);
     } else {
       return _advancedGrid(imageUrls);
     }
@@ -66,4 +61,5 @@ class ImageGrid extends StatelessWidget {
       marginTop: 10.0,
     );
   }
+
 }
