@@ -90,14 +90,8 @@ class _FriendProfilePageState extends State<FriendProfilePage>
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       setState(() {
-        postList =
-            parsedPosts; // Update the state variable with the parsed list
+        postList =parsedPosts; // Update the state variable with the parsed list
       });
-      for (var post in postList!) {
-        debugPrint('Post ID: ${post.id}');
-        debugPrint('Post Author: ${post.author}');
-        // ... Access other properties as needed
-      }
     }
   }
 

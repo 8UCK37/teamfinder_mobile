@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:newsfeed_multiple_imageview/newsfeed_multiple_imageview.dart';
+
 import 'package:shimmer/shimmer.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
+import 'package:teamfinder_mobile/widgets/image_grid.dart';
 
 class PostWidget extends StatelessWidget {
 
@@ -52,32 +55,9 @@ class PostWidget extends StatelessWidget {
             child: Text(post.description!, style: const TextStyle(fontSize: 15.0)),
           ),
           const SizedBox(height: 5.0),
-          CachedNetworkImage(
-            imageUrl: (post.shared==null)? post.photoUrl!:post.parentpost!.photoUrl!,
-            placeholder:(contex,url)=> Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.white,
-              child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
-                height: 200.0,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-            ),
-            errorWidget: (context,url,error)=>Image.asset('assets/images/error-404.png'),
-            imageBuilder: (context, imageProvider) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
-              height: 200.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage((post.shared==null)? post.photoUrl!:post.parentpost!.photoUrl!), fit: BoxFit.cover),
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-          ),
+           
+          ImageGrid(imageUrls:  (post.shared==null)? post.photoUrl!.split(','):post.parentpost!.photoUrl!.split(',')),
+          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[

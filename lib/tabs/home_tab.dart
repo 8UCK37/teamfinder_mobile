@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../pojos/post_pojo.dart';
@@ -45,21 +43,8 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
       // Parse the JSON response into a list of PostPojo objects
       List<PostPojo> parsedPosts = postPojoFromJson(res);
       setState(() {
-        for (var post in parsedPosts) {
-        if (post.shared != null) {
-          //debugPrint(post.toString());
-          //debugPrint('post id:${post.id} ');
-          //debugPrint('shared: ${post.shared}');
-          //debugPrint('parentPost: ${post.parentpost}');
-          
-          debugPrint(post.parentpost.toString());
-        } else {
-          debugPrint('shared: ${post.shared}');
-        }
-        
-      }
           postList = parsedPosts; // Update the state variable with the parsed list
-        });
+      });
      
     } else {
       // Request failed
@@ -77,21 +62,21 @@ Widget build(BuildContext context) {
   return SingleChildScrollView(
     child: Column(
       children: <Widget>[
-        Divider(),
+        const Divider(),
         WriteSomethingWidget(),
-        SeparatorWidget(),
-        OnlineWidget(),
+        const SeparatorWidget(),
+        const OnlineWidget(),
         //SeparatorWidget(),
         //StoriesWidget(),
         if (postList != null) // Add a null check here
           for (PostPojo post in postList!) // Add a null check here
             Column(
               children: <Widget>[
-                SeparatorWidget(),
+                const SeparatorWidget(),
                 PostWidget(post: post),
               ],
             ),
-        SeparatorWidget(),
+        const SeparatorWidget(),
       ],
     ),
   );

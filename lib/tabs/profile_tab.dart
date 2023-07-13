@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,19 +50,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       setState(() {
-        for (var post in parsedPosts) {
-        if (post.shared != null) {
-          //debugPrint(post.toString());
-          //debugPrint('post id:${post.id} ');
-          //debugPrint('shared: ${post.shared}');
-          //debugPrint('parentPost: ${post.parentpost}');
-          
-          debugPrint(post.parentpost.toString());
-        } else {
-          debugPrint('shared: ${post.shared}');
-        }
-        
-      }
         postList = parsedPosts; // Update the state variable with the parsed list
       });
       
@@ -235,18 +220,18 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 25),
                     if (postList != null) // Add a null check here
-                      for (PostPojo post
-                          in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                      for (PostPojo post in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                         Column(
                           children: <Widget>[
-                            SeparatorWidget(),
+                            const SeparatorWidget(),
                             PostWidget(post: post),
                           ],
                         ),
+                      const SeparatorWidget(),
                   ],
                 ),
               ),
-              SeparatorWidget(),
+              const SeparatorWidget(),
             ],
           )),
         ),
