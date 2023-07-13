@@ -30,7 +30,7 @@ class PostWidget extends StatelessWidget {
           Row(
             children: <Widget>[
               CircleAvatar(
-                backgroundImage: NetworkImage(post.profilePicture),
+                backgroundImage: NetworkImage(post.profilePicture!),
                 radius: 20.0,
               ),
               const SizedBox(width: 7.0),
@@ -38,7 +38,7 @@ class PostWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(post.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
+                  Text(post.name!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
                   const SizedBox(height: 5.0),
                   Text(convertToLocalTime(post.createdAt))
                 ],
@@ -49,11 +49,11 @@ class PostWidget extends StatelessWidget {
           const SizedBox(height: 20.0),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(post.description, style: const TextStyle(fontSize: 15.0)),
+            child: Text(post.description!, style: const TextStyle(fontSize: 15.0)),
           ),
           const SizedBox(height: 5.0),
           CachedNetworkImage(
-            imageUrl: (post.shared==null)? post.photoUrl:post.parentpost['photoUrl'],
+            imageUrl: (post.shared==null)? post.photoUrl!:post.parentpost!.photoUrl!,
             placeholder:(contex,url)=> Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.white,
@@ -73,7 +73,7 @@ class PostWidget extends StatelessWidget {
               height: 200.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage((post.shared==null)? post.photoUrl:post.parentpost['photoUrl']), fit: BoxFit.cover),
+                    image: NetworkImage((post.shared==null)? post.photoUrl!:post.parentpost!.photoUrl!), fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(6),
               ),
             ),

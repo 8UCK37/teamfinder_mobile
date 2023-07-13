@@ -58,9 +58,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
           //debugPrint('post id:${post.id} ');
           //debugPrint('shared: ${post.shared}');
           //debugPrint('parentPost: ${post.parentpost}');
-          final parentPost = json.decode(post.parentpost!);
-          post.parentpost = parentPost;
-          debugPrint(post.parentpost['photoUrl'].toString());
+          
+          debugPrint(post.parentpost.toString());
         } else {
           debugPrint('shared: ${post.shared}');
         }

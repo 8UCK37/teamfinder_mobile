@@ -12,23 +12,23 @@ class PostPojo {
     int id;
     String author;
     DateTime createdAt;
-    String description;
-    String photoUrl;
+    String? description;
+    String? photoUrl;
     bool deleted;
-    Mention mention;
+    Mention? mention;
     int? shared;
-    String raw;
+    String? raw;
     dynamic tagnames;
-    String name;
-    String profilePicture;
+    String? name;
+    String? profilePicture;
     dynamic reactiontype;
-    bool noreaction;
+    bool? noreaction;
     String? likecount;
     String? hahacount;
     String? sadcount;
     String? lovecount;
     String? poopcount;
-    dynamic parentpost;
+    PostPojo? parentpost;
     Parentpostauthor parentpostauthor;
 
     PostPojo({
@@ -55,29 +55,33 @@ class PostPojo {
         required this.parentpostauthor,
     });
 
-    factory PostPojo.fromJson(Map<String, dynamic> json) => PostPojo(
-        id: json["id"],
-        author: json["author"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        description: json["description"],
-        photoUrl: json["photoUrl"]?? 'null',
-        deleted: json["deleted"],
-        mention: Mention.fromJson(json["mention"]),
-        shared: json["shared"],
-        raw: json["raw"],
-        tagnames: json["tagnames"],
-        name: json["name"],
-        profilePicture: json["profilePicture"],
-        reactiontype: json["reactiontype"],
-        noreaction: json["noreaction"],
-        likecount: json["likecount"],
-        hahacount: json["hahacount"],
-        sadcount: json["sadcount"],
-        lovecount: json["lovecount"],
-        poopcount: json["poopcount"],
-        parentpost: json["parentpost"] ,
-        parentpostauthor: Parentpostauthor.fromJson(json["parentpostauthor"]),
-    );
+  factory PostPojo.fromJson(Map<String, dynamic> json) {
+    final post = PostPojo(
+    id: json["id"],
+    author: json["author"],
+    createdAt: DateTime.parse(json["createdAt"]),
+    description: json["description"],
+    photoUrl: json["photoUrl"],
+    deleted: json["deleted"],
+    mention: Mention.fromJson(json["mention"]),
+    shared: json["shared"],
+    raw: json["raw"],
+    tagnames: json["tagnames"],
+    name: json["name"],
+    profilePicture: json["profilePicture"],
+    reactiontype: json["reactiontype"],
+    noreaction: json["noreaction"],
+    likecount: json["likecount"],
+    hahacount: json["hahacount"],
+    sadcount: json["sadcount"],
+    lovecount: json["lovecount"],
+    poopcount: json["poopcount"],
+    parentpost: json["parentpost"] != null ? PostPojo.fromJson(jsonDecode(json["parentpost"])) : null,
+    parentpostauthor: Parentpostauthor.fromJson(json["parentpostauthor"]),
+  );
+
+  return post;
+}
 
     Map<String, dynamic> toJson() => {
         "id": id,
@@ -86,7 +90,7 @@ class PostPojo {
         "description": description,
         "photoUrl": photoUrl,
         "deleted": deleted,
-        "mention": mention.toJson(),
+        "mention": mention?.toJson(),
         "shared": shared,
         "raw": raw,
         "tagnames": tagnames,
@@ -121,17 +125,17 @@ class Mention {
 }
 
 class Parentpostauthor {
-    String name;
-    String profilePicture;
+    String? name;
+    String? profilePicture;
 
     Parentpostauthor({
         required this.name,
         required this.profilePicture,
     });
 
-    factory Parentpostauthor.fromJson(Map<String, dynamic> json) => Parentpostauthor(
-        name: json["name"]?? 'null',
-        profilePicture: json["profilePicture"] ?? 'null',
+    factory Parentpostauthor.fromJson(Map<String, dynamic>? json) => Parentpostauthor(
+        name: json?["name"],
+        profilePicture: json?["profilePicture"],
     );
 
     Map<String, dynamic> toJson() => {
