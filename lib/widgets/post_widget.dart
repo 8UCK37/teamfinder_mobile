@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 
@@ -11,7 +12,15 @@ class PostWidget extends StatelessWidget {
   PostWidget({
     required this.post
   });
+  String convertToLocalTime(DateTime dateTime) {
+    
+    DateTime localDateTime = dateTime.toLocal();
+    String formattedTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(localDateTime);
+    //var splicedTime = formattedTime.split(" ")[1].split(":");
 
+    return formattedTime.toString();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +40,7 @@ class PostWidget extends StatelessWidget {
                 children: <Widget>[
                   Text(post.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
                   const SizedBox(height: 5.0),
-                  Text(post.author)
+                  Text(convertToLocalTime(post.createdAt))
                 ],
               ),
             ],
@@ -44,7 +53,7 @@ class PostWidget extends StatelessWidget {
           ),
           const SizedBox(height: 5.0),
           CachedNetworkImage(
-            imageUrl: post.photoUrl,
+            imageUrl: (post.shared==null)? post.photoUrl:post.parentpost['photoUrl'],
             placeholder:(contex,url)=> Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.white,
@@ -64,7 +73,7 @@ class PostWidget extends StatelessWidget {
               height: 200.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(post.photoUrl), fit: BoxFit.cover),
+                    image: NetworkImage((post.shared==null)? post.photoUrl:post.parentpost['photoUrl']), fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(6),
               ),
             ),

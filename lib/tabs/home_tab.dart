@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../pojos/post_pojo.dart';
@@ -43,14 +45,23 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
       // Parse the JSON response into a list of PostPojo objects
       List<PostPojo> parsedPosts = postPojoFromJson(res);
       setState(() {
+        for (var post in parsedPosts) {
+        if (post.shared != null) {
+          //debugPrint(post.toString());
+          //debugPrint('post id:${post.id} ');
+          //debugPrint('shared: ${post.shared}');
+          //debugPrint('parentPost: ${post.parentpost}');
+          final parentPost = json.decode(post.parentpost!);
+          post.parentpost = parentPost;
+          debugPrint(post.parentpost['photoUrl'].toString());
+        } else {
+          debugPrint('shared: ${post.shared}');
+        }
+        
+      }
           postList = parsedPosts; // Update the state variable with the parsed list
         });
-      // Use the postList for further processing or display
-      // for (var post in parsedPosts) {
-      //   print('Post ID: ${post.id}');
-      //   print('Post Author: ${post.author}');
-      //   // ... Access other properties as needed
-      // }
+     
     } else {
       // Request failed
       debugPrint('Failed to hit Express backend endpoint');

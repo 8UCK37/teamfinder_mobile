@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +12,6 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../services/user_service.dart';
 import '../widgets/separator_widget.dart';
-
 
 class ProfileTab extends StatefulWidget {
   @override
@@ -51,13 +52,23 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       setState(() {
-          postList = parsedPosts; // Update the state variable with the parsed list
-        });
-        for (var post in postList!) {
-        debugPrint('Post ID: ${post.id}');
-        debugPrint('Post Author: ${post.author}');
-        // ... Access other properties as needed
+        for (var post in parsedPosts) {
+        if (post.shared != null) {
+          //debugPrint(post.toString());
+          //debugPrint('post id:${post.id} ');
+          //debugPrint('shared: ${post.shared}');
+          //debugPrint('parentPost: ${post.parentpost}');
+          final parentPost = json.decode(post.parentpost!);
+          post.parentpost = parentPost;
+          debugPrint(post.parentpost['photoUrl'].toString());
+        } else {
+          debugPrint('shared: ${post.shared}');
+        }
+        
       }
+        postList = parsedPosts; // Update the state variable with the parsed list
+      });
+      
     }
   }
 
@@ -123,20 +134,19 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top:190,left:10),
+                        padding: const EdgeInsets.only(top: 190, left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Text(userData['name'],
                                 style: const TextStyle(
                                     fontSize: 24.0,
-                                    fontWeight: FontWeight.bold)
-                                ),
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                       )
                     ],
-                  ),    
+                  ),
                 ],
               ),
               Container(
@@ -204,10 +214,11 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold)),
                             const SizedBox(height: 6.0),
-                            if(postList!=null)
-                            Text('You have ${postList!.length.toString()} posts',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.grey[800])),
+                            if (postList != null)
+                              Text(
+                                  'You have ${postList!.length.toString()} posts',
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.grey[800])),
                           ],
                         ),
                         // const Text('Find Friends',
@@ -221,19 +232,18 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                             color: Colors.white,
                           ),
                         ),
-
                       ],
                     ),
                     const SizedBox(height: 25),
                     if (postList != null) // Add a null check here
-                      for (PostPojo post in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                      for (PostPojo post
+                          in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                         Column(
                           children: <Widget>[
                             SeparatorWidget(),
                             PostWidget(post: post),
                           ],
                         ),
-                    
                   ],
                 ),
               ),

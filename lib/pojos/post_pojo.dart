@@ -28,7 +28,7 @@ class PostPojo {
     String? sadcount;
     String? lovecount;
     String? poopcount;
-    String? parentpost;
+    dynamic parentpost;
     Parentpostauthor parentpostauthor;
 
     PostPojo({
