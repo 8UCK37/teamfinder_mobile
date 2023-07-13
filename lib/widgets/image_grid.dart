@@ -12,24 +12,9 @@ class ImageGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageUrls.length == 1) {
-      return GridView.count(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 1,
-        children:
-            imageUrls.map((url) => _buildCachedNetworkImage(url)).toList(),
-      );
-    } else if (imageUrls.length > 1 && imageUrls.length <= 3) {
-      return CustomCarousel(images:imageUrls);
-    } else {
-      return _advancedGrid(imageUrls);
-    }
-  }
-
-  Widget _buildCachedNetworkImage(String url) {
-    return CachedNetworkImage(
-      imageUrl: url,
-      placeholder: (context, url) => Shimmer.fromColors(
+      return CachedNetworkImage(
+        imageUrl: imageUrls[0],
+        placeholder: (context, url) => Shimmer.fromColors(
         baseColor: Colors.purpleAccent.shade200,
         highlightColor: Colors.white,
         child: Container(
@@ -40,16 +25,12 @@ class ImageGrid extends StatelessWidget {
           ),
         ),
       ),
-      errorWidget: (context, url, error) =>
-          Image.asset('assets/images/error-404.png'),
-      imageBuilder: (context, imageProvider) => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
-        decoration: BoxDecoration(
-          image: DecorationImage(image: imageProvider, fit: BoxFit.contain),
-          borderRadius: BorderRadius.circular(6),
-        ),
-      ),
-    );
+      );
+    } else if (imageUrls.length > 1 && imageUrls.length <= 3) {
+      return CustomCarousel(images:imageUrls);
+    } else {
+      return _advancedGrid(imageUrls);
+    }
   }
 
   Widget _advancedGrid(List<String> imageList) {

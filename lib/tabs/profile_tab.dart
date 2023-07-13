@@ -70,28 +70,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                 children: <Widget>[
                   CachedNetworkImage(
                       imageUrl: userData['profileBanner'],
-                      imageBuilder: (context, imageProvider) => Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 0.0),
-                            height: 200.0,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      NetworkImage(userData['profileBanner']),
-                                  fit: BoxFit.cover),
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0),
-                              ),
-                            ),
-                          ),
                       placeholder: (contex, url) => Shimmer.fromColors(
                             baseColor: Colors.purpleAccent,
                             highlightColor: Colors.white,
                             child: Container(
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 0, vertical: 0.0),
-                              height: 200.0,
+                              
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
@@ -109,7 +94,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 5.0, top: 150),
+                          padding: const EdgeInsets.only(left: 5.0, top: 175),
                           child: CircleAvatar(
                             backgroundImage:
                                 NetworkImage(userData['profilePicture']),
@@ -118,7 +103,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 190, left: 10),
+                        padding: const EdgeInsets.only(top: 200, left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
@@ -133,6 +118,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   ),
                 ],
               ),
+              const Divider(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Column(

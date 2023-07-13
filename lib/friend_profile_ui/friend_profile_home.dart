@@ -171,28 +171,12 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                     children: <Widget>[
                       CachedNetworkImage(
                           imageUrl: friendProfile!.profileBanner,
-                          imageBuilder: (context, imageProvider) => Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 0.0),
-                                height: 200.0,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          friendProfile!.profileBanner),
-                                      fit: BoxFit.cover),
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(8.0),
-                                    bottomRight: Radius.circular(8.0),
-                                  ),
-                                ),
-                              ),
                           placeholder: (contex, url) => Shimmer.fromColors(
                                 baseColor: Colors.purpleAccent,
                                 highlightColor: Colors.white,
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 0, vertical: 0.0),
-                                  height: 200.0,
                                   decoration: const BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.only(
@@ -211,7 +195,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                             alignment: Alignment.centerLeft,
                             child: Padding(
                               padding:
-                                  const EdgeInsets.only(left: 5.0, top: 150),
+                                  const EdgeInsets.only(left: 5.0, top: 200),
                               child: CircleAvatar(
                                 backgroundImage:
                                     NetworkImage(friendProfile!.profilePicture),
@@ -220,7 +204,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 190, left: 10),
+                            padding: const EdgeInsets.only(top: 255, left: 10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
@@ -235,6 +219,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                       ),
                     ],
                   ),
+                  const Divider(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
@@ -316,7 +301,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                       ],
                     ),
                   ),
-                  SeparatorWidget(),
+                  const SeparatorWidget(),
                 ],
               )),
             ),
