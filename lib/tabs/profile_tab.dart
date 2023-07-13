@@ -10,11 +10,11 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../services/user_service.dart';
 import '../widgets/separator_widget.dart';
-import '../widgets/write_something_widget.dart';
 
 
 class ProfileTab extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileTabState createState() => _ProfileTabState();
 }
 
@@ -71,79 +71,73 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
           child: SingleChildScrollView(
               child: Column(
             children: <Widget>[
-              Container(
-                height: 360.0,
-                child: Stack(
-                  children: <Widget>[
-                    CachedNetworkImage(
-                        imageUrl: userData['profileBanner'],
-                        imageBuilder: (context, imageProvider) => Container(
+              Stack(
+                children: <Widget>[
+                  CachedNetworkImage(
+                      imageUrl: userData['profileBanner'],
+                      imageBuilder: (context, imageProvider) => Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 0.0),
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image:
+                                      NetworkImage(userData['profileBanner']),
+                                  fit: BoxFit.cover),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                      placeholder: (contex, url) => Shimmer.fromColors(
+                            baseColor: Colors.purpleAccent,
+                            highlightColor: Colors.white,
+                            child: Container(
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 0, vertical: 0.0),
                               height: 200.0,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        NetworkImage(userData['profileBanner']),
-                                    fit: BoxFit.cover),
-                                borderRadius: const BorderRadius.only(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(8.0),
                                   bottomRight: Radius.circular(8.0),
                                 ),
                               ),
                             ),
-                        placeholder: (contex, url) => Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.white,
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 0.0),
-                                height: 200.0,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(8.0),
-                                    bottomRight: Radius.circular(8.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                        errorWidget: (context, url, error) =>
-                            Image.asset('assets/images/error-404.png')),
-                    const SizedBox(height: 20.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0, top: 25),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(userData['profilePicture']),
-                          radius: 50.0,
+                          ),
+                      errorWidget: (context, url, error) =>
+                          Image.asset('assets/images/error-404.png')),
+                  //const SizedBox(height: 20.0),
+                  Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5.0, top: 150),
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(userData['profilePicture']),
+                            radius: 50.0,
+                          ),
                         ),
                       ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Text(userData['name'],
-                            style: const TextStyle(
-                                fontSize: 24.0, fontWeight: FontWeight.bold)),
-                        Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      Padding(
+                        padding: const EdgeInsets.only(top:190,left:10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Container(
-                              child: WriteSomethingWidget(),
-                            )
+                            Text(userData['name'],
+                                style: const TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold)
+                                ),
                           ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
-                child: Divider(height: 40.0),
+                        ),
+                      )
+                    ],
+                  ),    
+                ],
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -164,7 +158,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                             color: Colors.grey, size: 30.0),
                         const SizedBox(width: 10.0),
                         Text('Speaks ${userData['userInfo']['Language']}',
-                            style: TextStyle(fontSize: 16.0))
+                            style: const TextStyle(fontSize: 16.0))
                       ],
                     ),
                     const SizedBox(height: 15.0),
@@ -180,13 +174,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     Container(
                       height: 40.0,
                       decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent.withOpacity(0.25),
+                        color: Colors.deepPurpleAccent.withOpacity(0.25),
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       child: const Center(
                           child: Text('Edit Profile',
                               style: TextStyle(
-                                  color: Colors.blue,
+                                  color: Colors.deepPurpleAccent,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.0))),
                     ),
@@ -219,6 +213,15 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         // const Text('Find Friends',
                         //     style:
                         //         TextStyle(fontSize: 16.0, color: Colors.blue)),
+                        const CircleAvatar(
+                          backgroundColor: Colors.deepPurpleAccent,
+                          radius: 25,
+                          child: Icon(
+                            Icons.post_add,
+                            color: Colors.white,
+                          ),
+                        ),
+
                       ],
                     ),
                     const SizedBox(height: 25),
