@@ -8,9 +8,7 @@ class PostWidget extends StatelessWidget {
 
   final PostPojo post;
 
-  PostWidget({
-    required this.post
-  });
+  const PostWidget({super.key, required this.post});
   String convertToLocalTime(DateTime dateTime) {
     
     DateTime localDateTime = dateTime.toLocal();
@@ -44,14 +42,55 @@ class PostWidget extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 20.0),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(post.description!, style: const TextStyle(fontSize: 15.0)),
           ),
-          const SizedBox(height: 5.0),
-           
+          if(post.shared!=null)
+          Container(
+            //color: const Color.fromARGB(110, 222, 221, 221),
+            decoration: const BoxDecoration(
+                color: Color.fromARGB(110, 222, 221, 221), // Set the desired background color here
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  topRight: Radius.circular(10.0),
+                ),
+              ),
+            child: Column(children:<Widget> [
+              Padding(
+                padding: const EdgeInsets.only(top:8,left:16),
+                child: Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(post.parentpostauthor.profilePicture!),
+                    radius: 20.0,
+                  ),
+                  const SizedBox(width: 7.0),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(post.parentpostauthor.name!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0)),
+                      const SizedBox(height: 5.0),
+                      Text(convertToLocalTime(post.parentpost!.createdAt))
+                    ],
+                  ),
+                ],
+                        ),
+              ),
+            const SizedBox(height: 20.0),
+            Padding(
+              padding: const EdgeInsets.only(top:8,left:16),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(post.parentpost!.description!, style: const TextStyle(fontSize: 15.0)),
+              ),
+            ),
+            ],
+            ),
+          ),
+          //const SizedBox(height: 5.0),
           ImageGrid(imageUrls:  (post.shared==null)? post.photoUrl!.split(','):post.parentpost!.photoUrl!.split(',')),
           
           Row(
