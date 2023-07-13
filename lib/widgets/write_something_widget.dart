@@ -4,15 +4,18 @@ import 'package:provider/provider.dart';
 import '../services/user_service.dart';
 
 class WriteSomethingWidget extends StatelessWidget {
+  const WriteSomethingWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
     final userData = userService.user;
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -22,11 +25,11 @@ class WriteSomethingWidget extends StatelessWidget {
                   backgroundImage: NetworkImage(userData['profilePicture'] ?? ''),
                 ),
 
-                SizedBox(width: 7.0),
+                const SizedBox(width: 7.0),
 
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  height: 70.0,
+                  height: 50.0,
                   width: MediaQuery.of(context).size.width/1.4,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -35,7 +38,9 @@ class WriteSomethingWidget extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(30.0)
                   ),
-                  child: Text('Write something here...'),
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Write something here...')),
                 )
               ],
             ),

@@ -38,14 +38,14 @@ class _OnlineWidgetState extends State<OnlineWidget>
   void incNoti() {
     _socketSubscription = socketService.getIncomingNoti().listen((data) {
       //DateTime now = DateTime.now();
-      debugPrint('Received noti from socket: $data');
+      //debugPrint('Received noti from socket: $data');
       if (data['notification'] == 'disc') {
-        debugPrint('${data['sender']} disconnected');
+        //debugPrint('${data['sender']} disconnected');
         setState(() {
           onlineMap![data['sender']] = false;
         });
       } else if (data['notification'] == 'online') {
-        debugPrint('${data['sender']} is now online');
+        //debugPrint('${data['sender']} is now online');
         setState(() {
           onlineMap![data['sender']] = true;
         });
