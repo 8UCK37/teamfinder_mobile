@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
+import 'package:teamfinder_mobile/pages/menu_pages/games_screen.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/settings.dart';
 import 'package:teamfinder_mobile/pages/onboarding_page.dart';
 import '../services/auth_service.dart';
@@ -57,12 +58,14 @@ class MenuTab extends StatelessWidget {
                   const SizedBox(width: 120),
                   GestureDetector(
                     onTap: () => {AuthService().signOut(context)},
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Icon(Icons.logout, size: 40.0, color: Colors.grey[700]),
-                        const SizedBox(width: 10.0),
-                        const Text('Logout', style: TextStyle(fontSize: 17.0)),
+                        Icon(Icons.logout,
+                            size: 40.0,
+                            color: Color.fromARGB(255, 182, 86, 86)),
+                        SizedBox(width: 10.0),
+                        Text('Logout', style: TextStyle(fontSize: 17.0)),
                       ],
                     ),
                   ),
@@ -80,32 +83,45 @@ class MenuTab extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.sports_esports,
-                          color: Colors.deepPurpleAccent.shade200, size: 30.0),
-                      const SizedBox(height: 5.0),
-                      const Text('Games',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
-                  ),
-                ),
                 GestureDetector(
-                  onTap:(){           //TODO currently linked to onboarding page
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ConcentricAnimationOnboarding()),
+                          builder: (context) =>
+                              const GamesPage()),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2 - 20,
+                    height: 85.0,
+                    padding: const EdgeInsets.only(left: 20.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1.0, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.sports_esports,
+                            color: Colors.deepPurpleAccent.shade200,
+                            size: 30.0),
+                        const SizedBox(height: 5.0),
+                        const Text('Games',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    //TODO currently linked to onboarding page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const ConcentricAnimationOnboarding()),
                     );
                   },
                   child: Container(
@@ -120,7 +136,8 @@ class MenuTab extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Icon(Icons.account_tree,
-                            color: Colors.deepPurpleAccent.shade200, size: 30.0),
+                            color: Colors.deepPurpleAccent.shade200,
+                            size: 30.0),
                         const SizedBox(height: 5.0),
                         const Text('Linked accounts',
                             style: TextStyle(
@@ -177,7 +194,6 @@ class MenuTab extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => const SettingsPage()),
                     );
-
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2 - 30,
