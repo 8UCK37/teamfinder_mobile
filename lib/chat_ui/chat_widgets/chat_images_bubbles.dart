@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:io';
 
 const double BUBBLE_RADIUS_IMAGE = 16;
 
@@ -142,19 +142,17 @@ class ChatImageBubble extends StatelessWidget {
                                   ? CrossAxisAlignment.end
                                   : CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 0, vertical: 0.0),
+                                CachedNetworkImage(
+                                  imageUrl: imageUrl,
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  fit: BoxFit.fill,
                                   height: 200.0,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: checkIfLocalImage(imageUrl)
-                                            ? FileImage(File(imageUrl))
-                                                as ImageProvider<Object>
-                                            : NetworkImage(imageUrl),
-                                        fit: BoxFit.cover),
-                                  ),
+                                  width:200.0
                                 ),
+                               
                                 Padding(
                                   padding: stateTick
                                       ? const EdgeInsets.only(right: 20)

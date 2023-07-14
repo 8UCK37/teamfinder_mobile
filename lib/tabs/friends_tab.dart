@@ -1,11 +1,10 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
-import 'package:teamfinder_mobile/pojos/user_pojo.dart';
+
 
 class FriendsTab extends StatefulWidget {
   const FriendsTab({super.key});
@@ -229,9 +228,9 @@ class _FriendsTabState extends State<FriendsTab>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 35.0, vertical: 10.0),
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 16, 153, 78),
+                        color:const Color.fromARGB(255, 16, 153, 78),
                         borderRadius: BorderRadius.circular(5.0)),
-                    child: const Text('Confirm',
+                    child: const Text('Accept',
                         style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 15.0)),
                   ),
                   const SizedBox(width: 10.0),
@@ -239,9 +238,9 @@ class _FriendsTabState extends State<FriendsTab>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 35.0, vertical: 10.0),
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 229, 61, 61),
+                        color:const Color.fromARGB(255, 229, 61, 61),
                         borderRadius: BorderRadius.circular(5.0)),
-                    child: const Text('Delete',
+                    child: const Text('Reject',
                         style: TextStyle(color: Colors.black, fontSize: 15.0)),
                   ),
                 ],
