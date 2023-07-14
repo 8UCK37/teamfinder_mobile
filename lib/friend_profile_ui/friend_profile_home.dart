@@ -200,7 +200,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                               ),
                             ),
                           ),
-                          Padding(         //TODO:have to do something about the varying heightof the banner image
+                          Padding(         
                             padding: const EdgeInsets.only(top: 185, left: 10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,

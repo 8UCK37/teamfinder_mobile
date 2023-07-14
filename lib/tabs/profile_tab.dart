@@ -99,7 +99,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      Padding(            //TODO:have to do something about the varying height of the banner image
+                      Padding(            
                         padding: const EdgeInsets.only(top: 185, left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
