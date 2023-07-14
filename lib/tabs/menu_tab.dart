@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/settings.dart';
+import 'package:teamfinder_mobile/pages/onboarding_page.dart';
 import '../services/auth_service.dart';
 import '../services/user_service.dart';
 
@@ -99,24 +100,33 @@ class MenuTab extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 30,
-                  height: 85.0,
-                  padding: const EdgeInsets.only(left: 20.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Icon(Icons.account_tree,
-                          color: Colors.deepPurpleAccent.shade200, size: 30.0),
-                      const SizedBox(height: 5.0),
-                      const Text('Linked accounts',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.bold))
-                    ],
+                GestureDetector(
+                  onTap:(){           //TODO currently linked to onboarding page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ConcentricAnimationOnboarding()),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2 - 30,
+                    height: 85.0,
+                    padding: const EdgeInsets.only(left: 20.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1.0, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.account_tree,
+                            color: Colors.deepPurpleAccent.shade200, size: 30.0),
+                        const SizedBox(height: 5.0),
+                        const Text('Linked accounts',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold))
+                      ],
+                    ),
                   ),
                 )
               ],

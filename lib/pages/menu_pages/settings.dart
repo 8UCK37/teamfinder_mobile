@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
-import 'package:teamfinder_mobile/services/auth_service.dart';
+
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: <Widget>[
                     Row(
                       children: [
-                        Text('TeamFinder Settings',
+                        Text('Settings',
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontSize: 25.0,
@@ -77,8 +77,10 @@ class _SettingsPageState extends State<SettingsPage> {
                               color: Colors.black),
                         ),
                       ),
-                    ]),
-              ]),
+                    ]
+                ),
+              ]
+            ),
           backgroundColor: Colors.white,
           elevation: 0.0,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -88,6 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
             constraints: const BoxConstraints(maxWidth: 400),
             child: ListView(
               children: [
+                const Divider(thickness: 4,),
                 _SingleSection(
                   title: "General",
                   children: [
