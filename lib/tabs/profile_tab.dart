@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../services/user_service.dart';
@@ -68,33 +67,31 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  CachedNetworkImage(
-                      imageUrl: userData['profileBanner'],
-                      placeholder: (contex, url) => Shimmer.fromColors(
-                            baseColor: Colors.purpleAccent,
-                            highlightColor: Colors.white,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 0.0),
-                              
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(8.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                      errorWidget: (context, url, error) =>
-                          Image.asset('assets/images/error-404.png')),
+                  Container(
+                    height:
+                        200.0, // Set the desired fixed height for the banner
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                      ),
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                            userData['profileBanner']),
+                        fit: BoxFit
+                            .cover, // Set the fit property to determine how the image should be fitted
+                      ),
+                    ),
+                  ),
+
                   //const SizedBox(height: 20.0),
                   Row(
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 5.0, top: 175),
+                          padding: const EdgeInsets.only(left: 5.0, top: 150),
                           child: CircleAvatar(
                             backgroundImage:
                                 NetworkImage(userData['profilePicture']),
@@ -102,8 +99,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      Padding(            //TODO:have to do something about the varying heightof the banner image
-                        padding: const EdgeInsets.only(top: 200, left: 10),
+                      Padding(            //TODO:have to do something about the varying height of the banner image
+                        padding: const EdgeInsets.only(top: 185, left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
