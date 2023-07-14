@@ -40,25 +40,25 @@ class _WatchTabState extends State<WatchTab> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                 child: Text('Watch', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
               ),
 
               Container(
                 height: 60.0,
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    SizedBox(width: 15.0),
+                    const SizedBox(width: 15.0),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40.0),
                         color: Colors.grey[300]
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -69,15 +69,15 @@ class _WatchTabState extends State<WatchTab> {
                       ),
                     ),
 
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
 
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40.0),
                         color: Colors.grey[300]
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -88,15 +88,15 @@ class _WatchTabState extends State<WatchTab> {
                       ),
                     ),      
 
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
 
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40.0),
                         color: Colors.grey[300]
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -107,15 +107,15 @@ class _WatchTabState extends State<WatchTab> {
                       ),
                     ), 
 
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
 
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40.0),
                         color: Colors.grey[300]
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -126,15 +126,15 @@ class _WatchTabState extends State<WatchTab> {
                       ),
                     ), 
 
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
 
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40.0),
                         color: Colors.grey[300]
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -145,17 +145,17 @@ class _WatchTabState extends State<WatchTab> {
                       ),
                     ), 
 
-                    SizedBox(width: 15.0),         
+                    const SizedBox(width: 15.0),         
                   ],
                 ),
               ),
 
-              SeparatorWidget(),
+              const SeparatorWidget(),
 
               Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                     child: Row(
                       children: <Widget>[
                         CircleAvatar(
@@ -176,14 +176,14 @@ class _WatchTabState extends State<WatchTab> {
                     ),
                   ),
 
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
 
                   YoutubePlayer(controller: _controller1),
 
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -203,13 +203,13 @@ class _WatchTabState extends State<WatchTab> {
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Divider(height: 30.0),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,14 +241,14 @@ class _WatchTabState extends State<WatchTab> {
                 ],
               ),
 
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
 
-              SeparatorWidget(),
+              const SeparatorWidget(),
 
               Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(15.0, 15.0, 0.0, 0.0),
                     child: Row(
                       children: <Widget>[
                         CircleAvatar(
@@ -269,14 +269,14 @@ class _WatchTabState extends State<WatchTab> {
                     ),
                   ),
 
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
 
                   YoutubePlayer(controller: _controller2),
 
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -296,13 +296,13 @@ class _WatchTabState extends State<WatchTab> {
                     ),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Divider(height: 30.0),
                   ),
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -334,9 +334,9 @@ class _WatchTabState extends State<WatchTab> {
                 ],
               ),
 
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
 
-              SeparatorWidget(),
+              const SeparatorWidget(),
             ],
           )
         ),

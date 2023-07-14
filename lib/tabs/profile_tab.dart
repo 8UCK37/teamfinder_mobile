@@ -214,27 +214,27 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              
             ],
           )),
         ),
-        const GNav(gap: 8, tabs: [
-          GButton(
-            icon: Icons.receipt_long,
-            text: 'Posts',
-            textColor: Colors.deepPurple,
-          ),
-          GButton(
-            icon: Icons.sports_esports,
-            text: 'Games',
-            textColor: Colors.deepOrange,
-          ),
-          GButton(
-            icon: Icons.link,
-            text: 'Linked Acc',
-            textColor: Colors.blue,
-          ),
-        ]),
+      //   const GNav(gap: 8, tabs: [
+      //     GButton(
+      //       icon: Icons.receipt_long,
+      //       text: 'Posts',
+      //       textColor: Colors.deepPurple,
+      //     ),
+      //     GButton(
+      //       icon: Icons.sports_esports,
+      //       text: 'Games',
+      //       textColor: Colors.deepOrange,
+      //     ),
+      //     GButton(
+      //       icon: Icons.link,
+      //       text: 'Linked Acc',
+      //       textColor: Colors.blue,
+      //     ),
+      //   ]
+      //  ),
       ],
     );
   }
