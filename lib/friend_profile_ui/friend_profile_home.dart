@@ -241,13 +241,13 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                           ],
                         ),
                         const SizedBox(height: 15.0),
-                        const Row(
+                         Row(
                           children: <Widget>[
-                            Icon(Icons.more_horiz,
+                            const Icon(Icons.more_horiz,
                                 color: Colors.grey, size: 30.0),
-                            SizedBox(width: 10.0),
-                            Text('See your About Info',
-                                style: TextStyle(fontSize: 16.0))
+                            const SizedBox(width: 10.0),
+                            Text("See ${friendProfile!.name}'s About Info",
+                                style: const TextStyle(fontSize: 16.0))
                           ],
                         ),
                         const SizedBox(height: 15.0),
@@ -307,16 +307,19 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                 icon: Icons.receipt_long,
                 text: 'Posts',
                 textColor: Colors.deepPurple,
+                iconActiveColor: Colors.deepPurple,
               ),
               GButton(
                 icon: Icons.sports_esports,
                 text: 'Games',
                 textColor: Colors.deepOrange,
+                iconActiveColor: Colors.deepOrange,
               ),
               GButton(
                 icon: Icons.link,
                 text: 'Linked Acc',
                 textColor: Colors.blue,
+                iconActiveColor: Colors.blue,
               ),
             ]),
           ],

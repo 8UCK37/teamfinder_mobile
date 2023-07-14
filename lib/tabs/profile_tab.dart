@@ -214,7 +214,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              const SeparatorWidget(),
+              
             ],
           )),
         ),
