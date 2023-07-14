@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
+import 'package:teamfinder_mobile/services/auth_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -51,9 +52,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CircleAvatar(
-                            backgroundColor: _isDark? Colors.white: Colors.deepPurple,
+                            backgroundColor:
+                                _isDark ? Colors.white : Colors.deepPurple,
                             radius: 20,
-                            child: const Icon(Icons.search, color: Colors.black),
+                            child:
+                                const Icon(Icons.search, color: Colors.black),
                           ),
                         ),
                       ),
@@ -67,7 +70,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         },
                         child: CircleAvatar(
-                          backgroundColor: _isDark? Colors.white: Colors.deepPurple,
+                          backgroundColor:
+                              _isDark ? Colors.white : Colors.deepPurple,
                           radius: 20,
                           child: const Icon(Icons.question_answer,
                               color: Colors.black),
@@ -129,8 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         icon: Icons.help_outline_rounded),
                     _CustomListTile(
                         title: "About", icon: Icons.info_outline_rounded),
-                    _CustomListTile(
-                        title: "Sign out", icon: Icons.exit_to_app_rounded),
+                    
                   ],
                 ),
               ],
