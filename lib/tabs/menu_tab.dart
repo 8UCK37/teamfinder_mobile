@@ -28,50 +28,71 @@ class MenuTab extends StatelessWidget {
             child: Text('Menu',
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
           ),
-          Row(
-            children: <Widget>[
-              const SizedBox(width: 15.0),
-              CircleAvatar(
-                radius: 25.0,
-                backgroundImage: NetworkImage(userData['profilePicture']),
-              ),
-              const SizedBox(width: 20.0),
-              Row(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(userData['name'],
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0)),
-                      const SizedBox(height: 5.0),
-                      GestureDetector(
-                        onTap: () => {tabController.animateTo(1)},
-                        child: const Text(
-                          'See your profile',
-                          style: TextStyle(color: Colors.grey),
-                        ),
+          Center(
+            child: SizedBox(
+              height: 80,
+             width: MediaQuery.of(context).size.width*0.94,
+              child: Card(
+                elevation: 5,
+                surfaceTintColor: Colors.amberAccent,
+                shadowColor: Colors.deepPurpleAccent,
+                child: Row(
+                  children: <Widget>[
+                    //const SizedBox(height:15,width: 15.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left:8.0),
+                      child: CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: NetworkImage(userData['profilePicture']),
                       ),
-                    ],
-                  ),
-                  const SizedBox(width: 120),
-                  GestureDetector(
-                    onTap: () => {AuthService().signOut(context)},
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Icon(Icons.logout,
-                            size: 40.0,
-                            color: Color.fromARGB(255, 182, 86, 86)),
-                        SizedBox(width: 10.0),
-                        Text('Logout', style: TextStyle(fontSize: 17.0)),
+                    ),
+                    //const SizedBox(width: 20.0),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left:8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(userData['name'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 18.0)),
+                              //const SizedBox(height: 5.0),
+                              GestureDetector(
+                                onTap: () => {tabController.animateTo(1)},
+                                child: const Text(
+                                  'See your profile',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        //const SizedBox(width: 120),
+                        Padding(
+                          padding: EdgeInsets.only(left:MediaQuery.of(context).size.width*.3),
+                          child: GestureDetector(
+                            onTap: () => {AuthService().signOut(context)},
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Icon(Icons.logout,
+                                    size: 30.0,
+                                    color: Color.fromARGB(255, 182, 86, 86)),
+                                
+                                 Center(child: Text('Logout', style: TextStyle(fontSize: 15.0))),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.0),

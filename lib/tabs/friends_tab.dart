@@ -90,7 +90,10 @@ class _FriendsTabState extends State<FriendsTab>
                       TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
               const SizedBox(height: 15.0),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  //const SizedBox(width: 10.0),
                   GestureDetector(
                     onTap: () {
                       debugPrint('scroll  to suggestions');
@@ -107,7 +110,7 @@ class _FriendsTabState extends State<FriendsTab>
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   ),
-                  const SizedBox(width: 10.0),
+                  //const SizedBox(width: 10.0),
                   GestureDetector(
                     onTap: () {
                       debugPrint('go to contacts');
@@ -128,7 +131,7 @@ class _FriendsTabState extends State<FriendsTab>
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   ),
-                  const SizedBox(width: 10.0),
+                  //const SizedBox(width: 10.0),
                   GestureDetector(
                     onTap: () {
                       scrollToWidget(_outgoingReqWidgetkey);
