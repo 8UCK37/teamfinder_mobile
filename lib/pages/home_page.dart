@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage>
       ),
       body: TabBarView(controller: _tabController, children: [
         const HomeTab(),
-        ProfileTab(),
+        const ProfileTab(),
         const FriendsTab(),
         NotificationsTab(),
         MenuTab(_tabController),

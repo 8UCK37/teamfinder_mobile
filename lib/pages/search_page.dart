@@ -19,7 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _textController = TextEditingController();
   late List<UserPojo>? userList = [];
   String? userInp;
-  
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +34,13 @@ class _SearchPageState extends State<SearchPage> {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
+    // ignore: prefer_is_empty
+    if (userInp?.length == 0) {
+      setState(() {
+        userList = [];
+      });
+      return;
+    }
     debugPrint('from search userinp ${userInp}');
     Options options = Options(
       headers: {
@@ -60,7 +67,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -94,8 +101,7 @@ class _SearchPageState extends State<SearchPage> {
                               color: Colors.deepPurple),
                         ),
                       ),
-                    ]
-                  ),
+                    ]),
               ]),
           backgroundColor: Colors.white,
           elevation: 0.0,
@@ -176,43 +182,46 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
               ),
-              Expanded(child: ListView.builder(
-        itemCount: userList?.length,
-        itemBuilder: (context, i) => Column(
-          children: <Widget>[
-            const Divider(
-              height: 22.0,
-            ),
-            ListTile(
-              leading: CircleAvatar(
-                maxRadius: 25,
-                backgroundImage: NetworkImage(userList![i].profilePicture),
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                        userList![i].name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+              Expanded(
+                  child: ListView.builder(
+                itemCount: userList?.length,
+                itemBuilder: (context, i) => Column(
+                  children: <Widget>[
+                    const Divider(
+                      height: 22.0,
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        maxRadius: 25,
+                        backgroundImage:
+                            NetworkImage(userList![i].profilePicture),
                       ),
-                  
-                ],
-              ),
-              onTap: () {
-                var route = MaterialPageRoute(builder: (BuildContext context) => FriendProfilePage(
-                          friendId: userList![i].id,
-                          friendName: userList![i].name,
-                          friendProfileImage:userList![i].profilePicture,
-                                      ));
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            userList![i].name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        var route = MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                FriendProfilePage(
+                                  friendId: userList![i].id,
+                                  friendName: userList![i].name,
+                                  friendProfileImage:
+                                      userList![i].profilePicture,
+                                ));
                         Navigator.of(context).push(route);
-              },
-            ),
-          ],
-        ),
-      ))
+                      },
+                    ),
+                  ],
+                ),
+              ))
             ],
           ),
-        )
-    );
+        ));
   }
 }
