@@ -247,12 +247,14 @@ class _AddNewGamesState extends State<AddNewGames>
           onPressed: () {
             debugPrint('save');
             buildSelectedString();
+            
           },
         ));
   }
 
   void _displaySuccessMotionToast() {
     MotionToast toast = MotionToast.success(
+      toastDuration: const Duration(seconds: 3),
       title: const Text(
         'Sucess!!',
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -266,9 +268,6 @@ class _AddNewGamesState extends State<AddNewGames>
       dismissable: true,
     );
     toast.show(context);
-    Future.delayed(const Duration(seconds: 3)).then((value) {
-      toast.dismiss();
-    });
   }
 }
 
@@ -286,11 +285,6 @@ class _CustomGrid extends State<CustomGrid>
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

@@ -84,8 +84,8 @@ class _GamesPageState extends State<GamesPage> {
             }
           }
         }
+        showcase.sort((a, b) => b['playtime_forever'].compareTo(a['playtime_forever']) as int);
         ownedGames = gamesList;
-        
       });
     }
   }
@@ -204,7 +204,7 @@ class _GamesPageState extends State<GamesPage> {
         onPressed: () {
           debugPrint('add new games page');
           //debugPrint(ownedGames.toString());
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => AddNewGames(
