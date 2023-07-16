@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/widgets/search_bar.dart';
@@ -52,7 +54,7 @@ class _AddNewGamesState extends State<AddNewGames>
   void buildSelectedString() async {
     setState(() {
       selected = '';
-      debugPrint(selected);
+      //debugPrint(selected);
       for (dynamic game in ownedGames) {
         if (game['selected']) {
           if (selected == '') {
@@ -64,7 +66,7 @@ class _AddNewGamesState extends State<AddNewGames>
         }
       }
     });
-    debugPrint(selected);
+    //debugPrint(selected);
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
@@ -80,6 +82,7 @@ class _AddNewGamesState extends State<AddNewGames>
     );
     if (response.statusCode == 200) {
       debugPrint('saved fav games');
+      _displaySuccessMotionToast();
     }
   }
 
@@ -246,6 +249,26 @@ class _AddNewGamesState extends State<AddNewGames>
             buildSelectedString();
           },
         ));
+  }
+
+  void _displaySuccessMotionToast() {
+    MotionToast toast = MotionToast.success(
+      title: const Text(
+        'Sucess!!',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      description: const Text(
+        'Your fav games are saved',
+        style: TextStyle(fontSize: 12),
+      ),
+      layoutOrientation: ToastOrientation.ltr,
+      animationType: AnimationType.fromLeft,
+      dismissable: true,
+    );
+    toast.show(context);
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      toast.dismiss();
+    });
   }
 }
 
