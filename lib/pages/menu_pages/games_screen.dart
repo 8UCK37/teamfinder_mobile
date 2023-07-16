@@ -194,6 +194,7 @@ class _GamesPageState extends State<GamesPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        splashColor: Colors.blueAccent,
         backgroundColor: const Color.fromARGB(
             255, 22, 125, 99), //Theme.of(context).accentColor
         child: const Icon(

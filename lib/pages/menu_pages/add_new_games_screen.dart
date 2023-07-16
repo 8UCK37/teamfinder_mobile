@@ -1,7 +1,10 @@
 // ignore_for_file: unnecessary_overrides, duplicate_ignore
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/widgets/search_bar.dart';
@@ -18,6 +21,7 @@ class AddNewGames extends StatefulWidget {
 class _AddNewGamesState extends State<AddNewGames>
     with TickerProviderStateMixin {
   dynamic ownedGames;
+  late String selected;
   bool isKeyboardVisible = false;
   final TextEditingController _textController = TextEditingController();
   bool searchOpened = false;
@@ -45,158 +49,203 @@ class _AddNewGamesState extends State<AddNewGames>
     super.dispose();
   }
 
+  void buildSelectedString() async {
+    setState(() {
+      selected = '';
+      debugPrint(selected);
+      for (dynamic game in ownedGames) {
+        if (game['selected']) {
+          if (selected == '') {
+            selected += game['appid'].toString();
+          } else {
+            // ignore: prefer_interpolation_to_compose_strings
+            selected += ',' + game['appid'].toString();
+          }
+        }
+      }
+    });
+    debugPrint(selected);
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/gameSelect',
+      data: {'appid': selected},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint('saved fav games');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        title: Column(
-          children: [
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const Row(
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Text('TeamFinder',
-                              style: TextStyle(
-                                  color: Colors.deepPurple,
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          title: Column(
+            children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    const Row(
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            debugPrint('search clicked');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SearchPage()),
-                            );
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Material(
+                        Row(
+                          children: [
+                            Text('TeamFinder',
+                                style: TextStyle(
+                                    color: Colors.deepPurple,
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              debugPrint('search clicked');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SearchPage()),
+                              );
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Material(
+                                elevation: 5,
+                                shadowColor: Colors.grey,
+                                shape: CircleBorder(),
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  child: Icon(Icons.search,
+                                      color: Colors.blueGrey),
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              debugPrint('goto chat');
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatHome()),
+                              );
+                            },
+                            child: const Material(
                               elevation: 5,
                               shadowColor: Colors.grey,
                               shape: CircleBorder(),
                               child: CircleAvatar(
                                 radius: 20,
-                                child:
-                                    Icon(Icons.search, color: Colors.blueGrey),
+                                child: Icon(Icons.question_answer,
+                                    color: Colors.deepPurple),
                               ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            debugPrint('goto chat');
-    
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatHome()),
-                            );
-                          },
-                          child: const Material(
-                            elevation: 5,
-                            shadowColor: Colors.grey,
-                            shape: CircleBorder(),
-                            child: CircleAvatar(
-                              radius: 20,
-                              child: Icon(Icons.question_answer,
-                                  color: Colors.deepPurple),
-                            ),
-                          ),
-                        ),
-                      ]),
-                ]),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        //systemOverlayStyle: SystemUiOverlayStyle.light,
-      ),
-      body: Column(
-        children: [
-        const Row(
-          children: [
-            SizedBox(
-              width: 10,
-            ),
-            Text('Here are the games you own...',
-                style: TextStyle(
-                    color: Colors.deepPurpleAccent,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold)),
-          ],
-        ),
-        Row(
-          children: [
-            CustomSearchBar(
-              enableBoxShadow: true,
-              searchBoxWidth: MediaQuery.of(context).size.width * .80,
-              autoOpenOnInit: false,
-              textEditingController: _textController,
-              isOriginalAnimation: true,
-              enableKeyboardFocus: true,
-              durationInMilliSeconds: 450,
-              onChanged: (String typedTxt) {
-                debugPrint(typedTxt);
-              },
-              onExpansionComplete: () {
-                debugPrint('do something just after searchbox is opened.');
-              },
-              onCollapseComplete: () {
-                debugPrint('do something just after searchbox is closed.');
-              },
-              onPressButton: (isSearchBarOpens) {
-                debugPrint('do something before animation started. It\'s the ${isSearchBarOpens ? 'opening' : 'closing'} animation');
-                setState(() {
-                  if (isSearchBarOpens) {
-                    searchOpened = true;
-                  } else {
-                    Future.delayed(const Duration(milliseconds: 140), () {
-                      searchOpened = false;
-                    });
-                  }
-                });
-              },
-              trailingWidget: const Icon(
-                Icons.search,
-                size: 20,
-                color: Colors.black,
-              ),
-              secondaryButtonWidget: const Icon(
-                Icons.close,
-                size: 20,
-                color: Colors.black,
-              ),
-              buttonWidget: const Icon(
-                Icons.search,
-                size: 20,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height-170,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: CustomGrid(items: ownedGames),
+                        ]),
+                  ]),
+            ],
           ),
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          //systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
-      ]
-      ),
-    );
+        body: Column(children: [
+          const Row(
+            children: [
+              SizedBox(
+                width: 10,
+              ),
+              Text('Here are the games you own...',
+                  style: TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Row(
+            children: [
+              CustomSearchBar(
+                enableBoxShadow: true,
+                searchBoxWidth: MediaQuery.of(context).size.width * .80,
+                autoOpenOnInit: false,
+                textEditingController: _textController,
+                isOriginalAnimation: true,
+                enableKeyboardFocus: true,
+                durationInMilliSeconds: 450,
+                onChanged: (String typedTxt) {
+                  debugPrint(typedTxt);
+                },
+                onExpansionComplete: () {
+                  debugPrint('do something just after searchbox is opened.');
+                },
+                onCollapseComplete: () {
+                  debugPrint('do something just after searchbox is closed.');
+                },
+                onPressButton: (isSearchBarOpens) {
+                  debugPrint(
+                      'do something before animation started. It\'s the ${isSearchBarOpens ? 'opening' : 'closing'} animation');
+                  setState(() {
+                    if (isSearchBarOpens) {
+                      searchOpened = true;
+                    } else {
+                      Future.delayed(const Duration(milliseconds: 140), () {
+                        searchOpened = false;
+                      });
+                    }
+                  });
+                },
+                trailingWidget: const Icon(
+                  Icons.search,
+                  size: 20,
+                  color: Colors.black,
+                ),
+                secondaryButtonWidget: const Icon(
+                  Icons.close,
+                  size: 20,
+                  color: Colors.black,
+                ),
+                buttonWidget: const Icon(
+                  Icons.search,
+                  size: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 170,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: CustomGrid(items: ownedGames),
+            ),
+          ),
+        ]),
+        floatingActionButton: FloatingActionButton(
+          splashColor: Colors.lightGreen,
+          backgroundColor: const Color.fromARGB(
+              255, 22, 125, 99), //Theme.of(context).accentColor
+          child: const Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            debugPrint('save');
+            buildSelectedString();
+          },
+        ));
   }
 }
 
@@ -296,6 +345,10 @@ class CustomCard extends StatelessWidget {
             bottom: 70,
             left: 70,
             child: Checkbox(
+              side: game['selected']
+                  ? null
+                  : const BorderSide(
+                      color: Color.fromARGB(255, 255, 17, 0), width: 2.0),
               activeColor: Colors.green,
               value: game['selected'],
               onChanged: (value) {
