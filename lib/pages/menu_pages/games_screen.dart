@@ -1,13 +1,11 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
+import 'package:teamfinder_mobile/pages/menu_pages/add_new_games_screen.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 
 class GamesPage extends StatefulWidget {
@@ -87,6 +85,7 @@ class _GamesPageState extends State<GamesPage> {
           }
         }
         ownedGames = gamesList;
+        
       });
     }
   }
@@ -134,7 +133,8 @@ class _GamesPageState extends State<GamesPage> {
                               shape: CircleBorder(),
                               child: CircleAvatar(
                                 radius: 20,
-                                child: Icon(Icons.search, color: Colors.blueGrey),
+                                child:
+                                    Icon(Icons.search, color: Colors.blueGrey),
                               ),
                             ),
                           ),
@@ -151,8 +151,8 @@ class _GamesPageState extends State<GamesPage> {
                           },
                           child: const Material(
                             elevation: 5,
-                          shadowColor: Colors.grey,
-                          shape: CircleBorder(),
+                            shadowColor: Colors.grey,
+                            shape: CircleBorder(),
                             child: CircleAvatar(
                               radius: 20,
                               child: Icon(Icons.question_answer,
@@ -162,20 +162,17 @@ class _GamesPageState extends State<GamesPage> {
                         ),
                       ]),
                 ]),
-            const Divider(
-              thickness: 4,
-            )
           ],
         ),
         backgroundColor: Colors.white,
         elevation: 0.0,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        //systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Column(
         children: [
-          const SizedBox(
-            height: 25,
-          ),
+          // const Divider(
+          //   thickness: 4,
+          // ),
           const Row(
             children: [
               SizedBox(
@@ -205,6 +202,14 @@ class _GamesPageState extends State<GamesPage> {
         ),
         onPressed: () {
           debugPrint('add new games page');
+          //debugPrint(ownedGames.toString());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddNewGames(
+                      list: ownedGames,
+                    )),
+          );
         },
       ),
     );

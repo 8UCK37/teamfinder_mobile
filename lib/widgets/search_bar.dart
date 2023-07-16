@@ -105,12 +105,14 @@ class CustomSearchBar extends StatefulWidget {
   /// Can set RegExp in the textFormField of search box from here.
   final List<TextInputFormatter>? inputFormatters;
 
+  final bool autoOpenOnInit;
   const CustomSearchBar({
     required this.textEditingController,
     required this.isOriginalAnimation,
     required this.trailingWidget,
     required this.secondaryButtonWidget,
     required this.buttonWidget,
+    required this.autoOpenOnInit,
     this.searchBoxWidth,
     this.hintText = "Search Here",
     this.searchBoxColour = AppColours.white,
@@ -178,7 +180,7 @@ class _CustomSearchBarState extends State<CustomSearchBar>
       vsync: this,
       duration: Duration(milliseconds: widget.durationInMilliSeconds),
     );
-    if (mounted) {
+    if (mounted && widget.autoOpenOnInit) {
       debugPrint('mounted');
       //_onTapFunction();
       // Programmatically click the search button after a delay

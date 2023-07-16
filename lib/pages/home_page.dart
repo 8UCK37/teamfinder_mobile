@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage>
             Tab(icon: Icon(Icons.menu, size: 30.0, key: Key('menuTab')))
           ],
         ),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        //systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: TabBarView(controller: _tabController, children: [
         const HomeTab(),

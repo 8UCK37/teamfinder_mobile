@@ -110,7 +110,7 @@ class _SearchPageState extends State<SearchPage> {
               ]),
           backgroundColor: Colors.white,
           elevation: 0.0,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          //systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,
@@ -143,6 +143,7 @@ class _SearchPageState extends State<SearchPage> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: CustomSearchBar(
+                          autoOpenOnInit: true,
                           textEditingController: _textController,
                           isOriginalAnimation: true,
                           enableKeyboardFocus: true,

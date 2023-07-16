@@ -17,7 +17,12 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
     _tabController = TabController(initialIndex: 0, vsync: this, length: 1);
 
   }
-
+  @override
+  void dispose() {
+    // Unsubscribe the listener to avoid memory leaks
+    _tabController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
