@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -145,7 +146,24 @@ class ChatImageBubble extends StatelessWidget {
                                 CachedNetworkImage(
                                   imageUrl: imageUrl,
                                   placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
+                                      const Center(
+                                          child: SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child:
+                                                ColorfulCircularProgressIndicator(
+                                              colors: [
+                                                Colors.blue,
+                                                Colors.red,
+                                                Colors.amber,
+                                                Colors.green
+                                              ],
+                                              strokeWidth: 5,
+                                              indicatorHeight: 5,
+                                              indicatorWidth: 5,
+                                            ),
+                                          ),
+                                        ),
                                   errorWidget: (context, url, error) =>
                                       const Icon(Icons.error),
                                   fit: BoxFit.fill,

@@ -8,6 +8,7 @@ import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/add_new_games_screen.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
+import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 
 class GamesPage extends StatefulWidget {
   const GamesPage({super.key});
@@ -276,11 +277,20 @@ class CustomCardFront extends StatelessWidget {
         child: CachedNetworkImage(
           imageUrl:
               "https://steamcdn-a.akamaihd.net/steam/apps/$appid/library_600x900.jpg", // Replace with your image URL
-          placeholder: (context, url) => const CircularProgressIndicator(),
+          placeholder: (context, url) => const Center(
+            child: SizedBox(
+              height: 40,
+              width: 40,
+              child: ColorfulCircularProgressIndicator(
+                colors: [Colors.blue, Colors.red, Colors.amber, Colors.green],
+                strokeWidth: 5,
+                indicatorHeight: 5,
+                indicatorWidth: 5,
+              ),
+            ),
+          ),
           errorWidget: (context, url, error) => const Icon(Icons.error),
-          fit: BoxFit.fill, // Adjust the fit property as needed
-          //width: double.infinity, // Adjust the width property as needed
-          //height: double.infinity, // Adjust the height property as needed
+          fit: BoxFit.fill,
         ),
       ),
     );

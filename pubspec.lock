@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.1"
+  colorful_circular_progress_indicator:
+    dependency: "direct main"
+    description:
+      name: colorful_circular_progress_indicator
+      sha256: e38ba7208093253dfbc94a3b8726c0895ebedef87ed10189b43cb5a921d887cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   concentric_transition:
     dependency: "direct main"
     description:

@@ -69,6 +69,7 @@ dependencies:
   concentric_transition: ^1.0.3
   motion_toast: ^2.7.8
   flutter_flip_card: ^0.0.4
+  colorful_circular_progress_indicator: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
