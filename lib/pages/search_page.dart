@@ -95,10 +95,15 @@ class _SearchPageState extends State<SearchPage> {
                             MaterialPageRoute(builder: (context) => ChatHome()),
                           );
                         },
-                        child: const CircleAvatar(
-                          radius: 20,
-                          child: Icon(Icons.question_answer,
-                              color: Colors.deepPurple),
+                        child: const Material(
+                          elevation: 5,
+                          shadowColor: Colors.grey,
+                          shape: CircleBorder(),
+                          child: CircleAvatar(
+                            radius: 20,
+                            child: Icon(Icons.question_answer,
+                                color: Colors.deepPurple),
+                          ),
                         ),
                       ),
                     ]),

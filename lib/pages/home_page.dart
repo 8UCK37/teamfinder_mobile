@@ -94,7 +94,8 @@ class _HomePageState extends State<HomePage>
                   ),
                 ],
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 GestureDetector(
                   onTap: () {
                     debugPrint('search clicked');
@@ -105,10 +106,15 @@ class _HomePageState extends State<HomePage>
                   },
                   child:const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 20,
-                      child: Icon(Icons.search, color: Colors.black),
-                      ),
+                    child: Material(
+                      elevation: 5, 
+                      shadowColor: Colors.grey, 
+                      shape: CircleBorder(),
+                      child: CircleAvatar(
+                        radius: 20,
+                        child: Icon(Icons.search, color: Colors.blueGrey),
+                        ),
+                    ),
                   ),
                 ),
                 GestureDetector(
@@ -120,12 +126,18 @@ class _HomePageState extends State<HomePage>
                       MaterialPageRoute(builder: (context) => ChatHome()),
                     );
                   },
-                  child:const CircleAvatar(
-                    radius: 20,
-                    child: Icon(Icons.question_answer, color: Colors.deepPurple),
-                    ),
+                  child:const Material(
+                    elevation: 5, 
+                      shadowColor: Colors.grey, 
+                      shape: CircleBorder(),
+                    child: CircleAvatar(
+                      radius: 20,
+                      child: Icon(Icons.question_answer, color: Colors.deepPurple),
+                      ),
+                  ),
                 ),
-              ]),
+              ]
+              ),
             ]),
         backgroundColor: Colors.white,
         elevation: 0.0,

@@ -49,14 +49,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                 builder: (context) => const SearchPage()),
                           );
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            backgroundColor:
-                                _isDark ? Colors.white : Colors.deepPurple,
-                            radius: 20,
-                            child:
-                                const Icon(Icons.search, color: Colors.black),
+                       child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Material(
+                            elevation: 5,
+                            shadowColor: Colors.grey,
+                            shape: CircleBorder(),
+                            child: CircleAvatar(
+                              backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                              radius: 20,
+                              child: Icon(Icons.search, color: Colors.blueGrey),
+                            ),
                           ),
                         ),
                       ),
@@ -69,12 +72,16 @@ class _SettingsPageState extends State<SettingsPage> {
                             MaterialPageRoute(builder: (context) => ChatHome()),
                           );
                         },
-                        child: CircleAvatar(
-                          backgroundColor:
-                              _isDark ? Colors.white : Colors.deepPurple,
-                          radius: 20,
-                          child: const Icon(Icons.question_answer,
-                              color: Colors.black),
+                        child: const Material(
+                          elevation: 5,
+                          shadowColor: Colors.grey,
+                          shape:CircleBorder(),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundColor: const Color.fromRGBO(222, 209, 242, 100),
+                            child:Icon(Icons.question_answer,
+                                color: Colors.deepPurple),
+                          ),
                         ),
                       ),
                     ]

@@ -128,9 +128,14 @@ class _GamesPageState extends State<GamesPage> {
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              radius: 20,
-                              child: Icon(Icons.search, color: Colors.black),
+                            child: Material(
+                              elevation: 5,
+                              shadowColor: Colors.grey,
+                              shape: CircleBorder(),
+                              child: CircleAvatar(
+                                radius: 20,
+                                child: Icon(Icons.search, color: Colors.blueGrey),
+                              ),
                             ),
                           ),
                         ),
@@ -144,10 +149,15 @@ class _GamesPageState extends State<GamesPage> {
                                   builder: (context) => ChatHome()),
                             );
                           },
-                          child: const CircleAvatar(
-                            radius: 20,
-                            child: Icon(Icons.question_answer,
-                                color: Colors.deepPurple),
+                          child: const Material(
+                            elevation: 5,
+                          shadowColor: Colors.grey,
+                          shape: CircleBorder(),
+                            child: CircleAvatar(
+                              radius: 20,
+                              child: Icon(Icons.question_answer,
+                                  color: Colors.deepPurple),
+                            ),
                           ),
                         ),
                       ]),
