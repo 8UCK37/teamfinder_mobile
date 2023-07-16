@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_overrides, duplicate_ignore
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
@@ -12,15 +14,16 @@ class AddNewGames extends StatefulWidget {
   State<AddNewGames> createState() => _AddNewGamesState();
 }
 
+// ignore: duplicate_ignore
 class _AddNewGamesState extends State<AddNewGames>
     with TickerProviderStateMixin {
   dynamic ownedGames;
+  bool isKeyboardVisible = false;
   final TextEditingController _textController = TextEditingController();
   bool searchOpened = false;
   @override
   void initState() {
     super.initState();
-    //testOwned();
     searchOpened = false;
     setState(() {
       widget.list.sort((a, b) {
@@ -36,15 +39,16 @@ class _AddNewGamesState extends State<AddNewGames>
     });
   }
 
-  void testOwned() {
-    for (dynamic game in ownedGames) {
-      debugPrint(game.toString());
-    }
+  // ignore: unnecessary_overrides
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Column(
@@ -94,7 +98,7 @@ class _AddNewGamesState extends State<AddNewGames>
                         GestureDetector(
                           onTap: () {
                             debugPrint('goto chat');
-
+    
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -120,10 +124,8 @@ class _AddNewGamesState extends State<AddNewGames>
         elevation: 0.0,
         //systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
-      body: Column(children: [
-        // const Divider(
-        //   thickness: 4,
-        // ),
+      body: Column(
+        children: [
         const Row(
           children: [
             SizedBox(
@@ -154,11 +156,9 @@ class _AddNewGamesState extends State<AddNewGames>
               },
               onCollapseComplete: () {
                 debugPrint('do something just after searchbox is closed.');
-                
               },
               onPressButton: (isSearchBarOpens) {
-                debugPrint(
-                    'do something before animation started. It\'s the ${isSearchBarOpens ? 'opening' : 'closing'} animation');
+                debugPrint('do something before animation started. It\'s the ${isSearchBarOpens ? 'opening' : 'closing'} animation');
                 setState(() {
                   if (isSearchBarOpens) {
                     searchOpened = true;
@@ -187,36 +187,68 @@ class _AddNewGamesState extends State<AddNewGames>
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  (searchOpened ? 0.3 : 0.72),
-              child: CustomGrid(items: ownedGames)),
+        SizedBox(
+          height: MediaQuery.of(context).size.height-170,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: CustomGrid(items: ownedGames),
+          ),
         ),
-      ]),
+      ]
+      ),
     );
   }
 }
 
 // ignore: must_be_immutable
-class CustomGrid extends StatelessWidget {
+class CustomGrid extends StatefulWidget {
   dynamic items;
   CustomGrid({super.key, required this.items});
+  @override
+  _CustomGrid createState() => _CustomGrid();
+}
+
+class _CustomGrid extends State<CustomGrid>
+    with SingleTickerProviderStateMixin {
+  //late List<dynamic> ownedgames;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      itemCount: items?.length,
+      itemCount: widget.items?.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3, // Number of cards in a row
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0,
       ),
       itemBuilder: (context, index) {
-        if (items != null) {
-          return CustomCard(game: items[index]);
+        if (widget.items != null) {
+          return CustomCard(
+            game: widget.items[index],
+            onChecked: () {
+              setState(() {
+                if (widget.items[index]['selected']) {
+                  //debugPrint(widget.items[index]['selected'].toString());
+                  widget.items[index]['selected'] = false;
+                  //debugPrint(widget.items[index]['selected'].toString());
+                } else {
+                  //debugPrint(widget.items[index]['selected'].toString());
+                  widget.items[index]['selected'] = true;
+                  //debugPrint(widget.items[index]['selected'].toString());
+                }
+              });
+            },
+          );
         }
         return null;
       },
@@ -226,8 +258,10 @@ class CustomGrid extends StatelessWidget {
 
 class CustomCard extends StatelessWidget {
   final dynamic game;
+  final Function onChecked;
 
-  const CustomCard({Key? key, required this.game}) : super(key: key);
+  const CustomCard({Key? key, required this.game, required this.onChecked})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +299,7 @@ class CustomCard extends StatelessWidget {
               activeColor: Colors.green,
               value: game['selected'],
               onChanged: (value) {
-                // Handle checkbox onChanged event
+                onChecked();
               },
             ),
           ),
