@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 
@@ -13,7 +14,23 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  late SharedPreferences _preferences;
   bool _isDark = false;
+  @override
+  void initState() {
+    super.initState();
+    _initializePreferences();
+  }
+  Future<void> _initializePreferences() async {
+    _preferences = await SharedPreferences.getInstance();
+    bool savedThemeValue = _preferences.getBool('isDarkTheme') ?? false;
+    setState(() {
+      _isDark = savedThemeValue;
+    });
+  }
+  Future<void> _saveThemeValue(bool value) async {
+    await _preferences.setBool('isDarkTheme', value);
+  }
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -109,6 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             onChanged: (value) {
                               setState(() {
                                 _isDark = value;
+                                _saveThemeValue(value);
                               });
                             })),
                     const _CustomListTile(
