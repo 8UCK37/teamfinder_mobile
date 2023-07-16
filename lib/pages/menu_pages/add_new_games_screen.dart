@@ -229,7 +229,7 @@ class _AddNewGamesState extends State<AddNewGames>
             ],
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height - 170,
+            height: MediaQuery.of(context).size.height - 200,
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: CustomGrid(items: ownedGames),

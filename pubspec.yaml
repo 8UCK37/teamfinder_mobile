@@ -68,6 +68,7 @@ dependencies:
   newsfeed_multiple_imageview: ^1.0.1
   concentric_transition: ^1.0.3
   motion_toast: ^2.7.8
+  flutter_flip_card: ^0.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

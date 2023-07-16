@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/add_new_games_screen.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
+import 'package:flutter_flip_card/flutter_flip_card.dart';
 
 class GamesPage extends StatefulWidget {
   const GamesPage({super.key});
@@ -84,7 +85,8 @@ class _GamesPageState extends State<GamesPage> {
             }
           }
         }
-        showcase.sort((a, b) => b['playtime_forever'].compareTo(a['playtime_forever']) as int);
+        showcase.sort((a, b) =>
+            b['playtime_forever'].compareTo(a['playtime_forever']) as int);
         ownedGames = gamesList;
       });
     }
@@ -234,7 +236,7 @@ class CustomGrid extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         if (items != null) {
-          return CustomCard(appid: items[index]['appid'].toString());
+          return CustomCard(game: items[index]);
         }
         return null;
       },
@@ -243,9 +245,24 @@ class CustomGrid extends StatelessWidget {
 }
 
 class CustomCard extends StatelessWidget {
+  final dynamic game;
+
+  CustomCard({Key? key, required this.game}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureFlipCard(
+        frontWidget: CustomCardFront(appid: game['appid'].toString()),
+        backWidget: CustomCardBack(
+          game: game,
+        ));
+  }
+}
+
+class CustomCardFront extends StatelessWidget {
   final String appid;
 
-  CustomCard({Key? key, required this.appid}) : super(key: key);
+  CustomCardFront({Key? key, required this.appid}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -265,6 +282,29 @@ class CustomCard extends StatelessWidget {
           //height: double.infinity, // Adjust the height property as needed
         ),
       ),
+    );
+  }
+}
+
+class CustomCardBack extends StatelessWidget {
+  final dynamic game;
+
+  CustomCardBack({Key? key, required this.game}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 8,
+      shadowColor: Colors.deepPurpleAccent,
+      child: ClipRRect(
+          borderRadius:
+              BorderRadius.circular(8), // Adjust the border radius as needed
+          child: Padding(
+            padding: const EdgeInsets.only(top:8.0),
+            child: Column(children: <Widget>[
+              const Text('Total Play-Time'),
+              Text('${(game['playtime_forever']/60).toStringAsFixed(2)} hours')
+            ]),
+          )),
     );
   }
 }
