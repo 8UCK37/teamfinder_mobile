@@ -252,6 +252,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureFlipCard(
+      animationDuration: const Duration(milliseconds: 250),
         frontWidget: CustomCardFront(appid: game['appid'].toString()),
         backWidget: CustomCardBack(
           game: game,
