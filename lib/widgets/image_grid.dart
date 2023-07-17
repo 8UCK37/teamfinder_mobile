@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:newsfeed_multiple_imageview/newsfeed_multiple_imageview.dart';
 import 'package:teamfinder_mobile/widgets/carousel_widget.dart';
 import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
-import 'package:teamfinder_mobile/widgets/smartImage.dart';
+
 
 class ImageGrid extends StatelessWidget {
   final List<String> imageUrls;
@@ -106,14 +106,27 @@ class ImageViewer extends StatelessWidget {
                   indicatorColor: Colors.red,
                   indicatorBackgroundColor: Colors.grey,
                   isLoop: imageUrls.length > 1,
-                  children: imageUrls
-                      .map(
-                        (e) => ClipRect(
-                          child: SmartImage(
-                            e,
-                            fit: BoxFit.contain,
-                            isPost: true,
+                  children: imageUrls.map((e) => ClipRect(
+                    child: CachedNetworkImage(
+                          imageUrl: e,
+                          placeholder: (context, url) => const Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: ColorfulCircularProgressIndicator(
+                                colors: [
+                                  Colors.blue,
+                                  Colors.red,
+                                  Colors.amber,
+                                  Colors.green
+                                ],
+                                strokeWidth: 5,
+                                indicatorHeight: 5,
+                                indicatorWidth: 5,
+                              ),
+                            ),
                           ),
+                        )
                         ),
                       )
                       .toList(),
