@@ -1,4 +1,9 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:bottom_sheet/bottom_sheet.dart';
+import 'package:comment_tree/data/comment.dart';
+import 'package:comment_tree/widgets/comment_tree_widget.dart';
+import 'package:comment_tree/widgets/tree_theme_data.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,6 +23,8 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget>
     with SingleTickerProviderStateMixin {
+  final DraggableScrollableController _draggableScrollableController =
+      DraggableScrollableController();
   String convertToLocalTime(DateTime dateTime) {
     DateTime localDateTime = dateTime.toLocal();
     String formattedTime =
@@ -98,18 +105,17 @@ class _PostWidgetState extends State<PostWidget>
     );
   }
 
-   Widget _buildBottomSheet(
+  Widget _buildBottomSheet(
     BuildContext context,
     ScrollController scrollController,
     double bottomSheetOffset,
   ) {
     return Material(
-        child: Container(
-          child: ListView(
-            controller: scrollController,
-          ),
+        child: ListView(
+          controller: scrollController,
         ),
-      );
+      
+    );
   }
 
   @override
@@ -241,16 +247,210 @@ class _PostWidgetState extends State<PostWidget>
               ),
               GestureDetector(
                 onTap: () {
-                debugPrint('open bottom sheet');
-                showFlexibleBottomSheet(
-                      minHeight: 0,
-                      initHeight: 1,
-                      maxHeight: 1,
-                      context: context,
-                      builder: _buildBottomSheet,
-                      anchors: [0, 0.5, 1],
-                      isSafeArea: true,
-                    );
+                  //debugPrint('open bottom sheet');
+                  showStickyFlexibleBottomSheet(
+                    minHeight: 0,
+                    initHeight: 1,
+                    maxHeight: 1,
+                    headerHeight: 25,
+                    context: context,
+                    bottomSheetColor: Colors.white,
+                    headerBuilder: (BuildContext context, double offset) {
+                      return Container(
+                      );
+                    },
+                    bodyBuilder: (BuildContext context, double offset) {
+                      return SliverChildListDelegate(
+                        <Widget>[
+                          Container(
+                            // ignore: sort_child_properties_last
+                            child: CommentTreeWidget<Comment, Comment>(
+                              Comment(
+                                  avatar: 'null',
+                                  userName: 'null',
+                                  content:
+                                      'felangel made felangel/cubit_and_beyond public '),
+                              [
+                                Comment(
+                                    avatar: 'null',
+                                    userName: 'null',
+                                    content:
+                                        'A Dart template generator which helps teams'),
+                                Comment(
+                                    avatar: 'null',
+                                    userName: 'null',
+                                    content:
+                                        'A Dart template generator which helps teams generator which helps teams generator which helps teams'),
+                                Comment(
+                                    avatar: 'null',
+                                    userName: 'null',
+                                    content:
+                                        'A Dart template generator which helps teams'),
+                                Comment(
+                                    avatar: 'null',
+                                    userName: 'null',
+                                    content:
+                                        'A Dart template generator which helps teams generator which helps teams '),
+                              ],
+                              treeThemeData: TreeThemeData(
+                                  lineColor: Colors.green[500]!, lineWidth: 3),
+                              avatarRoot: (context, data) => const PreferredSize(
+                                child: CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.grey,
+                                  backgroundImage:
+                                      AssetImage('assets/avatar_2.png'),
+                                ),
+                                preferredSize: Size.fromRadius(18),
+                              ),
+                              avatarChild: (context, data) => const PreferredSize(
+                                child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: Colors.grey,
+                                  backgroundImage:
+                                      AssetImage('assets/avatar_1.png'),
+                                ),
+                                preferredSize: Size.fromRadius(12),
+                              ),
+                              contentChild: (context, data) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'dangngocduc',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                            '${data.content}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    DefaultTextStyle(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.bold),
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(top: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text('Like'),
+                                            SizedBox(
+                                              width: 24,
+                                            ),
+                                            Text('Reply'),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                              contentRoot: (context, data) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'dangngocduc',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption!
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
+                                          Text(
+                                            '${data.content}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption!
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    DefaultTextStyle(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.bold),
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(top: 4),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text('Like'),
+                                            SizedBox(
+                                              width: 24,
+                                            ),
+                                            Text('Reply'),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                          ),
+                        ],
+                      );
+                    },
+                    anchors: [0, 0.5, 1],
+                  );
                 },
                 child: const Row(
                   children: <Widget>[
