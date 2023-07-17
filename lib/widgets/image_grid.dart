@@ -1,8 +1,10 @@
+import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:newsfeed_multiple_imageview/newsfeed_multiple_imageview.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:teamfinder_mobile/widgets/carousel_widget.dart';
+import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
+import 'package:teamfinder_mobile/widgets/smartImage.dart';
 
 class ImageGrid extends StatelessWidget {
   final List<String> imageUrls;
@@ -12,22 +14,43 @@ class ImageGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageUrls.length == 1) {
-      return CachedNetworkImage(
-        imageUrl: imageUrls[0],
-        placeholder: (context, url) => Shimmer.fromColors(
-        baseColor: Colors.purpleAccent.shade200,
-        highlightColor: Colors.white,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImageViewer(imageUrls: imageUrls),
+            ),
+          );
+        },
+        child: CachedNetworkImage(
+          imageUrl: imageUrls[0],
+          placeholder: (context, url) => const Center(
+            child: SizedBox(
+              height: 40,
+              width: 40,
+              child: ColorfulCircularProgressIndicator(
+                colors: [Colors.blue, Colors.red, Colors.amber, Colors.green],
+                strokeWidth: 5,
+                indicatorHeight: 5,
+                indicatorWidth: 5,
+              ),
+            ),
           ),
         ),
-      ),
       );
     } else if (imageUrls.length > 1 && imageUrls.length <= 3) {
-      return CustomCarousel(images:imageUrls);
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImageViewer(imageUrls: imageUrls),
+            ),
+          );
+        },
+        child: CustomCarousel(images: imageUrls)
+        );
     } else {
       return _advancedGrid(imageUrls);
     }
@@ -42,5 +65,64 @@ class ImageGrid extends StatelessWidget {
       marginTop: 10.0,
     );
   }
+}
 
+class ImageViewer extends StatelessWidget {
+  final List<String> imageUrls;
+  const ImageViewer({
+    Key? key,
+    required this.imageUrls,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+      bottom: false,
+      child: Container(
+        // width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height,
+        color: Colors.black,
+        child: SafeArea(
+          top: false,
+          left: false,
+          right: false,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+              Expanded(
+                child: ImageSlideshow(
+                  initialPage: 0,
+                  indicatorColor: Colors.red,
+                  indicatorBackgroundColor: Colors.grey,
+                  isLoop: imageUrls.length > 1,
+                  children: imageUrls
+                      .map(
+                        (e) => ClipRect(
+                          child: SmartImage(
+                            e,
+                            fit: BoxFit.contain,
+                            isPost: true,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
 }
