@@ -78,7 +78,6 @@ class _GamesPageState extends State<GamesPage> {
       setState(() {
         showcase = [];
         for (dynamic game in gamesList) {
-          debugPrint(game['name'].toString());
           game['selected'] = false;
           for (dynamic appid in res['appid'].split(',')) {
             if (game['appid'].toString() == appid.toString()) {
