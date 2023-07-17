@@ -123,37 +123,49 @@ class _FriendListState extends State<FriendList>
                   ),
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: GestureDetector(
-                            onTap: () {
-                              // debugPrint(friendList![i].id.toString());
-                              // debugPrint(friendList![i].name.toString());
-                              // debugPrint(friendList![i].profilePicture.toString());
-                              var route = MaterialPageRoute(
-                                  builder: (BuildContext context) => ChatScreen(
-                                        friendId: friendList![i].id,
-                                        name: friendList![i].name,
-                                        profileImage:
-                                            friendList![i].profilePicture,
-                                      ));
-                              Navigator.of(context).push(route);
-                            },
-                            child: const Icon(Icons.chat)),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right:45.0),
+                          child: GestureDetector(
+                              onTap: () {
+                                var route = MaterialPageRoute(
+                                    builder: (BuildContext context) => ChatScreen(
+                                          friendId: friendList![i].id,
+                                          name: friendList![i].name,
+                                          profileImage:
+                                              friendList![i].profilePicture,
+                                        ));
+                                Navigator.of(context).push(route);
+                              },
+                              child: const Icon(
+                                Icons.chat,
+                                color: Color.fromARGB(255, 22, 125, 99),
+                                )
+                              ),
+                        ),
                       ),
-                      GFButton(
-                          text: "GoTo Profile",
-                          onPressed: () {
-                            var route = MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    FriendProfilePage(
-                                      friendId: friendList![i].id,
-                                      friendName: friendList![i].name,
-                                      friendProfileImage:
-                                          friendList![i].profilePicture,
-                                    ));
-                            Navigator.of(context).push(route);
-                          }),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom:8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              var route = MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        FriendProfilePage(
+                                          friendId: friendList![i].id,
+                                          friendName: friendList![i].name,
+                                          friendProfileImage:
+                                              friendList![i].profilePicture,
+                                        ));
+                                Navigator.of(context).push(route);
+                            },
+                            child: Icon(
+                              Icons.badge,
+                              color: Colors.amberAccent.shade700,
+                              ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
