@@ -24,10 +24,12 @@ class AddNewGames extends StatefulWidget {
 class _AddNewGamesState extends State<AddNewGames>
     with TickerProviderStateMixin {
   dynamic ownedGames;
+  dynamic ownedGamesCopy;
   late String selected;
   bool isKeyboardVisible = false;
   final TextEditingController _textController = TextEditingController();
   bool searchOpened = false;
+  late String searchTerm;
   @override
   void initState() {
     super.initState();
@@ -43,6 +45,7 @@ class _AddNewGamesState extends State<AddNewGames>
         }
       });
       ownedGames = widget.list;
+      ownedGamesCopy = widget.list;
     });
   }
 
@@ -50,6 +53,19 @@ class _AddNewGamesState extends State<AddNewGames>
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void searchGames() {
+    if (searchTerm == '') {
+      setState(() {
+        ownedGames = ownedGamesCopy;
+      });
+    } else {
+      ownedGames = ownedGamesCopy
+          .where((game) =>
+              game['name'].toString().toLowerCase().contains(searchTerm))
+          .toList();
+    }
   }
 
   void buildSelectedString() async {
@@ -190,7 +206,10 @@ class _AddNewGamesState extends State<AddNewGames>
                 enableKeyboardFocus: true,
                 durationInMilliSeconds: 450,
                 onChanged: (String typedTxt) {
-                  debugPrint(typedTxt);
+                  setState(() {
+                    searchTerm = typedTxt;
+                    searchGames();
+                  });
                 },
                 onExpansionComplete: () {
                   debugPrint('do something just after searchbox is opened.');
@@ -248,7 +267,6 @@ class _AddNewGamesState extends State<AddNewGames>
           onPressed: () {
             debugPrint('save');
             buildSelectedString();
-            
           },
         ));
   }
@@ -367,10 +385,10 @@ class CustomCard extends StatelessWidget {
                     indicatorHeight: 5,
                     indicatorWidth: 5,
                   ),
-            ),
-          ),
+                ),
+              ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
-              fit: BoxFit.fill, 
+              fit: BoxFit.fill,
             ),
           ),
           Positioned(

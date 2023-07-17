@@ -78,6 +78,7 @@ class _GamesPageState extends State<GamesPage> {
       setState(() {
         showcase = [];
         for (dynamic game in gamesList) {
+          debugPrint(game['name'].toString());
           game['selected'] = false;
           for (dynamic appid in res['appid'].split(',')) {
             if (game['appid'].toString() == appid.toString()) {
@@ -253,7 +254,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureFlipCard(
-      animationDuration: const Duration(milliseconds: 250),
+        animationDuration: const Duration(milliseconds: 250),
         frontWidget: CustomCardFront(appid: game['appid'].toString()),
         backWidget: CustomCardBack(
           game: game,
@@ -310,10 +311,11 @@ class CustomCardBack extends StatelessWidget {
           borderRadius:
               BorderRadius.circular(8), // Adjust the border radius as needed
           child: Padding(
-            padding: const EdgeInsets.only(top:8.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: Column(children: <Widget>[
               const Text('Total Play-Time'),
-              Text('${(game['playtime_forever']/60).toStringAsFixed(2)} hours')
+              Text(
+                  '${(game['playtime_forever'] / 60).toStringAsFixed(2)} hours')
             ]),
           )),
     );
