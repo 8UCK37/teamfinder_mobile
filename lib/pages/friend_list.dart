@@ -5,7 +5,6 @@ import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:http/http.dart' as http;
-import 'package:getwidget/getwidget.dart';
 
 class FriendList extends StatefulWidget {
   const FriendList({super.key});

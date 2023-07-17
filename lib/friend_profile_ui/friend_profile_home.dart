@@ -13,15 +13,15 @@ import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../widgets/separator_widget.dart';
 
 class FriendProfilePage extends StatefulWidget {
-  final String friendName;
+  final String? friendName;
   final String friendId;
-  final String friendProfileImage;
+  final String? friendProfileImage;
 
   const FriendProfilePage({
     super.key,
     required this.friendId,
-    required this.friendName,
-    required this.friendProfileImage,
+     this.friendName,
+     this.friendProfileImage,
   });
   @override
   // ignore: library_private_types_in_public_api
