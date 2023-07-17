@@ -1,3 +1,4 @@
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,8 +33,8 @@ class _PostWidgetState extends State<PostWidget>
     //debugPrint(widget.post.description.toString());
     if (widget.post.mention != null) {
       //debugPrint(widget.post.parentpost!.mention!.list.toString());
-      parseDescription(widget.post.description.toString(),
-          widget.post.mention!);
+      parseDescription(
+          widget.post.description.toString(), widget.post.mention!);
     }
     if (widget.post.parentpost?.mention != null) {
       //debugPrint(widget.post.parentpost!.mention!.list.toString());
@@ -47,7 +48,7 @@ class _PostWidgetState extends State<PostWidget>
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };
-    late String dump='';
+    late String dump = '';
     for (String key in idNameMap.keys) {
       dump = sanitizedDesc.replaceAll(key, idNameMap[key].toString());
     }
@@ -55,49 +56,61 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   Widget parseDescriptionWidget(String desc, Mention mentionList) {
-  String sanitizedDesc = desc.substring(0, desc.length - 1);
-  Map<String, String> idNameMap = {
-    for (var item in mentionList.list) item['id']: item['name']
-  };
-  DateTime now = DateTime.now();
-  List<TextSpan> textSpans = [];
+    String sanitizedDesc = desc.substring(0, desc.length - 1);
+    Map<String, String> idNameMap = {
+      for (var item in mentionList.list) item['id']: item['name']
+    };
+    DateTime now = DateTime.now();
+    List<TextSpan> textSpans = [];
 
-  for (String word in sanitizedDesc.split(' ')) {
-    if (idNameMap.containsKey(word)) {
-      textSpans.add(
-        TextSpan(
-          text: '${idNameMap[word]} ',
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
-              debugPrint('${now.toString()} yooooo:${word}');
-              var route = MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                FriendProfilePage(
-                                  friendId: word,
-                                ));
-                        Navigator.of(context).push(route); // Prints the corresponding ID
-            },
-            style:const TextStyle(
-              color: Colors.blue,
-              decoration: TextDecoration.underline,
-              decorationColor: Colors.blue,
-              fontSize: 18
-            )
-        ),
-      );
-    } else {
-      textSpans.add(TextSpan(text: '$word '));
+    for (String word in sanitizedDesc.split(' ')) {
+      if (idNameMap.containsKey(word)) {
+        textSpans.add(
+          TextSpan(
+              text: '${idNameMap[word]} ',
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  debugPrint('${now.toString()} yooooo:${word}');
+                  var route = MaterialPageRoute(
+                      builder: (BuildContext context) => FriendProfilePage(
+                            friendId: word,
+                          ));
+                  Navigator.of(context)
+                      .push(route); // Prints the corresponding ID
+                },
+              style: const TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.blue,
+                  fontSize: 18)),
+        );
+      } else {
+        textSpans.add(TextSpan(text: '$word '));
+      }
     }
+
+    return RichText(
+      text: TextSpan(
+        children: textSpans,
+        style:
+            DefaultTextStyle.of(context).style, // Apply the default text style
+      ),
+    );
   }
 
-  return RichText(
-    text: TextSpan(
-      children: textSpans,
-      style: DefaultTextStyle.of(context).style, // Apply the default text style
-    ),
-  );
-}
-
+   Widget _buildBottomSheet(
+    BuildContext context,
+    ScrollController scrollController,
+    double bottomSheetOffset,
+  ) {
+    return Material(
+        child: Container(
+          child: ListView(
+            controller: scrollController,
+          ),
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +141,11 @@ class _PostWidgetState extends State<PostWidget>
           const SizedBox(height: 20.0),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(widget.post.mention?.list.length!=0 
-              ?parseDescription(widget.post.description!,widget.post.mention!)
-              :widget.post.description!,
+            child: Text(
+                widget.post.mention?.list.length != 0
+                    ? parseDescription(
+                        widget.post.description!, widget.post.mention!)
+                    : widget.post.description!,
                 style: const TextStyle(fontSize: 15.0)),
           ),
           if (widget.post.shared != null)
@@ -177,7 +192,9 @@ class _PostWidgetState extends State<PostWidget>
                     padding: const EdgeInsets.only(top: 8, left: 16),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: parseDescriptionWidget(widget.post.parentpost!.description!, widget.post.parentpost!.mention!),
+                      child: parseDescriptionWidget(
+                          widget.post.parentpost!.description!,
+                          widget.post.parentpost!.mention!),
                     ),
                   ),
                 ],
@@ -211,25 +228,39 @@ class _PostWidgetState extends State<PostWidget>
 
           const Divider(height: 30.0),
 
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Row(
+              const Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
                   SizedBox(width: 5.0),
                   Text('Like', style: TextStyle(fontSize: 14.0)),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.commentAlt, size: 20.0),
-                  SizedBox(width: 5.0),
-                  Text('Comment', style: TextStyle(fontSize: 14.0)),
-                ],
+              GestureDetector(
+                onTap: () {
+                debugPrint('open bottom sheet');
+                showFlexibleBottomSheet(
+                      minHeight: 0,
+                      initHeight: 1,
+                      maxHeight: 1,
+                      context: context,
+                      builder: _buildBottomSheet,
+                      anchors: [0, 0.5, 1],
+                      isSafeArea: true,
+                    );
+                },
+                child: const Row(
+                  children: <Widget>[
+                    Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+                    SizedBox(width: 5.0),
+                    Text('Comment', style: TextStyle(fontSize: 14.0)),
+                  ],
+                ),
               ),
-              Row(
+              const Row(
                 children: <Widget>[
                   Icon(FontAwesomeIcons.share, size: 20.0),
                   SizedBox(width: 5.0),
