@@ -4,11 +4,15 @@ import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:comment_tree/data/comment.dart';
 import 'package:comment_tree/widgets/comment_tree_widget.dart';
 import 'package:comment_tree/widgets/tree_theme_data.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
+import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
 
@@ -21,17 +25,9 @@ class PostWidget extends StatefulWidget {
   State<PostWidget> createState() => _PostWidgetState();
 }
 
-class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateMixin {
-
-  String convertToLocalTime(DateTime dateTime) {
-    DateTime localDateTime = dateTime.toLocal();
-    String formattedTime =
-        DateFormat('yyyy-MM-dd HH:mm:ss').format(localDateTime);
-    //var splicedTime = formattedTime.split(" ")[1].split(":");
-
-    return formattedTime.toString();
-  }
-
+class _PostWidgetState extends State<PostWidget>
+    with SingleTickerProviderStateMixin {
+  late List<CommentPojo> comments;
   @override
   void initState() {
     super.initState();
@@ -46,6 +42,16 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
       parseDescription(widget.post.parentpost!.description.toString(),
           widget.post.parentpost!.mention!);
     }
+    debugPrint(widget.post.id.toString());
+  }
+
+  String convertToLocalTime(DateTime dateTime) {
+    DateTime localDateTime = dateTime.toLocal();
+    String formattedTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(localDateTime);
+    //var splicedTime = formattedTime.split(" ")[1].split(":");
+
+    return formattedTime.toString();
   }
 
   String parseDescription(String desc, Mention mentionList) {
@@ -103,17 +109,87 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildBottomSheet(
-    BuildContext context,
-    ScrollController scrollController,
-    double bottomSheetOffset,
-  ) {
-    return Material(
-        child: ListView(
-          controller: scrollController,
-        ),
-      
+  void fetchComments() async {
+    debugPrint(widget.post.id.toString());
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
     );
+    var response = await dio.get(
+      'http://${dotenv.env['server_url']}/comment?id=${widget.post.id}',
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint('comments fetched for postId ${widget.post.id}');
+      setState(() {
+        // for (CommentPojo comm in commentPojoFromJson(response.data)) {
+        //   debugPrint(comm.commentStr);
+        // }
+        List<CommentPojo> comments = commentPojoFromJson(response.data);
+        List<CommentPojo> commentTree = buildCommentTree(comments);
+        debugPrint('number of parent comment id :${commentTree.length}');
+        for (CommentPojo comm in commentTree) {
+          debugPrint('line 136 for comment ${comm.commentStr}: ${comm.reactionMap.toString()}');
+        }
+      });
+    }
+  }
+
+  List<CommentPojo> buildCommentTree(List<CommentPojo> comments,
+      {int? parentCommentId}) {
+    List<CommentPojo> counted = [];
+    for (var comment in comments) {
+      counted.add(countReaction(comment));
+    }
+    List<CommentPojo> childComments = counted
+        .where((comment) => comment.commentOf == parentCommentId)
+        .map((comment) {
+      return CommentPojo(
+        id: comment.id,
+        createdAt: comment.createdAt,
+        commentStr: comment.commentStr,
+        commentOf: comment.commentOf,
+        postsId: comment.postsId,
+        userId: comment.userId,
+        deleted: comment.deleted,
+        author: comment.author,
+        userReaction: comment.userReaction,
+        reactionMap: comment.reactionMap,
+        commentReaction: comment.commentReaction,
+        children: buildCommentTree(counted, parentCommentId: comment.id),
+      );
+    }).toList();
+    return childComments.isNotEmpty ? childComments : [];
+  }
+
+  CommentPojo countReaction(CommentPojo comment) {
+    Map<String, int> reactionMap = {};
+    reactionMap['total'] = 0;
+    comment.userReaction = null;
+    final user = FirebaseAuth.instance.currentUser;
+    List<dynamic> commentReactions = comment.commentReaction!;
+    for (var reaction in commentReactions) {
+      if (reaction['author']['id'] == user!.uid) {
+        comment.userReaction = reaction;
+        //debugPrint('from line 183: ${comment.userReaction.toString()}');
+      }
+
+      if (reaction['type'] != 'dislike') {
+        if (reactionMap.containsKey(reaction['type'])) {
+          reactionMap[reaction['type']] = reactionMap[reaction['type']]! + 1;
+        } else {
+          reactionMap[reaction['type']] = 1;
+        }
+        reactionMap['total'] = reactionMap['total']! + 1;
+      }
+    }
+    comment.reactionMap = reactionMap;
+    return comment;
   }
 
   @override
@@ -246,22 +322,36 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
               GestureDetector(
                 onTap: () {
                   //debugPrint('open bottom sheet');
+                  fetchComments();
                   showStickyFlexibleBottomSheet(
-                    decoration:const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      )
-                    ),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    )),
                     minHeight: 0,
                     initHeight: 1,
                     maxHeight: 1,
-                    headerHeight: 25,
+                    headerHeight: 75,
                     context: context,
                     bottomSheetColor: Colors.white,
                     headerBuilder: (BuildContext context, double offset) {
-                      return Container(
-                      );
+                      return AppBar(
+                          automaticallyImplyLeading: false,
+                          title: const Column(
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: 40,
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [Text('Comments')],
+                              ),
+                            ],
+                          ));
                     },
                     bodyBuilder: (BuildContext context, double offset) {
                       return SliverChildListDelegate(
@@ -297,10 +387,11 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                         content:
                                             'A Dart template generator which helps teams generator which helps teams '),
                                   ],
-                                  
                                   treeThemeData: TreeThemeData(
-                                      lineColor: Colors.green[500]!, lineWidth: 3),
-                                  avatarRoot: (context, data) => const PreferredSize(
+                                      lineColor: Colors.green[500]!,
+                                      lineWidth: 3),
+                                  avatarRoot: (context, data) =>
+                                      const PreferredSize(
                                     child: CircleAvatar(
                                       radius: 18,
                                       backgroundColor: Colors.grey,
@@ -309,7 +400,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                     ),
                                     preferredSize: Size.fromRadius(18),
                                   ),
-                                  avatarChild: (context, data) => const PreferredSize(
+                                  avatarChild: (context, data) =>
+                                      const PreferredSize(
                                     child: CircleAvatar(
                                       radius: 12,
                                       backgroundColor: Colors.grey,
@@ -320,7 +412,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                   ),
                                   contentChild: (context, data) {
                                     return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.symmetric(
@@ -339,7 +432,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption
                                                     ?.copyWith(
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                         color: Colors.black),
                                               ),
                                               const SizedBox(
@@ -351,7 +445,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption
                                                     ?.copyWith(
-                                                        fontWeight: FontWeight.w300,
+                                                        fontWeight:
+                                                            FontWeight.w300,
                                                         color: Colors.black),
                                               ),
                                             ],
@@ -385,7 +480,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                   },
                                   contentRoot: (context, data) {
                                     return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.symmetric(
@@ -404,7 +500,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption!
                                                     .copyWith(
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                         color: Colors.black),
                                               ),
                                               const SizedBox(
@@ -416,7 +513,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption!
                                                     .copyWith(
-                                                        fontWeight: FontWeight.w300,
+                                                        fontWeight:
+                                                            FontWeight.w300,
                                                         color: Colors.black),
                                               ),
                                             ],
@@ -477,10 +575,11 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                         content:
                                             'A Dart template generator which helps teams generator which helps teams '),
                                   ],
-                                  
                                   treeThemeData: TreeThemeData(
-                                      lineColor: Colors.green[500]!, lineWidth: 3),
-                                  avatarRoot: (context, data) => const PreferredSize(
+                                      lineColor: Colors.green[500]!,
+                                      lineWidth: 3),
+                                  avatarRoot: (context, data) =>
+                                      const PreferredSize(
                                     child: CircleAvatar(
                                       radius: 18,
                                       backgroundColor: Colors.grey,
@@ -489,7 +588,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                     ),
                                     preferredSize: Size.fromRadius(18),
                                   ),
-                                  avatarChild: (context, data) => const PreferredSize(
+                                  avatarChild: (context, data) =>
+                                      const PreferredSize(
                                     child: CircleAvatar(
                                       radius: 12,
                                       backgroundColor: Colors.grey,
@@ -500,7 +600,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                   ),
                                   contentChild: (context, data) {
                                     return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.symmetric(
@@ -519,7 +620,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption
                                                     ?.copyWith(
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                         color: Colors.black),
                                               ),
                                               const SizedBox(
@@ -531,7 +633,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption
                                                     ?.copyWith(
-                                                        fontWeight: FontWeight.w300,
+                                                        fontWeight:
+                                                            FontWeight.w300,
                                                         color: Colors.black),
                                               ),
                                             ],
@@ -565,7 +668,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                   },
                                   contentRoot: (context, data) {
                                     return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.symmetric(
@@ -584,7 +688,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption!
                                                     .copyWith(
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                         color: Colors.black),
                                               ),
                                               const SizedBox(
@@ -596,7 +701,8 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                                     .textTheme
                                                     .caption!
                                                     .copyWith(
-                                                        fontWeight: FontWeight.w300,
+                                                        fontWeight:
+                                                            FontWeight.w300,
                                                         color: Colors.black),
                                               ),
                                             ],
