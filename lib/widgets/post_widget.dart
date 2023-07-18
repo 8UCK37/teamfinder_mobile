@@ -1,9 +1,5 @@
 // ignore_for_file: sort_child_properties_last
-
 import 'package:bottom_sheet/bottom_sheet.dart';
-import 'package:comment_tree/data/comment.dart';
-import 'package:comment_tree/widgets/comment_tree_widget.dart';
-import 'package:comment_tree/widgets/tree_theme_data.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -14,9 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
-import 'package:teamfinder_mobile/widgets/comment_tree.dart';
+import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
-import 'package:teamfinder_mobile/widgets/separator_widget.dart';
+
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
@@ -34,17 +30,6 @@ class _PostWidgetState extends State<PostWidget>
   @override
   void initState() {
     super.initState();
-    //debugPrint(widget.post.description.toString());
-    if (widget.post.mention != null) {
-      //debugPrint(widget.post.parentpost!.mention!.list.toString());
-      parseDescription(
-          widget.post.description.toString(), widget.post.mention!);
-    }
-    if (widget.post.parentpost?.mention != null) {
-      //debugPrint(widget.post.parentpost!.mention!.list.toString());
-      parseDescription(widget.post.parentpost!.description.toString(),
-          widget.post.parentpost!.mention!);
-    }
     debugPrint(widget.post.id.toString());
     fetchComments();
   }
@@ -130,7 +115,8 @@ class _PostWidgetState extends State<PostWidget>
     );
     if (response.statusCode == 200) {
       debugPrint('comments fetched for postId ${widget.post.id}');
-      setState(() {
+      if(mounted){
+        setState(() {
         // for (CommentPojo comm in commentPojoFromJson(response.data)) {
         //   debugPrint(comm.commentStr);
         // }
@@ -142,6 +128,7 @@ class _PostWidgetState extends State<PostWidget>
               'line 136 for comment ${comm.commentStr}: ${comm.reactionMap.toString()}');
         }
       });
+      }
     }
   }
 
@@ -327,7 +314,6 @@ class _PostWidgetState extends State<PostWidget>
               GestureDetector(
                 onTap: () {
                   //debugPrint('open bottom sheet');
-                  
                   showStickyFlexibleBottomSheet(
                     decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(

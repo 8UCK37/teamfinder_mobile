@@ -1,8 +1,8 @@
 import 'package:comment_tree/data/comment.dart';
-import 'package:comment_tree/widgets/comment_tree_widget.dart';
-import 'package:comment_tree/widgets/tree_theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
+import 'package:teamfinder_mobile/widgets/comment_widgets/custom_comment_tree_widget.dart';
+import 'package:teamfinder_mobile/widgets/comment_widgets/custom_treeTheme.dart';
 
 class CommentObj extends StatelessWidget {
   final CommentPojo parentComment;
@@ -35,23 +35,23 @@ class CommentObj extends StatelessWidget {
             content:
                 'A Dart template generator which helps teams generator which helps teams '),
       ],
-      treeThemeData: TreeThemeData(
-          lineColor: Color.fromARGB(255, 80, 64, 147)!, lineWidth: 3),
+      treeThemeData:const TreeThemeData(
+          lineColor:  Color.fromARGB(255, 80, 64, 147), lineWidth: 3),
       avatarRoot: (context, data) => const PreferredSize(
+        preferredSize: Size.fromRadius(18),
         child: CircleAvatar(
           radius: 18,
           backgroundColor: Colors.grey,
           backgroundImage: AssetImage('assets/avatar_2.png'),
         ),
-        preferredSize: Size.fromRadius(18),
       ),
       avatarChild: (context, data) => const PreferredSize(
+        preferredSize: Size.fromRadius(12),
         child: CircleAvatar(
           radius: 12,
           backgroundColor: Colors.grey,
           backgroundImage: AssetImage('assets/avatar_1.png'),
         ),
-        preferredSize: Size.fromRadius(12),
       ),
       contentChild: (context, data) {
         return Column(
