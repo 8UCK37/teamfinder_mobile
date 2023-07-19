@@ -352,11 +352,10 @@ class _PostWidgetState extends State<PostWidget>
                               children: [
                                 // ignore: unnecessary_null_comparison
                                 if (commentTree != null) 
-                                  for(CommentPojo parentComment in commentTree)
                                     Column(
                                       children: <Widget>[
                                         const Divider(thickness: 4,),
-                                        CommentObj(parentComment: parentComment,),
+                                        CommentObj(tree: commentTree ,),
                                       ],
                                     ),                              
                               ],
