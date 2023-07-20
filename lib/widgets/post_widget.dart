@@ -134,31 +134,34 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   List<CommentPojo> buildCommentTree(List<CommentPojo> comments,
-      {int? parentCommentId}) {
-    List<CommentPojo> counted = [];
-    for (var comment in comments) {
-      counted.add(countReaction(comment));
-    }
-    List<CommentPojo> childComments = counted
-        .where((comment) => comment.commentOf == parentCommentId)
-        .map((comment) {
-      return CommentPojo(
-        id: comment.id,
-        createdAt: comment.createdAt,
-        commentStr: comment.commentStr,
-        commentOf: comment.commentOf,
-        postsId: comment.postsId,
-        userId: comment.userId,
-        deleted: comment.deleted,
-        author: comment.author,
-        userReaction: comment.userReaction,
-        reactionMap: comment.reactionMap,
-        commentReaction: comment.commentReaction,
-        children: buildCommentTree(counted, parentCommentId: comment.id),
-      );
-    }).toList();
-    return childComments.isNotEmpty ? childComments : [];
+    {int? parentCommentId, int level = 0}) {
+  List<CommentPojo> counted = [];
+  for (var comment in comments) {
+    counted.add(countReaction(comment));
   }
+  List<CommentPojo> childComments = counted
+      .where((comment) => comment.commentOf == parentCommentId)
+      .map((comment) {
+    return CommentPojo(
+      id: comment.id,
+      createdAt: comment.createdAt,
+      commentStr: comment.commentStr,
+      commentOf: comment.commentOf,
+      postsId: comment.postsId,
+      userId: comment.userId,
+      deleted: comment.deleted,
+      author: comment.author,
+      userReaction: comment.userReaction,
+      reactionMap: comment.reactionMap,
+      commentReaction: comment.commentReaction,
+      showChildren: false,
+      type: level, // Set the type/level of the current comment.
+      children: buildCommentTree(counted, parentCommentId: comment.id, level: level + 1),
+    );
+  }).toList();
+  return childComments.isNotEmpty ? childComments : [];
+}
+
 
   CommentPojo countReaction(CommentPojo comment) {
     Map<String, int> reactionMap = {};

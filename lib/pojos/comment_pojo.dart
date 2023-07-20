@@ -25,19 +25,24 @@ class CommentPojo {
   dynamic reactionMap;
   dynamic userReaction;
   List<CommentPojo>? children;
-  CommentPojo(
-      {this.id,
-      this.createdAt,
-      this.commentStr,
-      this.commentOf,
-      this.postsId,
-      this.userId,
-      this.deleted,
-      this.author,
-      this.commentReaction,
-      this.reactionMap,
-      this.userReaction,
-      this.children});
+  int? type;
+  bool? showChildren;
+  CommentPojo({
+    this.id,
+    this.createdAt,
+    this.commentStr,
+    this.commentOf,
+    this.postsId,
+    this.userId,
+    this.deleted,
+    this.author,
+    this.commentReaction,
+    this.reactionMap,
+    this.userReaction,
+    this.children,
+    this.showChildren,
+    this.type,
+  });
 
   factory CommentPojo.fromJson(Map<String, dynamic> json) => CommentPojo(
         id: json["id"],
