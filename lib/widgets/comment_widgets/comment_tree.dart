@@ -156,7 +156,7 @@ class LinePainter extends CustomPainter {
     Size size,
   ) {
     final paint = Paint()
-      ..color = Colors.blue
+      ..color = const Color.fromARGB(255, 169, 171, 174)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
@@ -181,7 +181,7 @@ class ArrowPainter extends CustomPainter {
     Size size,
   ) {
     final paint = Paint()
-      ..color = Colors.blue
+      ..color = Color.fromARGB(255, 169, 171, 174)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
@@ -215,7 +215,7 @@ class UpwardLinePainter extends CustomPainter {
     Size size,
   ) {
     final paint = Paint()
-      ..color = Colors.blue
+      ..color = Color.fromARGB(255, 169, 171, 174)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
