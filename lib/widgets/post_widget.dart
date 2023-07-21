@@ -1,14 +1,10 @@
 // ignore_for_file: sort_child_properties_last
 import 'package:bottom_sheet/bottom_sheet.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
-import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/canvas_test/test.dart';
@@ -24,15 +20,11 @@ class PostWidget extends StatefulWidget {
   State<PostWidget> createState() => _PostWidgetState();
 }
 
-class _PostWidgetState extends State<PostWidget>
-    with SingleTickerProviderStateMixin {
-  late List<CommentPojo> comments;
-  late List<CommentPojo> commentTree;
+class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    debugPrint(widget.post.id.toString());
-    fetchComments();
+    //debugPrint(widget.post.id.toString());
   }
 
   String convertToLocalTime(DateTime dateTime) {
@@ -97,95 +89,6 @@ class _PostWidgetState extends State<PostWidget>
             DefaultTextStyle.of(context).style, // Apply the default text style
       ),
     );
-  }
-
-  void fetchComments() async {
-    debugPrint(widget.post.id.toString());
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    var response = await dio.get(
-      'http://${dotenv.env['server_url']}/comment?id=${widget.post.id}',
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      debugPrint('comments fetched for postId ${widget.post.id}');
-      if(mounted){
-        setState(() {
-        // for (CommentPojo comm in commentPojoFromJson(response.data)) {
-        //   debugPrint(comm.commentStr);
-        // }
-        comments = commentPojoFromJson(response.data);
-        commentTree = buildCommentTree(comments);
-        debugPrint('number of parent comment id :${commentTree.length}');
-        for (CommentPojo comm in commentTree) {
-          debugPrint(
-              'line 136 for comment ${comm.commentStr}: ${comm.reactionMap.toString()}');
-        }
-      });
-      }
-    }
-  }
-
-  List<CommentPojo> buildCommentTree(List<CommentPojo> comments,
-    {int? parentCommentId, int level = 0}) {
-  List<CommentPojo> counted = [];
-  for (var comment in comments) {
-    counted.add(countReaction(comment));
-  }
-  List<CommentPojo> childComments = counted
-      .where((comment) => comment.commentOf == parentCommentId)
-      .map((comment) {
-    return CommentPojo(
-      id: comment.id,
-      createdAt: comment.createdAt,
-      commentStr: comment.commentStr,
-      commentOf: comment.commentOf,
-      postsId: comment.postsId,
-      userId: comment.userId,
-      deleted: comment.deleted,
-      author: comment.author,
-      userReaction: comment.userReaction,
-      reactionMap: comment.reactionMap,
-      commentReaction: comment.commentReaction,
-      showChildren: false,
-      type: level, // Set the type/level of the current comment.
-      children: buildCommentTree(counted, parentCommentId: comment.id, level: level + 1),
-    );
-  }).toList();
-  return childComments.isNotEmpty ? childComments : [];
-}
-
-
-  CommentPojo countReaction(CommentPojo comment) {
-    Map<String, int> reactionMap = {};
-    reactionMap['total'] = 0;
-    comment.userReaction = null;
-    final user = FirebaseAuth.instance.currentUser;
-    List<dynamic> commentReactions = comment.commentReaction!;
-    for (var reaction in commentReactions) {
-      if (reaction['author']['id'] == user!.uid) {
-        comment.userReaction = reaction;
-        //debugPrint('from line 183: ${comment.userReaction.toString()}');
-      }
-
-      if (reaction['type'] != 'dislike') {
-        if (reactionMap.containsKey(reaction['type'])) {
-          reactionMap[reaction['type']] = reactionMap[reaction['type']]! + 1;
-        } else {
-          reactionMap[reaction['type']] = 1;
-        }
-        reactionMap['total'] = reactionMap['total']! + 1;
-      }
-    }
-    comment.reactionMap = reactionMap;
-    return comment;
   }
 
   @override
@@ -325,8 +228,9 @@ class _PostWidgetState extends State<PostWidget>
                       topRight: Radius.circular(16),
                     )),
                     minHeight: 0,
-                    initHeight: 1,
-                    maxHeight: 1,
+                    initHeight: 0.88,
+                    maxHeight: 0.88,
+                    anchors: [0, 0.5, 0.88],
                     headerHeight: 75,
                     context: context,
                     bottomSheetColor: Colors.white,
@@ -354,12 +258,10 @@ class _PostWidgetState extends State<PostWidget>
                           Container(
                             child: Column(
                               children: [
-                                // ignore: unnecessary_null_comparison
-                                if (commentTree != null) 
                                     Column(
                                       children: <Widget>[
                                         const Divider(thickness: 4,),
-                                        CommentObj(tree: commentTree ,),
+                                        CommentObj(postId: widget.post.id ),
                                       ],
                                     ),                              
                               ],
@@ -370,7 +272,6 @@ class _PostWidgetState extends State<PostWidget>
                         ],
                       );
                     },
-                    anchors: [0, 0.5, 1],
                   );
                 },
                 child: const Row(
