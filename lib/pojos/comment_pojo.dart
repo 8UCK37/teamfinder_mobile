@@ -27,6 +27,7 @@ class CommentPojo {
   List<CommentPojo>? children;
   int? type;
   bool? showChildren;
+  bool? parentHasSiblings;
   CommentPojo({
     this.id,
     this.createdAt,
@@ -42,6 +43,7 @@ class CommentPojo {
     this.children,
     this.showChildren,
     this.type,
+    this.parentHasSiblings
   });
 
   factory CommentPojo.fromJson(Map<String, dynamic> json) => CommentPojo(

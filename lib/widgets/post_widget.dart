@@ -228,24 +228,17 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                       topRight: Radius.circular(16),
                     )),
                     minHeight: 0,
-                    initHeight: 0.88,
-                    maxHeight: 0.88,
-                    anchors: [0, 0.5, 0.88],
-                    headerHeight: 75,
+                    initHeight: 0.67,
+                    maxHeight: 0.95,
+                    anchors: [0, 0.5, 0.95],
+                    headerHeight: 50,
                     context: context,
                     bottomSheetColor: Colors.white,
                     headerBuilder: (BuildContext context, double offset) {
                       return AppBar(
-                          automaticallyImplyLeading: false,
+                          automaticallyImplyLeading: true,
                           title: const Column(
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 40,
-                                  )
-                                ],
-                              ),
                               Row(
                                 children: [Text('Comments')],
                               ),
@@ -267,7 +260,7 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                               ],
                             ),
                             padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16),
+                                vertical: 8, horizontal: 16),
                           ),
                         ],
                       );

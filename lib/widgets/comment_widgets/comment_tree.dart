@@ -15,8 +15,8 @@ class CommentObj extends StatefulWidget {
 }
 
 class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
-  late List<CommentPojo> comments=[];
-  late List<CommentPojo> commentTree=[];
+  late List<CommentPojo> comments = [];
+  late List<CommentPojo> commentTree = [];
   @override
   void initState() {
     super.initState();
@@ -47,9 +47,17 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
           comments = commentPojoFromJson(response.data);
           commentTree = buildCommentTree(comments);
           debugPrint('number of parent comment id :${commentTree.length}');
-          for (CommentPojo comm in commentTree) {
-            debugPrint(
-                'line 136 for comment ${comm.commentStr}: ${comm.reactionMap.toString()}');
+          for (CommentPojo comment in commentTree) {
+            //debugPrint('line 136 for comment ${comm.commentStr}: ${comm.reactionMap.toString()}');
+            if (comment.children != null && comment.children!.length > 1) {
+              for (CommentPojo lvlonecomment in comment.children!) {
+                if (lvlonecomment.children != null) {
+                  for (CommentPojo lvltwocomment in lvlonecomment.children!) {
+                    lvltwocomment.parentHasSiblings = true;
+                  }
+                }
+              }
+            }
           }
         });
       }
@@ -57,7 +65,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
   }
 
   List<CommentPojo> buildCommentTree(List<CommentPojo> comments,
-      {int? parentCommentId, int level = 0}) {
+      {int? parentCommentId, int level = 0, bool parentHasSiblings = false}) {
     List<CommentPojo> counted = [];
     for (var comment in comments) {
       counted.add(countReaction(comment));
@@ -79,8 +87,13 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
         commentReaction: comment.commentReaction,
         showChildren: false,
         type: level, // Set the type/level of the current comment.
+        parentHasSiblings:
+            parentHasSiblings, // Pass the parentHasSiblings value to the child comment.
         children: buildCommentTree(counted,
-            parentCommentId: comment.id, level: level + 1),
+            parentCommentId: comment.id,
+            level: level + 1,
+            parentHasSiblings:
+                parentHasSiblings), // Check if there are siblings of the current comment.
       );
     }).toList();
     return childComments.isNotEmpty ? childComments : [];
@@ -116,20 +129,15 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
     return SafeArea(
         child: Column(
       children: <Widget>[
-        if(commentTree.length!=0)
-        for (CommentPojo parentComment in commentTree)
-          commentBox(
-            parentComment,
-            18,
-          ),
+        if (commentTree.length != 0)
+          for (CommentPojo parentComment in commentTree)
+            commentBox(parentComment, 18, true, true),
       ],
     ));
   }
 
   Widget commentBox(
-    CommentPojo comment,
-    double radius,
-  ) {
+      CommentPojo comment, double radius, bool isFirst, bool isLast) {
     return SizedBox(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,6 +146,27 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
             children: [
               Row(
                 children: [
+                  CustomPaint(
+                    painter: _ArrowPainter(type: comment.type!),
+                  ),
+                  if (comment.type != 0)
+                    CustomPaint(
+                      willChange: true,
+                      painter: _MainLinePainter(
+                          type: comment.type!,
+                          comment: comment,
+                          isFirst: isFirst,
+                          isLast: isLast),
+                    ),
+                  CustomPaint(
+                    willChange: true,
+                    painter: _SecondaryLinePainter(
+                      type: comment.type!,
+                      comment: comment,
+                      isFirst: isFirst,
+                      isLast: isLast,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: CircleAvatar(
@@ -215,10 +244,15 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (CommentPojo child in comment.children!)
+                      for (int index = 0;
+                          index < comment.children!.length;
+                          index++)
                         commentBox(
-                          child,
+                          comment.children![index],
                           15,
+                          index == 0,
+                          index ==
+                              comment.children!.length - 1, // isFirst or no
                         ),
                     ],
                   ),
@@ -228,5 +262,229 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+}
+
+class _ArrowPainter extends CustomPainter {
+  int type = 0;
+  _ArrowPainter({required this.type}) {
+    _paint = Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+  }
+  double getLength() {
+    switch (type) {
+      case 1:
+        return -18;
+      case 2:
+        return -14;
+      default:
+        return 0;
+    }
+  }
+
+  late Paint _paint;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Path path = Path();
+
+    path.moveTo(0, 4);
+    path.lineTo(getLength(), 4);
+    if (type != 0) {
+      canvas.drawPath(path, _paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class _MainLinePainter extends CustomPainter {
+  int type = 0;
+  CommentPojo comment;
+  bool isFirst;
+  bool isLast;
+  _MainLinePainter(
+      {required this.type,
+      required this.comment,
+      required this.isFirst,
+      required this.isLast}) {
+    _paint = Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+  }
+  double getLength() {
+    switch (type) {
+      case 1:
+        return -18;
+      case 2:
+        return -14;
+      default:
+        return 0;
+    }
+  }
+
+  double getheight() {
+    if (isFirst) {
+      switch (type) {
+        case 1:
+          return -56;
+        case 2:
+          return -62;
+        default:
+          return 0;
+      }
+    } else {
+      switch (type) {
+        case 1:
+          return -77;
+        case 2:
+          return -76;
+        default:
+          return 0;
+      }
+    }
+  }
+
+  double getStartingHeight() {
+    if (isLast) {
+      switch (type) {
+        case 1:
+          return 4;
+        case 2:
+          return 4;
+        default:
+          return 0;
+      }
+    } else {
+      switch (type) {
+        case 1:
+          return 4;
+        case 2:
+          return 25;
+        default:
+          return 0;
+      }
+    }
+  }
+
+  late Paint _paint;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Path path = Path();
+    path.moveTo(getLength(), getStartingHeight());
+    path.lineTo(getLength(), getheight());
+    if (type != 0) {
+      canvas.drawPath(path, _paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class _SecondaryLinePainter extends CustomPainter {
+  int type = 0;
+  CommentPojo comment;
+  bool isFirst;
+  bool isLast;
+  _SecondaryLinePainter({
+    required this.type,
+    required this.comment,
+    required this.isFirst,
+    required this.isLast,
+  }) {
+    _paint = Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+  }
+  double getLength() {
+    switch (type) {
+      case 1:
+        return -52;
+      case 2:
+        return -48;
+      default:
+        return 0;
+    }
+  }
+
+  double getheight() {
+    if (isFirst) {
+      switch (type) {
+        case 1:
+          return -56;
+        case 2:
+          return -78;
+        default:
+          return 0;
+      }
+    } else {
+      switch (type) {
+        case 1:
+          return -76;
+        case 2:
+          return -78;
+        default:
+          return 0;
+      }
+    }
+  }
+
+  double getStartingHeight() {
+    if (isLast) {
+      switch (type) {
+        case 1:
+          return 4;
+        case 2:
+          return 6;
+        default:
+          return 0;
+      }
+    } else {
+      switch (type) {
+        case 1:
+          return 4;
+        case 2:
+          return 25;
+        default:
+          return 0;
+      }
+    }
+  }
+
+  void testComment() {
+    debugPrint(
+        'for ${comment.commentStr} parent has children: ${comment.parentHasSiblings.toString()}');
+  }
+
+  late Paint _paint;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Path path = Path();
+    path.moveTo(getLength(), getStartingHeight());
+    path.lineTo(getLength(), getheight());
+    if (type == 2 && comment.parentHasSiblings!) {
+      testComment();
+      canvas.drawPath(path, _paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
