@@ -478,7 +478,7 @@ class _SecondaryLinePainter extends CustomPainter {
     path.moveTo(getLength(), getStartingHeight());
     path.lineTo(getLength(), getheight());
     if (type == 2 && comment.parentHasSiblings!) {
-      testComment();
+      //testComment();
       canvas.drawPath(path, _paint);
     }
   }
