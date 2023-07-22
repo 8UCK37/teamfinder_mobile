@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
-import 'package:teamfinder_mobile/widgets/canvas_test/test.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
 
 
@@ -197,9 +196,9 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
               ),
               Row(
                 children: <Widget>[
-                  Text(
-                      '${widget.post.hahacount} comments  •  '), //TODO:need to assign real values
-                  Text('${widget.post.lovecount} shares'),
+                  Text(int.parse(widget.post.commentCount!)<2?
+                  '${widget.post.commentCount} comment  •  ':'${widget.post.commentCount} comments  •  '), //TODO:need to assign real values
+                  Text('${widget.post.sharedCount} shares'),
                 ],
               ),
             ],
@@ -277,10 +276,7 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
               ),
               GestureDetector(
                 onTap: () {
-                   var route = MaterialPageRoute(
-                      builder: (BuildContext context) => const Test());
-                  Navigator.of(context)
-                      .push(route);
+                  
                 },
                 child: const Row(
                   children: <Widget>[

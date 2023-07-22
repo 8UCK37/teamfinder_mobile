@@ -7,6 +7,7 @@ import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
@@ -25,61 +26,60 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
   }
 
   void _fetchPosts() async {
-  final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
-  final user = FirebaseAuth.instance.currentUser;
-  debugPrint('fetch post called');
-  if (user != null) {
-    final idToken = await user.getIdToken();
+    final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
+    final user = FirebaseAuth.instance.currentUser;
+    debugPrint('fetch post called');
+    if (user != null) {
+      final idToken = await user.getIdToken();
 
-    final response = await http.get(
-      url,
-      headers: {'Authorization': 'Bearer $idToken'},
-    );
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $idToken'},
+      );
 
-    if (response.statusCode == 200) {
-      // Request successful
-      var res = response.body;
-      //print(res);
-      // Parse the JSON response into a list of PostPojo objects
-      List<PostPojo> parsedPosts = postPojoFromJson(res);
-      setState(() {
-          postList = parsedPosts; // Update the state variable with the parsed list
-      });
-     
+      if (response.statusCode == 200) {
+        // Request successful
+        var res = response.body;
+        //print(res);
+        // Parse the JSON response into a list of PostPojo objects
+        List<PostPojo> parsedPosts = postPojoFromJson(res);
+        setState(() {
+          postList =
+              parsedPosts; // Update the state variable with the parsed list
+          
+        });
+      } else {
+        // Request failed
+        debugPrint('Failed to hit Express backend endpoint');
+      }
     } else {
-      // Request failed
-      debugPrint('Failed to hit Express backend endpoint');
+      // User not logged in
+      debugPrint('User is not logged in');
     }
-  } else {
-    // User not logged in
-    debugPrint('User is not logged in');
   }
-}
 
-
- @override
-Widget build(BuildContext context) {
-  return SingleChildScrollView(
-    child: Column(
-      children: <Widget>[
-        const Divider(),
-        const OnlineWidget(),
-        const SeparatorWidget(),
-        const WriteSomethingWidget(),
-        //SeparatorWidget(),
-        //StoriesWidget(),
-        if (postList != null) // Add a null check here
-          for (PostPojo post in postList!) // Add a null check here
-            Column(
-              children: <Widget>[
-                const SeparatorWidget(),
-                PostWidget(post: post),
-              ],
-            ),
-        const SeparatorWidget(),
-      ],
-    ),
-  );
-}
-
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          const Divider(),
+          const OnlineWidget(),
+          const SeparatorWidget(),
+          const WriteSomethingWidget(),
+          //SeparatorWidget(),
+          //StoriesWidget(),
+          if (postList != null) // Add a null check here
+            for (PostPojo post in postList!) // Add a null check here
+              Column(
+                children: <Widget>[
+                  const SeparatorWidget(),
+                  PostWidget(post: post),
+                ],
+              ),
+          const SeparatorWidget(),
+        ],
+      ),
+    );
+  }
 }

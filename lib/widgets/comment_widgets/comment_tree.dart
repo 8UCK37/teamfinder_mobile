@@ -146,7 +146,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
             duration: Duration(milliseconds: 500),
             initialColor: Colors.red,
           ),
-        if(commentTree.length == 0)
+        if(!showLoading && commentTree.length == 0)
           Text('There are currently no comments for this post!!'),
         if (commentTree.length != 0)
           for (CommentPojo parentComment in commentTree)
