@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  colorful_progress_indicators:
+    dependency: "direct main"
+    description:
+      name: colorful_progress_indicators
+      sha256: "5a37014775368b37ebfcd9a47e758785438b2bd7ccbf3d6ec8066cb37207d87f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   comment_tree:
     dependency: "direct main"
     description:
@@ -233,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.1+1"
+  expandable_text:
+    dependency: "direct main"
+    description:
+      name: expandable_text
+      sha256: "7d03ea48af6987b20ece232678b744862aa3250d4a71e2aaf1e4af90015d76b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   fake_async:
     dependency: transitive
     description:

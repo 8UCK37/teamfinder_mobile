@@ -254,7 +254,7 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
                                     Column(
                                       children: <Widget>[
                                         const Divider(thickness: 4,),
-                                        CommentObj(postId: widget.post.id ),
+                                        CommentObj(postId: widget.post.id,showLines: false, ),
                                       ],
                                     ),                              
                               ],

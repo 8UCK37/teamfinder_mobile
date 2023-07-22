@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_is_empty
+import 'package:colorful_progress_indicators/colorful_progress_indicators.dart';
 import 'package:dio/dio.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,8 +9,8 @@ import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
 
 class CommentObj extends StatefulWidget {
   final int postId;
-
-  const CommentObj({super.key, required this.postId});
+  final bool showLines;
+  const CommentObj({super.key, required this.postId, required this.showLines});
 
   @override
   State<CommentObj> createState() => _CommentObjState();
@@ -17,6 +19,7 @@ class CommentObj extends StatefulWidget {
 class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
   late List<CommentPojo> comments = [];
   late List<CommentPojo> commentTree = [];
+  bool showLoading = true;
   @override
   void initState() {
     super.initState();
@@ -59,6 +62,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
               }
             }
           }
+          showLoading = false;
         });
       }
     }
@@ -129,15 +133,30 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
     return SafeArea(
         child: Column(
       children: <Widget>[
+        if (showLoading)
+          ColorfulLinearProgressIndicator(
+            colors: const [
+              Colors.red,
+              Colors.green,
+              Colors.blue,
+              Colors.yellow,
+              Colors.purple,
+              Colors.orange,
+            ],
+            duration: Duration(milliseconds: 500),
+            initialColor: Colors.red,
+          ),
+        if(commentTree.length == 0)
+          Text('There are currently no comments for this post!!'),
         if (commentTree.length != 0)
           for (CommentPojo parentComment in commentTree)
-            commentBox(parentComment, 18, true, true),
+            commentBox(parentComment, 18, true, true, widget.showLines),
       ],
     ));
   }
 
-  Widget commentBox(
-      CommentPojo comment, double radius, bool isFirst, bool isLast) {
+  Widget commentBox(CommentPojo comment, double radius, bool isFirst,
+      bool isLast, bool showLine) {
     return SizedBox(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,10 +165,11 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
             children: [
               Row(
                 children: [
-                  CustomPaint(
-                    painter: _ArrowPainter(type: comment.type!),
-                  ),
-                  if (comment.type != 0)
+                  if (showLine)
+                    CustomPaint(
+                      painter: _ArrowPainter(type: comment.type!),
+                    ),
+                  if (comment.type != 0 && showLine)
                     CustomPaint(
                       willChange: true,
                       painter: _MainLinePainter(
@@ -158,15 +178,16 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                           isFirst: isFirst,
                           isLast: isLast),
                     ),
-                  CustomPaint(
-                    willChange: true,
-                    painter: _SecondaryLinePainter(
-                      type: comment.type!,
-                      comment: comment,
-                      isFirst: isFirst,
-                      isLast: isLast,
+                  if (showLine)
+                    CustomPaint(
+                      willChange: true,
+                      painter: _SecondaryLinePainter(
+                        type: comment.type!,
+                        comment: comment,
+                        isFirst: isFirst,
+                        isLast: isLast,
+                      ),
                     ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: CircleAvatar(
@@ -196,10 +217,12 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                           comment.author!.name,
                           style: TextStyle(fontSize: 14),
                         ),
-                        Text(
+                        ExpandableText(
                           comment.commentStr!,
-                          style: TextStyle(fontSize: 13),
-                          softWrap: true,
+                          expandText: 'show more',
+                          collapseText: 'show less',
+                          maxLines: 2,
+                          linkColor: Colors.blue,
                         ),
                       ],
                     ),
@@ -229,8 +252,6 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                               style: TextStyle(fontSize: 13),
                             ),
                             onTap: () {
-                              // Handle the tap to show the children comments here
-                              // You can use a state variable to control the visibility of children
                               setState(() {
                                 comment.showChildren = !(comment.showChildren!);
                               });
@@ -248,12 +269,12 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                           index < comment.children!.length;
                           index++)
                         commentBox(
-                          comment.children![index],
-                          15,
-                          index == 0,
-                          index ==
-                              comment.children!.length - 1, // isFirst or no
-                        ),
+                            comment.children![index],
+                            15,
+                            index == 0,
+                            index ==
+                                comment.children!.length - 1, // isFirst or no
+                            showLine),
                     ],
                   ),
               ],
