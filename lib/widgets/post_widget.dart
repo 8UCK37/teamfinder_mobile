@@ -19,11 +19,24 @@ class PostWidget extends StatefulWidget {
   State<PostWidget> createState() => _PostWidgetState();
 }
 
-class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateMixin {
+class _PostWidgetState extends State<PostWidget>
+    with SingleTickerProviderStateMixin {
+  bool showReaction = false;
+  late AnimationController _controller;
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200), // Adjust the duration as you like
+    );
     //debugPrint(widget.post.id.toString());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   String convertToLocalTime(DateTime dateTime) {
@@ -45,6 +58,21 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
       dump = sanitizedDesc.replaceAll(key, idNameMap[key].toString());
     }
     return (dump);
+  }
+
+  void toggleReactionBar() {
+    debugPrint("animation called");
+    setState(() {
+      showReaction = !showReaction;
+    });
+
+    if (showReaction) {
+      _controller.forward();
+      debugPrint("showreaction:true");
+    } else {
+      debugPrint("showreaction:false");
+      _controller.reverse();
+    }
   }
 
   Widget parseDescriptionWidget(String desc, Mention mentionList) {
@@ -179,115 +207,180 @@ class _PostWidgetState extends State<PostWidget> with SingleTickerProviderStateM
               ),
             ),
           //const SizedBox(height: 5.0),
-          ImageGrid(
-              imageUrls: (widget.post.shared == null)
-                  ? widget.post.photoUrl!.split(',')
-                  : widget.post.parentpost!.photoUrl!.split(',')),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  const Icon(FontAwesomeIcons.thumbsUp,
-                      size: 15.0, color: Colors.blue),
-                  Text(' ${widget.post.likecount}'),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Text(int.parse(widget.post.commentCount!)<2?
-                  '${widget.post.commentCount} comment  •  ':'${widget.post.commentCount} comments  •  '), //TODO:need to assign real values
-                  Text('${widget.post.sharedCount} shares'),
-                ],
-              ),
-            ],
-          ),
-
-          const Divider(height: 30.0),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const Row(
-                children: <Widget>[
-                  Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
-                  SizedBox(width: 5.0),
-                  Text('Like', style: TextStyle(fontSize: 14.0)),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  //debugPrint('open bottom sheet');
-                  showStickyFlexibleBottomSheet(
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    )),
-                    minHeight: 0,
-                    initHeight: 0.67,
-                    maxHeight: 0.95,
-                    anchors: [0, 0.5, 0.95],
-                    headerHeight: 50,
-                    context: context,
-                    bottomSheetColor: Colors.white,
-                    headerBuilder: (BuildContext context, double offset) {
-                      return AppBar(
-                          automaticallyImplyLeading: true,
-                          title: const Column(
-                            children: [
-                              Row(
-                                children: [Text('Comments')],
-                              ),
-                            ],
-                          ));
-                    },
-                    bodyBuilder: (BuildContext context, double offset) {
-                      return SliverChildListDelegate(
-                        <Widget>[
-                          Container(
-                            child: Column(
-                              children: [
-                                    Column(
-                                      children: <Widget>[
-                                        const Divider(thickness: 4,),
-                                        CommentObj(postId: widget.post.id,showLines: false, ),
-                                      ],
-                                    ),                              
+          Stack(children: <Widget>[
+            Column(
+              children: [
+                ImageGrid(
+                    imageUrls: (widget.post.shared == null)
+                        ? widget.post.photoUrl!.split(',')
+                        : widget.post.parentpost!.photoUrl!.split(',')),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          const Icon(FontAwesomeIcons.thumbsUp,
+                              size: 15.0, color: Colors.blue),
+                          Text(' ${widget.post.likecount}'),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(int.parse(widget.post.commentCount!) < 2
+                              ? '${widget.post.commentCount} comment  •  '
+                              : '${widget.post.commentCount} comments  •  '), //TODO:need to assign real values
+                          Text('${widget.post.sharedCount} shares'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Column(
+                    children: [
+                      Divider(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onLongPress: () {
+                              //TODO show reaction bar
+                              toggleReactionBar();
+                            },
+                            child: const Row(
+                              children: <Widget>[
+                                Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
+                                SizedBox(width: 5.0),
+                                Text('Like', style: TextStyle(fontSize: 14.0)),
                               ],
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              //debugPrint('open bottom sheet');
+                              showStickyFlexibleBottomSheet(
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                )),
+                                minHeight: 0,
+                                initHeight: 0.67,
+                                maxHeight: 0.95,
+                                anchors: [0, 0.5, 0.95],
+                                headerHeight: 50,
+                                context: context,
+                                bottomSheetColor: Colors.white,
+                                headerBuilder:
+                                    (BuildContext context, double offset) {
+                                  return AppBar(
+                                      automaticallyImplyLeading: true,
+                                      title: const Column(
+                                        children: [
+                                          Row(
+                                            children: [Text('Comments')],
+                                          ),
+                                        ],
+                                      ));
+                                },
+                                bodyBuilder:
+                                    (BuildContext context, double offset) {
+                                  return SliverChildListDelegate(
+                                    <Widget>[
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                            Column(
+                                              children: <Widget>[
+                                                const Divider(
+                                                  thickness: 4,
+                                                ),
+                                                CommentObj(
+                                                  postId: widget.post.id,
+                                                  showLines: false,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 16),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: const Row(
+                              children: <Widget>[
+                                Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+                                SizedBox(width: 5.0),
+                                Text('Comment',
+                                    style: TextStyle(fontSize: 14.0)),
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: const Row(
+                              children: <Widget>[
+                                Icon(FontAwesomeIcons.share, size: 20.0),
+                                SizedBox(width: 5.0),
+                                Text('Share', style: TextStyle(fontSize: 14.0)),
+                              ],
+                            ),
                           ),
                         ],
-                      );
-                    },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 25,
+              left: 0,
+              right: 0,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: _controller
+                        .value, // Animate the opacity using the controller's value
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0,
+                            1), // Start from below the screen (you can adjust this)
+                        end: Offset
+                            .zero, // End at the original position (centered)
+                      ).animate(CurvedAnimation(
+                        parent: _controller,
+                        curve: Curves.easeInOut,
+                      )),
+                      child: PhysicalModel(
+                        color: Colors.white,
+                        elevation: 3,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(25),
+                        child: SizedBox(
+                          height: 50,
+                          child: Container(
+                              // You can put your content here
+                              ),
+                        ),
+                      ),
+                    ),
                   );
                 },
-                child: const Row(
-                  children: <Widget>[
-                    Icon(FontAwesomeIcons.commentAlt, size: 20.0),
-                    SizedBox(width: 5.0),
-                    Text('Comment', style: TextStyle(fontSize: 14.0)),
-                  ],
-                ),
               ),
-              GestureDetector(
-                onTap: () {
-                  
-                },
-                child: const Row(
-                  children: <Widget>[
-                    Icon(FontAwesomeIcons.share, size: 20.0),
-                    SizedBox(width: 5.0),
-                    Text('Share', style: TextStyle(fontSize: 14.0)),
-                  ],
-                ),
-              ),
-            ],
-          )
+            ),
+          ]),
         ],
       ),
     );
