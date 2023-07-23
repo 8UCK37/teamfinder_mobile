@@ -52,7 +52,7 @@ class _CustomReactionState extends State<CustomReaction>
     // return success? !isLiked:isLiked;
     iconScaleController.forward().whenComplete(() async {
             await player.play(AssetSource("assets/audio/pop.mp3"));
-            Future.delayed(const Duration(milliseconds: 550), () {
+            Future.delayed(const Duration(milliseconds: 525), () {
               widget.onTap(widget.index);
             });
           });
