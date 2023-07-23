@@ -255,8 +255,25 @@ class _PostWidgetState extends State<PostWidget>
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    const Icon(FontAwesomeIcons.thumbsUp,
-                        size: 15.0, color: Colors.blue),
+                    const SizedBox(
+                      width:25,
+                      child: Stack(children: [
+                          Positioned(
+                            left: 7.5,
+                            child: Image(
+                              image: AssetImage("assets/images/love.gif"),
+                              height:20,
+                              width:20,
+                            ),
+                          ),
+                          Image(
+                            image: AssetImage("assets/images/haha.gif"),
+                            height:20,
+                            width:20,
+                          ),
+                      ],),
+                    ),
+                    
                     Text(' ${int.parse(widget.post.likecount!)+
                             int.parse(widget.post.hahacount!)+
                             int.parse(widget.post.lovecount!)+
