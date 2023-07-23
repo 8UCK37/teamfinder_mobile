@@ -2,7 +2,6 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_reaction/flutter_animated_reaction.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';

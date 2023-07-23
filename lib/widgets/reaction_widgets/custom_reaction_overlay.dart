@@ -33,14 +33,9 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
   @override
   void initState() {
     super.initState();
-
-    for (String path in widget.reactions) {
-      debugPrint("from c_r_overlay line 38:$path");
-    }
-
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 200),
     );
 
     scaleAnimation = CurvedAnimation(
