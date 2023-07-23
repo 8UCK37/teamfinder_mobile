@@ -2,13 +2,13 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_reaction/flutter_animated_reaction.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
-
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
@@ -21,21 +21,14 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget>
     with SingleTickerProviderStateMixin {
-  bool showReaction = false;
-  late AnimationController _controller;
+  GlobalKey key = GlobalKey();
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200), // Adjust the duration as you like
-    );
-    //debugPrint(widget.post.id.toString());
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
@@ -60,20 +53,9 @@ class _PostWidgetState extends State<PostWidget>
     return (dump);
   }
 
-  void toggleReactionBar() {
-    debugPrint("animation called");
-    setState(() {
-      showReaction = !showReaction;
-    });
+  
 
-    if (showReaction) {
-      _controller.forward();
-      debugPrint("showreaction:true");
-    } else {
-      debugPrint("showreaction:false");
-      _controller.reverse();
-    }
-  }
+  
 
   Widget parseDescriptionWidget(String desc, Mention mentionList) {
     String sanitizedDesc = desc.substring(0, desc.length - 1);
@@ -233,7 +215,7 @@ class _PostWidgetState extends State<PostWidget>
                         children: <Widget>[
                           Text(int.parse(widget.post.commentCount!) < 2
                               ? '${widget.post.commentCount} comment  •  '
-                              : '${widget.post.commentCount} comments  •  '), 
+                              : '${widget.post.commentCount} comments  •  '),
                           Text('${widget.post.sharedCount} shares'),
                         ],
                       ),
@@ -250,14 +232,23 @@ class _PostWidgetState extends State<PostWidget>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           GestureDetector(
+                            key: key,
                             onLongPress: () {
-                              toggleReactionBar();
+                              AnimatedFlutterReaction().showOverlay(
+                                  context: context,
+                                  key: key,
+                                  onReaction: (val) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                            SnackBar(content: Text("$val")));
+                                  });
                             },
                             child: const Row(
                               children: <Widget>[
                                 Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
                                 SizedBox(width: 5.0),
-                                Text('Like', style: TextStyle(fontSize: 14.0)),
+                                Text('Like',
+                                    style: TextStyle(fontSize: 14.0)),
                               ],
                             ),
                           ),
@@ -332,7 +323,8 @@ class _PostWidgetState extends State<PostWidget>
                               children: <Widget>[
                                 Icon(FontAwesomeIcons.share, size: 20.0),
                                 SizedBox(width: 5.0),
-                                Text('Share', style: TextStyle(fontSize: 14.0)),
+                                Text('Share',
+                                    style: TextStyle(fontSize: 14.0)),
                               ],
                             ),
                           ),
@@ -343,44 +335,8 @@ class _PostWidgetState extends State<PostWidget>
                 ),
               ],
             ),
-            Positioned(
-              bottom: 25,
-              left: 0,
-              right: 0,
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _controller
-                        .value, // Animate the opacity using the controller's value
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0,
-                            1), // Start from below the screen (you can adjust this)
-                        end: Offset
-                            .zero, // End at the original position (centered)
-                      ).animate(CurvedAnimation(
-                        parent: _controller,
-                        curve: Curves.easeInOut,
-                      )),
-                      child: PhysicalModel(
-                        color: Colors.white,
-                        elevation: 3,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(25),
-                        child: SizedBox(
-                          height: 50,
-                          child: Container(
-                              // You can put your content here
-                              ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ]),
+          ]
+        ),
         ],
       ),
     );

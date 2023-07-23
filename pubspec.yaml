@@ -75,7 +75,7 @@ dependencies:
   comment_tree: ^0.3.0
   bottom_sheet: ^3.1.2
   expandable_text: ^2.3.0
-
+  flutter_animated_reaction: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
