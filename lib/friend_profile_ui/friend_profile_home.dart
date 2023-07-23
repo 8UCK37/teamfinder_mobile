@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
@@ -20,8 +21,8 @@ class FriendProfilePage extends StatefulWidget {
   const FriendProfilePage({
     super.key,
     required this.friendId,
-     this.friendName,
-     this.friendProfileImage,
+    this.friendName,
+    this.friendProfileImage,
   });
   @override
   // ignore: library_private_types_in_public_api
@@ -32,6 +33,8 @@ class _FriendProfilePageState extends State<FriendProfilePage>
     with TickerProviderStateMixin {
   List<PostPojo>? postList;
   UserPojo? friendProfile;
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _linkedAccWidgetKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -42,8 +45,41 @@ class _FriendProfilePageState extends State<FriendProfilePage>
   @override
   void dispose() {
     // Unsubscribe the listener to avoid memory leaks
+    _scrollController.dispose();
     super.dispose();
   }
+
+  void scrollToWidget(GlobalKey key) {
+  // Determine the target widget's position
+  final RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
+  final targetOffset = renderBox.localToGlobal(Offset.zero);
+
+  // Check if the target widget is already visible within the viewport
+  final double targetY = targetOffset.dy;
+  final double screenHeight = MediaQuery.of(context).size.height;
+  final double scrollPosition = _scrollController.offset;
+  final double maxScrollPosition = _scrollController.position.maxScrollExtent;
+
+  if (targetY >= scrollPosition && targetY < (scrollPosition + screenHeight)) {
+    // The target widget is already visible, so no need to scroll
+    return;
+  }
+
+  // Ensure the target position is within the bounds of the scrollable content
+  final double targetScrollOffset = targetY > maxScrollPosition
+      ? maxScrollPosition
+      : targetY < 0
+          ? 0
+          : targetY;
+
+  // Scroll to the target widget
+  _scrollController.animateTo(
+    targetScrollOffset,
+    duration: const Duration(milliseconds: 500), // Animation duration
+    curve: Curves.easeInOut, // Animation curve
+  );
+}
+
 
   Future<void> getProfileData() async {
     Dio dio = Dio();
@@ -89,17 +125,17 @@ class _FriendProfilePageState extends State<FriendProfilePage>
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       setState(() {
-        postList =parsedPosts; // Update the state variable with the parsed list
+        postList =
+            parsedPosts; // Update the state variable with the parsed list
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (friendProfile == null){
+    if (friendProfile == null) {
       return Container();
-      }
-    else {
+    } else {
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -164,6 +200,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                   child: Column(
                 children: <Widget>[
                   Stack(
@@ -200,7 +237,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                               ),
                             ),
                           ),
-                          Padding(         
+                          Padding(
                             padding: const EdgeInsets.only(top: 185, left: 10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -222,26 +259,31 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                     child: Column(
                       children: <Widget>[
                         Row(
-                          children: <Widget>[
-                            const Icon(Icons.home,
-                                color: Colors.grey, size: 30.0),
-                            const SizedBox(width: 10.0),
-                            Text('Lives in ${friendProfile!.userInfo!.country}',
-                                style: const TextStyle(fontSize: 16.0))
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: <Widget>[
+                                const Icon(Icons.person_pin_circle,
+                                    color: Colors.green, size: 32.0),
+                                const SizedBox(width: 10.0),
+                                Text('${friendProfile!.userInfo!.country}',
+                                    style: const TextStyle(fontSize: 16.0))
+                              ],
+                            ),
+                            const SizedBox(height: 15.0),
+                            Row(
+                              children: <Widget>[
+                                const Icon(Icons.record_voice_over,
+                                    color: Colors.blue, size: 30.0),
+                                const SizedBox(width: 10.0),
+                                Text('${friendProfile!.userInfo!.language}',
+                                    style: const TextStyle(fontSize: 16.0))
+                              ],
+                            ),
                           ],
                         ),
                         const SizedBox(height: 15.0),
                         Row(
-                          children: <Widget>[
-                            const Icon(Icons.record_voice_over,
-                                color: Colors.grey, size: 30.0),
-                            const SizedBox(width: 10.0),
-                            Text('Speaks ${friendProfile!.userInfo!.language}',
-                                style: const TextStyle(fontSize: 16.0))
-                          ],
-                        ),
-                        const SizedBox(height: 15.0),
-                         Row(
                           children: <Widget>[
                             const Icon(Icons.more_horiz,
                                 color: Colors.grey, size: 30.0),
@@ -251,6 +293,56 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                           ],
                         ),
                         const SizedBox(height: 15.0),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    height: 0.0,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              key: _linkedAccWidgetKey,
+                              children: const <Widget>[
+                                Text('Linked accounts',
+                                    style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 60, 159, 209))),
+                                SizedBox(height: 6.0),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 15.0),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        child: Icon(FontAwesomeIcons.steam),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 15.0),
+                                        child: SizedBox(
+                                          child: Icon(FontAwesomeIcons.twitch),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 15.0),
+                                        child: SizedBox(
+                                          child: Icon(FontAwesomeIcons.discord),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -266,8 +358,8 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                 Text("${friendProfile!.name}'s wall",
-                                    style:const TextStyle(
+                                Text("${friendProfile!.name}'s wall",
+                                    style: const TextStyle(
                                         fontSize: 22.0,
                                         fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 6.0),
@@ -282,7 +374,6 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                             // const Text('Find Friends',
                             //     style:
                             //         TextStyle(fontSize: 16.0, color: Colors.blue)),
-                           
                           ],
                         ),
                         const SizedBox(height: 25),
@@ -302,27 +393,40 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                 ],
               )),
             ),
-            const GNav(gap: 8, tabs: [
-              GButton(
-                icon: Icons.receipt_long,
-                text: 'Posts',
-                textColor: Colors.deepPurple,
-                iconActiveColor: Colors.deepPurple,
-              ),
-              GButton(
-                icon: Icons.sports_esports,
-                text: 'Games',
-                textColor: Colors.deepOrange,
-                iconActiveColor: Colors.deepOrange,
-              ),
-              GButton(
-                icon: Icons.link,
-                text: 'Linked Acc',
-                textColor: Colors.blue,
-                iconActiveColor: Colors.blue,
-              ),
-            ]),
           ],
+        ),
+        bottomNavigationBar: SizedBox(
+          height: 75,
+          child: GNav(duration: const Duration(milliseconds: 250), gap: 5, tabs: [
+            const GButton(
+              icon: Icons.receipt_long,
+              text: 'Posts',
+              textColor: Colors.deepPurple,
+              iconActiveColor: Colors.deepPurple,
+            ),
+            const GButton(
+              icon: Icons.sports_esports,
+              text: 'Games',
+              textColor: Colors.deepOrange,
+              iconActiveColor: Colors.deepOrange,
+            ),
+            GButton(
+              onPressed: () {
+                //debugPrint('scroll  to linked');
+                scrollToWidget(_linkedAccWidgetKey);
+              },
+              icon: Icons.link,
+              text: 'Linked Acc',
+              textColor: Colors.blue,
+              iconActiveColor: Colors.blue,
+            ),
+            const GButton(
+              icon: Icons.people_outline,
+              text: 'Friends',
+              textColor: Color.fromARGB(255, 152, 129, 14),
+              iconActiveColor: Color.fromARGB(255, 152, 129, 14),
+            ),
+          ]),
         ),
       );
     }

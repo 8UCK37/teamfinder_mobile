@@ -142,7 +142,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                   Row(
                   children: <Widget>[
                     const Icon(Icons.person_pin_circle, color: Colors.green, size: 32.0),
-                    
                     Text(' ${userData['userInfo']['Country']}',
                         style: const TextStyle(fontSize: 16.0))
                   ],
@@ -223,7 +222,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                               ),
                             )
                           ],
-                                              ),
+                          ),
                         )
                       ],
                     ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
@@ -148,10 +149,10 @@ class _HomePageState extends State<HomePage>
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.deepPurple,
           tabs: const [
-            Tab(icon: Icon(Icons.home, size: 30.0)),
-            Tab(icon: Icon(Icons.co_present, size: 30.0)),
-            Tab(icon: Icon(Icons.diversity_3, size: 30.0)),
-            Tab(icon: Icon(Icons.notifications, size: 30.0)),
+            Tab(icon: Icon(FontAwesomeIcons.houseFlag, size: 28.0)),
+            Tab(icon: Icon(Icons.co_present, size: 28.0)),
+            Tab(icon: Icon(Icons.diversity_3, size: 32.0)),
+            Tab(icon: Icon(FontAwesomeIcons.bell, size: 28.0)),
             Tab(icon: Icon(Icons.menu, size: 30.0, key: Key('menuTab')))
           ],
         ),
