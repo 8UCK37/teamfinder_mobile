@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:like_button/like_button.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
@@ -124,6 +125,7 @@ class _PostWidgetState extends State<PostWidget>
                   Text(convertToLocalTime(widget.post.createdAt))
                 ],
               ),
+              
             ],
           ),
           const SizedBox(height: 20.0),
@@ -244,9 +246,28 @@ class _PostWidgetState extends State<PostWidget>
                                   }
                                 );
                             },
-                            child: const Row(
+                            child: Row(
                               children: <Widget>[
-                                Icon(FontAwesomeIcons.thumbsUp, size: 20.0),
+                                LikeButton(
+                                  size: 30,
+                                  circleColor: const CircleColor(
+                                      start: Color(0xff00ddff),
+                                      end: Color(0xff0099cc)),
+                                  bubblesColor: const BubblesColor(
+                                    dotPrimaryColor: Color(0xff33b5e5),
+                                    dotSecondaryColor: Color(0xff0099cc),
+                                  ),
+                                  likeBuilder: (bool isLiked) {
+                                    return Icon(
+                                      Icons.thumb_up,
+                                      color: isLiked
+                                          ? Colors.deepPurpleAccent
+                                          : Colors.grey,
+                                      size: 30,
+                                    );
+                                  },
+                                  likeCount: null,
+                                ),
                                 SizedBox(width: 5.0),
                                 Text('Like',
                                     style: TextStyle(fontSize: 14.0)),
