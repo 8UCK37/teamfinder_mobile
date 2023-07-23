@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_reaction/reaction.dart';
+import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_reaction.dart';
 
 class CustomReactionOverlay extends StatefulWidget {
   const CustomReactionOverlay({
@@ -33,6 +33,11 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
   @override
   void initState() {
     super.initState();
+
+    for (String path in widget.reactions) {
+      debugPrint("from c_r_overlay line 38:$path");
+    }
+
     controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -82,7 +87,8 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
                   borderRadius: BorderRadius.circular(30),
                   child: Container(
                     width: widget.overlaySize,
-                    constraints: const BoxConstraints(maxHeight: 60, minHeight: 60),
+                    constraints:
+                        const BoxConstraints(maxHeight: 60, minHeight: 60),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       color: widget.backgroundColor,
@@ -91,7 +97,7 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         for (int i = 0; i < widget.reactions.length; i++)
-                          Reaction(
+                          CustomReaction(
                             path: widget.reactions[i],
                             onTap: widget.onPressReact,
                             index: i,
@@ -109,4 +115,3 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
     );
   }
 }
-
