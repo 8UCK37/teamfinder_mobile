@@ -2,13 +2,13 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_reaction/flutter_animated_reaction.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
+import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
@@ -234,14 +234,15 @@ class _PostWidgetState extends State<PostWidget>
                           GestureDetector(
                             key: key,
                             onLongPress: () {
-                              AnimatedFlutterReaction().showOverlay(
+                              CustomAnimatedFlutterReaction().showOverlay(
                                   context: context,
                                   key: key,
                                   onReaction: (val) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(
-                                            SnackBar(content: Text("$val")));
-                                  });
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(
+                                    //         SnackBar(content: Text("$val")));
+                                  }
+                                );
                             },
                             child: const Row(
                               children: <Widget>[
