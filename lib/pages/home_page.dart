@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage>
           labelColor: Colors.deepPurple,
           tabs: const [
             Tab(icon: Icon(Icons.home, size: 30.0)),
-            Tab(icon: Icon(Icons.badge, size: 30.0)),
+            Tab(icon: Icon(Icons.co_present, size: 30.0)),
             Tab(icon: Icon(Icons.diversity_3, size: 30.0)),
             Tab(icon: Icon(Icons.notifications, size: 30.0)),
             Tab(icon: Icon(Icons.menu, size: 30.0, key: Key('menuTab')))

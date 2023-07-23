@@ -159,7 +159,7 @@ class _FriendListState extends State<FriendList>
                                 Navigator.of(context).push(route);
                             },
                             child: Icon(
-                              Icons.badge,
+                              Icons.co_present,
                               color: Colors.amberAccent.shade700,
                               ),
                           ),
