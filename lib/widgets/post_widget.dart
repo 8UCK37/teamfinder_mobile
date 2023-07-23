@@ -54,9 +54,60 @@ class _PostWidgetState extends State<PostWidget>
     return (dump);
   }
 
-  
-
-  
+  Widget UserReaction() {
+    if (widget.post.noreaction!) {
+      return SizedBox(
+        height: 75,
+        width: 75,
+        child: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return const LinearGradient(
+              colors: [
+                Colors.grey,
+                Colors.grey
+              ], // You can change the colors if needed.
+              stops: [0.0, 1.0],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ).createShader(bounds);
+          },
+          blendMode: BlendMode
+              .srcATop, // This preserves the transparency of the image.
+          child: const Image(
+            image: AssetImage("assets/images/fire.gif"),
+            width: 75,
+            height: 75,
+          ),
+        ),
+      );
+    } else {
+      String path (String  s) {
+        switch (s) {
+          case "like":
+            return "assets/images/fire.gif";
+          case "haha":
+            return "assets/images/haha.gif";
+          case "sad":
+            return "assets/images/sad.gif";
+          case "love":
+            return "assets/images/love.gif";
+          case "poop":
+            return "assets/images/poop.gif";
+          default:
+            return "null";
+        }
+      }
+      return SizedBox(
+        height: 75,
+        width: 75,
+        child: Image(
+          image: AssetImage(path(widget.post.reactiontype)),
+          width: 75,
+          height: 75,
+        ),
+      );
+    }
+  }
 
   Widget parseDescriptionWidget(String desc, Mention mentionList) {
     String sanitizedDesc = desc.substring(0, desc.length - 1);
@@ -73,7 +124,6 @@ class _PostWidgetState extends State<PostWidget>
               text: '${idNameMap[word]} ',
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  debugPrint('${now.toString()} yooooo:$word');
                   var route = MaterialPageRoute(
                       builder: (BuildContext context) => FriendProfilePage(
                             friendId: word,
@@ -125,7 +175,6 @@ class _PostWidgetState extends State<PostWidget>
                   Text(convertToLocalTime(widget.post.createdAt))
                 ],
               ),
-              
             ],
           ),
           const SizedBox(height: 20.0),
@@ -240,8 +289,7 @@ class _PostWidgetState extends State<PostWidget>
                               // ScaffoldMessenger.of(context)
                               //     .showSnackBar(
                               //         SnackBar(content: Text("$val")));
-                            }
-                          );
+                            });
                       },
                       child: Row(
                         children: <Widget>[
@@ -255,19 +303,12 @@ class _PostWidgetState extends State<PostWidget>
                               dotSecondaryColor: Color(0xff0099cc),
                             ),
                             likeBuilder: (bool isLiked) {
-                              return Icon(
-                                Icons.thumb_up,
-                                color: isLiked
-                                    ? Colors.deepPurpleAccent
-                                    : Colors.grey,
-                                size: 30,
-                              );
+                              return UserReaction();
                             },
                             likeCount: null,
                           ),
-                          SizedBox(width: 5.0),
-                          Text('Like',
-                              style: TextStyle(fontSize: 14.0)),
+                          const SizedBox(width: 5.0),
+                          const Text('Like', style: TextStyle(fontSize: 14.0)),
                         ],
                       ),
                     ),
@@ -287,8 +328,7 @@ class _PostWidgetState extends State<PostWidget>
                           headerHeight: 50,
                           context: context,
                           bottomSheetColor: Colors.white,
-                          headerBuilder:
-                              (BuildContext context, double offset) {
+                          headerBuilder: (BuildContext context, double offset) {
                             return AppBar(
                                 automaticallyImplyLeading: true,
                                 title: const Column(
@@ -299,8 +339,7 @@ class _PostWidgetState extends State<PostWidget>
                                   ],
                                 ));
                           },
-                          bodyBuilder:
-                              (BuildContext context, double offset) {
+                          bodyBuilder: (BuildContext context, double offset) {
                             return SliverChildListDelegate(
                               <Widget>[
                                 Container(
@@ -328,8 +367,7 @@ class _PostWidgetState extends State<PostWidget>
                         children: <Widget>[
                           Icon(FontAwesomeIcons.message, size: 20.0),
                           SizedBox(width: 5.0),
-                          Text('Comment',
-                              style: TextStyle(fontSize: 14.0)),
+                          Text('Comment', style: TextStyle(fontSize: 14.0)),
                         ],
                       ),
                     ),
@@ -339,8 +377,7 @@ class _PostWidgetState extends State<PostWidget>
                         children: <Widget>[
                           Icon(FontAwesomeIcons.share, size: 20.0),
                           SizedBox(width: 5.0),
-                          Text('Share',
-                              style: TextStyle(fontSize: 14.0)),
+                          Text('Share', style: TextStyle(fontSize: 14.0)),
                         ],
                       ),
                     ),
