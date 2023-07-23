@@ -1,4 +1,5 @@
 library flutter_animated_reaction;
+
 import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_reaction_overlay.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/teamfinder_reactiondata.dart';
@@ -27,7 +28,8 @@ class CustomAnimatedFlutterReaction {
         ? MediaQuery.of(context).size.height - bottomRight.dy - 60
         : MediaQuery.of(context).size.height -
             bottomRight.dy +
-            (bottomRight.dy - topLeft.dy)+10;
+            (bottomRight.dy - topLeft.dy) +
+            10;
     RelativeRect relativeRect = RelativeRect.fromLTRB(
         (MediaQuery.of(context).size.width - overlaySize) / 2,
         top,

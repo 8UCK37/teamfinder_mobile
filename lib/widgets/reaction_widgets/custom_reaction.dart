@@ -43,6 +43,21 @@ class _CustomReactionState extends State<CustomReaction>
     super.dispose();
   }
 
+
+  Future<bool> onLikeButtonTapped(bool isLiked) async{
+    /// send your request here
+    // final bool success= await sendRequest();
+
+    /// if failed, you can do nothing
+    // return success? !isLiked:isLiked;
+    iconScaleController.forward().whenComplete(() async {
+            await player.play(AssetSource("assets/audio/pop.mp3"));
+            Future.delayed(const Duration(milliseconds: 550), () {
+              widget.onTap(widget.index);
+            });
+          });
+    return !isLiked;
+  }
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
@@ -92,12 +107,12 @@ class _CustomReactionState extends State<CustomReaction>
               padding: EdgeInsets.symmetric(horizontal: padding),
               duration: const Duration(milliseconds: 200),
               child: LikeButton(
+                onTap: onLikeButtonTapped,
                 size: 45,
-                circleColor:  CircleColor(
-                    start: widget.colorSplash.circleColorStart, 
-                    end: widget.colorSplash.circleColorEnd
-                    ),
-                bubblesColor:  BubblesColor(
+                circleColor: CircleColor(
+                    start: widget.colorSplash.circleColorStart,
+                    end: widget.colorSplash.circleColorEnd),
+                bubblesColor: BubblesColor(
                   dotPrimaryColor: widget.colorSplash.dotPrimaryColor,
                   dotSecondaryColor: widget.colorSplash.dotSecondaryColor,
                 ),

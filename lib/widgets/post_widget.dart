@@ -82,7 +82,7 @@ class _PostWidgetState extends State<PostWidget>
         ),
       );
     } else {
-      String path (String  s) {
+      String path(String s) {
         switch (s) {
           case "like":
             return "assets/images/fire.gif";
@@ -98,6 +98,7 @@ class _PostWidgetState extends State<PostWidget>
             return "null";
         }
       }
+
       return SizedBox(
         height: 45,
         width: 45,
@@ -256,29 +257,27 @@ class _PostWidgetState extends State<PostWidget>
                 Row(
                   children: <Widget>[
                     const SizedBox(
-                      width:25,
-                      child: Stack(children: [
+                      width: 25,
+                      child: Stack(
+                        children: [
                           Positioned(
                             left: 7.5,
                             child: Image(
                               image: AssetImage("assets/images/love.gif"),
-                              height:20,
-                              width:20,
+                              height: 20,
+                              width: 20,
                             ),
                           ),
                           Image(
                             image: AssetImage("assets/images/haha.gif"),
-                            height:20,
-                            width:20,
+                            height: 20,
+                            width: 20,
                           ),
-                      ],),
+                        ],
+                      ),
                     ),
-                    
-                    Text(' ${int.parse(widget.post.likecount!)+
-                            int.parse(widget.post.hahacount!)+
-                            int.parse(widget.post.lovecount!)+
-                            int.parse(widget.post.sadcount!)+
-                            int.parse(widget.post.poopcount!)}'),
+                    Text(
+                        ' ${int.parse(widget.post.likecount!) + int.parse(widget.post.hahacount!) + int.parse(widget.post.lovecount!) + int.parse(widget.post.sadcount!) + int.parse(widget.post.poopcount!)}'),
                   ],
                 ),
                 Row(
@@ -317,14 +316,17 @@ class _PostWidgetState extends State<PostWidget>
                         children: <Widget>[
                           LikeButton(
                             size: 35,
-                            circleColor:  CircleColor(
-                                start: ColorSplash.getColorPalette(0).circleColorStart,
-                                end: ColorSplash.getColorPalette(0).circleColorEnd
-                                ),
+                            circleColor: CircleColor(
+                                start: ColorSplash.getColorPalette(0)
+                                    .circleColorStart,
+                                end: ColorSplash.getColorPalette(0)
+                                    .circleColorEnd),
                             bubblesColor: BubblesColor(
-                              dotPrimaryColor: ColorSplash.getColorPalette(0).dotPrimaryColor,
-                              dotSecondaryColor: ColorSplash.getColorPalette(0).dotSecondaryColor
-                            ),
+                                dotPrimaryColor: ColorSplash.getColorPalette(0)
+                                    .dotPrimaryColor,
+                                dotSecondaryColor:
+                                    ColorSplash.getColorPalette(0)
+                                        .dotSecondaryColor),
                             likeBuilder: (bool isLiked) {
                               return UserReaction();
                             },
