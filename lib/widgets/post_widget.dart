@@ -10,6 +10,7 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
+import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
@@ -256,7 +257,11 @@ class _PostWidgetState extends State<PostWidget>
                   children: <Widget>[
                     const Icon(FontAwesomeIcons.thumbsUp,
                         size: 15.0, color: Colors.blue),
-                    Text(' ${widget.post.likecount}'),
+                    Text(' ${int.parse(widget.post.likecount!)+
+                            int.parse(widget.post.hahacount!)+
+                            int.parse(widget.post.lovecount!)+
+                            int.parse(widget.post.sadcount!)+
+                            int.parse(widget.post.poopcount!)}'),
                   ],
                 ),
                 Row(
@@ -295,12 +300,13 @@ class _PostWidgetState extends State<PostWidget>
                         children: <Widget>[
                           LikeButton(
                             size: 35,
-                            circleColor: const CircleColor(
-                                start: Color.fromARGB(255, 240, 153, 39),
-                                end: Color.fromARGB(255, 212, 108, 44)),
-                            bubblesColor: const BubblesColor(
-                              dotPrimaryColor: Color.fromARGB(255, 229, 78, 51),
-                              dotSecondaryColor: Color.fromARGB(255, 204, 85, 0),
+                            circleColor:  CircleColor(
+                                start: ColorSplash.getColorPalette(0).circleColorStart,
+                                end: ColorSplash.getColorPalette(0).circleColorEnd
+                                ),
+                            bubblesColor: BubblesColor(
+                              dotPrimaryColor: ColorSplash.getColorPalette(0).dotPrimaryColor,
+                              dotSecondaryColor: ColorSplash.getColorPalette(0).dotSecondaryColor
                             ),
                             likeBuilder: (bool isLiked) {
                               return UserReaction();
