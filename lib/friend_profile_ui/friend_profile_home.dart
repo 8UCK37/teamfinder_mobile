@@ -259,7 +259,7 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                     child: Column(
                       children: <Widget>[
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Row(
                               children: <Widget>[
