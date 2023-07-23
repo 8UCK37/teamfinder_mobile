@@ -28,7 +28,7 @@ class _PostWidgetState extends State<PostWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 200), // Adjust the duration as you like
+      duration: const Duration(milliseconds: 200), // Adjust the duration as you like
     );
     //debugPrint(widget.post.id.toString());
   }
@@ -90,7 +90,7 @@ class _PostWidgetState extends State<PostWidget>
               text: '${idNameMap[word]} ',
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  debugPrint('${now.toString()} yooooo:${word}');
+                  debugPrint('${now.toString()} yooooo:$word');
                   var route = MaterialPageRoute(
                       builder: (BuildContext context) => FriendProfilePage(
                             friendId: word,
@@ -148,6 +148,7 @@ class _PostWidgetState extends State<PostWidget>
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
+                // ignore: prefer_is_empty
                 widget.post.mention?.list.length != 0
                     ? parseDescription(
                         widget.post.description!, widget.post.mention!)
@@ -232,7 +233,7 @@ class _PostWidgetState extends State<PostWidget>
                         children: <Widget>[
                           Text(int.parse(widget.post.commentCount!) < 2
                               ? '${widget.post.commentCount} comment  •  '
-                              : '${widget.post.commentCount} comments  •  '), //TODO:need to assign real values
+                              : '${widget.post.commentCount} comments  •  '), 
                           Text('${widget.post.sharedCount} shares'),
                         ],
                       ),
@@ -243,14 +244,13 @@ class _PostWidgetState extends State<PostWidget>
                   padding: const EdgeInsets.only(top: 0),
                   child: Column(
                     children: [
-                      Divider(height: 20),
+                      const Divider(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           GestureDetector(
                             onLongPress: () {
-                              //TODO show reaction bar
                               toggleReactionBar();
                             },
                             child: const Row(
@@ -319,7 +319,7 @@ class _PostWidgetState extends State<PostWidget>
                             },
                             child: const Row(
                               children: <Widget>[
-                                Icon(FontAwesomeIcons.commentAlt, size: 20.0),
+                                Icon(FontAwesomeIcons.message, size: 20.0),
                                 SizedBox(width: 5.0),
                                 Text('Comment',
                                     style: TextStyle(fontSize: 14.0)),
