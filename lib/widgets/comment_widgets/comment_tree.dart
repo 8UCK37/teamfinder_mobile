@@ -133,6 +133,8 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
     return SafeArea(
         child: Column(
       children: <Widget>[
+        if(!showLoading)
+          const Divider(thickness: 4,),
         if (showLoading)
           ColorfulLinearProgressIndicator(
             colors: const [
