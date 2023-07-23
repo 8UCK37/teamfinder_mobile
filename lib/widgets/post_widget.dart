@@ -57,8 +57,8 @@ class _PostWidgetState extends State<PostWidget>
   Widget UserReaction() {
     if (widget.post.noreaction!) {
       return SizedBox(
-        height: 75,
-        width: 75,
+        height: 45,
+        width: 45,
         child: ShaderMask(
           shaderCallback: (Rect bounds) {
             return const LinearGradient(
@@ -75,8 +75,8 @@ class _PostWidgetState extends State<PostWidget>
               .srcATop, // This preserves the transparency of the image.
           child: const Image(
             image: AssetImage("assets/images/fire.gif"),
-            width: 75,
-            height: 75,
+            width: 45,
+            height: 45,
           ),
         ),
       );
@@ -98,12 +98,12 @@ class _PostWidgetState extends State<PostWidget>
         }
       }
       return SizedBox(
-        height: 75,
-        width: 75,
+        height: 45,
+        width: 45,
         child: Image(
           image: AssetImage(path(widget.post.reactiontype)),
-          width: 75,
-          height: 75,
+          width: 45,
+          height: 45,
         ),
       );
     }
@@ -114,7 +114,7 @@ class _PostWidgetState extends State<PostWidget>
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };
-    DateTime now = DateTime.now();
+    //DateTime now = DateTime.now();
     List<TextSpan> textSpans = [];
 
     for (String word in sanitizedDesc.split(' ')) {
@@ -294,13 +294,13 @@ class _PostWidgetState extends State<PostWidget>
                       child: Row(
                         children: <Widget>[
                           LikeButton(
-                            size: 30,
+                            size: 35,
                             circleColor: const CircleColor(
-                                start: Color(0xff00ddff),
-                                end: Color(0xff0099cc)),
+                                start: Color.fromARGB(255, 240, 153, 39),
+                                end: Color.fromARGB(255, 212, 108, 44)),
                             bubblesColor: const BubblesColor(
-                              dotPrimaryColor: Color(0xff33b5e5),
-                              dotSecondaryColor: Color(0xff0099cc),
+                              dotPrimaryColor: Color.fromARGB(255, 229, 78, 51),
+                              dotSecondaryColor: Color.fromARGB(255, 204, 85, 0),
                             ),
                             likeBuilder: (bool isLiked) {
                               return UserReaction();

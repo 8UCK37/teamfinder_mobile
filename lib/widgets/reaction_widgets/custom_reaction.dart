@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:like_button/like_button.dart';
+import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 
 class CustomReaction extends StatefulWidget {
   const CustomReaction(
@@ -7,17 +9,20 @@ class CustomReaction extends StatefulWidget {
       required this.path,
       required this.onTap,
       required this.index,
-      required this.size});
+      required this.size,
+      required this.colorSplash});
   final String path;
   final int index;
   final Size size;
   final Function(int) onTap;
+  final ColorSplash colorSplash;
 
   @override
   State<CustomReaction> createState() => _CustomReactionState();
 }
 
-class _CustomReactionState extends State<CustomReaction> with TickerProviderStateMixin {
+class _CustomReactionState extends State<CustomReaction>
+    with TickerProviderStateMixin {
   late AnimationController iconScaleController;
   late AnimationController slideController;
   final player = AudioPlayer();
@@ -84,18 +89,31 @@ class _CustomReactionState extends State<CustomReaction> with TickerProviderStat
             ),
           ),
           child: AnimatedPadding(
-            padding: EdgeInsets.symmetric(horizontal: padding),
-            duration: const Duration(milliseconds: 200),
-            child: SizedBox(
-              height:45,
-              width:45,
-              child: Image(
-                image:AssetImage(widget.path),
-                width: widget.size.width,
-                height: widget.size.height,
-              ),
-            ),
-          ),
+              padding: EdgeInsets.symmetric(horizontal: padding),
+              duration: const Duration(milliseconds: 200),
+              child: LikeButton(
+                size: 45,
+                circleColor:  CircleColor(
+                    start: widget.colorSplash.circleColorStart, 
+                    end: widget.colorSplash.circleColorEnd
+                    ),
+                bubblesColor:  BubblesColor(
+                  dotPrimaryColor: widget.colorSplash.dotPrimaryColor,
+                  dotSecondaryColor: widget.colorSplash.dotSecondaryColor,
+                ),
+                likeBuilder: (bool isLiked) {
+                  return SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: Image(
+                      image: AssetImage(widget.path),
+                      width: widget.size.width,
+                      height: widget.size.height,
+                    ),
+                  );
+                },
+                likeCount: null,
+              )),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_reaction.dart';
+import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 
 class CustomReactionOverlay extends StatefulWidget {
   const CustomReactionOverlay({
@@ -97,6 +98,7 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
                             onTap: widget.onPressReact,
                             index: i,
                             size: widget.size ?? const Size(45, 45),
+                            colorSplash: ColorSplash.getColorPalette(i),
                           )
                       ],
                     ),
