@@ -105,9 +105,11 @@ class _FriendListState extends State<FriendList>
         itemCount: friendList?.length,
         itemBuilder: (context, i) => Column(
           children: <Widget>[
-            const Divider(
-              height: 22.0,
-            ),
+            if(i==0)
+              const Divider(
+                height: 22.0,
+              ),
+            const SizedBox(height:20),
             ListTile(
               leading: CircleAvatar(
                 maxRadius: 25,
@@ -148,19 +150,11 @@ class _FriendListState extends State<FriendList>
                           padding: const EdgeInsets.only(bottom:8.0),
                           child: GestureDetector(
                             onTap: () {
-                              var route = MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        FriendProfilePage(
-                                          friendId: friendList![i].id,
-                                          friendName: friendList![i].name,
-                                          friendProfileImage:
-                                              friendList![i].profilePicture,
-                                        ));
-                                Navigator.of(context).push(route);
+                              
                             },
-                            child: Icon(
-                              Icons.co_present,
-                              color: Colors.amberAccent.shade700,
+                            child: const Icon(
+                              Icons.more_vert,
+                              color: Colors.grey,
                               ),
                           ),
                         ),
@@ -170,7 +164,14 @@ class _FriendListState extends State<FriendList>
                 ],
               ),
               onTap: () {
-                debugPrint('list tile clicked');
+                //debugPrint('list tile clicked');
+                var route = MaterialPageRoute(
+                    builder: (BuildContext context) => FriendProfilePage(
+                          friendId: friendList![i].id,
+                          friendName: friendList![i].name,
+                          friendProfileImage: friendList![i].profilePicture,
+                        ));
+                Navigator.of(context).push(route);
               },
             ),
           ],
