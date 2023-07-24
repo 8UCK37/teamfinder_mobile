@@ -31,6 +31,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(vsync: this, length: 4);
     if(mounted){
       _tabController.addListener(() {
         setState(() {
@@ -39,7 +40,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     });
   });
     }
-    _tabController = TabController(vsync: this, length: 4);
+    
     
   }
 
