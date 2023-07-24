@@ -149,22 +149,25 @@ class _HomePageState extends State<HomePage>
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.deepPurple,
           tabs: const [
-            Tab(icon: Icon(FontAwesomeIcons.houseFlag, size: 28.0)),
+            Tab(icon: Icon(Icons.receipt_long, size: 28.0)),
             Tab(icon: Icon(Icons.co_present, size: 28.0)),
             Tab(icon: Icon(Icons.diversity_3, size: 32.0)),
-            Tab(icon: Icon(FontAwesomeIcons.bell, size: 28.0)),
+            Tab(icon: Icon(FontAwesomeIcons.bell, size: 25.0)),
             Tab(icon: Icon(Icons.menu, size: 30.0, key: Key('menuTab')))
           ],
         ),
         //systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: TabBarView(controller: _tabController, children: [
-        const HomeTab(),
-        const ProfileTab(),
-        const FriendsTab(),
-        NotificationsTab(),
-        MenuTab(_tabController),
-      ]),
+      body: TabBarView(
+        controller: _tabController, 
+        children: [
+          const HomeTab(),
+          const ProfileTab(),
+          const FriendsTab(),
+          NotificationsTab(),
+          MenuTab(_tabController),
+        ]
+      ),
     );
   }
 }

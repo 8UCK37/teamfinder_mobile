@@ -60,11 +60,6 @@ class _LoginActivityState extends State<LoginActivity> {
              const SizedBox(
                     height: 20,
                   ),
-                  //signInButton(context, true, onTap)
-                //  SquareTile(
-                //   onTap: () => AuthService().signInWithGoogle(context) ,
-                //   imagePath: 'assets/images/google.png'
-                //   ),
               SignInButton(
                   buttonType: ButtonType.google,
                   onPressed: () {
