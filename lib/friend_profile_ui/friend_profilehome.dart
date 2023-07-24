@@ -31,13 +31,16 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 4);
-    _tabController.addListener(() {
-    setState(() {
-      // Update the selected index of GNav when the tabs change
-      _tabController.index = _tabController.index;
+    if(mounted){
+      _tabController.addListener(() {
+        setState(() {
+          // Update the selected index of GNav when the tabs change
+        _tabController.index = _tabController.index;
     });
   });
+    }
+    _tabController = TabController(vsync: this, length: 4);
+    
   }
 
   @override
