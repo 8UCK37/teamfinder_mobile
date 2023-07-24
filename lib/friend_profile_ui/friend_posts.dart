@@ -250,11 +250,16 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                                 255, 60, 159, 209))),
                                     const SizedBox(height: 6.0),
                                     Padding(
-                                      padding: EdgeInsets.only(left: 15.0),
+                                      padding: const EdgeInsets.only(left: 15.0),
                                       child: Row(
                                         children: [
-                                          const SizedBox(
-                                            child: Icon(FontAwesomeIcons.steam),
+                                          SizedBox(
+                                            child: Icon(
+                                              FontAwesomeIcons.steam,
+                                              color: friendProfile?.steamId != null
+                                                ? const Color.fromRGBO( 29, 92, 234, 85)
+                                                : Colors.black,
+                                              ),
                                           ),
                                           Padding(
                                             padding:
