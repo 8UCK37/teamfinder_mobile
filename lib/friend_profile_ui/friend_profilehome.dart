@@ -32,6 +32,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 4);
+    _tabController.addListener(() {
+    setState(() {
+      // Update the selected index of GNav when the tabs change
+      _tabController.index = _tabController.index;
+    });
+  });
   }
 
   @override
@@ -105,6 +111,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
       bottomNavigationBar: SizedBox(
         height: 75,
         child: GNav(
+          selectedIndex: _tabController.index,
           duration: const Duration(milliseconds: 250), 
           gap: 5, tabs: [
           GButton(
