@@ -31,7 +31,6 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
   @override
   void initState() {
     super.initState();
-    debugPrint(widget.friendName);
     getShowCase();
   }
 
@@ -115,26 +114,21 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
           // ),
           Row(
             children: [
-              const SizedBox(
-                width: 10,
-              ),
-              if(showcase.length!=0)
-                AutoSizeText("${widget.friendName!}'s favourite games",
-                      style: const TextStyle(
-                      color: Colors.deepPurpleAccent,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                      )
-              else if(showcase.length==0)
-                AutoSizeText(
-                  "${widget.friendName!} currently has no games saved as favourites",
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width:MediaQuery.of(context).size.width-20,
+                  child: AutoSizeText(
+                      showcase.length==0
+                      ?"${widget.friendName!} currently has no games saved as favourites"
+                      :"${widget.friendName!}'s favourite games",
                       style: const TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontWeight: FontWeight.bold),
                       maxLines: 1,
                       ),
-              
+                ),
+              ),
             ],
           ),
           Padding(
