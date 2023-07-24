@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
-import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/widgets/search_bar.dart';
 
@@ -214,7 +213,7 @@ class _SearchPageState extends State<SearchPage> {
                       onTap: () {
                         var route = MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                FriendProfilePage(
+                                FriendProfileHome(
                                   friendId: userList![i].id,
                                   friendName: userList![i].name,
                                   friendProfileImage:

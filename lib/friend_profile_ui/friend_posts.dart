@@ -2,24 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
-import 'package:teamfinder_mobile/friend_profile_ui/games_showcase.dart';
-import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../widgets/separator_widget.dart';
 
-class FriendProfilePage extends StatefulWidget {
+class FriendProfilePosts extends StatefulWidget {
   final String? friendName;
   final String friendId;
   final String? friendProfileImage;
 
-  const FriendProfilePage({
+  const FriendProfilePosts({
     super.key,
     required this.friendId,
     this.friendName,
@@ -27,10 +22,10 @@ class FriendProfilePage extends StatefulWidget {
   });
   @override
   // ignore: library_private_types_in_public_api
-  _FriendProfilePageState createState() => _FriendProfilePageState();
+  _FriendProfilePostsState createState() => _FriendProfilePostsState();
 }
 
-class _FriendProfilePageState extends State<FriendProfilePage>
+class _FriendProfilePostsState extends State<FriendProfilePosts>
     with TickerProviderStateMixin {
   List<PostPojo>? postList;
   UserPojo? friendProfile;
@@ -139,65 +134,6 @@ class _FriendProfilePageState extends State<FriendProfilePage>
       return Container();
     } else {
       return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Row(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Text('TeamFinder',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          debugPrint('search clicked');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SearchPage()),
-                          );
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 20,
-                            child: Icon(Icons.search, color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          debugPrint('goto chat');
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ChatHome()),
-                          );
-                        },
-                        child: const CircleAvatar(
-                          radius: 20,
-                          child: Icon(Icons.question_answer,
-                              color: Colors.deepPurple),
-                        ),
-                      ),
-                    ]),
-              ]),
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-        ),
         body: Column(
           children: <Widget>[
             Expanded(
@@ -401,49 +337,6 @@ class _FriendProfilePageState extends State<FriendProfilePage>
                   )),
             ),
           ],
-        ),
-        bottomNavigationBar: SizedBox(
-          height: 75,
-          child:
-              GNav(duration: const Duration(milliseconds: 250), gap: 5, tabs: [
-            const GButton(
-              icon: Icons.receipt_long,
-              text: 'Posts',
-              textColor: Colors.deepPurple,
-              iconActiveColor: Colors.deepPurple,
-            ),
-            GButton(
-              onPressed:() {
-                var route = MaterialPageRoute(
-                    builder: (BuildContext context) => FriendGamesShowCase(
-                          friendId: widget.friendId,
-                          friendName: widget.friendName,
-                          friendProfileImage: widget.friendProfileImage,
-                        ));
-                Navigator.of(context).push(route);
-              },
-              icon: Icons.sports_esports,
-              text: 'Games',
-              textColor: Colors.deepOrange,
-              iconActiveColor: Colors.deepOrange,
-            ),
-            GButton(
-              onPressed: () {
-                //debugPrint('scroll  to linked');
-                scrollToWidget(_linkedAccWidgetKey);
-              },
-              icon: Icons.link,
-              text: 'Linked Acc',
-              textColor: Colors.blue,
-              iconActiveColor: Colors.blue,
-            ),
-            const GButton(
-              icon: Icons.people_outline,
-              text: 'Friends',
-              textColor: Color.fromARGB(255, 152, 129, 14),
-              iconActiveColor: Color.fromARGB(255, 152, 129, 14),
-            ),
-          ]),
         ),
       );
     }

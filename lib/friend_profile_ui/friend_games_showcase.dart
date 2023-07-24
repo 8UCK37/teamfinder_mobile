@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:dio/dio.dart';
@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_flip_card/flipcard/gesture_flip_card.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 class FriendGamesShowCase extends StatefulWidget {
   final String? friendName;
@@ -17,8 +16,8 @@ class FriendGamesShowCase extends StatefulWidget {
   const FriendGamesShowCase({
     super.key,
     required this.friendId,
-    this.friendName,
-    this.friendProfileImage,
+    required this.friendName,
+    required this.friendProfileImage,
   });
 
   @override
@@ -26,12 +25,13 @@ class FriendGamesShowCase extends StatefulWidget {
 }
 
 class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
-  dynamic ownedGames;
-  dynamic showcase;
+  dynamic ownedGames = [];
+  dynamic showcase = [];
 
   @override
   void initState() {
     super.initState();
+    debugPrint(widget.friendName);
     getShowCase();
   }
 
@@ -57,10 +57,12 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
       options: options,
     );
     if (response.statusCode == 200) {
-      //debugPrint(response.data.toString());
+      //debugPrint('from line 59: ${jsonDecode(response.data).length}');
       setState(() {
-        ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
-        getSelectedGames(ownedGames);
+        if(jsonDecode(response.data).length!=0){
+          ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
+          getSelectedGames(ownedGames);
+        }
       });
     }
   }
@@ -106,39 +108,6 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SizedBox(
-        height: 75,
-        child: GNav(duration: const Duration(milliseconds: 250), gap: 5, tabs: [
-          const GButton(
-            icon: Icons.receipt_long,
-            text: 'Posts',
-            textColor: Colors.deepPurple,
-            iconActiveColor: Colors.deepPurple,
-          ),
-          GButton(
-            onPressed: () {
-              
-            },
-            icon: Icons.sports_esports,
-            text: 'Games',
-            textColor: Colors.deepOrange,
-            iconActiveColor: Colors.deepOrange,
-          ),
-          GButton(
-            onPressed: () {},
-            icon: Icons.link,
-            text: 'Linked Acc',
-            textColor: Colors.blue,
-            iconActiveColor: Colors.blue,
-          ),
-          const GButton(
-            icon: Icons.people_outline,
-            text: 'Friends',
-            textColor: Color.fromARGB(255, 152, 129, 14),
-            iconActiveColor: Color.fromARGB(255, 152, 129, 14),
-          ),
-        ]),
-      ),
       body: Column(
         children: [
           // const Divider(
@@ -149,18 +118,30 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
               const SizedBox(
                 width: 10,
               ),
-              Text("${widget.friendName!}'s favourite games",
-                  style: const TextStyle(
+              if(showcase.length!=0)
+                AutoSizeText("${widget.friendName!}'s favourite games",
+                      style: const TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontSize: 20.0,
-                      fontWeight: FontWeight.bold)),
+                      fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      )
+              else if(showcase.length==0)
+                AutoSizeText(
+                  "${widget.friendName!} currently has no games saved as favourites",
+                      style: const TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      ),
+              
             ],
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: SizedBox(
-                height: MediaQuery.of(context).size.height * .80,
-                child: CustomGrid(items: showcase)),
+                height: MediaQuery.of(context).size.height * .70,
+                child: CustomGrid(items: showcase!)),
           ),
         ],
       ),

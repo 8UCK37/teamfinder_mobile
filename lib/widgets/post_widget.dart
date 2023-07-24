@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
-import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
@@ -127,8 +127,9 @@ class _PostWidgetState extends State<PostWidget>
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   var route = MaterialPageRoute(
-                      builder: (BuildContext context) => FriendProfilePage(
+                      builder: (BuildContext context) => FriendProfileHome(
                             friendId: word,
+                            friendName: idNameMap[word],
                           ));
                   Navigator.of(context)
                       .push(route); // Prints the corresponding ID

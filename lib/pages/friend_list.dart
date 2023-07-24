@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
-import 'package:teamfinder_mobile/friend_profile_ui/friend_profile_home.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:http/http.dart' as http;
 
@@ -166,7 +166,7 @@ class _FriendListState extends State<FriendList>
               onTap: () {
                 //debugPrint('list tile clicked');
                 var route = MaterialPageRoute(
-                    builder: (BuildContext context) => FriendProfilePage(
+                    builder: (BuildContext context) => FriendProfileHome(
                           friendId: friendList![i].id,
                           friendName: friendList![i].name,
                           friendProfileImage: friendList![i].profilePicture,
