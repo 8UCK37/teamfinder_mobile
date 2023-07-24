@@ -45,44 +45,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
     super.dispose();
   }
 
-  void scrollToWidget(GlobalKey key) {
-    // Determine the target widget's position
-    final RenderBox renderBox =
-        key.currentContext!.findRenderObject() as RenderBox;
-    final targetOffset = renderBox.localToGlobal(Offset.zero);
-
-    // Check if the target widget is already visible within the viewport
-    final double targetY = targetOffset.dy;
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double scrollPosition = _scrollController.offset;
-    final double maxScrollPosition = _scrollController.position.maxScrollExtent;
-
-    if (targetY >= scrollPosition &&
-        targetY < (scrollPosition + screenHeight)) {
-      // The target widget is already visible, so no need to scroll
-      return;
-    }
-
-    // Ensure the target position is within the bounds of the scrollable content
-    final double targetScrollOffset = targetY > maxScrollPosition
-        ? maxScrollPosition
-        : targetY < 0
-            ? 0
-            : targetY;
-
-    // Scroll to the target widget
-    _scrollController.animateTo(
-      targetScrollOffset,
-      duration: const Duration(milliseconds: 500), // Animation duration
-      curve: Curves.easeInOut, // Animation curve
-    );
-  }
-
   Future<void> getProfileData() async {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
-    debugPrint(widget.friendId.toString());
+    //debugPrint(widget.friendId.toString());
     Options options = Options(
       headers: {
         'Authorization': 'Bearer $idToken',
@@ -94,12 +61,12 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
       options: options,
     );
     if (response.statusCode == 200) {
-      debugPrint('friend data fetched');
+      //debugPrint('friend data fetched');
       //debugPrint(response.data);
       setState(() {
         friendProfile = userPojoListFromJson(response.data)[0];
       });
-      debugPrint(friendProfile.toString());
+      //debugPrint(friendProfile.toString());
     }
   }
 
