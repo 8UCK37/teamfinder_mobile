@@ -22,16 +22,42 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   List<PostPojo>? postList;
+  dynamic twitchData;
   @override
   void initState() {
     super.initState();
     getOwnPost();
+    getTwitchInfo();
   }
 
   @override
   void dispose() {
     // Unsubscribe the listener to avoid memory leaks
     super.dispose();
+  }
+
+  Future<void> getTwitchInfo() async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.get(
+      'http://${dotenv.env['server_url']}/getowntwitchinfo',
+      queryParameters: {'id': user.uid.toString()},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      //debugPrint(response.data.toString());
+        setState(() {
+           twitchData = response.data;
+          debugPrint(twitchData.toString());
+        });
+    }
   }
 
   Future<void> getOwnPost() async {
@@ -53,9 +79,9 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       setState(() {
-        postList = parsedPosts; // Update the state variable with the parsed list
+        postList =
+            parsedPosts; // Update the state variable with the parsed list
       });
-      
     }
   }
 
@@ -84,8 +110,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
           Stack(
             children: <Widget>[
               Container(
-                height:
-                    200.0, // Set the desired fixed height for the banner
+                height: 200.0, // Set the desired fixed height for the banner
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.only(
@@ -93,14 +118,14 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     bottomRight: Radius.circular(8.0),
                   ),
                   image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                        userData['profileBanner']),
+                    image:
+                        CachedNetworkImageProvider(userData['profileBanner']),
                     fit: BoxFit
                         .cover, // Set the fit property to determine how the image should be fitted
                   ),
                 ),
               ),
-    
+
               //const SizedBox(height: 20.0),
               Row(
                 children: [
@@ -115,15 +140,14 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  Padding(            
+                  Padding(
                     padding: const EdgeInsets.only(top: 185, left: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(userData['name'],
                             style: const TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold)),
+                                fontSize: 24.0, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   )
@@ -139,34 +163,34 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  Row(
-                  children: <Widget>[
-                    const Icon(Icons.person_pin_circle, color: Colors.green, size: 32.0),
-                    Text(' ${userData['userInfo']['Country']}',
-                        style: const TextStyle(fontSize: 16.0))
+                    Row(
+                      children: <Widget>[
+                        const Icon(Icons.person_pin_circle,
+                            color: Colors.green, size: 32.0),
+                        Text(' ${userData['userInfo']['Country']}',
+                            style: const TextStyle(fontSize: 16.0))
+                      ],
+                    ),
+                    const SizedBox(width: 15.0),
+                    Row(
+                      children: <Widget>[
+                        const Icon(Icons.record_voice_over,
+                            color: Colors.blue, size: 30.0),
+                        const SizedBox(width: 10.0),
+                        Text('${userData['userInfo']['Language']}',
+                            style: const TextStyle(fontSize: 16.0))
+                      ],
+                    ),
+                    const SizedBox(width: 15.0),
+                    const Row(
+                      children: <Widget>[
+                        Icon(Icons.share, color: Colors.blue, size: 30.0),
+                        SizedBox(width: 10.0),
+                        Text('Share', style: TextStyle(fontSize: 16.0))
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(width: 15.0),
-                Row(
-                  children: <Widget>[
-                    const Icon(Icons.record_voice_over,
-                        color: Colors.blue, size: 30.0),
-                    const SizedBox(width: 10.0),
-                    Text('${userData['userInfo']['Language']}',
-                        style: const TextStyle(fontSize: 16.0))
-                  ],
-                ),
-                const SizedBox(width: 15.0),
-                const Row(
-                  children: <Widget>[
-                     Icon(Icons.share,
-                        color: Colors.blue, size: 30.0),
-                     SizedBox(width: 10.0),
-                    Text('Share',
-                        style: TextStyle(fontSize: 16.0))
-                  ],
-                ),
-                ],),
                 const SizedBox(height: 15.0),
                 Container(
                   height: 40.0,
@@ -184,53 +208,58 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
               ],
             ),
           ),
-          const Divider(thickness: 1.0,height:15),
-             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-               child: const Column(
-                 children: [
-                   Row(
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
+          const Divider(thickness: 1.0, height: 15),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Text('Linked accounts',
+                        const Text('Linked accounts',
                             style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 60, 159, 209)
-                                )
-                              ),
-                        SizedBox(height: 6.0),
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 60, 159, 209))),
+                        const SizedBox(height: 6.0),
                         Padding(
-                          padding: EdgeInsets.only(left:15.0),
+                          padding: EdgeInsets.only(left: 15.0),
                           child: Row(
                             children: [
-                            SizedBox(
-                              child: Icon(FontAwesomeIcons.steam),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left:15.0),
-                              child: SizedBox(
-                                child: Icon(FontAwesomeIcons.twitch),
+                              const SizedBox(
+                                child: Icon(FontAwesomeIcons.steam),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left:15.0),
-                              child: SizedBox(
-                                child: Icon(FontAwesomeIcons.discord),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15.0),
+                                child: SizedBox(
+                                  child: Icon(
+                                    FontAwesomeIcons.twitch,
+                                    color: twitchData != "not logged in"
+                                        ? const Color.fromRGBO(
+                                            145, 70, 250, 100)
+                                        : Colors.black,
+                                  ),
+                                ),
                               ),
-                            )
-                          ],
+                              const Padding(
+                                padding: EdgeInsets.only(left: 15.0),
+                                child: SizedBox(
+                                  child: Icon(FontAwesomeIcons.discord),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       ],
                     ),
-                    ],
-                  ),
-                 ],
-               ),
-             ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           const Divider(height: 45.0),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -250,8 +279,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                 fontWeight: FontWeight.bold)),
                         const SizedBox(height: 6.0),
                         if (postList != null)
-                          Text(
-                              'You have ${postList!.length.toString()} posts',
+                          Text('You have ${postList!.length.toString()} posts',
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.grey[800])),
                       ],
@@ -260,7 +288,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 25),
                 if (postList != null) // Add a null check here
-                  for (PostPojo post in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                  for (PostPojo post
+                      in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                     Column(
                       children: <Widget>[
                         //const SeparatorWidget(),
@@ -268,7 +297,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         const SeparatorWidget(),
                       ],
                     ),
-                  
               ],
             ),
           ),

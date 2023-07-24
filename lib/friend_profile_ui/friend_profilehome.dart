@@ -32,16 +32,14 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 4);
-    if(mounted){
+    if (mounted) {
       _tabController.addListener(() {
         setState(() {
           // Update the selected index of GNav when the tabs change
-        _tabController.index = _tabController.index;
-    });
-  });
+          _tabController.index = _tabController.index;
+        });
+      });
     }
-    
-    
   }
 
   @override
@@ -49,7 +47,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     _tabController.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

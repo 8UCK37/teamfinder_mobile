@@ -31,11 +31,13 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   UserPojo? friendProfile;
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _linkedAccWidgetKey = GlobalKey();
+  dynamic twitchData;
   @override
   void initState() {
     super.initState();
     getProfileData();
     getFriendsPosts();
+    getTwitchInfo();
   }
 
   @override
@@ -43,6 +45,30 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
     // Unsubscribe the listener to avoid memory leaks
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> getTwitchInfo() async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.get(
+      'http://${dotenv.env['server_url']}/getowntwitchinfo',
+      queryParameters: {'id': widget.friendId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      //debugPrint(response.data.toString());
+        setState(() {
+          twitchData = response.data;
+          debugPrint(twitchData.toString());
+        });
+    }
   }
 
   Future<void> getProfileData() async {
@@ -215,19 +241,19 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                               children: <Widget>[
                                 Column(
                                   key: _linkedAccWidgetKey,
-                                  children: const <Widget>[
-                                    Text('Linked accounts',
+                                  children:  <Widget>[
+                                    const Text('Linked accounts',
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold,
                                             color: Color.fromARGB(
                                                 255, 60, 159, 209))),
-                                    SizedBox(height: 6.0),
+                                    const SizedBox(height: 6.0),
                                     Padding(
                                       padding: EdgeInsets.only(left: 15.0),
                                       child: Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                             child: Icon(FontAwesomeIcons.steam),
                                           ),
                                           Padding(
@@ -235,10 +261,16 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                                 EdgeInsets.only(left: 15.0),
                                             child: SizedBox(
                                               child:
-                                                  Icon(FontAwesomeIcons.twitch),
+                                                  Icon(
+                                                    FontAwesomeIcons.twitch,
+                                                    color: twitchData !="not logged in"
+                                                    ? const Color.fromRGBO(
+                                                        145, 70, 250, 100)
+                                                    : Colors.black,
+                                                    ),
                                             ),
                                           ),
-                                          Padding(
+                                          const Padding(
                                             padding:
                                                 EdgeInsets.only(left: 15.0),
                                             child: SizedBox(
