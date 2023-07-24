@@ -23,6 +23,7 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   List<PostPojo>? postList;
   dynamic twitchData;
+  
   @override
   void initState() {
     super.initState();
@@ -55,7 +56,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
       //debugPrint(response.data.toString());
         setState(() {
            twitchData = response.data;
-          debugPrint(twitchData.toString());
+           //debugPrint(twitchData.toString());
         });
     }
   }
@@ -226,11 +227,17 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                 color: Color.fromARGB(255, 60, 159, 209))),
                         const SizedBox(height: 6.0),
                         Padding(
-                          padding: EdgeInsets.only(left: 15.0),
+                          padding: const EdgeInsets.only(left: 15.0),
                           child: Row(
                             children: [
-                              const SizedBox(
-                                child: Icon(FontAwesomeIcons.steam),
+                               SizedBox(
+                                child: Icon(
+                                  FontAwesomeIcons.steam,
+                                  color: userData['steamId'] != null
+                                        ? const Color.fromRGBO(
+                                            29, 92, 234, 85)
+                                        : Colors.black,
+                                  ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 15.0),

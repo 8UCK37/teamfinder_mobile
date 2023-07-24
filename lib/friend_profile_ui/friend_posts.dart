@@ -66,7 +66,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
       //debugPrint(response.data.toString());
         setState(() {
           twitchData = response.data;
-          debugPrint(twitchData.toString());
+          //debugPrint(twitchData.toString());
         });
     }
   }
