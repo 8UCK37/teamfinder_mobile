@@ -50,8 +50,8 @@ class _OnlineWidgetState extends State<OnlineWidget>
         //debugPrint('${data['sender']} is now online');
         if (mounted) {
           setState(() {
-          onlineMap![data['sender']] = true;
-        });
+            onlineMap![data['sender']] = true;
+          });
         }
       }
     });
@@ -75,7 +75,8 @@ class _OnlineWidgetState extends State<OnlineWidget>
         //print(res);
         // Parse the JSON response into a list of PostPojo objects
         List<UserPojo> parsedFriendList = userPojoListFromJson(res);
-        setState(() {
+        if (mounted) {
+          setState(() {
           parsedFriendList.sort((a, b) {
             if (a.isConnected && !b.isConnected) {
               return -1; // a comes before b
@@ -92,16 +93,9 @@ class _OnlineWidgetState extends State<OnlineWidget>
           friendList =
               parsedFriendList; // Update the state variable with the parsed list
         });
-        // Use the postList for further processing or display
-        // ignore: unused_local_variable
-      } else {
-        // Request failed
-        //print('Failed to hit Express backend endpoint');
+        }
       }
-    } else {
-      // User not logged in
-      //print('User is not logged in');
-    }
+    } 
   }
 
   @override

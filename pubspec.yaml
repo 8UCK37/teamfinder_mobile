@@ -81,7 +81,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  auto_size_text: 3.0.0
   google_fonts: 4.0.3
   
   

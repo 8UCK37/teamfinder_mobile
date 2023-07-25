@@ -62,7 +62,8 @@ class _FriendsTabState extends State<FriendsTab>
     );
     if (response.statusCode == 200) {
       //debugPrint(response.data);
-      setState(() {
+      if(mounted){
+        setState(() {
         for (dynamic user in json.decode(response.data)) {
           if (user['status'] == 'incoming') {
             pendingInc.add(user);
@@ -71,6 +72,7 @@ class _FriendsTabState extends State<FriendsTab>
           }
         }
       });
+      }
       debugPrint(pendingInc.toString());
     }
   }

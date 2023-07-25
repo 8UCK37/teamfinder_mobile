@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,12 +25,14 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   List<PostPojo>? postList;
   dynamic twitchData;
-  
+  dynamic discordData;
+
   @override
   void initState() {
     super.initState();
     getOwnPost();
     getTwitchInfo();
+    getDiscordInfo();
   }
 
   @override
@@ -54,10 +58,34 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     );
     if (response.statusCode == 200) {
       //debugPrint(response.data.toString());
-        setState(() {
-           twitchData = response.data;
-           //debugPrint(twitchData.toString());
-        });
+      setState(() {
+        twitchData = response.data;
+        //debugPrint(twitchData.toString());
+      });
+    }
+  }
+
+  Future<void> getDiscordInfo() async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.get(
+      'http://${dotenv.env['server_url']}/getDiscordInfo',
+      queryParameters: {'id': user.uid.toString()},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      //debugPrint(jsonDecode(response.data)["Discord"].toString());
+      setState(() {
+        discordData = jsonDecode(response.data);
+        
+      });
     }
   }
 
@@ -230,14 +258,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           padding: const EdgeInsets.only(left: 15.0),
                           child: Row(
                             children: [
-                               SizedBox(
+                              SizedBox(
                                 child: Icon(
                                   FontAwesomeIcons.steam,
                                   color: userData['steamId'] != null
-                                        ? const Color.fromRGBO(
-                                            29, 92, 234, 85)
-                                        : Colors.black,
-                                  ),
+                                      ? const Color.fromRGBO(29, 92, 234, 85)
+                                      : Colors.black,
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
@@ -251,10 +278,14 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 15.0),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15.0),
                                 child: SizedBox(
-                                  child: Icon(FontAwesomeIcons.discord),
+                                  child: Icon(
+                                    FontAwesomeIcons.discord,
+                                    color:discordData['Discord']!=null
+                                    ?const Color.fromARGB(255, 114, 137, 218)
+                                    :Colors.black,)
                                 ),
                               )
                             ],
