@@ -34,6 +34,8 @@ class _HomePageState extends State<HomePage>
     _saveUser();
     fetchFeed();
     getOwnPost();
+    getTwitchInfo();
+    getDiscordInfo();
   }
 
   @override
@@ -51,6 +53,16 @@ class _HomePageState extends State<HomePage>
   Future<void> getOwnPost() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
     userService.getOwnPost();
+  }
+
+  Future<void> getTwitchInfo() async {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.getTwitchInfo();
+  }
+
+  Future<void> getDiscordInfo() async {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.getDiscordInfo();
   }
 
   void _saveUser() async {

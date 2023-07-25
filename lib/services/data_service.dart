@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,8 @@ class ProviderService extends ChangeNotifier {
   Map<String, dynamic> user = {}; // Initialize as an empty map
   List<PostPojo>? feed;
   List<PostPojo>? ownPosts;
+  dynamic twitchData;
+  dynamic discordData;
 
   void updateSharedVariable(Map<String, dynamic> newValue) {
     user = newValue;
@@ -49,7 +53,6 @@ class ProviderService extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getOwnPost() async {
     Dio dio = Dio();
 
@@ -72,6 +75,58 @@ class ProviderService extends ChangeNotifier {
         ownPosts = parsedPosts;
         notifyListeners();
       }
+    }
+  }
+
+  void updateTwitchData(dynamic newValue) {
+    twitchData = newValue;
+    notifyListeners();
+  }
+
+  Future<void> getTwitchInfo() async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.get(
+      'http://${dotenv.env['server_url']}/getowntwitchinfo',
+      queryParameters: {'id': user.uid.toString()},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      twitchData = response.data;
+      notifyListeners();
+    }
+  }
+
+  void updateDiscordData(dynamic newValue) {
+    discordData = newValue;
+    notifyListeners();
+  }
+
+  Future<void> getDiscordInfo() async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.get(
+      'http://${dotenv.env['server_url']}/getDiscordInfo',
+      queryParameters: {'id': user.uid.toString()},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      discordData = jsonDecode(response.data);
+      notifyListeners();
     }
   }
 }

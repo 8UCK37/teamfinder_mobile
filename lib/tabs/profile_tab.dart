@@ -1,9 +1,5 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // ignore: unused_import
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -29,8 +25,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getTwitchInfo();
-    getDiscordInfo();
   }
 
   @override
@@ -39,60 +33,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> getTwitchInfo() async {
-    Dio dio = Dio();
-
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    var response = await dio.get(
-      'http://${dotenv.env['server_url']}/getowntwitchinfo',
-      queryParameters: {'id': user.uid.toString()},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint(response.data.toString());
-      setState(() {
-        twitchData = response.data;
-        //debugPrint(twitchData.toString());
-      });
-    }
-  }
-
-  Future<void> getDiscordInfo() async {
-    Dio dio = Dio();
-
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    var response = await dio.get(
-      'http://${dotenv.env['server_url']}/getDiscordInfo',
-      queryParameters: {'id': user.uid.toString()},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint(jsonDecode(response.data)["Discord"].toString());
-      setState(() {
-        discordData = jsonDecode(response.data);
-      });
-    }
-  }
-
-  
-
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context);
     final userData = userService.user;
     postList = userService.ownPosts;
+    twitchData = userService.twitchData;
+    discordData = userService.discordData;
     return Scaffold(
       floatingActionButton: const Material(
         elevation: 20,
