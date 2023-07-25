@@ -28,29 +28,21 @@ class FriendProfileHome extends StatefulWidget {
 
 class _FriendProfileHomeState extends State<FriendProfileHome>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late PageController _pageController;
   int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     getFriendPosts();
     getFriendProfileData();
     getFriendTwitchInfo();
     getFriendDiscordInfo();
-    _tabController = TabController(vsync: this, length: 4);
-    if (mounted) {
-      _tabController.addListener(() {
-        setState(() {
-          selectedIndex = _tabController.index;
-          debugPrint("now it's changes$selectedIndex");
-        });
-      });
-    }
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -147,12 +139,13 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                 selectedIndex = value;
               });
             },
-            duration: const Duration(milliseconds: 150),
+            //duration: const Duration(milliseconds: 150),
             gap: 5,
             tabs: [
               GButton(
                 onPressed: () {
-                  _tabController.animateTo(0);
+                  //_tabController.animateTo(0);
+                  _pageController.jumpToPage(0);
                 },
                 icon: Icons.receipt_long,
                 text: 'Posts',
@@ -161,7 +154,8 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               ),
               GButton(
                 onPressed: () {
-                  _tabController.animateTo(1);
+                  //_tabController.animateTo(1);
+                  _pageController.jumpToPage(1);
                 },
                 icon: Icons.sports_esports,
                 text: 'Games',
@@ -170,7 +164,8 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               ),
               GButton(
                 onPressed: () {
-                  _tabController.animateTo(2);
+                  //_tabController.animateTo(2);
+                  _pageController.jumpToPage(2);
                 },
                 icon: Icons.link,
                 text: 'Linked Acc',
@@ -179,7 +174,8 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               ),
               GButton(
                 onPressed: () {
-                  _tabController.animateTo(3);
+                  //_tabController.animateTo(3);
+                  _pageController.jumpToPage(3);
                 },
                 icon: Icons.people_outline,
                 text: 'Friends',
@@ -188,20 +184,25 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               ),
             ]),
       ),
-      body: TabBarView(controller: _tabController, children: [
-        FriendProfilePosts(
-          friendId: widget.friendId,
-          friendName: widget.friendName,
-          friendProfileImage: widget.friendProfileImage,
-        ),
-        FriendGamesShowCase(
-          friendId: widget.friendId,
-          friendName: widget.friendName,
-          friendProfileImage: widget.friendProfileImage,
-        ),
-        const FriendLinkedAcc(),
-        const FriendsFriendList()
-      ]),
+      body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => selectedIndex = index);
+          },
+          children: [
+            FriendProfilePosts(
+              friendId: widget.friendId,
+              friendName: widget.friendName,
+              friendProfileImage: widget.friendProfileImage,
+            ),
+            FriendGamesShowCase(
+              friendId: widget.friendId,
+              friendName: widget.friendName,
+              friendProfileImage: widget.friendProfileImage,
+            ),
+            const FriendLinkedAcc(),
+            const FriendsFriendList()
+          ]),
     );
   }
 }
