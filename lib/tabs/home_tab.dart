@@ -43,11 +43,13 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
         //print(res);
         // Parse the JSON response into a list of PostPojo objects
         List<PostPojo> parsedPosts = postPojoFromJson(res);
-        setState(() {
-          postList =
-              parsedPosts; // Update the state variable with the parsed list
+        if(mounted){
+          setState(() {
+          postList =parsedPosts; // Update the state variable with the parsed list
           
         });
+        }
+        
       } else {
         // Request failed
         debugPrint('Failed to hit Express backend endpoint');

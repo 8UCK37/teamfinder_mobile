@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -107,10 +106,11 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     );
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
-      setState(() {
-        postList =
-            parsedPosts; // Update the state variable with the parsed list
+      if(parsedPosts.isNotEmpty){
+        setState(() {
+        postList = parsedPosts; // Update the state variable with the parsed list
       });
+      }
     }
   }
 
@@ -283,7 +283,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                 child: SizedBox(
                                   child: Icon(
                                     FontAwesomeIcons.discord,
-                                    color:discordData['Discord']!=null
+                                    color:discordData?['Discord']!=null
                                     ?const Color.fromARGB(255, 114, 137, 218)
                                     :Colors.black,)
                                 ),
