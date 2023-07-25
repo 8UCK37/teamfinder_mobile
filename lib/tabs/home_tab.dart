@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/services/user_service.dart';
 import '../pojos/post_pojo.dart';
 import '../widgets/online_widget.dart';
 import '../widgets/post_widget.dart';
@@ -21,52 +23,19 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _fetchPosts();
   }
 
-  void _fetchPosts() async {
-    final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
-    final user = FirebaseAuth.instance.currentUser;
-    debugPrint('fetch post called');
-    if (user != null) {
-      final idToken = await user.getIdToken();
-
-      final response = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer $idToken'},
-      );
-
-      if (response.statusCode == 200) {
-        // Request successful
-        var res = response.body;
-        //print(res);
-        // Parse the JSON response into a list of PostPojo objects
-        List<PostPojo> parsedPosts = postPojoFromJson(res);
-        if(mounted){
-          setState(() {
-          postList =parsedPosts; // Update the state variable with the parsed list
-          
-        });
-        }
-        
-      } else {
-        // Request failed
-        debugPrint('Failed to hit Express backend endpoint');
-      }
-    } else {
-      // User not logged in
-      debugPrint('User is not logged in');
-    }
-  }
+  
 
   Future<void> _handleRefresh() async {
-  _fetchPosts();
+    final userService = Provider.of<UserService>(context, listen: false);
+    userService.fetchPosts();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+    postList = userService.feed;
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: SingleChildScrollView(

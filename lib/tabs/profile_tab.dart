@@ -83,7 +83,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
       //debugPrint(jsonDecode(response.data)["Discord"].toString());
       setState(() {
         discordData = jsonDecode(response.data);
-        
       });
     }
   }
@@ -106,10 +105,11 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     );
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
-      if(parsedPosts.isNotEmpty){
+      if (parsedPosts.isNotEmpty) {
         setState(() {
-        postList = parsedPosts; // Update the state variable with the parsed list
-      });
+          postList =
+              parsedPosts; // Update the state variable with the parsed list
+        });
       }
     }
   }
@@ -281,12 +281,12 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                               Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
                                 child: SizedBox(
-                                  child: Icon(
-                                    FontAwesomeIcons.discord,
-                                    color:discordData?['Discord']!=null
-                                    ?const Color.fromARGB(255, 114, 137, 218)
-                                    :Colors.black,)
-                                ),
+                                    child: Icon(
+                                  FontAwesomeIcons.discord,
+                                  color: discordData?['Discord'] != null
+                                      ? const Color.fromARGB(255, 114, 137, 218)
+                                      : Colors.black,
+                                )),
                               )
                             ],
                           ),

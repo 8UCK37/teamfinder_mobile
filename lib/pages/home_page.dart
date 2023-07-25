@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _tabController = TabController(vsync: this, length: 5);
     _saveUser();
+    fetchFeed();
   }
 
   @override
@@ -40,7 +41,14 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
+  void fetchFeed() {
+    debugPrint('fetchFeedCalled');
+    final userService = Provider.of<UserService>(context, listen: false);
+    userService.fetchPosts();
+  }
+
   void _saveUser() async {
+    debugPrint('saveuserCalled');
     final url = Uri.parse('http://${dotenv.env['server_url']}/saveuser');
     final user = FirebaseAuth.instance.currentUser;
     final userService = Provider.of<UserService>(context, listen: false);
@@ -89,31 +97,30 @@ class _HomePageState extends State<HomePage>
                               color: Colors.deepPurple,
                               fontSize: 25.0,
                               fontWeight: FontWeight.bold)),
-                              
                     ],
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 GestureDetector(
                   onTap: () {
                     debugPrint('search clicked');
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SearchPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const SearchPage()),
                     );
                   },
-                  child:const Padding(
+                  child: const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Material(
-                      elevation: 5, 
-                      shadowColor: Colors.grey, 
+                      elevation: 5,
+                      shadowColor: Colors.grey,
                       shape: CircleBorder(),
                       child: CircleAvatar(
                         radius: 20,
                         child: Icon(Icons.search, color: Colors.blueGrey),
-                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -126,23 +133,23 @@ class _HomePageState extends State<HomePage>
                       MaterialPageRoute(builder: (context) => ChatHome()),
                     );
                   },
-                  child:const Material(
-                    elevation: 5, 
-                      shadowColor: Colors.grey, 
-                      shape: CircleBorder(),
+                  child: const Material(
+                    elevation: 5,
+                    shadowColor: Colors.grey,
+                    shape: CircleBorder(),
                     child: CircleAvatar(
                       radius: 20,
-                      child: Icon(Icons.question_answer, color: Colors.deepPurple),
-                      ),
+                      child:
+                          Icon(Icons.question_answer, color: Colors.deepPurple),
+                    ),
                   ),
                 ),
-              ]
-              ),
+              ]),
             ]),
         backgroundColor: Colors.white,
         elevation: 0.0,
         bottom: TabBar(
-          key:const Key('tabBar'),
+          key: const Key('tabBar'),
           indicatorColor: Colors.deepPurple,
           controller: _tabController,
           unselectedLabelColor: Colors.grey,
@@ -157,17 +164,13 @@ class _HomePageState extends State<HomePage>
         ),
         //systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: TabBarView(
-        controller: _tabController, 
-        children: [
-          const HomeTab(),
-          const ProfileTab(),
-          const FriendsTab(),
-          NotificationsTab(),
-          MenuTab(_tabController),
-        ]
-      ),
+      body: TabBarView(controller: _tabController, children: [
+        const HomeTab(),
+        const ProfileTab(),
+        const FriendsTab(),
+        NotificationsTab(),
+        MenuTab(_tabController),
+      ]),
     );
   }
 }
- 
