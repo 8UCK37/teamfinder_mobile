@@ -21,7 +21,6 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _fetchPosts();
   }
 
@@ -60,27 +59,34 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<void> _handleRefresh() async {
+  _fetchPosts();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const Divider(),
-          const OnlineWidget(),
-          const SeparatorWidget(),
-          const WriteSomethingWidget(),
-          //SeparatorWidget(),
-          //StoriesWidget(),
-          if (postList != null) // Add a null check here
-            for (PostPojo post in postList!) // Add a null check here
-              Column(
-                children: <Widget>[
-                  const SeparatorWidget(),
-                  PostWidget(post: post),
-                ],
-              ),
-          const SeparatorWidget(),
-        ],
+    return RefreshIndicator(
+      onRefresh: _handleRefresh,
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const Divider(),
+            const OnlineWidget(),
+            const SeparatorWidget(),
+            const WriteSomethingWidget(),
+            if (postList != null) // Add a null check here
+              for (PostPojo post in postList!) // Add a null check here
+                Column(
+                  children: <Widget>[
+                    const SeparatorWidget(),
+                    PostWidget(post: post),
+                  ],
+                ),
+            const SeparatorWidget(),
+          ],
+        ),
       ),
     );
   }
