@@ -135,9 +135,11 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
         child: GNav(
             selectedIndex: selectedIndex,
             onTabChange: (value) {
-              setState(() {
+              if(mounted){
+                setState(() {
                 selectedIndex = value;
               });
+              }
             },
             //duration: const Duration(milliseconds: 150),
             gap: 5,
@@ -145,7 +147,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               GButton(
                 onPressed: () {
                   //_tabController.animateTo(0);
-                  _pageController.jumpToPage(0);
+                  _pageController.animateToPage(
+                    0,
+                    duration: const Duration(
+                        milliseconds: 150), // Set the duration of the animation
+                    curve: Curves.easeInCubic, // Set the easing curve for the animation
+                  );
                 },
                 icon: Icons.receipt_long,
                 text: 'Posts',
@@ -155,7 +162,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               GButton(
                 onPressed: () {
                   //_tabController.animateTo(1);
-                  _pageController.jumpToPage(1);
+                  _pageController.animateToPage(
+                    1,
+                    duration: const Duration(
+                        milliseconds: 150), // Set the duration of the animation
+                    curve: Curves.easeInCubic, // Set the easing curve for the animation
+                  );
                 },
                 icon: Icons.sports_esports,
                 text: 'Games',
@@ -165,7 +177,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               GButton(
                 onPressed: () {
                   //_tabController.animateTo(2);
-                  _pageController.jumpToPage(2);
+                  _pageController.animateToPage(
+                    2,
+                    duration: const Duration(
+                        milliseconds: 150), // Set the duration of the animation
+                    curve: Curves.easeInCubic, // Set the easing curve for the animation
+                  );
                 },
                 icon: Icons.link,
                 text: 'Linked Acc',
@@ -175,7 +192,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
               GButton(
                 onPressed: () {
                   //_tabController.animateTo(3);
-                  _pageController.jumpToPage(3);
+                  _pageController.animateToPage(
+                    3,
+                    duration: const Duration(
+                        milliseconds: 150), // Set the duration of the animation
+                    curve: Curves.easeInCubic, // Set the easing curve for the animation
+                  );
                 },
                 icon: Icons.people_outline,
                 text: 'Friends',
@@ -187,7 +209,9 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
       body: PageView(
           controller: _pageController,
           onPageChanged: (index) {
-            setState(() => selectedIndex = index);
+            if(mounted){
+              setState(() => selectedIndex = index);
+            }
           },
           children: [
             FriendProfilePosts(

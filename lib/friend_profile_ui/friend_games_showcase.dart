@@ -89,7 +89,8 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
       //debugPrint(response.data.toString());
       dynamic res = jsonDecode(response.data)[0];
       //debugPrint(res.toString());
-      setState(() {
+      if(mounted){
+        setState(() {
         showcase = [];
         for (dynamic game in gamesList) {
           game['selected'] = false;
@@ -104,6 +105,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
             b['playtime_forever'].compareTo(a['playtime_forever']) as int);
         ownedGames = gamesList;
       });
+      }
     }
   }
 
