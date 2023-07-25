@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../services/user_service.dart';
+import '../services/data_service.dart';
 
 class WriteSomethingWidget extends StatelessWidget {
   const WriteSomethingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
+    final userService = Provider.of<ProviderService>(context);
     final userData = userService.user;
     // ignore: avoid_unnecessary_containers
     return Container(

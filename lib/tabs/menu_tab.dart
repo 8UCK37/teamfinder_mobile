@@ -5,7 +5,7 @@ import 'package:teamfinder_mobile/pages/menu_pages/games_screen.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/settings.dart';
 import 'package:teamfinder_mobile/pages/onboarding_page.dart';
 import '../services/auth_service.dart';
-import '../services/user_service.dart';
+import '../services/data_service.dart';
 
 class MenuTab extends StatelessWidget {
   final TabController tabController;
@@ -14,7 +14,7 @@ class MenuTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
+    final userService = Provider.of<ProviderService>(context);
     final userData = userService.user;
     return SingleChildScrollView(
       // ignore: avoid_unnecessary_containers

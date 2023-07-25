@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/socket_service.dart';
-import '../services/user_service.dart';
+import '../services/data_service.dart';
 import '../tabs/friends_tab.dart';
 import '../tabs/home_tab.dart';
 import '../tabs/menu_tab.dart';
@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage>
     _tabController = TabController(vsync: this, length: 5);
     _saveUser();
     fetchFeed();
+    getOwnPost();
   }
 
   @override
@@ -42,16 +43,21 @@ class _HomePageState extends State<HomePage>
   }
 
   void fetchFeed() {
-    debugPrint('fetchFeedCalled');
-    final userService = Provider.of<UserService>(context, listen: false);
+    //debugPrint('fetchFeedCalled');
+    final userService = Provider.of<ProviderService>(context, listen: false);
     userService.fetchPosts();
+  }
+
+  Future<void> getOwnPost() async {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.getOwnPost();
   }
 
   void _saveUser() async {
     debugPrint('saveuserCalled');
     final url = Uri.parse('http://${dotenv.env['server_url']}/saveuser');
     final user = FirebaseAuth.instance.currentUser;
-    final userService = Provider.of<UserService>(context, listen: false);
+    final userService = Provider.of<ProviderService>(context, listen: false);
     if (user != null) {
       final idToken = await user.getIdToken();
 
@@ -79,7 +85,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
+    final userService = Provider.of<ProviderService>(context);
     // ignore: unused_local_variable
     final userData = userService.user;
     return Scaffold(

@@ -10,7 +10,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
-import '../services/user_service.dart';
+import '../services/data_service.dart';
 import '../widgets/separator_widget.dart';
 
 class ProfileTab extends StatefulWidget {
@@ -29,7 +29,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getOwnPost();
     getTwitchInfo();
     getDiscordInfo();
   }
@@ -87,37 +86,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> getOwnPost() async {
-    Dio dio = Dio();
-
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    //debugPrint(user.uid.toString());
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/getPostById',
-      data: {'uid': user.uid.toString()},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      List<PostPojo> parsedPosts = postPojoFromJson(response.data);
-      if (parsedPosts.isNotEmpty) {
-        setState(() {
-          postList =
-              parsedPosts; // Update the state variable with the parsed list
-        });
-      }
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
+    final userService = Provider.of<ProviderService>(context);
     final userData = userService.user;
+    postList = userService.ownPosts;
     return Scaffold(
       floatingActionButton: const Material(
         elevation: 20,

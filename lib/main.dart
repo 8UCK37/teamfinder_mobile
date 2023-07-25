@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/home_page.dart';
-import 'package:teamfinder_mobile/services/user_service.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 import 'chat_ui/camera_ui/CameraScreen.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => UserService(),
+        create: (context) => ProviderService(),
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'TeamFinder',
