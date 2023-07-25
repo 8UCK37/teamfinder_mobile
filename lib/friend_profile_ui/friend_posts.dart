@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
+import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../widgets/separator_widget.dart';
 
@@ -32,12 +31,10 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _linkedAccWidgetKey = GlobalKey();
   dynamic twitchData;
+  dynamic discordData;
   @override
   void initState() {
     super.initState();
-    getProfileData();
-    getFriendsPosts();
-    getTwitchInfo();
   }
 
   @override
@@ -47,82 +44,14 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
     super.dispose();
   }
 
-  Future<void> getTwitchInfo() async {
-    Dio dio = Dio();
-
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    var response = await dio.get(
-      'http://${dotenv.env['server_url']}/getowntwitchinfo',
-      queryParameters: {'id': widget.friendId},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint(response.data.toString());
-        setState(() {
-          twitchData = response.data;
-          //debugPrint(twitchData.toString());
-        });
-    }
-  }
-
-  Future<void> getProfileData() async {
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    //debugPrint(widget.friendId.toString());
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/getUserInfo',
-      data: {'id': widget.friendId},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint('friend data fetched');
-      //debugPrint(response.data);
-      setState(() {
-        friendProfile = userPojoListFromJson(response.data)[0];
-      });
-      //debugPrint(friendProfile.toString());
-    }
-  }
-
-  Future<void> getFriendsPosts() async {
-    Dio dio = Dio();
-
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    //debugPrint(user.uid.toString());
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/getPostById',
-      data: {'uid': widget.friendId.toString()},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      List<PostPojo> parsedPosts = postPojoFromJson(response.data);
-      setState(() {
-        postList =
-            parsedPosts; // Update the state variable with the parsed list
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: true);
+    postList = profileService.friendPostList;
+    friendProfile = profileService.friendProfile;
+    twitchData = profileService.twitchData;
+    discordData = profileService.discordData;
     if (friendProfile == null) {
       return Container();
     } else {
@@ -241,7 +170,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                               children: <Widget>[
                                 Column(
                                   key: _linkedAccWidgetKey,
-                                  children:  <Widget>[
+                                  children: <Widget>[
                                     const Text('Linked accounts',
                                         style: TextStyle(
                                             fontSize: 18.0,
@@ -250,37 +179,42 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                                 255, 60, 159, 209))),
                                     const SizedBox(height: 6.0),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 15.0),
+                                      padding:
+                                          const EdgeInsets.only(left: 15.0),
                                       child: Row(
                                         children: [
                                           SizedBox(
                                             child: Icon(
                                               FontAwesomeIcons.steam,
-                                              color: friendProfile?.steamId != null
-                                                ? const Color.fromRGBO( 29, 92, 234, 85)
-                                                : Colors.black,
-                                              ),
+                                              color:
+                                                  friendProfile?.steamId != null
+                                                      ? const Color.fromRGBO(
+                                                          29, 92, 234, 85)
+                                                      : Colors.black,
+                                            ),
                                           ),
                                           Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 15.0),
+                                            padding:const EdgeInsets.only(left: 15.0),
                                             child: SizedBox(
-                                              child:
-                                                  Icon(
-                                                    FontAwesomeIcons.twitch,
-                                                    color: twitchData !="not logged in"
+                                              child: Icon(
+                                                FontAwesomeIcons.twitch,
+                                                color: twitchData !=
+                                                        "not logged in"
                                                     ? const Color.fromRGBO(
                                                         145, 70, 250, 100)
                                                     : Colors.black,
-                                                    ),
+                                              ),
                                             ),
                                           ),
-                                          const Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 15.0),
+                                          Padding(
+                                            padding:const EdgeInsets.only(left: 15.0),
                                             child: SizedBox(
                                               child: Icon(
-                                                  FontAwesomeIcons.discord),
+                                                  FontAwesomeIcons.discord,
+                                                   color:discordData?['Discord'] !=null
+                                                        ? const Color.fromRGBO(114, 137, 218, 1)
+                                                        : Colors.black,
+                                                  ),
                                             ),
                                           )
                                         ],
