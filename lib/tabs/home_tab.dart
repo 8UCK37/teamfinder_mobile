@@ -23,8 +23,6 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
-  
-
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
     userService.fetchPosts();
