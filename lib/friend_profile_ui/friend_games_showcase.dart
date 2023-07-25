@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_flip_card/flipcard/gesture_flip_card.dart';
 
-
 class FriendGamesShowCase extends StatefulWidget {
   final String? friendName;
   final String friendId;
@@ -58,12 +57,15 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
     );
     if (response.statusCode == 200) {
       //debugPrint('from line 59: ${jsonDecode(response.data).length}');
-      setState(() {
+      if (mounted) {
+        setState(() {
         if (jsonDecode(response.data).length != 0) {
           ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
           getSelectedGames(ownedGames);
         }
       });
+      }
+      
     }
   }
 

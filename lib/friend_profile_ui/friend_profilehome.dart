@@ -29,7 +29,7 @@ class FriendProfileHome extends StatefulWidget {
 class _FriendProfileHomeState extends State<FriendProfileHome>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -41,8 +41,8 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     if (mounted) {
       _tabController.addListener(() {
         setState(() {
-          // Update the selected index of GNav when the tabs change
-          _tabController.index = _tabController.index;
+          selectedIndex = _tabController.index;
+          debugPrint("now it's changes$selectedIndex");
         });
       });
     }
@@ -141,8 +141,13 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
       bottomNavigationBar: SizedBox(
         height: 75,
         child: GNav(
-            selectedIndex: _tabController.index,
-            duration: const Duration(milliseconds: 250),
+            selectedIndex: selectedIndex,
+            onTabChange: (value) {
+              setState(() {
+                selectedIndex = value;
+              });
+            },
+            duration: const Duration(milliseconds: 150),
             gap: 5,
             tabs: [
               GButton(

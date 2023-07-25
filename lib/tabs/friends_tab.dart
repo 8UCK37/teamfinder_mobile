@@ -119,7 +119,8 @@ class _FriendsTabState extends State<FriendsTab>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const FriendList()),
+                            builder: (context) => const FriendList()
+                        ),
                       );
                     },
                     child: Container(

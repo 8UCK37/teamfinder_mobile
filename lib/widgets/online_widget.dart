@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
+import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/services/socket_service.dart';
@@ -113,25 +115,44 @@ class _OnlineWidgetState extends State<OnlineWidget>
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40.0),
                 border: Border.all(width: 1.0, color: Colors.blue)),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.video_call, size: 20, color: Colors.purple),
-                SizedBox(width: 5.0),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Post', style: TextStyle(color: Colors.blue)),
-                    Text('Video', style: TextStyle(color: Colors.blue)),
-                  ],
-                )
-              ],
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FriendList()),
+                );
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.diversity_2, size: 20, color: Colors.purple),
+                  SizedBox(width: 5.0),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text('All', style: TextStyle(color: Colors.blue)),
+                      Text('Friends', style: TextStyle(color: Colors.blue)),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
           if (friendList != null) // Add a null check here
             for (UserPojo user in friendList!) // Add a null check here
-              friendBubble(user)
+              GestureDetector(
+                onTap:() {
+                  var route = MaterialPageRoute(
+                    builder: (BuildContext context) => FriendProfileHome(
+                          friendId: user.id,
+                          friendName: user.name,
+                          friendProfileImage: user.profilePicture,
+                        ));
+                Navigator.of(context).push(route);
+                },
+                child: friendBubble(user)
+              )
         ],
       ),
     );

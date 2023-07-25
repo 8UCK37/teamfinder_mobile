@@ -55,8 +55,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
 
   @override
   Widget build(BuildContext context) {
-    final profileService =
-        Provider.of<FriendProfileService>(context, listen: true);
+    final profileService = Provider.of<FriendProfileService>(context, listen: true);
     postList = profileService.friendPostList;
     friendProfile = profileService.friendProfile;
     twitchData = profileService.twitchData;
