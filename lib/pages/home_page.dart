@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage>
         // Request successful
         var userData = json.decode(response.body);
         //print(userData);
-        userService.updateSharedVariable(userData);
+        userService.updateCurrentUser(userData);
         socketService.setupSocketConnection();
         socketService.setSocketId(userData['id']);
       } else {

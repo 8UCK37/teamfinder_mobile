@@ -32,7 +32,7 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context);
+    final userService = Provider.of<ProviderService>(context,listen: true);
     postList = userService.feed;
     return RefreshIndicator(
       onRefresh: _handleRefresh,

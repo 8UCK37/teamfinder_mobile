@@ -35,7 +35,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context);
+    final userService = Provider.of<ProviderService>(context,listen: true);
     final userData = userService.user;
     postList = userService.ownPosts;
     twitchData = userService.twitchData;

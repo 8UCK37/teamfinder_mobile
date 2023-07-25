@@ -14,7 +14,7 @@ class ProviderService extends ChangeNotifier {
   dynamic twitchData;
   dynamic discordData;
 
-  void updateSharedVariable(Map<String, dynamic> newValue) {
+  void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
   }
