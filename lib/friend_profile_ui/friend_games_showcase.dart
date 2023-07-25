@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_flip_card/flipcard/gesture_flip_card.dart';
 
+
 class FriendGamesShowCase extends StatefulWidget {
   final String? friendName;
   final String friendId;
@@ -58,7 +59,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
     if (response.statusCode == 200) {
       //debugPrint('from line 59: ${jsonDecode(response.data).length}');
       setState(() {
-        if(jsonDecode(response.data).length!=0){
+        if (jsonDecode(response.data).length != 0) {
           ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
           getSelectedGames(ownedGames);
         }
@@ -104,40 +105,44 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
     }
   }
 
+  Future<void> _handleRefresh() async {
+    getShowCase();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // const Divider(
-          //   thickness: 4,
-          // ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width:MediaQuery.of(context).size.width-20,
-                  child: AutoSizeText(
-                      showcase.length==0
-                      ?"${widget.friendName!} currently has no games saved as favourites"
-                      :"${widget.friendName!}'s favourite games",
+    return RefreshIndicator(
+      onRefresh: _handleRefresh,
+      child: Scaffold(
+        body: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 20,
+                    child: AutoSizeText(
+                      showcase.length == 0
+                          ? "${widget.friendName!} currently has no games saved as favourites"
+                          : "${widget.friendName!}'s favourite games",
                       style: const TextStyle(
-                      color: Colors.deepPurpleAccent,
-                      fontWeight: FontWeight.bold),
+                          color: Colors.deepPurpleAccent,
+                          fontWeight: FontWeight.bold),
                       maxLines: 1,
-                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height * .70,
-                child: CustomGrid(items: showcase!)),
-          ),
-        ],
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: SizedBox(
+                  height: MediaQuery.of(context).size.height * .70,
+                  child: CustomGrid(items: showcase!)),
+            ),
+          ],
+        ),
       ),
     );
   }
