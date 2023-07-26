@@ -13,7 +13,7 @@ class ProviderService extends ChangeNotifier {
   List<PostPojo>? ownPosts;
   dynamic twitchData;
   dynamic discordData;
-  bool darkTheme=false;
+  late bool darkTheme;
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();

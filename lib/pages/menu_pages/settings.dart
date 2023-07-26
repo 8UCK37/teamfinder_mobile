@@ -44,6 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -110,7 +111,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ]),
               ]),
-          backgroundColor: Colors.white,
           elevation: 0.0,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),

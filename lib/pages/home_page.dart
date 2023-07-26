@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context);
+    final userService = Provider.of<ProviderService>(context,listen:true);
     // ignore: unused_local_variable
     final userData = userService.user;
     _isDark = userService.darkTheme;
@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage>
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -184,7 +185,6 @@ class _HomePageState extends State<HomePage>
                       ),
                     ]),
               ]),
-          backgroundColor: Colors.white,
           elevation: 0.0,
           bottom: TabBar(
             key: const Key('tabBar'),

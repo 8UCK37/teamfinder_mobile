@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 
 class FriendsTab extends StatefulWidget {
   const FriendsTab({super.key});
@@ -79,6 +81,7 @@ class _FriendsTabState extends State<FriendsTab>
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<ProviderService>(context,listen:true);
     return SingleChildScrollView(
       controller: _scrollController,
       child: Container(
@@ -107,8 +110,9 @@ class _FriendsTabState extends State<FriendsTab>
                       decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(30.0)),
-                      child: const Text('Suggestions',
+                      child: Text('Suggestions',
                           style: TextStyle(
+                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -129,8 +133,9 @@ class _FriendsTabState extends State<FriendsTab>
                       decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(30.0)),
-                      child: const Text('All Friends',
+                      child: Text('All Friends',
                           style: TextStyle(
+                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -145,8 +150,9 @@ class _FriendsTabState extends State<FriendsTab>
                       decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(30.0)),
-                      child: const Text('Pending',
+                      child:  Text('Pending',
                           style: TextStyle(
+                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   )

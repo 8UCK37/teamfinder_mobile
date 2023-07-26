@@ -35,7 +35,7 @@ class MenuTab extends StatelessWidget {
               child: Card(
                 elevation: 5,
                 surfaceTintColor: Colors.amberAccent,
-                shadowColor: Colors.deepPurpleAccent,
+                shadowColor: userService.darkTheme? Colors.transparent:Colors.deepPurpleAccent,
                 child: Row(
                   children: <Widget>[
                     //const SizedBox(height:15,width: 15.0),

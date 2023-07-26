@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chats.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/contacts.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 
 
 class ChatHome extends StatefulWidget {
@@ -25,52 +27,48 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Teamfinder Chat', style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search),
-            color: Colors.white,
-            onPressed: (){},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            color: Colors.white,
-            onPressed: (){},
-          ),
-        ],
-        backgroundColor: Colors.deepPurpleAccent.shade400,
-        // bottom: TabBar(
-        //   controller: _tabController,
-        //   tabs: const <Widget>[
-        //     // Tab(icon: Icon(Icons.camera_alt, color: Colors.white,)),
-        //     Tab(child: Text("CHATS", style: TextStyle(color: Colors.white))),
-        //     // Tab(child: Text("STATUS", style: TextStyle(color: Colors.white))),
-        //     // Tab(child: Text("CALLS", style: TextStyle(color: Colors.white))),
-        //   ],
-        // ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-          // CameraPage(),
-          Chats(),
-          // Status(),
-          // Calls()
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor:const Color.fromARGB(255, 22, 125, 99), //Theme.of(context).accentColor
-        child: const Icon(
-          Icons.message,
-          color: Colors.white,
+    final userService = Provider.of<ProviderService>(context,listen:true);
+    return Theme(
+      data: userService.darkTheme ? ThemeData.dark() : ThemeData.light(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor:userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          iconTheme: IconThemeData(color: userService.darkTheme ?Colors.grey:Colors.white),
+          title: const Text('Teamfinder Chat', style: TextStyle(color: Colors.white)),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.search),
+              color: Colors.white,
+              onPressed: (){},
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert),
+              color: Colors.white,
+              onPressed: (){},
+            ),
+          ],
         ),
-        onPressed: (){
-          var router = MaterialPageRoute(
-            builder: (BuildContext context) =>const Contacts());
-            Navigator.of(context).push(router);
-        },
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+            // CameraPage(),
+            Chats(),
+            // Status(),
+            // Calls()
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor:const Color.fromARGB(255, 22, 125, 99), //Theme.of(context).accentColor
+          child: const Icon(
+            Icons.message,
+            color: Colors.white,
+          ),
+          onPressed: (){
+            var router = MaterialPageRoute(
+              builder: (BuildContext context) =>const Contacts());
+              Navigator.of(context).push(router);
+          },
+        ),
       ),
     );
 
