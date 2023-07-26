@@ -7,7 +7,6 @@ import '../widgets/post_widget.dart';
 import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
 
-
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
 
@@ -16,12 +15,13 @@ class HomeTab extends StatefulWidget {
   _HomeTabState createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
+class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin<HomeTab> {
   List<PostPojo>? postList;
+
+
   @override
-  void initState() {
-    super.initState();
-  }
+  bool get wantKeepAlive => true;
+
 
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -30,7 +30,8 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen: true);
+    super.build(context);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     postList = userService.feed;
     return RefreshIndicator(
       onRefresh: _handleRefresh,
