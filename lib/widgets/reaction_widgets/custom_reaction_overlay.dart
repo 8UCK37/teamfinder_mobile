@@ -71,7 +71,6 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
       child: Stack(
         children: [
           GestureDetector(
-              onTap: widget.onDismiss, // Dismiss on tap outside
               onVerticalDragUpdate: (details) {
                 //debugPrint('caught onVerticalDragUpdate ${details.toString()}');
                 widget.onDismiss();
