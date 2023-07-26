@@ -16,7 +16,7 @@ import 'package:teamfinder_mobile/widgets/search_bar.dart';
 
 class AddNewGames extends StatefulWidget {
   final List<dynamic> list;
-  AddNewGames({required this.list});
+  const AddNewGames({super.key, required this.list});
 
   @override
   State<AddNewGames> createState() => _AddNewGamesState();
