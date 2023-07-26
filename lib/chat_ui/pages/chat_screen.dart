@@ -200,10 +200,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         photoUrl: _selectedImage == null ? null : selectedImagePath,
         sender: user.uid,
         time: DateFormat('yyyy-MM-dd HH:mm:ss').format(now));
-
-    // debugPrint('split');
-    // debugPrint(selectedImagePath?.split('/')[2]);
-    // debugPrint(selectedImagePath);
     if (mounted) {
       setState(() {
         chatMsgs!.add(newChat);

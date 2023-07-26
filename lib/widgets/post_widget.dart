@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
@@ -26,6 +27,7 @@ class PostWidget extends StatefulWidget {
 class _PostWidgetState extends State<PostWidget>
     with SingleTickerProviderStateMixin {
   GlobalKey key = GlobalKey();
+  TextEditingController _textController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,7 @@ class _PostWidgetState extends State<PostWidget>
 
   @override
   void dispose() {
+    _textController.dispose();
     super.dispose();
   }
 
@@ -392,6 +395,36 @@ class _PostWidgetState extends State<PostWidget>
                                           ),
                                         ],
                                       ),
+                                      // ChatMessageBar(
+                                      //   textController: _textController,
+                                      //   onSend: (String typedMsg) {
+                                          
+                                      //   },
+                                      //   actions: [
+                                      //     InkWell(
+                                      //       child: const Icon(
+                                      //         Icons.link,
+                                      //         color: Colors.orangeAccent,
+                                      //         size: 24,
+                                      //       ),
+                                      //       onTap: () {
+                                              
+                                      //       },
+                                      //     ),
+                                      //     Padding(
+                                      //       padding: const EdgeInsets.only(
+                                      //           left: 8, right: 8),
+                                      //       child: InkWell(
+                                      //         child: const Icon(
+                                      //           Icons.camera_alt,
+                                      //           color: Colors.green,
+                                      //           size: 24,
+                                      //         ),
+                                      //         onTap: () {},
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                   padding: const EdgeInsets.symmetric(
