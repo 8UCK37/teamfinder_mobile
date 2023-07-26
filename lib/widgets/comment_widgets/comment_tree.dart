@@ -5,7 +5,9 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 
 class CommentObj extends StatefulWidget {
   final int postId;
@@ -130,6 +132,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<ProviderService>(context,listen:false);
     return SafeArea(
         child: Column(
       children: <Widget>[
@@ -152,13 +155,13 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
           Text('There are currently no comments for this post!!'),
         if (commentTree.length != 0)
           for (CommentPojo parentComment in commentTree)
-            commentBox(parentComment, 18, true, true, widget.showLines),
+            commentBox(parentComment, 18, true, true, widget.showLines,userService.darkTheme!),
       ],
     ));
   }
 
   Widget commentBox(CommentPojo comment, double radius, bool isFirst,
-      bool isLast, bool showLine) {
+      bool isLast, bool showLine,bool isDark) {
     return SizedBox(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,8 +211,12 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
               children: [
                 Card(
                   elevation: 0,
-                  surfaceTintColor: Colors.grey,
-                  color: Color.fromARGB(255, 241, 239, 239),
+                  surfaceTintColor: isDark 
+                          ?Color.fromARGB(255, 80, 80, 80)
+                          :Colors.grey,
+                  color: isDark 
+                          ?Color.fromARGB(255, 80, 80, 80)
+                          :Color.fromARGB(255, 241, 239, 239),
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Column(
@@ -276,7 +283,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                             index == 0,
                             index ==
                                 comment.children!.length - 1, // isFirst or no
-                            showLine),
+                            showLine,isDark),
                     ],
                   ),
               ],

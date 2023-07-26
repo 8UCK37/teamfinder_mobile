@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
@@ -156,6 +158,7 @@ class _PostWidgetState extends State<PostWidget>
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<ProviderService>(context,listen:false);
     return Container(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -353,14 +356,23 @@ class _PostWidgetState extends State<PostWidget>
                           anchors: [0, 0.5, 0.95],
                           headerHeight: 50,
                           context: context,
-                          bottomSheetColor: Colors.white,
+                          bottomSheetColor: userService.darkTheme! 
+                          ?const Color.fromRGBO(46, 46, 46, 1)
+                          :Colors.white,
                           headerBuilder: (BuildContext context, double offset) {
                             return AppBar(
                                 automaticallyImplyLeading: true,
-                                title: const Column(
+                                backgroundColor: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
+                                iconTheme: IconThemeData(color: userService.darkTheme! ? Colors.white: Colors.black,),
+                                title: Column(
                                   children: [
                                     Row(
-                                      children: [Text('Comments')],
+                                      children: [
+                                        Text('Comments',
+                                        style: TextStyle(
+                                          color: userService.darkTheme! ? Colors.white: Colors.black,
+                                        )),
+                                        ],
                                     ),
                                   ],
                                 ));

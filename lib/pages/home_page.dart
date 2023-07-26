@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage>
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
