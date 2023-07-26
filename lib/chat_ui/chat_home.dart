@@ -33,17 +33,17 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor:userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
-          iconTheme: IconThemeData(color: userService.darkTheme ?Colors.grey:Colors.white),
-          title: const Text('Teamfinder Chat', style: TextStyle(color: Colors.white)),
+          iconTheme: IconThemeData(color: userService.darkTheme ?Colors.white:Colors.grey),
+          title:  Text('Teamfinder Chat', style: TextStyle(color: userService.darkTheme ?Colors.white:Colors.deepPurpleAccent)),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.search),
-              color: Colors.white,
+              color: userService.darkTheme ?Colors.white:Colors.grey,
               onPressed: (){},
             ),
             IconButton(
               icon: const Icon(Icons.more_vert),
-              color: Colors.white,
+              color: userService.darkTheme ?Colors.white:Colors.grey,
               onPressed: (){},
             ),
           ],
