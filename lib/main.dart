@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.deepPurple,
           useMaterial3: true,
         ),
-        home: isLogin ? HomePage() : const LoginActivity(),
+        home: isLogin ? const HomePage() : const LoginActivity(),
       ),
     );
   }
