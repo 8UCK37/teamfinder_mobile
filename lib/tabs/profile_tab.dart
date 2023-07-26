@@ -246,11 +246,12 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           if (postList != null)
                             Text('You have ${postList!.length.toString()} posts',
                                 style: TextStyle(
-                                    fontSize: 16.0, color: Colors.grey[800])),
+                                    fontSize: 16.0, color:userService.darkTheme?Colors.white: Colors.grey[800])),
                         ],
                       ),
                     ],
                   ),
+                  const Divider(height: 20,),
                   const SizedBox(height: 25),
                   if (postList != null) // Add a null check here
                     for (PostPojo post
