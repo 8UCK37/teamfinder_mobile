@@ -197,10 +197,10 @@ class _PostWidgetState extends State<PostWidget>
           if (widget.post.shared != null)
             Container(
               //color: const Color.fromARGB(110, 222, 221, 221),
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(110, 222, 221,
+              decoration: BoxDecoration(
+                color: userService.darkTheme! ? const Color.fromARGB(255, 80, 80, 80):const Color.fromARGB(110, 222, 221,
                     221), // Set the desired background color here
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10.0),
                   topRight: Radius.circular(10.0),
                 ),
@@ -235,7 +235,7 @@ class _PostWidgetState extends State<PostWidget>
                   ),
                   const SizedBox(height: 20.0),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 16),
+                    padding: const EdgeInsets.only(top: 8, left: 16,bottom:8),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: parseDescriptionWidget(
@@ -299,7 +299,8 @@ class _PostWidgetState extends State<PostWidget>
             padding: const EdgeInsets.only(top: 0),
             child: Column(
               children: [
-                const Divider(height: 20),
+                Divider(height: 20,
+                color:userService.darkTheme! ? Colors.white:Colors.grey),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
