@@ -43,7 +43,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
       options: options,
     );
     if (response.statusCode == 200) {
-      debugPrint('comments fetched for postId ${widget.postId}');
+      //debugPrint('comments fetched for postId ${widget.postId}');
       if (mounted) {
         setState(() {
           // for (CommentPojo comm in commentPojoFromJson(response.data)) {
@@ -51,7 +51,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
           // }
           comments = commentPojoFromJson(response.data);
           commentTree = buildCommentTree(comments);
-          debugPrint('number of parent comment id :${commentTree.length}');
+          //debugPrint('number of parent comment id :${commentTree.length}');
           for (CommentPojo comment in commentTree) {
             //debugPrint('line 136 for comment ${comm.commentStr}: ${comm.reactionMap.toString()}');
             if (comment.children != null && comment.children!.length > 1) {
