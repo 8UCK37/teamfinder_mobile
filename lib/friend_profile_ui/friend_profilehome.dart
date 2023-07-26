@@ -75,11 +75,11 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context,listen:true);
     return Theme(
-      data: userService.darkTheme ? ThemeData.dark() : ThemeData.light(),
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor:userService.darkTheme ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          backgroundColor:userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -162,7 +162,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                   },
                   icon: Icons.receipt_long,
                   text: 'Posts',
-                  iconColor:userService.darkTheme ?  Colors.grey: Colors.white,
+                  iconColor:userService.darkTheme! ?  Colors.grey: Colors.white,
                   textColor: Colors.deepPurple,
                   iconActiveColor: Colors.deepPurple,
                 ),
@@ -178,7 +178,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                   },
                   icon: Icons.sports_esports,
                   text: 'Games',
-                  iconColor:userService.darkTheme ?  Colors.grey: Colors.white,
+                  iconColor:userService.darkTheme! ?  Colors.grey: Colors.white,
                   textColor: Colors.deepOrange,
                   iconActiveColor: Colors.deepOrange,
                 ),
@@ -194,7 +194,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                   },
                   icon: Icons.link,
                   text: 'Linked Acc',
-                  iconColor:userService.darkTheme ?  Colors.grey: Colors.white,
+                  iconColor:userService.darkTheme! ?  Colors.grey: Colors.white,
                   textColor: Colors.blue,
                   iconActiveColor: Colors.blue,
                 ),
@@ -210,7 +210,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                   },
                   icon: Icons.people_outline,
                   text: 'Friends',
-                  iconColor:userService.darkTheme ?  Colors.grey: Colors.white,
+                  iconColor:userService.darkTheme! ?  Colors.grey: Colors.white,
                   textColor: const Color.fromARGB(255, 152, 129, 14),
                   iconActiveColor: const Color.fromARGB(255, 152, 129, 14),
                 ),

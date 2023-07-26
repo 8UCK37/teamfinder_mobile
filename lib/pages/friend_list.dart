@@ -69,20 +69,20 @@ class _FriendListState extends State<FriendList>
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context,listen:true);
     return Theme(
-      data: userService.darkTheme ? ThemeData.dark() : ThemeData.light(),
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
-            color: userService.darkTheme ?Colors.grey:Colors.deepPurple),
+            color: userService.darkTheme! ?Colors.grey:Colors.deepPurple),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.search),
-              color: userService.darkTheme ?Colors.grey:Colors.deepPurple,
+              color: userService.darkTheme! ?Colors.grey:Colors.deepPurple,
               onPressed: () {},
             ),
             IconButton(
               icon: const Icon(Icons.more_vert),
-              color: userService.darkTheme ?Colors.grey:Colors.deepPurple,
+              color: userService.darkTheme! ?Colors.grey:Colors.deepPurple,
               onPressed: () {},
             ),
           ],
@@ -93,7 +93,7 @@ class _FriendListState extends State<FriendList>
               children: <Widget>[
                  Text("FriendList",
                     style: TextStyle(
-                      color: userService.darkTheme ?Colors.grey:Colors.deepPurple
+                      color: userService.darkTheme! ?Colors.grey:Colors.deepPurple
                       )),
                 // ignore: avoid_unnecessary_containers
                 Container(

@@ -29,21 +29,21 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context,listen:true);
     return Theme(
-      data: userService.darkTheme ? ThemeData.dark() : ThemeData.light(),
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor:userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
-          iconTheme: IconThemeData(color: userService.darkTheme ?Colors.white:Colors.grey),
-          title:  Text('Teamfinder Chat', style: TextStyle(color: userService.darkTheme ?Colors.white:Colors.deepPurpleAccent)),
+          backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          iconTheme: IconThemeData(color: userService.darkTheme! ?Colors.white:Colors.grey),
+          title:  Text('Teamfinder Chat', style: TextStyle(color: userService.darkTheme! ?Colors.white:Colors.deepPurpleAccent)),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.search),
-              color: userService.darkTheme ?Colors.white:Colors.grey,
+              color: userService.darkTheme! ?Colors.white:Colors.grey,
               onPressed: (){},
             ),
             IconButton(
               icon: const Icon(Icons.more_vert),
-              color: userService.darkTheme ?Colors.white:Colors.grey,
+              color: userService.darkTheme! ?Colors.white:Colors.grey,
               onPressed: (){},
             ),
           ],

@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage>
     final userService = Provider.of<ProviderService>(context,listen:true);
     // ignore: unused_local_variable
     final userData = userService.user;
-    _isDark = userService.darkTheme!; //TODO important null check
+    _isDark = userService.darkTheme!;
     return Theme(
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(

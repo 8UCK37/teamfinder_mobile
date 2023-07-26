@@ -246,7 +246,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           if (postList != null)
                             Text('You have ${postList!.length.toString()} posts',
                                 style: TextStyle(
-                                    fontSize: 16.0, color:userService.darkTheme?Colors.white: Colors.grey[800])),
+                                    fontSize: 16.0, color:userService.darkTheme! ?Colors.white: Colors.grey[800])),
                         ],
                       ),
                     ],

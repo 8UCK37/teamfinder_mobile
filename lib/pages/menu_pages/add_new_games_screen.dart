@@ -110,12 +110,12 @@ class _AddNewGamesState extends State<AddNewGames>
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     return Theme(
-      data: userService.darkTheme ? ThemeData.dark() : ThemeData.light(),
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             automaticallyImplyLeading: true,
-            backgroundColor: userService.darkTheme
+            backgroundColor: userService.darkTheme!
                 ? const Color.fromRGBO(46, 46, 46, 100)
                 : Colors.white,
             title: Column(

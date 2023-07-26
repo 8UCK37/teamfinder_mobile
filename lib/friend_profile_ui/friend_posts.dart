@@ -276,7 +276,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                             "${friendProfile!.name.split(' ')[0]} has ${postList!.length.toString()} posts",
                                             style: TextStyle(
                                                 fontSize: 16.0,
-                                                color: userService.darkTheme ?  Colors.white70: Colors.grey[800],
+                                                color: userService.darkTheme! ?  Colors.white70: Colors.grey[800],
                                                 )),
                                     ],
                                   ),
