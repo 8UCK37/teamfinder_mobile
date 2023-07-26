@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
-
+import 'package:teamfinder_mobile/services/data_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     _initializePreferences();
   }
+
   Future<void> _initializePreferences() async {
     _preferences = await SharedPreferences.getInstance();
     bool savedThemeValue = _preferences.getBool('isDarkTheme') ?? false;
@@ -28,9 +30,13 @@ class _SettingsPageState extends State<SettingsPage> {
       _isDark = savedThemeValue;
     });
   }
+
   Future<void> _saveThemeValue(bool value) async {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.updateTheme(value);
     await _preferences.setBool('isDarkTheme', value);
   }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -66,14 +72,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                 builder: (context) => const SearchPage()),
                           );
                         },
-                       child: const Padding(
+                        child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Material(
                             elevation: 5,
                             shadowColor: Colors.grey,
                             shape: CircleBorder(),
                             child: CircleAvatar(
-                              backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                              backgroundColor:
+                                  Color.fromRGBO(222, 209, 242, 100),
                               radius: 20,
                               child: Icon(Icons.search, color: Colors.blueGrey),
                             ),
@@ -92,19 +99,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: const Material(
                           elevation: 5,
                           shadowColor: Colors.grey,
-                          shape:CircleBorder(),
+                          shape: CircleBorder(),
                           child: CircleAvatar(
                             radius: 20,
-                            backgroundColor: const Color.fromRGBO(222, 209, 242, 100),
-                            child:Icon(Icons.question_answer,
+                            backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                            child: Icon(Icons.question_answer,
                                 color: Colors.deepPurple),
                           ),
                         ),
                       ),
-                    ]
-                ),
-              ]
-            ),
+                    ]),
+              ]),
           backgroundColor: Colors.white,
           elevation: 0.0,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -114,7 +119,9 @@ class _SettingsPageState extends State<SettingsPage> {
             constraints: const BoxConstraints(maxWidth: 400),
             child: ListView(
               children: [
-                const Divider(thickness: 4,),
+                const Divider(
+                  thickness: 4,
+                ),
                 _SingleSection(
                   title: "General",
                   children: [
@@ -161,7 +168,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         icon: Icons.help_outline_rounded),
                     _CustomListTile(
                         title: "About", icon: Icons.info_outline_rounded),
-                    
                   ],
                 ),
               ],
