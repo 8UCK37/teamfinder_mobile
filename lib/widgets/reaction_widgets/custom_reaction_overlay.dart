@@ -70,7 +70,17 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
       height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
-          ModalBarrier(onDismiss: widget.onDismiss),
+          GestureDetector(
+              onTap: widget.onDismiss, // Dismiss on tap outside
+              onVerticalDragUpdate: (details) {
+                //debugPrint('caught onVerticalDragUpdate ${details.toString()}');
+                widget.onDismiss();
+              },
+              onHorizontalDragUpdate: (details) {
+                //debugPrint('caught onHorizontalDragUpdate ${details.toString()}');
+                widget.onDismiss();
+              },
+              child: ModalBarrier(onDismiss: widget.onDismiss)),
           Positioned.fromRelativeRect(
             rect: widget.relativeRect,
             child: SlideTransition(
