@@ -150,7 +150,7 @@ class _WatchTabState extends State<WatchTab> {
                 ),
               ),
 
-              const SeparatorWidget(),
+              SeparatorWidget(),
 
               Column(
                 children: <Widget>[
@@ -243,7 +243,7 @@ class _WatchTabState extends State<WatchTab> {
 
               const SizedBox(height: 20.0),
 
-              const SeparatorWidget(),
+              SeparatorWidget(),
 
               Column(
                 children: <Widget>[
@@ -336,7 +336,7 @@ class _WatchTabState extends State<WatchTab> {
 
               const SizedBox(height: 20.0),
 
-              const SeparatorWidget(),
+              SeparatorWidget(),
             ],
           )
         ),

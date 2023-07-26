@@ -291,14 +291,14 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                                   Column(
                                     children: <Widget>[
-                                      const SeparatorWidget(),
+                                      SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey[800]),
                                       PostWidget(post: post),
                                     ],
                                   ),
                             ],
                           ),
                         ),
-                        const SeparatorWidget(),
+                        SeparatorWidget(),
                       ],
                     )),
               ),

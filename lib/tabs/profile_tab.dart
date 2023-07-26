@@ -97,13 +97,18 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 185, left: 10),
+                      padding: const EdgeInsets.only(top: 200, left: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(userData['name'],
                               style: const TextStyle(
                                   fontSize: 24.0, fontWeight: FontWeight.bold)),
+                          Text(userData['bio'],
+                              softWrap: true,
+                              style: const TextStyle(
+                                  fontSize: 15.0, fontWeight: FontWeight.normal))
                         ],
                       ),
                     )
@@ -226,45 +231,48 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
               ),
             ),
             const Divider(height: 45.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const Text('Your wall',
+            Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.only (left:15.0),
+                          child:  Text('Your wall',
                               style: TextStyle(
                                   fontSize: 22.0,
                                   color: Colors.cyan,
                                   fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 6.0),
-                          if (postList != null)
-                            Text('You have ${postList!.length.toString()} posts',
+                        ),
+                        const SizedBox(height: 6.0),
+                        if (postList != null)
+                          Padding(
+                            padding: const EdgeInsets.only(left:15.0),
+                            child: Text('You have ${postList!.length.toString()} posts',
                                 style: TextStyle(
                                     fontSize: 16.0, color:userService.darkTheme! ?Colors.white: Colors.grey[800])),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 20,),
-                  const SizedBox(height: 25),
-                  if (postList != null) // Add a null check here
-                    for (PostPojo post
-                        in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
-                      Column(
-                        children: <Widget>[
-                          //const SeparatorWidget(),
-                          PostWidget(post: post),
-                          const SeparatorWidget(),
-                        ],
-                      ),
-                ],
-              ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Divider(height: 20,),
+                const SizedBox(height: 25),
+                if (postList != null) // Add a null check here
+                  for (PostPojo post
+                      in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                    Column(
+                      children: <Widget>[
+                        //const SeparatorWidget(),
+                        PostWidget(post: post,),
+                        SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey[800]),
+                      ],
+                    ),
+              ],
             ),
           ],
         )),

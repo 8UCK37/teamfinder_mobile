@@ -40,17 +40,17 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin<Ho
           children: <Widget>[
             const Divider(),
             const OnlineWidget(),
-            const SeparatorWidget(),
+            SeparatorWidget(),
             const WriteSomethingWidget(),
             if (postList != null) // Add a null check here
               for (PostPojo post in postList!) // Add a null check here
                 Column(
                   children: <Widget>[
-                    const SeparatorWidget(),
+                    SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey[800]),
                     PostWidget(post: post),
                   ],
                 ),
-            const SeparatorWidget(),
+            SeparatorWidget(),
           ],
         ),
       ),
