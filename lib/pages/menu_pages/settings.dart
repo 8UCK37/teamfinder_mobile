@@ -1,3 +1,4 @@
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +17,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late SharedPreferences _preferences;
-  bool _isDark = false;
+  late bool _isDark ;
   @override
   void initState() {
     super.initState();
@@ -37,6 +38,12 @@ class _SettingsPageState extends State<SettingsPage> {
     await _preferences.setBool('isDarkTheme', value);
   }
 
+  void onStateChanged(bool isDarkModeEnabled) {
+    setState(() {
+      _isDark = isDarkModeEnabled;
+      _saveThemeValue(isDarkModeEnabled);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -44,7 +51,8 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          backgroundColor:
+              _isDark ? const Color.fromRGBO(46, 46, 46, 100) : Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -125,17 +133,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 _SingleSection(
                   title: "General",
                   children: [
-                    _CustomListTile(
-                        title: "Dark Mode",
-                        icon: Icons.dark_mode_outlined,
-                        trailing: Switch(
-                            value: _isDark,
-                            onChanged: (value) {
-                              setState(() {
-                                _isDark = value;
-                                _saveThemeValue(value);
-                              });
-                            })),
+                    ListTile(
+                      title: Text(_isDark?"Dark Mode":"Light Mode"),
+                      leading: DayNightSwitcherIcon(
+                        isDarkModeEnabled: _isDark,
+                        onStateChanged: onStateChanged,
+                      ),
+                      trailing: DayNightSwitcher(
+                        isDarkModeEnabled: _isDark,
+                        onStateChanged: onStateChanged,
+                      ),
+                    ),
                     const _CustomListTile(
                         title: "Notifications",
                         icon: Icons.notifications_none_rounded),

@@ -78,6 +78,7 @@ dependencies:
   flutter_animated_reaction: ^0.0.2
   like_button: ^2.0.5
   auto_size_text: ^3.0.0
+  day_night_switcher: ^0.2.0+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
