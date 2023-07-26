@@ -112,7 +112,7 @@ class _FriendsTabState extends State<FriendsTab>
                           borderRadius: BorderRadius.circular(30.0)),
                       child: Text('Suggestions',
                           style: TextStyle(
-                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.grey[800],
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -135,7 +135,7 @@ class _FriendsTabState extends State<FriendsTab>
                           borderRadius: BorderRadius.circular(30.0)),
                       child: Text('All Friends',
                           style: TextStyle(
-                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.grey[800],
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -152,7 +152,7 @@ class _FriendsTabState extends State<FriendsTab>
                           borderRadius: BorderRadius.circular(30.0)),
                       child:  Text('Pending',
                           style: TextStyle(
-                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+                              color: userService.darkTheme? const Color.fromRGBO(46, 46, 46, 100): Colors.grey[800],
                               fontSize: 17.0, fontWeight: FontWeight.bold)),
                     ),
                   )
