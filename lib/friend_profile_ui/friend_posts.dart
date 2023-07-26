@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../widgets/separator_widget.dart';
@@ -56,6 +57,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   @override
   Widget build(BuildContext context) {
     final profileService = Provider.of<FriendProfileService>(context, listen: true);
+    final userService = Provider.of<ProviderService>(context,listen:true);
     postList = profileService.friendPostList;
     friendProfile = profileService.friendProfile;
     twitchData = profileService.twitchData;
@@ -274,7 +276,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                             "${friendProfile!.name.split(' ')[0]} has ${postList!.length.toString()} posts",
                                             style: TextStyle(
                                                 fontSize: 16.0,
-                                                color: Colors.grey[800])),
+                                                color: userService.darkTheme ?  Colors.white70: Colors.grey[800],
+                                                )),
                                     ],
                                   ),
                                   // const Text('Find Friends',
