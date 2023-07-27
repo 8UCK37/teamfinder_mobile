@@ -109,7 +109,7 @@ class FlexibleBottomSheet extends StatefulWidget {
   final VoidCallback? onDismiss;
   final Color? keyboardBarrierColor;
   final Color? bottomSheetColor;
-
+  final Widget bottomWidget;
   FlexibleBottomSheet({
     Key? key,
     this.minHeight = 0,
@@ -128,7 +128,8 @@ class FlexibleBottomSheet extends StatefulWidget {
     this.onDismiss,
     this.keyboardBarrierColor,
     this.bottomSheetColor,
-    this.draggableScrollableController,
+    this.draggableScrollableController, 
+    required this.bottomWidget,
   })  : assert(minHeight >= 0 && minHeight <= 1),
         assert(maxHeight > 0 && maxHeight <= 1),
         assert(maxHeight > minHeight),
@@ -154,6 +155,7 @@ class FlexibleBottomSheet extends StatefulWidget {
     Decoration? decoration,
     Color? keyboardBarrierColor,
     Color? bottomSheetColor,
+    required Widget bottomWidget,
   }) : this(
           key: key,
           maxHeight: maxHeight,
@@ -172,6 +174,7 @@ class FlexibleBottomSheet extends StatefulWidget {
           decoration: decoration,
           keyboardBarrierColor: keyboardBarrierColor,
           bottomSheetColor: bottomSheetColor,
+          bottomWidget: bottomWidget
         );
 
   @override
@@ -243,6 +246,7 @@ class _FlexibleBottomSheetState extends State<FlexibleBottomSheet> {
               backgroundColor: Colors.transparent,
               body: _Content(
                 builder: widget.builder,
+                bottomWidget: widget.bottomWidget,
                 decoration: widget.decoration,
                 bodyBuilder: widget.bodyBuilder,
                 headerBuilder: widget.headerBuilder,
@@ -387,11 +391,12 @@ class _Content extends StatefulWidget {
   final ScrollController scrollController;
   final Function(double)? getContentHeight;
   final double cacheExtent;
-
+  final Widget bottomWidget;
   const _Content({
     required this.currentExtent,
     required this.scrollController,
     required this.cacheExtent,
+    required this.bottomWidget,
     this.builder,
     this.decoration,
     this.headerBuilder,
@@ -408,7 +413,6 @@ class _Content extends StatefulWidget {
 
 class _ContentState extends State<_Content> {
   final _contentKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -430,7 +434,7 @@ class _ContentState extends State<_Content> {
       return Material(
         type: MaterialType.transparency,
         child: DecoratedBox(
-          decoration: widget.decoration ??const BoxDecoration(),
+          decoration: widget.decoration ?? const BoxDecoration(),
           child: SizedBox(
             key: _contentKey,
             child: widget.builder!(
@@ -446,34 +450,50 @@ class _ContentState extends State<_Content> {
     return Material(
       type: MaterialType.transparency,
       child: DecoratedBox(
-        decoration:BoxDecoration(
-          color:userService.darkTheme!
-                              ? const Color.fromRGBO(46, 46, 46, 1)
-                              : Colors.white,
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
-        ),
-        child: CustomScrollView(
-          cacheExtent: widget.cacheExtent,
-          key: _contentKey,
-          controller: widget.scrollController,
-          slivers: <Widget>[
-            if (widget.headerBuilder != null)
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: FlexibleBottomSheetHeaderDelegate(
-                  minHeight: widget.minHeaderHeight ?? 0.0,
-                  maxHeight: widget.maxHeaderHeight ?? 1.0,
-                  child: widget.headerBuilder!(context, widget.currentExtent),
+        decoration: BoxDecoration(
+            color: userService.darkTheme!
+                ? const Color.fromRGBO(46, 46, 46, 1)
+                : Colors.white,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+        child: Container(
+          decoration: BoxDecoration(
+            color: userService.darkTheme!
+                ? const Color.fromRGBO(46, 46, 46, 1)
+                : Colors.white,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+          child: Padding(
+            padding: const EdgeInsets.only(top:15.0),
+            child: Scaffold(
+                body: CustomScrollView(
+                  cacheExtent: widget.cacheExtent,
+                  key: _contentKey,
+                  controller: widget.scrollController,
+                  slivers: <Widget>[
+                    if (widget.headerBuilder != null)
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: FlexibleBottomSheetHeaderDelegate(
+                          minHeight: widget.minHeaderHeight ?? 0.0,
+                          maxHeight: widget.maxHeaderHeight ?? 1.0,
+                          child:
+                              widget.headerBuilder!(context, widget.currentExtent),
+                        ),
+                      ),
+                    if (widget.bodyBuilder != null)
+                      SliverList(
+                        delegate: widget.bodyBuilder!(
+                          context,
+                          widget.currentExtent,
+                        ),
+                      ),
+                  ],
                 ),
-              ),
-            if (widget.bodyBuilder != null)
-              SliverList(
-                delegate: widget.bodyBuilder!(
-                  context,
-                  widget.currentExtent,
-                ),
-              ),
-          ],
+                bottomNavigationBar: SizedBox(
+                  height: 66,
+                  child: widget.bottomWidget)),
+          ),
         ),
       ),
     );

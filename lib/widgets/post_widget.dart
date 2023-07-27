@@ -359,6 +359,40 @@ class _PostWidgetState extends State<PostWidget>
                           anchors: [0, 0.5, 0.96],
                           headerHeight: 65,
                           context: context,
+                          bottomWidget: Theme(
+                            data: ThemeData.light(),
+                            child: ChatMessageBar(
+                              messageBarColor: const Color.fromARGB(255, 239, 239, 239),
+                              hintText: "Write a comment here..",
+                              textController: _textController,
+                              onSend: (String typedMsg) {
+                                debugPrint(typedMsg);
+                              },
+                              //TODO: no action in comments supported yet
+                              // actions: [
+                              //   InkWell(
+                              //     child: const Icon(
+                              //       Icons.link,
+                              //       color: Colors.orangeAccent,
+                              //       size: 24,
+                              //     ),
+                              //     onTap: () {},
+                              //   ),
+                              //   Padding(
+                              //     padding:
+                              //         const EdgeInsets.only(left: 8, right: 8),
+                              //     child: InkWell(
+                              //       child: const Icon(
+                              //         Icons.camera_alt,
+                              //         color: Colors.green,
+                              //         size: 24,
+                              //       ),
+                              //       onTap: () {},
+                              //     ),
+                              //   ),
+                              // ],
+                            ),
+                          ),
                           bottomSheetColor: userService.darkTheme!
                               ? const Color.fromRGBO(46, 46, 46, 1)
                               : Colors.white,
@@ -377,7 +411,7 @@ class _PostWidgetState extends State<PostWidget>
                                     borderRadius: const BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
                                     child: Theme(
                                       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
-                                      child:   Padding(
+                                      child:  Padding(
                                         padding: const EdgeInsets.only(left:22.0,right:22),
                                         child:Column(
                                           children: [
@@ -385,7 +419,7 @@ class _PostWidgetState extends State<PostWidget>
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Padding(
-                                                  padding: const EdgeInsets.only(top:8.0),
+                                                  padding: const EdgeInsets.only(top:0.0),
                                                   child: Container(
                                                   height: 5,
                                                   width: 60,
@@ -447,39 +481,11 @@ class _PostWidgetState extends State<PostWidget>
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                 ),
-                                // ChatMessageBar(
-                                //   textController: _textController,
-                                //   onSend: (String typedMsg) {
-
-                                //   },
-                                //   actions: [
-                                //     InkWell(
-                                //       child: const Icon(
-                                //         Icons.link,
-                                //         color: Colors.orangeAccent,
-                                //         size: 24,
-                                //       ),
-                                //       onTap: () {
-
-                                //       },
-                                //     ),
-                                //     Padding(
-                                //       padding: const EdgeInsets.only(
-                                //           left: 8, right: 8),
-                                //       child: InkWell(
-                                //         child: const Icon(
-                                //           Icons.camera_alt,
-                                //           color: Colors.green,
-                                //           size: 24,
-                                //         ),
-                                //         onTap: () {},
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
+                                
                               ],
                             );
                           },
+                          
                         );
                       },
                       child: const Row(

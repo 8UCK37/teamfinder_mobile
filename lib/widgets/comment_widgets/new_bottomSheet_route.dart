@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/custom_bottom_sheet.dart';
 
@@ -61,6 +60,7 @@ Future<T?> showFlexibleBottomSheet<T>({
   Duration? duration,
   bool isSafeArea = false,
   BoxDecoration? decoration,
+  required Widget bottomWidget,
 }) {
   assert(debugCheckHasMediaQuery(context));
   assert(debugCheckHasMaterialLocalizations(context));
@@ -69,6 +69,7 @@ Future<T?> showFlexibleBottomSheet<T>({
   return Navigator.of(context, rootNavigator: useRootNavigator).push(
     _FlexibleBottomSheetRoute<T>(
       theme: Theme.of(context),
+      bottomWidget: bottomWidget,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       draggableScrollableController: draggableScrollableController,
       minHeight: minHeight ?? 0,
@@ -142,6 +143,7 @@ Future<T?> showCustomBottomSheet<T>({
   Color? barrierColor,
   Duration? duration,
   bool isSafeArea = false,
+  required Widget bottomWidget,
 }) {
   assert(maxHeaderHeight != null || headerHeight != null);
   assert(debugCheckHasMediaQuery(context));
@@ -151,6 +153,7 @@ Future<T?> showCustomBottomSheet<T>({
   return Navigator.of(context, rootNavigator: useRootNavigator).push(
     _FlexibleBottomSheetRoute<T>(
       theme: Theme.of(context),
+      bottomWidget: bottomWidget,
       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
       minHeight: minHeight ?? 0,
       initHeight: initHeight ?? 0.5,
@@ -198,6 +201,7 @@ class _FlexibleBottomSheetRoute<T> extends PopupRoute<T> {
   final Color? barrierBottomSheetColor;
   final Duration? duration;
   final bool isSafeArea;
+  final Widget bottomWidget;
 
   @override
   final String? barrierLabel;
@@ -224,6 +228,7 @@ class _FlexibleBottomSheetRoute<T> extends PopupRoute<T> {
     required this.isExpand,
     required this.isModal,
     required this.isSafeArea,
+    required this.bottomWidget,
     this.draggableScrollableController,
     this.builder,
     this.headerBuilder,
@@ -266,6 +271,7 @@ class _FlexibleBottomSheetRoute<T> extends PopupRoute<T> {
               initHeight: initHeight,
               maxHeight: maxHeight,
               builder: builder,
+              bottomWidget: bottomWidget,
               headerBuilder: headerBuilder,
               bodyBuilder: bodyBuilder,
               isExpand: isExpand,
@@ -292,7 +298,7 @@ class _FlexibleBottomSheetRoute<T> extends PopupRoute<T> {
               minHeaderHeight: minHeaderHeight,
               maxHeaderHeight: maxHeaderHeight,
               decoration: decoration,
-              keyboardBarrierColor: keyboardBarrierColor,
+              bottomWidget: bottomWidget,
               bottomSheetColor: bottomSheetColor,
             ),
     );
