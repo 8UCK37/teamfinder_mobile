@@ -15,6 +15,8 @@ import 'package:teamfinder_mobile/widgets/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 
+import 'comment_widgets/new_bottomSheet_route.dart';
+
 class PostWidget extends StatefulWidget {
   final PostPojo post;
 
@@ -161,7 +163,7 @@ class _PostWidgetState extends State<PostWidget>
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:false);
+    final userService = Provider.of<ProviderService>(context, listen: false);
     return Container(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -201,8 +203,10 @@ class _PostWidgetState extends State<PostWidget>
             Container(
               //color: const Color.fromARGB(110, 222, 221, 221),
               decoration: BoxDecoration(
-                color: userService.darkTheme! ? const Color.fromARGB(255, 80, 80, 80):const Color.fromARGB(110, 222, 221,
-                    221), // Set the desired background color here
+                color: userService.darkTheme!
+                    ? const Color.fromARGB(255, 80, 80, 80)
+                    : const Color.fromARGB(110, 222, 221,
+                        221), // Set the desired background color here
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10.0),
                   topRight: Radius.circular(10.0),
@@ -238,7 +242,7 @@ class _PostWidgetState extends State<PostWidget>
                   ),
                   const SizedBox(height: 20.0),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 16,bottom:8),
+                    padding: const EdgeInsets.only(top: 8, left: 16, bottom: 8),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: parseDescriptionWidget(
@@ -302,8 +306,9 @@ class _PostWidgetState extends State<PostWidget>
             padding: const EdgeInsets.only(top: 0),
             child: Column(
               children: [
-                Divider(height: 20,
-                color:userService.darkTheme! ? Colors.white:Colors.grey),
+                Divider(
+                    height: 20,
+                    color: userService.darkTheme! ? Colors.white : Colors.grey),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -348,36 +353,43 @@ class _PostWidgetState extends State<PostWidget>
                     GestureDetector(
                       onTap: () {
                         //debugPrint('open bottom sheet');
-                        showStickyFlexibleBottomSheet(
+                        showCustomBottomSheet(
                           minHeight: 0,
                           initHeight: 0.67,
-                          maxHeight: 0.95,
-                          anchors: [0, 0.5, 0.95],
+                          maxHeight: 0.96,
+                          anchors: [0, 0.5, 0.96],
                           headerHeight: 70,
                           context: context,
-                          bottomSheetColor: userService.darkTheme! 
-                          ?const Color.fromRGBO(46, 46, 46, 1)
-                          :Colors.white,
+                          bottomSheetColor: userService.darkTheme!
+                              ? const Color.fromRGBO(46, 46, 46, 1)
+                              : Colors.white,
                           headerBuilder: (BuildContext context, double offset) {
                             return Container(
-                              decoration: const BoxDecoration(color: Colors.red,
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
+                              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
                               child: Column(
                                 children: [
-                                  const SizedBox(height: 14,),
+                                  const SizedBox(height:14),
                                   AppBar(
-                                      automaticallyImplyLeading: true,
-                                      backgroundColor: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
-                                      iconTheme: IconThemeData(color: userService.darkTheme! ? Colors.white: Colors.black,),
+                                      automaticallyImplyLeading: false,
+                                      backgroundColor: userService.darkTheme!
+                                          ? const Color.fromRGBO(46, 46, 46, 1)
+                                          : Colors.white,
+                                      iconTheme: IconThemeData(
+                                        color: userService.darkTheme!
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                       title: Column(
                                         children: [
                                           Row(
                                             children: [
                                               Text('Comments',
-                                              style: TextStyle(
-                                                color: userService.darkTheme! ? Colors.white: Colors.black,
-                                              )),
-                                              ],
+                                                  style: TextStyle(
+                                                    color: userService.darkTheme!
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  )),
+                                            ],
                                           ),
                                         ],
                                       )),
@@ -399,41 +411,41 @@ class _PostWidgetState extends State<PostWidget>
                                           ),
                                         ],
                                       ),
-                                      // ChatMessageBar(
-                                      //   textController: _textController,
-                                      //   onSend: (String typedMsg) {
-                                          
-                                      //   },
-                                      //   actions: [
-                                      //     InkWell(
-                                      //       child: const Icon(
-                                      //         Icons.link,
-                                      //         color: Colors.orangeAccent,
-                                      //         size: 24,
-                                      //       ),
-                                      //       onTap: () {
-                                              
-                                      //       },
-                                      //     ),
-                                      //     Padding(
-                                      //       padding: const EdgeInsets.only(
-                                      //           left: 8, right: 8),
-                                      //       child: InkWell(
-                                      //         child: const Icon(
-                                      //           Icons.camera_alt,
-                                      //           color: Colors.green,
-                                      //           size: 24,
-                                      //         ),
-                                      //         onTap: () {},
-                                      //       ),
-                                      //     ),
-                                      //   ],
-                                      // ),
                                     ],
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                 ),
+                                // ChatMessageBar(
+                                //   textController: _textController,
+                                //   onSend: (String typedMsg) {
+
+                                //   },
+                                //   actions: [
+                                //     InkWell(
+                                //       child: const Icon(
+                                //         Icons.link,
+                                //         color: Colors.orangeAccent,
+                                //         size: 24,
+                                //       ),
+                                //       onTap: () {
+
+                                //       },
+                                //     ),
+                                //     Padding(
+                                //       padding: const EdgeInsets.only(
+                                //           left: 8, right: 8),
+                                //       child: InkWell(
+                                //         child: const Icon(
+                                //           Icons.camera_alt,
+                                //           color: Colors.green,
+                                //           size: 24,
+                                //         ),
+                                //         onTap: () {},
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             );
                           },
