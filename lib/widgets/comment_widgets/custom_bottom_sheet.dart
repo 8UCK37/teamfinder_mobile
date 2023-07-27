@@ -490,9 +490,19 @@ class _ContentState extends State<_Content> {
                       ),
                   ],
                 ),
-                bottomNavigationBar: SizedBox(
-                  height: 66,
-                  child: widget.bottomWidget)),
+                bottomNavigationBar: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    if (constraints.maxHeight < 66) {
+                      return Container(); 
+                    } else {
+                      return SizedBox(
+                        height: 66,
+                        child: widget.bottomWidget,
+                      );
+                    }
+                  },
+                )
+              ),
           ),
         ),
       ),

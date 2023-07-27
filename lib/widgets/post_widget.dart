@@ -372,29 +372,6 @@ class _PostWidgetState extends State<PostWidget>
                               onSend: (String typedMsg) {
                                 debugPrint(typedMsg);
                               },
-                              //TODO: no action in comments supported yet
-                              // actions: [
-                              //   InkWell(
-                              //     child: const Icon(
-                              //       Icons.link,
-                              //       color: Colors.orangeAccent,
-                              //       size: 24,
-                              //     ),
-                              //     onTap: () {},
-                              //   ),
-                              //   Padding(
-                              //     padding:
-                              //         const EdgeInsets.only(left: 8, right: 8),
-                              //     child: InkWell(
-                              //       child: const Icon(
-                              //         Icons.camera_alt,
-                              //         color: Colors.green,
-                              //         size: 24,
-                              //       ),
-                              //       onTap: () {},
-                              //     ),
-                              //   ),
-                              // ],
                             ),
                           ),
                           bottomSheetColor: userService.darkTheme!
