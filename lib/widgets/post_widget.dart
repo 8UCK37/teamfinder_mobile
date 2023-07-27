@@ -349,37 +349,41 @@ class _PostWidgetState extends State<PostWidget>
                       onTap: () {
                         //debugPrint('open bottom sheet');
                         showStickyFlexibleBottomSheet(
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          )),
                           minHeight: 0,
                           initHeight: 0.67,
                           maxHeight: 0.95,
                           anchors: [0, 0.5, 0.95],
-                          headerHeight: 50,
+                          headerHeight: 70,
                           context: context,
                           bottomSheetColor: userService.darkTheme! 
                           ?const Color.fromRGBO(46, 46, 46, 1)
                           :Colors.white,
                           headerBuilder: (BuildContext context, double offset) {
-                            return AppBar(
-                                automaticallyImplyLeading: true,
-                                backgroundColor: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
-                                iconTheme: IconThemeData(color: userService.darkTheme! ? Colors.white: Colors.black,),
-                                title: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text('Comments',
-                                        style: TextStyle(
-                                          color: userService.darkTheme! ? Colors.white: Colors.black,
-                                        )),
+                            return Container(
+                              decoration: const BoxDecoration(color: Colors.red,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 14,),
+                                  AppBar(
+                                      automaticallyImplyLeading: true,
+                                      backgroundColor: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
+                                      iconTheme: IconThemeData(color: userService.darkTheme! ? Colors.white: Colors.black,),
+                                      title: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text('Comments',
+                                              style: TextStyle(
+                                                color: userService.darkTheme! ? Colors.white: Colors.black,
+                                              )),
+                                              ],
+                                          ),
                                         ],
-                                    ),
-                                  ],
-                                ));
+                                      )),
+                                ],
+                              ),
+                            );
                           },
                           bodyBuilder: (BuildContext context, double offset) {
                             return SliverChildListDelegate(

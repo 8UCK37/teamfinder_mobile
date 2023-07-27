@@ -46,7 +46,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin<Ho
               for (PostPojo post in postList!) // Add a null check here
                 Column(
                   children: <Widget>[
-                    SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey[800]),
+                    SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
                     PostWidget(post: post),
                   ],
                 ),
