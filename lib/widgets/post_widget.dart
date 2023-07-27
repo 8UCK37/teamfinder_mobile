@@ -362,7 +362,11 @@ class _PostWidgetState extends State<PostWidget>
                           bottomWidget: Theme(
                             data: ThemeData.light(),
                             child: ChatMessageBar(
-                              messageBarColor: const Color.fromARGB(255, 239, 239, 239),
+                              messageBarColor:userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):const Color.fromARGB(255, 239, 239, 239),
+                              decoration:  BoxDecoration(
+                                color:  userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):const Color.fromARGB(255, 239, 239, 239),
+                                borderRadius: const BorderRadius.all(Radius.circular(15))
+                              ),
                               hintText: "Write a comment here..",
                               textController: _textController,
                               onSend: (String typedMsg) {
@@ -398,66 +402,89 @@ class _PostWidgetState extends State<PostWidget>
                               : Colors.white,
                           headerBuilder: (BuildContext context, double offset) {
                             return Container(
-                              decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15))),
                               child: Column(
                                 children: [
-                                  SizedBox(height:65,
-                                  child: Container(
-                                    decoration: BoxDecoration(
+                                  SizedBox(
+                                    height: 65,
+                                    child: Container(
+                                      decoration: BoxDecoration(
                                           color: userService.darkTheme!
                                               ? const Color.fromRGBO(
                                                   46, 46, 46, 1)
                                               : Colors.white,
-                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
-                                    child: Theme(
-                                      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
-                                      child:  Padding(
-                                        padding: const EdgeInsets.only(left:22.0,right:22),
-                                        child:Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                          borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(15),
+                                              topRight: Radius.circular(15))),
+                                      child: Theme(
+                                        data: userService.darkTheme!
+                                            ? ThemeData.dark()
+                                            : ThemeData.light(),
+                                        child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 22.0, right: 22),
+                                            child: Column(
                                               children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top:0.0),
-                                                  child: Container(
-                                                  height: 5,
-                                                  width: 60,
-                                                  decoration: const BoxDecoration(
-                                                      color: Colors.grey,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  15))),
-                                                                                              ),
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                const Text("Comments",
-                                                style: TextStyle(fontSize: 20),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 0.0),
+                                                      child: Container(
+                                                        height: 5,
+                                                        width: 60,
+                                                        decoration: const BoxDecoration(
+                                                            color: Colors.grey,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            15))),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Padding(
-                                                    padding: EdgeInsets.all(10.0),
-                                                    child: Icon(Icons.close),
-                                                  ),
-                                                )
-                                              ]
-                                            ),
-                                          ],
-                                        )
+                                                Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      const Text(
+                                                        "Comments",
+                                                        style: TextStyle(
+                                                            fontSize: 20),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: const Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10.0),
+                                                          child:
+                                                              Icon(Icons.close),
+                                                        ),
+                                                      )
+                                                    ]),
+                                              ],
+                                            )),
                                       ),
                                     ),
                                   ),
+                                  Divider(
+                                    height: 0,
+                                    color: userService.darkTheme!
+                                        ? Colors.grey
+                                        : const Color.fromARGB(255, 36, 36, 36),
                                   ),
-                                  
-                                  Divider(height:0,color: userService.darkTheme!? Colors.grey:const Color.fromARGB(255, 36, 36, 36),),
                                 ],
                               ),
                             );
@@ -481,11 +508,9 @@ class _PostWidgetState extends State<PostWidget>
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                 ),
-                                
                               ],
                             );
                           },
-                          
                         );
                       },
                       child: const Row(
