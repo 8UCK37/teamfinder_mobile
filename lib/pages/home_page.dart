@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -119,6 +120,11 @@ class _HomePageState extends State<HomePage>
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: _isDark? Brightness.light:Brightness.dark
+            
+          ),
           backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

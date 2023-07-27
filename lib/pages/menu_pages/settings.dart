@@ -51,6 +51,11 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: _isDark? Brightness.light:Brightness.dark
+            
+          ),
           backgroundColor:
               _isDark ? const Color.fromRGBO(46, 46, 46, 100) : Colors.white,
           title: Row(
@@ -120,7 +125,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     ]),
               ]),
           elevation: 0.0,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: Center(
           child: Container(
