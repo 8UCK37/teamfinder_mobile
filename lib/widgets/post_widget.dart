@@ -1,5 +1,4 @@
 // ignore_for_file: sort_child_properties_last
-import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -358,7 +357,7 @@ class _PostWidgetState extends State<PostWidget>
                           initHeight: 0.67,
                           maxHeight: 0.96,
                           anchors: [0, 0.5, 0.96],
-                          headerHeight: 70,
+                          headerHeight: 65,
                           context: context,
                           bottomSheetColor: userService.darkTheme!
                               ? const Color.fromRGBO(46, 46, 46, 1)
@@ -368,31 +367,63 @@ class _PostWidgetState extends State<PostWidget>
                               decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
                               child: Column(
                                 children: [
-                                  const SizedBox(height:14),
-                                  AppBar(
-                                      automaticallyImplyLeading: false,
-                                      backgroundColor: userService.darkTheme!
-                                          ? const Color.fromRGBO(46, 46, 46, 1)
-                                          : Colors.white,
-                                      iconTheme: IconThemeData(
-                                        color: userService.darkTheme!
-                                            ? Colors.white
-                                            : Colors.black,
+                                  SizedBox(height:65,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                          color: userService.darkTheme!
+                                              ? const Color.fromRGBO(
+                                                  46, 46, 46, 1)
+                                              : Colors.white,
+                                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))),
+                                    child: Theme(
+                                      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
+                                      child:   Padding(
+                                        padding: const EdgeInsets.only(left:22.0,right:22),
+                                        child:Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top:8.0),
+                                                  child: Container(
+                                                  height: 5,
+                                                  width: 60,
+                                                  decoration: const BoxDecoration(
+                                                      color: Colors.grey,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  15))),
+                                                                                              ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                const Text("Comments",
+                                                style: TextStyle(fontSize: 20),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Padding(
+                                                    padding: EdgeInsets.all(10.0),
+                                                    child: Icon(Icons.close),
+                                                  ),
+                                                )
+                                              ]
+                                            ),
+                                          ],
+                                        )
                                       ),
-                                      title: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text('Comments',
-                                                  style: TextStyle(
-                                                    color: userService.darkTheme!
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  )),
-                                            ],
-                                          ),
-                                        ],
-                                      )),
+                                    ),
+                                  ),
+                                  ),
+                                  
+                                  Divider(height:0,color: userService.darkTheme!? Colors.grey:const Color.fromARGB(255, 36, 36, 36),),
                                 ],
                               ),
                             );

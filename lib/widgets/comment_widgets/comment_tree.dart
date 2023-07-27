@@ -133,31 +133,30 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context,listen:false);
-    return SafeArea(
-        child: Column(
+    return Column(
       children: <Widget>[
-        if(!showLoading)
-          const Divider(thickness: 4,),
-        if (showLoading)
-          ColorfulLinearProgressIndicator(
-            colors: const [
-              Colors.red,
-              Colors.green,
-              Colors.blue,
-              Colors.yellow,
-              Colors.purple,
-              Colors.orange,
-            ],
-            duration: Duration(milliseconds: 500),
-            initialColor: Colors.red,
-          ),
-        if(!showLoading && commentTree.length == 0)
-          Text('There are currently no comments for this post!!'),
-        if (commentTree.length != 0)
-          for (CommentPojo parentComment in commentTree)
-            commentBox(parentComment, 18, true, true, widget.showLines,userService.darkTheme!),
+    if(!showLoading)
+      const Divider(thickness: 4,),
+    if (showLoading)
+      ColorfulLinearProgressIndicator(
+        colors: const [
+          Colors.red,
+          Colors.green,
+          Colors.blue,
+          Colors.yellow,
+          Colors.purple,
+          Colors.orange,
+        ],
+        duration: Duration(milliseconds: 500),
+        initialColor: Colors.red,
+      ),
+    if(!showLoading && commentTree.length == 0)
+      Text('There are currently no comments for this post!!'),
+    if (commentTree.length != 0)
+      for (CommentPojo parentComment in commentTree)
+        commentBox(parentComment, 18, true, true, widget.showLines,userService.darkTheme!),
       ],
-    ));
+    );
   }
 
   Widget commentBox(CommentPojo comment, double radius, bool isFirst,
