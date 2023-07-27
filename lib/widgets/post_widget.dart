@@ -367,7 +367,7 @@ class _PostWidgetState extends State<PostWidget>
                                 color:  userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):const Color.fromARGB(255, 239, 239, 239),
                                 borderRadius: const BorderRadius.all(Radius.circular(15))
                               ),
-                              hintText: "Write a comment here..",
+                              hintText: "   Write a comment here..",
                               textController: _textController,
                               onSend: (String typedMsg) {
                                 debugPrint(typedMsg);
