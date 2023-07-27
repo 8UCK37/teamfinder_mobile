@@ -356,7 +356,7 @@ class _PostWidgetState extends State<PostWidget>
                           minHeight: 0,
                           initHeight: 0.67,
                           maxHeight: 0.96,
-                          anchors: [0, 0.5, 0.96],
+                          anchors: [0, 0.67, 0.96],
                           headerHeight: 65,
                           context: context,
                           bottomWidget: Theme(
