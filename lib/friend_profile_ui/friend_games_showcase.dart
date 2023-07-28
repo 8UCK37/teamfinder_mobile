@@ -140,10 +140,32 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .70,
-                  child: CustomGrid(items: showcase!)),
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.purple.withOpacity(0.2), // Shadow color
+                        spreadRadius: 1, // How wide the shadow should be
+                        blurRadius: 2, // How spread out the shadow should be
+                        offset: const Offset(0, 2),// Offset in x and y direction
+                        blurStyle: BlurStyle.inner 
+                      ),
+                    ],
+                  ),
+                child: Material(
+                  color: Colors.transparent,
+                  elevation: 15, // Elevation level
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                        height: MediaQuery.of(context).size.height * .65,
+                        child: CustomGrid(items: showcase!)),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

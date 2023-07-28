@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: _isDark? Brightness.light:Brightness.dark

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
@@ -103,7 +104,11 @@ class _GamesPageState extends State<GamesPage> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          backgroundColor:userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: userService.darkTheme!? Brightness.light:Brightness.dark
+          ),
+          backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
           title: Column(
             children: [
               Row(
@@ -179,30 +184,54 @@ class _GamesPageState extends State<GamesPage> {
           //systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: Column(
-          children: [
-            // const Divider(
-            //   thickness: 4,
-            // ),
-            const Row(
-              children: [
-                SizedBox(
-                  width: 10,
+            children: [
+              // const Divider(
+              //   thickness: 4,
+              // ),
+              const Row(
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text('Your favourite games',
+                      style: TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.purple.withOpacity(0.2), // Shadow color
+                      spreadRadius: 2, // How wide the shadow should be
+                      blurRadius: 5, // How spread out the shadow should be
+                      offset: const Offset(0, 2),// Offset in x and y direction
+                      blurStyle: BlurStyle.inner 
+                    ),
+                  ],
                 ),
-                Text('Your favourite games',
-                    style: TextStyle(
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold)),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .80,
-                  child: CustomGrid(items: showcase)),
-            ),
-          ],
-        ),
+                child: Material(
+                  color: Colors.transparent,
+                  elevation: 15, // Elevation level
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .782,
+                      child: CustomGrid(items: showcase),
+                    ),
+                  ),
+                ),
+              ),
+              ),
+            ],
+          ),
+        
         floatingActionButton: FloatingActionButton(
           splashColor: Colors.blueAccent,
           backgroundColor: const Color.fromARGB(

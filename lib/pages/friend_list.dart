@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
@@ -72,8 +73,14 @@ class _FriendListState extends State<FriendList>
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: userService.darkTheme!? Brightness.light:Brightness.dark
+            
+          ),
+          backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
           iconTheme: IconThemeData(
-            color: userService.darkTheme! ?Colors.grey:Colors.deepPurple),
+            color: userService.darkTheme! ?Colors.white:Colors.deepPurple),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.search),
