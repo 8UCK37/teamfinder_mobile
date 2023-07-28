@@ -39,6 +39,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     getFriendProfileData();
     getFriendTwitchInfo();
     getFriendDiscordInfo();
+    getFriendShowcase();
   }
 
   @override
@@ -71,15 +72,23 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     profileService.getDiscordInfo(widget.friendId.toString());
   }
 
+  Future<void> getFriendShowcase() async {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: false);
+    profileService.getShowCase(widget.friendId.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor:userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
+          backgroundColor: userService.darkTheme!
+              ? const Color.fromRGBO(46, 46, 46, 100)
+              : Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -96,42 +105,44 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                     ),
                   ],
                 ),
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      debugPrint('search clicked');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SearchPage()),
-                      );
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Color.fromRGBO(222, 209, 242, 100),
-                        child: Icon(Icons.search, color: Colors.black),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          debugPrint('search clicked');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SearchPage()),
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                            child: Icon(Icons.search, color: Colors.black),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      debugPrint('goto chat');
-    
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChatHome()),
-                      );
-                    },
-                    child: const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Color.fromRGBO(222, 209, 242, 100),
-                      child:
-                          Icon(Icons.question_answer, color: Colors.deepPurple),
-                    ),
-                  ),
-                ]),
+                      GestureDetector(
+                        onTap: () {
+                          debugPrint('goto chat');
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ChatHome()),
+                          );
+                        },
+                        child: const CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                          child: Icon(Icons.question_answer,
+                              color: Colors.deepPurple),
+                        ),
+                      ),
+                    ]),
               ]),
           elevation: 0.0,
           systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -141,10 +152,10 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
           child: GNav(
               selectedIndex: selectedIndex,
               onTabChange: (value) {
-                if(mounted){
+                if (mounted) {
                   setState(() {
-                  selectedIndex = value;
-                });
+                    selectedIndex = value;
+                  });
                 }
               },
               //duration: const Duration(milliseconds: 150),
@@ -156,13 +167,17 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                     _pageController.animateToPage(
                       0,
                       duration: const Duration(
-                          milliseconds: 150), // Set the duration of the animation
-                      curve: Curves.easeInCubic, // Set the easing curve for the animation
+                          milliseconds:
+                              150), // Set the duration of the animation
+                      curve: Curves
+                          .easeInCubic, // Set the easing curve for the animation
                     );
                   },
                   icon: Icons.receipt_long,
                   text: 'Posts',
-                  iconColor:userService.darkTheme! ?  Colors.grey: const Color.fromARGB(255, 52, 52, 52),
+                  iconColor: userService.darkTheme!
+                      ? Colors.grey
+                      : const Color.fromARGB(255, 52, 52, 52),
                   textColor: Colors.deepPurple,
                   iconActiveColor: Colors.deepPurple,
                 ),
@@ -172,13 +187,17 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                     _pageController.animateToPage(
                       1,
                       duration: const Duration(
-                          milliseconds: 150), // Set the duration of the animation
-                      curve: Curves.easeInCubic, // Set the easing curve for the animation
+                          milliseconds:
+                              150), // Set the duration of the animation
+                      curve: Curves
+                          .easeInCubic, // Set the easing curve for the animation
                     );
                   },
                   icon: Icons.sports_esports,
                   text: 'Games',
-                  iconColor:userService.darkTheme! ?  Colors.grey: const Color.fromARGB(255, 52, 52, 52),
+                  iconColor: userService.darkTheme!
+                      ? Colors.grey
+                      : const Color.fromARGB(255, 52, 52, 52),
                   textColor: Colors.deepOrange,
                   iconActiveColor: Colors.deepOrange,
                 ),
@@ -188,13 +207,17 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                     _pageController.animateToPage(
                       2,
                       duration: const Duration(
-                          milliseconds: 150), // Set the duration of the animation
-                      curve: Curves.easeInCubic, // Set the easing curve for the animation
+                          milliseconds:
+                              150), // Set the duration of the animation
+                      curve: Curves
+                          .easeInCubic, // Set the easing curve for the animation
                     );
                   },
                   icon: Icons.link,
                   text: 'Linked Acc',
-                  iconColor:userService.darkTheme! ?  Colors.grey: const Color.fromARGB(255, 52, 52, 52),
+                  iconColor: userService.darkTheme!
+                      ? Colors.grey
+                      : const Color.fromARGB(255, 52, 52, 52),
                   textColor: Colors.blue,
                   iconActiveColor: Colors.blue,
                 ),
@@ -204,13 +227,17 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                     _pageController.animateToPage(
                       3,
                       duration: const Duration(
-                          milliseconds: 150), // Set the duration of the animation
-                      curve: Curves.easeInCubic, // Set the easing curve for the animation
+                          milliseconds:
+                              150), // Set the duration of the animation
+                      curve: Curves
+                          .easeInCubic, // Set the easing curve for the animation
                     );
                   },
                   icon: Icons.people_outline,
                   text: 'Friends',
-                  iconColor:userService.darkTheme! ?  Colors.grey: const Color.fromARGB(255, 52, 52, 52),
+                  iconColor: userService.darkTheme!
+                      ? Colors.grey
+                      : const Color.fromARGB(255, 52, 52, 52),
                   textColor: const Color.fromARGB(255, 152, 129, 14),
                   iconActiveColor: const Color.fromARGB(255, 152, 129, 14),
                 ),
@@ -219,7 +246,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
         body: PageView(
             controller: _pageController,
             onPageChanged: (index) {
-              if(mounted){
+              if (mounted) {
                 setState(() => selectedIndex = index);
               }
             },

@@ -1,12 +1,10 @@
-import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_flip_card/flipcard/gesture_flip_card.dart';
+import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 
 class FriendGamesShowCase extends StatefulWidget {
   final String? friendName;
@@ -31,7 +29,6 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
   @override
   void initState() {
     super.initState();
-    getShowCase();
   }
 
   @override
@@ -40,81 +37,16 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
     super.dispose();
   }
 
-  Future<void> getShowCase() async {
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    //debugPrint(user.uid.toString());
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/getFrndOwnedGames',
-      data: {'frnd_id': widget.friendId},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint('from line 59: ${jsonDecode(response.data).length}');
-      if (mounted) {
-        setState(() {
-        if (jsonDecode(response.data).length != 0) {
-          ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
-          getSelectedGames(ownedGames);
-        }
-      });
-      }
-      
-    }
-  }
-
-  Future<void> getSelectedGames(dynamic gamesList) async {
-    Dio dio = Dio();
-
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    //debugPrint(user.uid.toString());
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/getFrndSelectedGames',
-      data: {'frnd_id': widget.friendId},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint(response.data.toString());
-      dynamic res = jsonDecode(response.data)[0];
-      //debugPrint(res.toString());
-      if(mounted){
-        setState(() {
-        showcase = [];
-        for (dynamic game in gamesList) {
-          game['selected'] = false;
-          for (dynamic appid in res['appid'].split(',')) {
-            if (game['appid'].toString() == appid.toString()) {
-              game['selected'] = true;
-              showcase.add(game);
-            }
-          }
-        }
-        showcase.sort((a, b) =>
-            b['playtime_forever'].compareTo(a['playtime_forever']) as int);
-        ownedGames = gamesList;
-      });
-      }
-    }
-  }
-
   Future<void> _handleRefresh() async {
-    getShowCase();
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: false);
+    profileService.getShowCase(widget.friendId.toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    final profileService = Provider.of<FriendProfileService>(context, listen: true);
+    showcase = profileService.showcase;
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: Scaffold(
@@ -143,17 +75,17 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
               padding: const EdgeInsets.all(10.0),
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
                         color: Colors.purple.withOpacity(0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should be
                         blurRadius: 2, // How spread out the shadow should be
-                        offset: const Offset(0, 2),// Offset in x and y direction
-                        blurStyle: BlurStyle.inner 
-                      ),
-                    ],
-                  ),
+                        offset:
+                            const Offset(0, 2), // Offset in x and y direction
+                        blurStyle: BlurStyle.inner),
+                  ],
+                ),
                 child: Material(
                   color: Colors.transparent,
                   elevation: 15, // Elevation level

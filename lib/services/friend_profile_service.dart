@@ -12,6 +12,9 @@ class FriendProfileService extends ChangeNotifier {
   UserPojo? friendProfile;
   dynamic twitchData;
   dynamic discordData;
+  dynamic ownedGames = [];
+  dynamic showcase = [];
+
   void updateFriendProfile(UserPojo newValue) {
     friendProfile = newValue;
     notifyListeners();
@@ -113,11 +116,70 @@ class FriendProfileService extends ChangeNotifier {
     }
   }
 
-  
+  void updateFriendShowCase(dynamic newValue) {
+    showcase = newValue;
+    notifyListeners();
+  }
 
+  Future<void> getShowCase(String id) async {
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    //debugPrint(user.uid.toString());
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/getFrndOwnedGames',
+      data: {'frnd_id': id},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      //debugPrint('from line 59: ${jsonDecode(response.data).length}');
+      if (jsonDecode(response.data).length != 0) {
+        ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
+        notifyListeners();
+        getSelectedGames(ownedGames, id);
+      }
+    }
+  }
 
+  Future<void> getSelectedGames(dynamic gamesList, String id) async {
+    Dio dio = Dio();
 
-
-
-
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    //debugPrint(user.uid.toString());
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/getFrndSelectedGames',
+      data: {'frnd_id': id},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      //debugPrint(response.data.toString());
+      dynamic res = jsonDecode(response.data)[0];
+      //debugPrint(res.toString());
+      showcase = [];
+      for (dynamic game in gamesList) {
+        game['selected'] = false;
+        for (dynamic appid in res['appid'].split(',')) {
+          if (game['appid'].toString() == appid.toString()) {
+            game['selected'] = true;
+            showcase.add(game);
+          }
+        }
+      }
+      showcase.sort((a, b) =>
+          b['playtime_forever'].compareTo(a['playtime_forever']) as int);
+      ownedGames = gamesList;
+      notifyListeners();
+    }
+  }
 }
