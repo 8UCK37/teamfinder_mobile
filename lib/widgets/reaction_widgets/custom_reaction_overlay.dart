@@ -119,6 +119,7 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
                       color: widget.backgroundColor,
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         for (int i = 0; i < widget.reactions.length; i++)
                           if (_animatedIndices.contains(i))

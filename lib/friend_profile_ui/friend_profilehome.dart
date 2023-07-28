@@ -95,13 +95,17 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    final profileService =
-        Provider.of<FriendProfileService>(context, listen: true);
+    final profileService = Provider.of<FriendProfileService>(context, listen: true);
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: userService.darkTheme!? Brightness.light:Brightness.dark
+            
+          ),
           backgroundColor: userService.darkTheme!
               ? const Color.fromRGBO(46, 46, 46, 100)
               : Colors.white,
@@ -161,7 +165,6 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                     ]),
               ]),
           elevation: 0.0,
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         bottomNavigationBar: SizedBox(
           height: 75,
