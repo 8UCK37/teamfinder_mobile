@@ -27,6 +27,7 @@ class _CustomReactionState extends State<CustomReaction>
     with TickerProviderStateMixin {
   late AnimationController iconScaleController;
   late AnimationController slideController;
+  late AnimationController emojiSlideController;
   final player = AudioPlayer();
   double padding = 0;
   @override
@@ -35,19 +36,23 @@ class _CustomReactionState extends State<CustomReaction>
     player.audioCache.prefix = "packages/flutter_animated_reaction/";
     iconScaleController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
+
     slideController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 100));
-    
+
+    emojiSlideController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 100));
+
     if (mounted) {
-      slideController.forward();
+      emojiSlideController.forward();
     }
-    
   }
 
   @override
   void dispose() {
-    iconScaleController.dispose();
     slideController.dispose();
+    iconScaleController.dispose();
+    emojiSlideController.dispose();
     super.dispose();
   }
 
@@ -69,11 +74,12 @@ class _CustomReactionState extends State<CustomReaction>
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
-      position:
-          Tween<Offset>(begin: const Offset(0.0,1), end: const Offset(0.0, 0.0)).animate(
+      position: Tween<Offset>(
+              begin: const Offset(0.0, 1), end: const Offset(0.0, 0.0))
+          .animate(
         CurvedAnimation(
-          curve: Curves.linear,
-          parent: slideController,
+          curve: Curves.easeInOutCubic,
+          parent: emojiSlideController,
         ),
       ),
       child: GestureDetector(
