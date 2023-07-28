@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
@@ -56,16 +55,29 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width - 20,
-                    child: AutoSizeText(
-                      showcase.length == 0
-                          ? "${widget.friendName!} currently has no games saved as favourites"
-                          : "${widget.friendName!}'s favourite games",
-                      style: const TextStyle(
-                          color: Colors.deepPurpleAccent,
-                          fontWeight: FontWeight.bold),
-                      maxLines: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:18.0,right:18),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(widget.friendProfileImage!)
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width-100,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left:10.0,right:10),
+                            child: Text(
+                              showcase.length == 0
+                                  ? "${widget.friendName!} currently has no games saved as favourites"
+                                  : "${widget.friendName!}'s favourite games",
+                              style:const TextStyle(
+                                  fontSize:16, //showcase.length == 0? 15:18,
+                                  color: Colors.deepPurpleAccent,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -81,8 +93,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                         color: Colors.purple.withOpacity(0.2), // Shadow color
                         spreadRadius: 1, // How wide the shadow should be
                         blurRadius: 2, // How spread out the shadow should be
-                        offset:
-                            const Offset(0, 2), // Offset in x and y direction
+                        offset:const Offset(0, 2), // Offset in x and y direction
                         blurStyle: BlurStyle.inner),
                   ],
                 ),
@@ -93,7 +104,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: SizedBox(
-                        height: MediaQuery.of(context).size.height * .65,
+                        height: MediaQuery.of(context).size.height * .63,
                         child: CustomGrid(items: showcase!)),
                   ),
                 ),

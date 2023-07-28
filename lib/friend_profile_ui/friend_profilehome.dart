@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
-import 'package:teamfinder_mobile/friend_profile_ui/friend_freindList.dart';
+import 'package:teamfinder_mobile/friend_profile_ui/friend_friendList.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_linkedAcc.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_posts.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_games_showcase.dart';

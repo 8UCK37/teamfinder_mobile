@@ -137,18 +137,21 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      //debugPrint('from line 59: ${jsonDecode(response.data).length}');
+      debugPrint('from line 140: ${jsonDecode(response.data).length}');
       if (jsonDecode(response.data).length != 0) {
         ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
         notifyListeners();
         getSelectedGames(ownedGames, id);
+      } else {
+        ownedGames = [];
+        showcase = [];
+        notifyListeners();
       }
     }
   }
 
   Future<void> getSelectedGames(dynamic gamesList, String id) async {
     Dio dio = Dio();
-
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
     Options options = Options(
@@ -179,6 +182,7 @@ class FriendProfileService extends ChangeNotifier {
       showcase.sort((a, b) =>
           b['playtime_forever'].compareTo(a['playtime_forever']) as int);
       ownedGames = gamesList;
+      debugPrint('line 182 ${showcase.length.toString()}');
       notifyListeners();
     }
   }
