@@ -78,7 +78,7 @@ class _CustomReactionState extends State<CustomReaction>
               begin: const Offset(0.0, 1), end: const Offset(0.0, 0.0))
           .animate(
         CurvedAnimation(
-          curve: Curves.easeInOutCubic,
+          curve: Curves.easeInOutSine,
           parent: emojiSlideController,
         ),
       ),
