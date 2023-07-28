@@ -105,7 +105,27 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                     padding: const EdgeInsets.all(10),
                     child: SizedBox(
                         height: MediaQuery.of(context).size.height * .63,
-                        child: CustomGrid(items: showcase!)),
+                        child: showcase.length!=0? CustomGrid(items: showcase!)
+                        : const Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Sadly there's nothing to see here!!😪",
+                                        style:TextStyle(fontWeight: FontWeight.bold,
+                                        fontSize: 22)
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ),
                   ),
                 ),
               ),

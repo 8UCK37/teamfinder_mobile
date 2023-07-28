@@ -203,8 +203,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     image: DecorationImage(
                                       image: CachedNetworkImageProvider(
                                           friendProfile!.profileBanner),
-                                      fit: BoxFit
-                                          .cover, // Set the fit property to determine how the image should be fitted
+                                      fit: BoxFit.cover, // Set the fit property to determine how the image should be fitted
                                     ),
                                   ),
                                 ),

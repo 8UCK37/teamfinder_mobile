@@ -34,6 +34,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   void initState() {
     super.initState();
+    erasePreviousProfile();
     _pageController = PageController();
     getFriendStatus();
     getFriendPosts();
@@ -47,6 +48,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void erasePreviousProfile() {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: false);
+    profileService.erasePreviousProfile();
   }
 
   Future<void> getFriendStatus() async {
@@ -88,7 +95,8 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    final profileService = Provider.of<FriendProfileService>(context, listen: true);
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: true);
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(

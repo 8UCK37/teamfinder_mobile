@@ -15,6 +15,18 @@ class FriendProfileService extends ChangeNotifier {
   dynamic ownedGames = [];
   dynamic showcase = [];
   String friendStatus = "default";
+
+  void erasePreviousProfile() {
+    friendPostList = [];
+    friendProfile = null;
+    twitchData = null;
+    discordData = null;
+    ownedGames = [];
+    showcase = [];
+    friendStatus = "default";
+    notifyListeners();
+  }
+
   void updateFriendProfile(UserPojo newValue) {
     friendProfile = newValue;
     notifyListeners();
