@@ -96,7 +96,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/megaphone.png"
+  image_path: "assets/icon/android/res/mipmap-xxxhdpi/ic_launcher.png"
+  adaptive_icon_foreground: "assets/icon/android/res/mipmap-xxxhdpi/ic_launcher_foreground.png"
+  adaptive_icon_background: "assets/icon/android/res/mipmap-xxxhdpi/ic_launcher_background.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
