@@ -181,7 +181,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                           Padding(
                                             padding: const EdgeInsets.only(top:18.0),
                                             child: SizedBox(
-                                              width:175,
+                                              width:167,
                                               child: Text(friendProfile!.name,
                                                   style: const TextStyle(
                                                       overflow: TextOverflow.clip,
