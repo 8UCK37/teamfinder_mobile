@@ -61,7 +61,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
         Provider.of<FriendProfileService>(context, listen: true);
     if (profileService.friendStatus == 'accepted') {
       return const Padding(
-        padding: EdgeInsets.only(left: 15.0),
+        padding: EdgeInsets.only(top:4,left: 15.0),
         child: CircleAvatar(
           backgroundColor: Colors.deepPurpleAccent,
           radius: 15,
@@ -70,29 +70,35 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
       );
     } else if (profileService.friendStatus == 'pending') {
       return const Padding(
-        padding: EdgeInsets.only(left: 15.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.amberAccent,
-          radius: 15,
-          backgroundImage: AssetImage("assets/images/hourglass.png"),
+        padding:  EdgeInsets.only(top:4,left: 15.0),
+        child: Column(
+          children: [
+             CircleAvatar(
+              backgroundColor: Colors.amberAccent,
+              radius: 15,
+              backgroundImage: AssetImage("assets/images/hourglass.png"),
+            ),
+            Text("Pending",
+              style: TextStyle(fontWeight: FontWeight.bold),)
+          ],
         ),
       );
     } else {
       return Padding(
-        padding: const EdgeInsets.only(top:18.0,left:8),
+        padding: const EdgeInsets.only(top: 8.0, left: 28),
         child: GestureDetector(
           onTap: () {
             debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
+            profileService.updateFriendStatus("pending");
           },
           child: Material(
             elevation: 20,
-            shape: const CircleBorder(),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: ClipPath(
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 144, 171, 217),
-                  borderRadius: BorderRadius.all(Radius.circular(8))
-                ),
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: const Column(
                   children: [
                     CircleAvatar(
@@ -100,9 +106,12 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                         backgroundColor: Colors.transparent,
                         backgroundImage: AssetImage("assets/images/wave.png")),
                     Padding(
-                      padding: EdgeInsets.only(left:5.0,right:5.0,bottom:5.0),
-                      child: Text("Send Request",
-                      style: TextStyle(fontWeight: FontWeight.bold),),
+                      padding:
+                          EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+                      child: Text(
+                        "Send Request",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -138,22 +147,44 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       children: <Widget>[
                         Stack(
                           children: <Widget>[
-                            Container(
-                              height:
-                                  200.0, // Set the desired fixed height for the banner
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(8.0),
-                                  bottomRight: Radius.circular(8.0),
+                            Column(
+                              children: [
+                                Container(
+                                  height:200.0, // Set the desired fixed height for the banner
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(8.0),
+                                      bottomRight: Radius.circular(8.0),
+                                    ),
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          friendProfile!.profileBanner),
+                                      fit: BoxFit
+                                          .cover, // Set the fit property to determine how the image should be fitted
+                                    ),
+                                  ),
                                 ),
-                                image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      friendProfile!.profileBanner),
-                                  fit: BoxFit
-                                      .cover, // Set the fit property to determine how the image should be fitted
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top:5,left:110),
+                                      child: SizedBox(
+                                        width: 167,
+                                        child: Text(friendProfile!.name,
+                                            style: const TextStyle(
+                                                overflow:
+                                                    TextOverflow.clip,
+                                                fontSize: 20.0,
+                                                fontWeight:
+                                                    FontWeight.bold)),
+                                      ),
+                                    ),
+                                    statusDependentwidget(),
+                                  ],
                                 ),
-                              ),
+                              ],
                             ),
                             //const SizedBox(height: 20.0),
                             Row(
@@ -170,35 +201,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 185, left: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(top:18.0),
-                                            child: SizedBox(
-                                              width:167,
-                                              child: Text(friendProfile!.name,
-                                                  style: const TextStyle(
-                                                      overflow: TextOverflow.clip,
-                                                      fontSize: 24.0,
-                                                      fontWeight: FontWeight.bold)),
-                                            ),
-                                          ),
-                                          statusDependentwidget(),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
                               ],
                             ),
                           ],
                         ),
+                        
                         const Divider(),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),

@@ -187,6 +187,11 @@ class FriendProfileService extends ChangeNotifier {
     }
   }
 
+  void updateFriendStatus(String newValue) {
+    friendStatus = newValue;
+    notifyListeners();
+  }
+
   void getFriendStatus(String id) async {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
