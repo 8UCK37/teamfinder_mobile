@@ -56,6 +56,64 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
     profileService.getDiscordInfo(widget.friendId.toString());
   }
 
+  Widget statusDependentwidget() {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: true);
+    if (profileService.friendStatus == 'accepted') {
+      return const Padding(
+        padding: EdgeInsets.only(left: 15.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.deepPurpleAccent,
+          radius: 15,
+          backgroundImage: AssetImage("assets/images/help.png"),
+        ),
+      );
+    } else if (profileService.friendStatus == 'pending') {
+      return const Padding(
+        padding: EdgeInsets.only(left: 15.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.amberAccent,
+          radius: 15,
+          backgroundImage: AssetImage("assets/images/hourglass.png"),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(top:18.0,left:8),
+        child: GestureDetector(
+          onTap: () {
+            debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
+          },
+          child: Material(
+            elevation: 20,
+            shape: const CircleBorder(),
+            child: ClipPath(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 144, 171, 217),
+                  borderRadius: BorderRadius.all(Radius.circular(8))
+                ),
+                child: const Column(
+                  children: [
+                    CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: AssetImage("assets/images/wave.png")),
+                    Padding(
+                      padding: EdgeInsets.only(left:5.0,right:5.0,bottom:5.0),
+                      child: Text("Send Request",
+                      style: TextStyle(fontWeight: FontWeight.bold),),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final profileService =
@@ -120,19 +178,18 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     children: <Widget>[
                                       Row(
                                         children: [
-                                          Text(friendProfile!.name,
-                                              style: const TextStyle(
-                                                  fontSize: 24.0,
-                                                  fontWeight: FontWeight.bold)),
-                                          if(profileService.friendStatus=='accepted')
-                                          const Padding(
-                                            padding: EdgeInsets.only(left:15.0),
-                                            child: CircleAvatar(
-                                              backgroundColor: Colors.deepPurpleAccent,
-                                              radius: 15,
-                                              backgroundImage: AssetImage("assets/images/help.png"),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top:18.0),
+                                            child: SizedBox(
+                                              width:175,
+                                              child: Text(friendProfile!.name,
+                                                  style: const TextStyle(
+                                                      overflow: TextOverflow.clip,
+                                                      fontSize: 24.0,
+                                                      fontWeight: FontWeight.bold)),
                                             ),
-                                          )
+                                          ),
+                                          statusDependentwidget(),
                                         ],
                                       ),
                                     ],

@@ -40,7 +40,7 @@ class _SearchPageState extends State<SearchPage> {
       });
       return;
     }
-    debugPrint('from search userinp ${userInp}');
+    debugPrint('from search userinp: $userInp');
     Options options = Options(
       headers: {
         'Authorization': 'Bearer $idToken',
@@ -56,7 +56,7 @@ class _SearchPageState extends State<SearchPage> {
       debugPrint('user data searched');
       //debugPrint(response.data);
       setState(() {
-        userList = userPojoListFromJson(response.data);
+        userList = userPojoListFromJson(response.data).where((userPojo) => userPojo.id != user.uid).toList();
       });
       debugPrint(userList.toString());
     }
