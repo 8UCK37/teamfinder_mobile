@@ -4,13 +4,15 @@ import 'package:like_button/like_button.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 
 class CustomReaction extends StatefulWidget {
+  final AnimationController animationController;
   const CustomReaction(
       {super.key,
       required this.path,
       required this.onTap,
       required this.index,
       required this.size,
-      required this.colorSplash});
+      required this.colorSplash,
+      required this.animationController});
   final String path;
   final int index;
   final Size size;
@@ -35,34 +37,40 @@ class _CustomReactionState extends State<CustomReaction>
         vsync: this, duration: const Duration(milliseconds: 200));
     slideController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 100));
+    
+    if (mounted) {
+      slideController.forward();
+    }
+    
   }
 
   @override
   void dispose() {
     iconScaleController.dispose();
+    slideController.dispose();
     super.dispose();
   }
 
-
-  Future<bool> onLikeButtonTapped(bool isLiked) async{
+  Future<bool> onLikeButtonTapped(bool isLiked) async {
     /// send your request here
     // final bool success= await sendRequest();
 
     /// if failed, you can do nothing
     // return success? !isLiked:isLiked;
     iconScaleController.forward().whenComplete(() async {
-            await player.play(AssetSource("assets/audio/pop.mp3"));
-            Future.delayed(const Duration(milliseconds: 525), () {
-              widget.onTap(widget.index);
-            });
-          });
+      await player.play(AssetSource("assets/audio/pop.mp3"));
+      Future.delayed(const Duration(milliseconds: 525), () {
+        widget.onTap(widget.index);
+      });
+    });
     return !isLiked;
   }
+
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
-      position: Tween<Offset>(begin: Offset.zero, end: const Offset(0.0, -0.3))
-          .animate(
+      position:
+          Tween<Offset>(begin: const Offset(0.0,1), end: const Offset(0.0, 0.0)).animate(
         CurvedAnimation(
           curve: Curves.linear,
           parent: slideController,

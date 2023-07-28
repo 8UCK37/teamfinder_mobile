@@ -43,7 +43,7 @@ class CustomAnimatedFlutterReaction {
             hideOverlay(context);
           },
           relativeRect: relativeRect,
-          overlaySize: overlaySize ?? MediaQuery.of(context).size.width * 0.3,
+          overlaySize: overlaySize ?? MediaQuery.of(context).size.width * .3,
           reactions: reactions ?? TeamfinderReactionData.teamfinderReactionIcon,
           onPressReact: (val) {
             hideOverlay(context);

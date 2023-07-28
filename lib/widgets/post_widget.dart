@@ -316,6 +316,7 @@ class _PostWidgetState extends State<PostWidget>
                       key: key,
                       onLongPress: () {
                         CustomAnimatedFlutterReaction().showOverlay(
+                          overlaySize: MediaQuery.of(context).size.width * .59,
                             context: context,
                             key: key,
                             onReaction: (val) {

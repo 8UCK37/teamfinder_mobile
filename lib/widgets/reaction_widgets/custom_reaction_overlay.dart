@@ -30,7 +30,7 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
   late AnimationController controller;
   late Animation<double> scaleAnimation;
   late Animation<Offset> slideAnimation;
-
+  final List<int> _animatedIndices = [];
   @override
   void initState() {
     super.initState();
@@ -44,17 +44,30 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
       curve: Curves.easeInSine,
     );
 
-    slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1.0),
-      end: const Offset(0.0, 0.0),
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOutQuad,
-      ),
-    );
+    // slideAnimation = Tween<Offset>(
+    //   begin: const Offset(0.0, 1.0),
+    //   end: const Offset(0.0, 0.0),
+    // ).animate(
+    //   CurvedAnimation(
+    //     parent: controller,
+    //     curve: Curves.easeOutQuad,
+    //   ),
+    // );
 
-    controller.forward();
+    controller.forward().whenComplete(() {
+      // Start the individual slide-up animation with a delay after the card animation is finished.
+      for (int i = 0; i < widget.reactions.length; i++) {
+        Future.delayed(Duration(milliseconds: 15 + i * 25), () {
+          // Check if the widget is still mounted to prevent running animations on unmounted widgets.
+          if (mounted) {
+            setState(() {
+              // Update the animation state for the specific index.
+              _animatedIndices.add(i);
+            });
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -66,24 +79,31 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
       child: Stack(
         children: [
           GestureDetector(
-              onVerticalDragUpdate: (details) {
-                //debugPrint('caught onVerticalDragUpdate ${details.toString()}');
-                widget.onDismiss();
-              },
-              onHorizontalDragUpdate: (details) {
-                //debugPrint('caught onHorizontalDragUpdate ${details.toString()}');
-                widget.onDismiss();
-              },
-              child: ModalBarrier(onDismiss: widget.onDismiss)),
+            onVerticalDragUpdate: (details) {
+              widget.onDismiss();
+            },
+            onHorizontalDragUpdate: (details) {
+              widget.onDismiss();
+            },
+            child: ModalBarrier(onDismiss: widget.onDismiss),
+          ),
           Positioned.fromRelativeRect(
             rect: widget.relativeRect,
             child: SlideTransition(
-              position: slideAnimation,
+              position: Tween<Offset>(
+                begin: const Offset(
+                    0.0, 1.0), // Start off the screen below the overlay
+                end: const Offset(
+                    0.0, 0.0), // Slide to the center of the overlay
+              ).animate(
+                CurvedAnimation(
+                  parent: controller,
+                  curve: Curves.easeOutQuad,
+                ),
+              ),
               child: ScaleTransition(
                 scale: scaleAnimation,
                 child: Material(
@@ -99,16 +119,32 @@ class _CustomReactionOverlayState extends State<CustomReactionOverlay>
                       color: widget.backgroundColor,
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         for (int i = 0; i < widget.reactions.length; i++)
-                          CustomReaction(
-                            path: widget.reactions[i],
-                            onTap: widget.onPressReact,
-                            index: i,
-                            size: widget.size ?? const Size(45, 45),
-                            colorSplash: ColorSplash.getColorPalette(i),
-                          )
+                          if (_animatedIndices.contains(i))
+                            AnimatedBuilder(
+                              animation: controller,
+                              builder: (context, child) {
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0,1), // Slide in from below the overlay
+                                    end: Offset.zero,
+                                  ).animate(CurvedAnimation(
+                                    parent: controller,
+                                    curve: Interval(0.15 + i * 0.25, 1.0),
+                                  )),
+                                  child: child,
+                                );
+                              },
+                              child: CustomReaction(
+                                path: widget.reactions[i],
+                                onTap: widget.onPressReact,
+                                index: i,
+                                size: widget.size ?? const Size(45, 45),
+                                colorSplash: ColorSplash.getColorPalette(i),
+                                animationController: controller,
+                              ),
+                            ),
                       ],
                     ),
                   ),
