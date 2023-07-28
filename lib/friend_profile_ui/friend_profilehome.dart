@@ -35,6 +35,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   void initState() {
     super.initState();
     _pageController = PageController();
+    getFriendStatus();
     getFriendPosts();
     getFriendProfileData();
     getFriendTwitchInfo();
@@ -46,6 +47,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> getFriendStatus() async {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: false);
+    profileService.getFriendStatus(widget.friendId.toString());
   }
 
   Future<void> getFriendProfileData() async {
@@ -81,6 +88,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
+    final profileService = Provider.of<FriendProfileService>(context, listen: true);
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
@@ -253,6 +261,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
             children: [
               FriendProfilePosts(
                 friendId: widget.friendId,
+                friendStatus: profileService.friendStatus,
                 friendName: widget.friendName,
                 friendProfileImage: widget.friendProfileImage,
               ),

@@ -13,10 +13,12 @@ class FriendProfilePosts extends StatefulWidget {
   final String? friendName;
   final String friendId;
   final String? friendProfileImage;
+  final String? friendStatus;
 
   const FriendProfilePosts({
     super.key,
     required this.friendId,
+    required this.friendStatus,
     this.friendName,
     this.friendProfileImage,
   });
@@ -56,8 +58,9 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
 
   @override
   Widget build(BuildContext context) {
-    final profileService = Provider.of<FriendProfileService>(context, listen: true);
-    final userService = Provider.of<ProviderService>(context,listen:true);
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     postList = profileService.friendPostList;
     friendProfile = profileService.friendProfile;
     twitchData = profileService.twitchData;
@@ -115,10 +118,23 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Text(friendProfile!.name,
-                                          style: const TextStyle(
-                                              fontSize: 24.0,
-                                              fontWeight: FontWeight.bold)),
+                                      Row(
+                                        children: [
+                                          Text(friendProfile!.name,
+                                              style: const TextStyle(
+                                                  fontSize: 24.0,
+                                                  fontWeight: FontWeight.bold)),
+                                          if(profileService.friendStatus=='accepted')
+                                          const Padding(
+                                            padding: EdgeInsets.only(left:15.0),
+                                            child: CircleAvatar(
+                                              backgroundColor: Colors.deepPurpleAccent,
+                                              radius: 15,
+                                              backgroundImage: AssetImage("assets/images/help.png"),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 )
@@ -275,9 +291,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                         Text(
                                             "${friendProfile!.name.split(' ')[0]} has ${postList!.length.toString()} posts",
                                             style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: userService.darkTheme! ?  Colors.white70: Colors.grey[800],
-                                                )),
+                                              fontSize: 16.0,
+                                              color: userService.darkTheme!
+                                                  ? Colors.white70
+                                                  : Colors.grey[800],
+                                            )),
                                     ],
                                   ),
                                   // const Text('Find Friends',
@@ -291,7 +309,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                                   Column(
                                     children: <Widget>[
-                                      SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey[800]),
+                                      SeparatorWidget(
+                                          color: userService.darkTheme!
+                                              ? const Color.fromARGB(
+                                                  255, 74, 74, 74)
+                                              : Colors.grey[800]),
                                       PostWidget(post: post),
                                     ],
                                   ),
