@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
@@ -35,15 +36,32 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   final GlobalKey _linkedAccWidgetKey = GlobalKey();
   dynamic twitchData;
   dynamic discordData;
+  late AnimationController _animationController;
+  late Animation<Offset> _animation;
+  late Animation<double> _fadeAnimation;
   @override
   void initState() {
     super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _animation = Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero)
+        .animate(_animationController);
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _animation = Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero)
+        .animate(_animationController);
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);  }
 
   @override
   void dispose() {
     // Unsubscribe the listener to avoid memory leaks
     _scrollController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -57,11 +75,10 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   }
 
   Widget statusDependentwidget() {
-    final profileService =
-        Provider.of<FriendProfileService>(context, listen: true);
+    final profileService = Provider.of<FriendProfileService>(context, listen: true);
     if (profileService.friendStatus == 'accepted') {
       return const Padding(
-        padding: EdgeInsets.only(top:4,left: 15.0),
+        padding: EdgeInsets.only(top: 4, left: 15.0,bottom:4),
         child: CircleAvatar(
           backgroundColor: Colors.deepPurpleAccent,
           radius: 15,
@@ -69,18 +86,27 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
         ),
       );
     } else if (profileService.friendStatus == 'pending') {
-      return const Padding(
-        padding:  EdgeInsets.only(top:4,left: 15.0),
-        child: Column(
-          children: [
-             CircleAvatar(
-              backgroundColor: Colors.amberAccent,
-              radius: 15,
-              backgroundImage: AssetImage("assets/images/hourglass.png"),
+      _animationController.forward();
+      return FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _animation,
+          child: const Padding(
+            padding: EdgeInsets.only(top: 4, left: 15.0,bottom:4),
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.amberAccent,
+                  radius: 15,
+                  backgroundImage: AssetImage("assets/images/hourglass.png"),
+                ),
+                Text(
+                  "Pending",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
             ),
-            Text("Pending",
-              style: TextStyle(fontWeight: FontWeight.bold),)
-          ],
+          ),
         ),
       );
     } else {
@@ -88,8 +114,24 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
         padding: const EdgeInsets.only(top: 8.0, left: 28),
         child: GestureDetector(
           onTap: () {
-            debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
+            debugPrint(
+                "send request to ${widget.friendName} with id ${widget.friendId}");
             profileService.updateFriendStatus("pending");
+            MotionToast(
+              icon: Icons.rocket_launch,
+              primaryColor: Colors.purple,
+              displaySideBar: false,
+              displayBorder: true,
+              title: const Text(
+                'Sucess!!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              description: const Text(
+                'Friend Request sent',
+              ),
+            ).show(context);
           },
           child: Material(
             elevation: 20,
@@ -107,7 +149,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                         backgroundImage: AssetImage("assets/images/wave.png")),
                     Padding(
                       padding:
-                          EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+                          EdgeInsets.only(left: 5.0, right: 5.0, bottom: 0),
                       child: Text(
                         "Send Request",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -150,7 +192,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                             Column(
                               children: [
                                 Container(
-                                  height:200.0, // Set the desired fixed height for the banner
+                                  height:
+                                      200.0, // Set the desired fixed height for the banner
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: const BorderRadius.only(
@@ -169,16 +212,15 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(top:5,left:110),
+                                      padding: const EdgeInsets.only(
+                                          top: 5, left: 110),
                                       child: SizedBox(
                                         width: 167,
                                         child: Text(friendProfile!.name,
                                             style: const TextStyle(
-                                                overflow:
-                                                    TextOverflow.clip,
+                                                overflow: TextOverflow.clip,
                                                 fontSize: 20.0,
-                                                fontWeight:
-                                                    FontWeight.bold)),
+                                                fontWeight: FontWeight.bold)),
                                       ),
                                     ),
                                     statusDependentwidget(),
@@ -205,7 +247,6 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                             ),
                           ],
                         ),
-                        
                         const Divider(),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
