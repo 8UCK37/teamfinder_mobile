@@ -126,12 +126,12 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                     if (countNulls(steamData, discordData, twitchData) < 2)
                       CustomPaint(
                         willChange: true,
-                        painter: _MainLinePainter(yCoordinate: 155),
+                        painter: _MainLinePainter(yCoordinate: 165),
                       ),
                     if (countNulls(steamData, discordData, twitchData) == 0)
                       CustomPaint(
                         willChange: true,
-                        painter: _MainLinePainter(yCoordinate: 300),
+                        painter: _MainLinePainter(yCoordinate: 310),
                       ),
                   ],
                 ),
@@ -195,24 +195,34 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                 backgroundImage: AssetImage(logo),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Row(
+            Expanded(
+              child: Column(
                 children: [
-                  Text(
-                    brand,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 32, 133, 216),
-                        fontWeight: FontWeight.bold),
-                  ),
-                  if (type != "discord")
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text("Joined on $createdAt"),
-                    )
+                  Row(
+                    children: [
+                      Text(
+                        brand,
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 32, 133, 216),
+                            fontWeight: FontWeight.bold),
+                      ),
+                      if (type != "discord")
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Text("Joined on $createdAt"),
+                              ),
+                            ],
+                          ),
+                        )
+                    ],
+                  )
                 ],
               ),
-            )
+            ),
           ],
         ),
         Row(
@@ -234,10 +244,18 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Currently known as:",
+                    "Platform handle:",
                     style: TextStyle(color: Colors.amberAccent),
                   ),
-                  Text('"$handle"'),
+                  Padding(
+                    padding: const EdgeInsets.only(top:8.0),
+                    child: Text('"$handle"',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold
+                        ),
+                      ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
