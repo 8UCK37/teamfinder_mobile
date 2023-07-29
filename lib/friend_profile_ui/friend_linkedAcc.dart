@@ -4,14 +4,9 @@ import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:intl/intl.dart';
 
 class FriendLinkedAcc extends StatefulWidget {
-  final String? friendName;
-  final String? friendId;
-  final String? friendProfileImage;
+ 
   const FriendLinkedAcc(
-      {super.key,
-      required this.friendName,
-      required this.friendId,
-      required this.friendProfileImage});
+      {super.key});
 
   @override
   State<FriendLinkedAcc> createState() => _FriendLinkedAccState();
@@ -118,7 +113,7 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                           child: CircleAvatar(
                               radius: 25,
                               backgroundImage:
-                                  NetworkImage(widget.friendProfileImage!)),
+                                  NetworkImage(profileService.friendProfile!.profilePicture)),
                         ),
                         if (countNulls(steamData, discordData, twitchData) < 3)
                           CustomPaint(
@@ -140,8 +135,8 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                     Padding(
                       padding: const EdgeInsets.only(left:15.0),
                       child: Text(countNulls(steamData, twitchData, discordData)!=3
-                      ?"${widget.friendName}'s associated accounts"
-                      :"${widget.friendName} currently has no account linked!!",
+                      ?"${profileService.friendProfile!.name}'s associated accounts"
+                      :"${profileService.friendProfile!.name} currently has no account linked!!",
                       style: const TextStyle(
                         color: Colors.deepPurpleAccent,
                         fontWeight: FontWeight.normal),

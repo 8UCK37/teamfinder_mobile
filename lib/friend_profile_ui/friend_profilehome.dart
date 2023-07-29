@@ -290,11 +290,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                 friendName: widget.friendName,
                 friendProfileImage: widget.friendProfileImage,
               ),
-              FriendLinkedAcc(
-                friendId: widget.friendId,
-                friendName: widget.friendName,
-                friendProfileImage: widget.friendProfileImage,
-              ),
+              const FriendLinkedAcc(),
               const FriendsFriendList()
             ]),
       ),
