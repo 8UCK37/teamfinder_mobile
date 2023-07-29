@@ -109,41 +109,71 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0, left: 10),
-                      child: CircleAvatar(
-                          radius: 25,
-                          backgroundImage:
-                              NetworkImage(widget.friendProfileImage!)),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0, left: 10),
+                          child: CircleAvatar(
+                              radius: 25,
+                              backgroundImage:
+                                  NetworkImage(widget.friendProfileImage!)),
+                        ),
+                        if (countNulls(steamData, discordData, twitchData) < 3)
+                          CustomPaint(
+                            willChange: true,
+                            painter: _MainLinePainter(yCoordinate: 15),
+                          ),
+                        if (countNulls(steamData, discordData, twitchData) < 2)
+                          CustomPaint(
+                            willChange: true,
+                            painter: _MainLinePainter(yCoordinate: 165),
+                          ),
+                        if (countNulls(steamData, discordData, twitchData) == 0)
+                          CustomPaint(
+                            willChange: true,
+                            painter: _MainLinePainter(yCoordinate: 310),
+                          ),
+                      ],
                     ),
-                    if (countNulls(steamData, discordData, twitchData) < 3)
-                      CustomPaint(
-                        willChange: true,
-                        painter: _MainLinePainter(yCoordinate: 15),
-                      ),
-                    if (countNulls(steamData, discordData, twitchData) < 2)
-                      CustomPaint(
-                        willChange: true,
-                        painter: _MainLinePainter(yCoordinate: 165),
-                      ),
-                    if (countNulls(steamData, discordData, twitchData) == 0)
-                      CustomPaint(
-                        willChange: true,
-                        painter: _MainLinePainter(yCoordinate: 310),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(left:15.0),
+                      child: Text(countNulls(steamData, twitchData, discordData)!=3
+                      ?"${widget.friendName}'s associated accounts"
+                      :"${widget.friendName} currently has no account linked!!",
+                      style: const TextStyle(
+                        color: Colors.deepPurpleAccent,
+                        fontWeight: FontWeight.normal),
+                        ),
+                    )
                   ],
+                  
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 58, top: 15, right: 10),
-                  child: Column(
-                    children: [
-                      if (steamData != null) AccountCard(steamData, "steam"),
-                      if (discordData != null)
-                        AccountCard(discordData, "discord"),
-                      if (twitchData != null) AccountCard(twitchData, "twitch"),
-                    ],
+                  child: Expanded(
+                    child: Column(
+                      children: [
+                        if (steamData != null) 
+                          AccountCard(steamData, "steam"),
+                        if (discordData != null)
+                          AccountCard(discordData, "discord"),
+                        if (twitchData != null) 
+                          AccountCard(twitchData, "twitch"),
+                        if(countNulls(steamData, twitchData, discordData)==3)
+                          Center(
+                            child: Container(
+                              height: 200,
+                              width: 200,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(image: AssetImage("assets/images/sad.png"),
+                                fit: BoxFit.fill)
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -252,7 +282,7 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                     child: Text('"$handle"',
                       style: const TextStyle(
                         color: Colors.blue,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.normal
                         ),
                       ),
                   ),
