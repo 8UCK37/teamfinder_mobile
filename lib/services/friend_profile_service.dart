@@ -20,6 +20,7 @@ class FriendProfileService extends ChangeNotifier {
   void erasePreviousProfile() {
     friendPostList = [];
     friendProfile = null;
+    steamData = null;
     twitchData = null;
     discordData = null;
     ownedGames = [];
@@ -50,7 +51,9 @@ class FriendProfileService extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       friendProfile = userPojoListFromJson(response.data)[0];
-      getSteamInfo(friendProfile!.steamId!);
+      if (friendProfile!.steamId != null) {
+        getSteamInfo(friendProfile!.steamId!);
+      }
       notifyListeners();
     }
   }
@@ -104,9 +107,11 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      steamData = jsonDecode(response.data)["info"][0];
-      //debugPrint(steamData.toString());
-      notifyListeners();
+      if (jsonDecode(response.data) != null) {
+        steamData = jsonDecode(response.data)["info"][0];
+        //debugPrint(steamData.toString());
+        notifyListeners();
+      }
     }
   }
 
@@ -131,8 +136,11 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      twitchData = response.data;
-      notifyListeners();
+      if (response.data != "not logged in") {
+        twitchData = response.data;
+        debugPrint(twitchData.toString());
+        notifyListeners();
+      }
     }
   }
 
@@ -152,8 +160,11 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      discordData = jsonDecode(response.data);
-      notifyListeners();
+      if (jsonDecode(response.data) != null) {
+        discordData = jsonDecode(response.data)['Discord'];
+        //debugPrint(discordData.toString());
+        notifyListeners();
+      }
     }
   }
 
