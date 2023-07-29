@@ -181,13 +181,10 @@ class _GamesPageState extends State<GamesPage> {
             ],
           ),
           elevation: 0.0,
-          //systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: Column(
             children: [
-              // const Divider(
-              //   thickness: 4,
-              // ),
+              
               const Row(
                 children: [
                   SizedBox(
@@ -202,32 +199,18 @@ class _GamesPageState extends State<GamesPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.purple.withOpacity(0.2), // Shadow color
-                      spreadRadius: 2, // How wide the shadow should be
-                      blurRadius: 5, // How spread out the shadow should be
-                      offset: const Offset(0, 2),// Offset in x and y direction
-                      blurStyle: BlurStyle.inner 
-                    ),
-                  ],
-                ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: Colors.deepOrange,
                   elevation: 15, // Elevation level
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .782,
+                      height: MediaQuery.of(context).size.height * .79,
                       child: CustomGrid(items: showcase),
                     ),
                   ),
                 ),
-              ),
               ),
             ],
           ),

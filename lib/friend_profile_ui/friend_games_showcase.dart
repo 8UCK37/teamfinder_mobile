@@ -98,7 +98,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                   ],
                 ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: Colors.deepOrange,
                   elevation: 15, // Elevation level
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: Padding(
