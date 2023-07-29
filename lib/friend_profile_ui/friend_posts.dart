@@ -37,24 +37,17 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   dynamic twitchData;
   dynamic discordData;
   late AnimationController _animationController;
-  late Animation<Offset> _animation;
   late Animation<double> _fadeAnimation;
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _animation = Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero)
-        .animate(_animationController);
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _animation = Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero)
-        .animate(_animationController);
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);  }
 
   @override
@@ -89,79 +82,75 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
       _animationController.forward();
       return FadeTransition(
         opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _animation,
-          child: const Padding(
-            padding: EdgeInsets.only(top: 4, left: 15.0,bottom:4),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.amberAccent,
-                  radius: 15,
-                  backgroundImage: AssetImage("assets/images/hourglass.png"),
-                ),
-                Text(
-                  "Pending",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
+        child: const Padding(
+          padding: EdgeInsets.only(top: 4, left: 15.0,bottom:4),
+          child: Column(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.amberAccent,
+                radius: 15,
+                backgroundImage: AssetImage("assets/images/hourglass.png"),
+              ),
+              Text(
+                "Pending",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
           ),
         ),
       );
     } else {
-      return Padding(
-        padding: const EdgeInsets.only(top: 8.0, left: 28),
-        child: GestureDetector(
-          onTap: () {
-            debugPrint(
-                "send request to ${widget.friendName} with id ${widget.friendId}");
-            profileService.updateFriendStatus("pending");
-            MotionToast(
-              icon: Icons.rocket_launch,
-              primaryColor: Colors.purple,
-              displaySideBar: false,
-              displayBorder: true,
-              title: const Text(
-                'Sucess!!',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+      return  Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+          child: GestureDetector(
+            onTap: () {
+              debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
+              profileService.updateFriendStatus("pending");
+              MotionToast(
+                icon: Icons.rocket_launch,
+                primaryColor: Colors.purple,
+                displaySideBar: false,
+                displayBorder: true,
+                title: const Text(
+                  'Sucess!!',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              description: const Text(
-                'Friend Request sent',
-              ),
-            ).show(context);
-          },
-          child: Material(
-            elevation: 20,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            child: ClipPath(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: const Column(
-                  children: [
-                    CircleAvatar(
-                        radius: 15,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: AssetImage("assets/images/wave.png")),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(left: 5.0, right: 5.0, bottom: 0),
-                      child: Text(
-                        "Send Request",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                description: const Text(
+                  'Friend Request sent',
+                ),
+              ).show(context);
+            },
+            child: Material(
+              elevation: 20,
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              child: ClipPath(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white12,
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: const Column(
+                    children: [
+                      CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: AssetImage("assets/images/wave.png")),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+                        child: Text(
+                          "Send Request",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
     }
   }
 
@@ -207,23 +196,25 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     ),
                                   ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 5, left: 110),
-                                      child: SizedBox(
-                                        width: 167,
-                                        child: Text(friendProfile!.name,
-                                            style: const TextStyle(
-                                                overflow: TextOverflow.clip,
-                                                fontSize: 20.0,
-                                                fontWeight: FontWeight.bold)),
+                                SafeArea(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5, left: 110),
+                                        child: SizedBox(
+                                          width: 167,
+                                          child: Text(friendProfile!.name,
+                                              style: const TextStyle(
+                                                  overflow: TextOverflow.clip,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
                                       ),
-                                    ),
-                                    statusDependentwidget(),
-                                  ],
+                                      statusDependentwidget(),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
