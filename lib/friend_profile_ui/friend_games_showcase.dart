@@ -85,48 +85,35 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.purple.withOpacity(0.2), // Shadow color
-                        spreadRadius: 1, // How wide the shadow should be
-                        blurRadius: 2, // How spread out the shadow should be
-                        offset:const Offset(0, 2), // Offset in x and y direction
-                        blurStyle: BlurStyle.inner),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.deepOrange,
-                  elevation: 15, // Elevation level
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SizedBox(
-                        height: MediaQuery.of(context).size.height * .63,
-                        child: showcase.length!=0? CustomGrid(items: showcase!)
-                        : const Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Sadly there's nothing to see here!!😪",
-                                        style:TextStyle(fontWeight: FontWeight.bold,
-                                        fontSize: 22)
-                                      ),
-                                  ],
-                                ),
+              child: Material(
+                color: Colors.deepOrange,
+                elevation: 15, // Elevation level
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .63,
+                      child: showcase.length!=0? CustomGrid(items: showcase!)
+                      : const Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Sadly there's nothing to see here!!😪",
+                                      style:TextStyle(fontWeight: FontWeight.bold,
+                                      fontSize: 22)
+                                    ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        ),
-                  ),
+                      ),
+                      ),
                 ),
               ),
             ),

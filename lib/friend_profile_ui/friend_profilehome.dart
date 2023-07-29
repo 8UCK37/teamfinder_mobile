@@ -66,12 +66,21 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
     profileService.getFriendProfileData(widget.friendId.toString());
+    
   }
 
   Future<void> getFriendPosts() async {
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
     profileService.getFriendsPosts(widget.friendId.toString());
+  }
+
+  Future<void> getFriendSteamInfo() async {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: false);
+    if (profileService.friendProfile?.steamId != null) {
+      profileService.getSteamInfo(profileService.friendProfile!.steamId!);
+    }
   }
 
   Future<void> getFriendTwitchInfo() async {
@@ -95,17 +104,17 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    final profileService = Provider.of<FriendProfileService>(context, listen: true);
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: true);
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: userService.darkTheme!? Brightness.light:Brightness.dark
-            
-          ),
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness:
+                  userService.darkTheme! ? Brightness.light : Brightness.dark),
           backgroundColor: userService.darkTheme!
               ? const Color.fromRGBO(46, 46, 46, 100)
               : Colors.white,
@@ -281,7 +290,11 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
                 friendName: widget.friendName,
                 friendProfileImage: widget.friendProfileImage,
               ),
-              const FriendLinkedAcc(),
+              FriendLinkedAcc(
+                friendId: widget.friendId,
+                friendName: widget.friendName,
+                friendProfileImage: widget.friendProfileImage,
+              ),
               const FriendsFriendList()
             ]),
       ),

@@ -10,6 +10,7 @@ import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 class FriendProfileService extends ChangeNotifier {
   List<PostPojo>? friendPostList;
   UserPojo? friendProfile;
+  dynamic steamData;
   dynamic twitchData;
   dynamic discordData;
   dynamic ownedGames = [];
@@ -49,6 +50,7 @@ class FriendProfileService extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       friendProfile = userPojoListFromJson(response.data)[0];
+      getSteamInfo(friendProfile!.steamId!);
       notifyListeners();
     }
   }
@@ -77,6 +79,33 @@ class FriendProfileService extends ChangeNotifier {
     if (response.statusCode == 200) {
       List<PostPojo> parsedPosts = postPojoFromJson(response.data);
       friendPostList = parsedPosts;
+      notifyListeners();
+    }
+  }
+
+  void updateFriendSteamInfo(dynamic newValue) {
+    steamData = newValue;
+    notifyListeners();
+  }
+
+  Future<void> getSteamInfo(String steamId) async {
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/steamInfo',
+      data: {'steam_id': steamId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      steamData = jsonDecode(response.data)["info"][0];
+      //debugPrint(steamData.toString());
       notifyListeners();
     }
   }
