@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:intl/intl.dart';
 
@@ -91,15 +92,13 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
     return SafeArea(
         child: Expanded(
       child: Padding(
-        padding:
-            const EdgeInsets.only(top: 10.0, bottom: 10, left: 15, right: 15),
+        padding: const EdgeInsets.all( 10.0),
         child: Material(
-          elevation: 20,
+          elevation: 15,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: Container(
-            decoration: BoxDecoration(
-                //color: const Color.fromARGB(255, 91, 164, 224),
-                border: Border.all(color: Colors.blue),
-                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            decoration: const BoxDecoration(
+                borderRadius:  BorderRadius.all(Radius.circular(20))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +138,7 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                       :"${profileService.friendProfile!.name} currently has no account linked!!",
                       style: const TextStyle(
                         color: Colors.deepPurpleAccent,
-                        fontWeight: FontWeight.normal),
+                        fontWeight: FontWeight.bold),
                         ),
                     )
                   ],
@@ -156,21 +155,22 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                           AccountCard(discordData, "discord"),
                         if (twitchData != null) 
                           AccountCard(twitchData, "twitch"),
-                        if(countNulls(steamData, twitchData, discordData)==3)
-                          Center(
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(image: AssetImage("assets/images/sad.png"),
-                                fit: BoxFit.fill)
-                              ),
-                            ),
-                          )
+                        
                       ],
                     ),
                   ),
-                )
+                ),
+                if (countNulls(steamData, twitchData, discordData) == 3)
+                  Center(
+                    child: Container(
+                      height: 200,
+                      width: 200,
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage("assets/images/sad.png"),
+                              fit: BoxFit.fill)),
+                    ),
+                  )
               ],
             ),
           ),
@@ -181,13 +181,14 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
 
   // ignore: non_constant_identifier_names
   Widget AccountCard(dynamic data, String type) {
+    final userService = Provider.of<ProviderService>(context, listen: true);
     String logo = "";
     String brand = "";
     String avatar = "";
     String handle = "";
     String createdAt = "";
     if (type == "steam") {
-      logo = "assets/images/steam.png";
+      logo = "assets/images/steam_material.png";
       brand = "Steam";
       avatar = data["avatarfull"];
       handle = data["personaname"];
@@ -268,9 +269,11 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     "Platform handle:",
-                    style: TextStyle(color: Colors.amberAccent),
+                    style: TextStyle(
+                      color:userService.darkTheme!? Colors.amberAccent: Colors.deepPurpleAccent,
+                      ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top:8.0),
@@ -289,10 +292,9 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                         child: Container(
                           //width: 75,
                           height: 35,
-                          decoration: const BoxDecoration(
-                              color: Color.fromRGBO(50, 38, 83, 1.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                          decoration:  BoxDecoration(
+                              color:userService.darkTheme!? const Color.fromRGBO(50, 38, 83, 1.0):Color.fromARGB(255, 22, 224, 224),
+                              borderRadius:const BorderRadius.all(Radius.circular(10))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
@@ -324,14 +326,14 @@ class _MainLinePainter extends CustomPainter {
       ..color = Colors.deepPurpleAccent
       ..strokeWidth = 5.0
       ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = StrokeCap.butt;
   }
   late Paint _paint;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Path path = Path();
-    path.moveTo(5, 2);
+    path.moveTo(5, 0);
     path.lineTo(5, yCoordinate);
     path.conicTo(6, yCoordinate + 15, 30, yCoordinate + 15, 1);
     canvas.drawPath(path, _paint);

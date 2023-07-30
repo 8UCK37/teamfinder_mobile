@@ -138,7 +138,7 @@ class FriendProfileService extends ChangeNotifier {
     if (response.statusCode == 200) {
       if (response.data != "not logged in") {
         twitchData = response.data;
-        debugPrint(twitchData.toString());
+        //debugPrint(twitchData.toString());
         notifyListeners();
       }
     }

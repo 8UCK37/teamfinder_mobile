@@ -56,26 +56,27 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Padding(
-                    padding: const EdgeInsets.only(left:18.0,right:18),
+                    padding: const EdgeInsets.only(left:10.0,right:18),
                     child: Row(
                       children: [
                         CircleAvatar(
+                          radius: 25,
                           backgroundImage: NetworkImage(widget.friendProfileImage!)
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width-100,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left:10.0,right:10),
-                            child: Text(
-                              showcase.length == 0
-                                  ? "${widget.friendName!} currently has no games saved as favourites"
-                                  : "${widget.friendName!}'s favourite games",
-                              style:const TextStyle(
-                                  fontSize:16, //showcase.length == 0? 15:18,
-                                  color: Colors.deepPurpleAccent,
-                                  fontWeight: FontWeight.bold),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                showcase.length == 0
+                                    ? "${widget.friendName!} has no favourite games"
+                                    : "${widget.friendName!}'s favourite games",
+                                style:const TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                    fontWeight: FontWeight.bold,),   
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ],
                     ),
@@ -86,34 +87,41 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Material(
-                color: Colors.deepOrange,
+                //color: Colors.deepOrange,
                 elevation: 15, // Elevation level
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .63,
-                      child: showcase.length!=0? CustomGrid(items: showcase!)
-                      : const Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Row(
+                  child: Expanded(
+                    child: showcase.length != 0
+                        ? Column(
+                            children: [
+                              CustomGrid(items: showcase!),
+                            ],
+                          )
+                        :  Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text("Sadly there's nothing to see here!!😪",
-                                      style:TextStyle(fontWeight: FontWeight.bold,
-                                      fontSize: 22)
-                                    ),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22)),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ),
+                              Container(
+                                height: 200,
+                                width: 200,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("assets/images/loneliness.png"))),
+                              )
+                            ],
+                          ),
+                  ),
                 ),
               ),
             ),
