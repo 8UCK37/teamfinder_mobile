@@ -160,11 +160,21 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     child: const Center(
-                        child: Text('Edit Profile',
-                            style: TextStyle(
-                                color: Colors.deepPurpleAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit,
+                            color: Colors.deepPurpleAccent),
+                            Padding(
+                              padding: EdgeInsets.only(left:8.0),
+                              child: Text('Edit Profile',
+                                  style: TextStyle(
+                                      color: Colors.deepPurpleAccent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0)),
+                            ),
+                          ],
+                        )),
                   ),
                 ],
               ),

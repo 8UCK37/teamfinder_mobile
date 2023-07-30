@@ -9,6 +9,7 @@ import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 
 class FriendProfileService extends ChangeNotifier {
   List<PostPojo>? friendPostList;
+  List<UserPojo>? friendList;
   UserPojo? friendProfile;
   dynamic steamData;
   dynamic twitchData;
@@ -19,6 +20,7 @@ class FriendProfileService extends ChangeNotifier {
 
   void erasePreviousProfile() {
     friendPostList = [];
+    friendList = [];
     friendProfile = null;
     steamData = null;
     twitchData = null;
@@ -261,6 +263,33 @@ class FriendProfileService extends ChangeNotifier {
     if (response.statusCode == 200) {
       //debugPrint('line 205 ${response.data.toString()}');
       friendStatus = response.data;
+      notifyListeners();
+    }
+  }
+
+  void updateFriendList(List<UserPojo>? newValue) {
+    friendList = newValue;
+    notifyListeners();
+  }
+
+  void getFriendList(String id) async {
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/friendsoffriendData',
+      data: {'frnd_id': id},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint('line 290 ${response.data.length.toString()}');
+      friendList = userPojoListFromJson(jsonEncode(response.data));
+      debugPrint('line 292 ${friendList.toString()}');
       notifyListeners();
     }
   }

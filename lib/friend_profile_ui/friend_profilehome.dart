@@ -42,6 +42,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     getFriendTwitchInfo();
     getFriendDiscordInfo();
     getFriendShowcase();
+    getFriendfriendList();
   }
 
   @override
@@ -66,10 +67,9 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
     profileService.getFriendProfileData(widget.friendId.toString());
-    
   }
 
-  void getFriendPosts()  {
+  void getFriendPosts() {
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
     profileService.getFriendsPosts(widget.friendId.toString());
@@ -99,6 +99,12 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
     profileService.getShowCase(widget.friendId.toString());
+  }
+
+  Future<void> getFriendfriendList() async {
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: false);
+    profileService.getFriendList(widget.friendId.toString());
   }
 
   @override
