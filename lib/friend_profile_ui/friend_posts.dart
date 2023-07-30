@@ -406,9 +406,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                               children: <Widget>[
                                 SeparatorWidget(
                                     color: userService.darkTheme!
-                                        ? const Color.fromARGB(
-                                            255, 74, 74, 74)
-                                        : Colors.grey[800]),
+                                    ?const Color.fromARGB(255, 74, 74, 74)
+                                    :Color.fromARGB(255, 182, 182, 182)),
                                 PostWidget(post: post),
                               ],
                             ),

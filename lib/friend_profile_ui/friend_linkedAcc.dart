@@ -5,9 +5,7 @@ import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:intl/intl.dart';
 
 class FriendLinkedAcc extends StatefulWidget {
- 
-  const FriendLinkedAcc(
-      {super.key});
+  const FriendLinkedAcc({super.key});
 
   @override
   State<FriendLinkedAcc> createState() => _FriendLinkedAccState();
@@ -91,16 +89,16 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
     discordData = profileService.discordData;
     return SafeArea(
         child: Column(
-          children: [
-            Expanded(
-      child: Padding(
-            padding: const EdgeInsets.all( 10.0),
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
             child: Material(
               elevation: 15,
               borderRadius: const BorderRadius.all(Radius.circular(20)),
               child: Container(
                 decoration: const BoxDecoration(
-                    borderRadius:  BorderRadius.all(Radius.circular(20))),
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,23 +108,28 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                         Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(top: 5.0, left: 10),
+                              padding:
+                                  const EdgeInsets.only(top: 5.0, left: 10),
                               child: CircleAvatar(
                                   radius: 25,
-                                  backgroundImage:
-                                      NetworkImage(profileService.friendProfile!.profilePicture)),
+                                  backgroundImage: NetworkImage(profileService
+                                      .friendProfile!.profilePicture)),
                             ),
-                            if (countNulls(steamData, discordData, twitchData) < 3)
+                            if (countNulls(steamData, discordData, twitchData) <
+                                3)
                               CustomPaint(
                                 willChange: true,
                                 painter: _MainLinePainter(yCoordinate: 15),
                               ),
-                            if (countNulls(steamData, discordData, twitchData) < 2)
+                            if (countNulls(steamData, discordData, twitchData) <
+                                2)
                               CustomPaint(
                                 willChange: true,
                                 painter: _MainLinePainter(yCoordinate: 165),
                               ),
-                            if (countNulls(steamData, discordData, twitchData) == 0)
+                            if (countNulls(
+                                    steamData, discordData, twitchData) ==
+                                0)
                               CustomPaint(
                                 willChange: true,
                                 painter: _MainLinePainter(yCoordinate: 310),
@@ -134,32 +137,32 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left:15.0),
-                          child: Text(countNulls(steamData, twitchData, discordData)!=3
-                          ?"${profileService.friendProfile!.name}'s associated accounts"
-                          :"${profileService.friendProfile!.name} currently has no account linked!!",
-                          style: const TextStyle(
-                            color: Colors.deepPurpleAccent,
-                            fontWeight: FontWeight.bold),
-                            ),
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Text(
+                            countNulls(steamData, twitchData, discordData) != 3
+                                ? "${profileService.friendProfile!.name}'s associated accounts"
+                                : "${profileService.friendProfile!.name} currently has no account linked!!",
+                            style: const TextStyle(
+                                color: Colors.deepPurpleAccent,
+                                fontWeight: FontWeight.bold),
+                          ),
                         )
                       ],
-                      
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 58, top: 15, right: 10),
+                      padding:
+                          const EdgeInsets.only(left: 58, top: 15, right: 10),
                       child: Row(
                         children: [
                           Expanded(
                             child: Column(
                               children: [
-                                if (steamData != null) 
+                                if (steamData != null)
                                   AccountCard(steamData, "steam"),
                                 if (discordData != null)
                                   AccountCard(discordData, "discord"),
-                                if (twitchData != null) 
+                                if (twitchData != null)
                                   AccountCard(twitchData, "twitch"),
-                                
                               ],
                             ),
                           ),
@@ -181,10 +184,10 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                 ),
               ),
             ),
-      ),
-    ),
-          ],
-        ));
+          ),
+        ),
+      ],
+    ));
   }
 
   // ignore: non_constant_identifier_names
@@ -277,20 +280,21 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
+                  Text(
                     "Platform handle:",
                     style: TextStyle(
-                      color:userService.darkTheme!? Colors.amberAccent: Colors.deepPurpleAccent,
-                      ),
+                      color: userService.darkTheme!
+                          ? Colors.amberAccent
+                          : Colors.deepPurpleAccent,
+                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top:8.0),
-                    child: Text('"$handle"',
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      '"$handle"',
                       style: const TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.normal
-                        ),
-                      ),
+                          color: Colors.blue, fontWeight: FontWeight.normal),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -300,9 +304,12 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                         child: Container(
                           //width: 75,
                           height: 35,
-                          decoration:  BoxDecoration(
-                              color:userService.darkTheme!? const Color.fromRGBO(50, 38, 83, 1.0):Color.fromARGB(255, 22, 224, 224),
-                              borderRadius:const BorderRadius.all(Radius.circular(10))),
+                          decoration: BoxDecoration(
+                              color: userService.darkTheme!
+                                  ? const Color.fromRGBO(50, 38, 83, 1.0)
+                                  : Color.fromARGB(255, 22, 224, 224),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
