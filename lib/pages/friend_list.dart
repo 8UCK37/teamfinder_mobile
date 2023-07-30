@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +10,7 @@ import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart' hide Theme;
 import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/services/data_service.dart';
+import 'package:teamfinder_mobile/services/socket_service.dart';
 
 class FriendList extends StatefulWidget {
   const FriendList({super.key});
@@ -20,11 +23,42 @@ class FriendList extends StatefulWidget {
 class _FriendListState extends State<FriendList>
     with SingleTickerProviderStateMixin {
   late List<UserPojo>? friendList = [];
-
+  late Map<String, bool>? onlineMap;
+  final SocketService socketService = SocketService();
+  StreamSubscription<dynamic>? _socketSubscription;
   @override
   void initState() {
     super.initState();
+    socketService.setupSocketConnection();
     _getFriendList();
+    incNoti();
+  }
+  @override
+  void dispose() {
+    // Unsubscribe the listener to avoid memory leaks
+    _socketSubscription?.cancel();
+    super.dispose();
+  }
+  void incNoti() {
+    _socketSubscription = socketService.getIncomingNoti().listen((data) {
+      //DateTime now = DateTime.now();
+      //debugPrint('Received noti from socket: $data');
+      if (data['notification'] == 'disc') {
+        //debugPrint('${data['sender']} disconnected');
+        if (mounted) {
+          setState(() {
+            onlineMap![data['sender']] = false;
+          });
+        }
+      } else if (data['notification'] == 'online') {
+        //debugPrint('${data['sender']} is now online');
+        if (mounted) {
+          setState(() {
+            onlineMap![data['sender']] = true;
+          });
+        }
+      }
+    });
   }
 
   void _getFriendList() async {
@@ -45,22 +79,26 @@ class _FriendListState extends State<FriendList>
         //print(res);
         // Parse the JSON response into a list of PostPojo objects
         List<UserPojo> parsedFriendList = userPojoListFromJson(res);
-        setState(() {
-          friendList = parsedFriendList; // Update the state variable with the parsed list
-        });
-        // Use the postList for further processing or display
-        // ignore: unused_local_variable
-        for (var friend in parsedFriendList) {
-          //print(friend);
-          // ... Access other properties as needed
+        if (mounted) {
+          setState(() {
+            parsedFriendList.sort((a, b) {
+              if (a.isConnected && !b.isConnected) {
+                return -1; // a comes before b
+              } else if (!a.isConnected && b.isConnected) {
+                return 1; // b comes before a
+              } else {
+                return 0; // order remains the same
+              }
+            });
+            onlineMap = {
+              for (var obj in parsedFriendList) obj.id: obj.isConnected
+            };
+
+            friendList =
+                parsedFriendList; // Update the state variable with the parsed list
+          });
         }
-      } else {
-        // Request failed
-        //print('Failed to hit Express backend endpoint');
       }
-    } else {
-      // User not logged in
-      //print('User is not logged in');
     }
   }
 
@@ -130,6 +168,7 @@ class _FriendListState extends State<FriendList>
                     maxRadius: 25,
                     backgroundImage: NetworkImage(friendList![i].profilePicture),
                   ),
+                  if (onlineMap![friendList![i].id]!)
                    const Positioned(
                     right: 1.0,
                     bottom: 0,

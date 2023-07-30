@@ -58,14 +58,8 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  // Future<void> getSteamInfo(String id) async {
-  //   final userService = Provider.of<ProviderService>(context, listen: false);
-  //   debugPrint(userService.user.toString());
-  //   if (userService.user["steamId "] != null) {
-  //     userService.getSteamInfo(id);
-  //   }
-  // }
-
+  
+  
   void fetchFeed() {
     //debugPrint('fetchFeedCalled');
     final userService = Provider.of<ProviderService>(context, listen: false);
