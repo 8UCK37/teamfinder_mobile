@@ -187,7 +187,8 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
           ),
         ),
       ],
-    ));
+    )
+    );
   }
 
   // ignore: non_constant_identifier_names

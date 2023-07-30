@@ -69,7 +69,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     
   }
 
-  Future<void> getFriendPosts() async {
+  void getFriendPosts()  {
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
     profileService.getFriendsPosts(widget.friendId.toString());

@@ -11,9 +11,10 @@ class ProviderService extends ChangeNotifier {
   Map<String, dynamic> user = {}; // Initialize as an empty map
   List<PostPojo>? feed;
   List<PostPojo>? ownPosts;
+  dynamic steamData;
   dynamic twitchData;
   dynamic discordData;
-  bool? darkTheme=false;
+  bool? darkTheme = false;
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -23,6 +24,7 @@ class ProviderService extends ChangeNotifier {
     darkTheme = newValue;
     notifyListeners();
   }
+
   void updateFeed(List<PostPojo> newValue) {
     feed = newValue;
     notifyListeners();
@@ -82,6 +84,35 @@ class ProviderService extends ChangeNotifier {
     }
   }
 
+  void updateSteamInfo(dynamic newValue) {
+    steamData = newValue;
+    notifyListeners();
+  }
+
+  Future<void> getSteamInfo(String id) async {
+    Dio dio = Dio();
+    
+    final userFromFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFromFirebase!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/steamInfo',
+      data: {'steam_id': id},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      if (jsonDecode(response.data) != null) {
+        steamData = jsonDecode(response.data)["info"][0];
+        //debugPrint(steamData.toString());
+        notifyListeners();
+      }
+    }
+  }
+
   void updateTwitchData(dynamic newValue) {
     twitchData = newValue;
     notifyListeners();
@@ -103,8 +134,11 @@ class ProviderService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      twitchData = response.data;
-      notifyListeners();
+      if (response.data != "not logged in") {
+        twitchData = response.data;
+        //debugPrint(twitchData.toString());
+        notifyListeners();
+      }
     }
   }
 
@@ -129,8 +163,11 @@ class ProviderService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      discordData = jsonDecode(response.data);
-      notifyListeners();
+      if (jsonDecode(response.data) != null) {
+        discordData = jsonDecode(response.data)['Discord'];
+        //debugPrint(discordData.toString());
+        notifyListeners();
+      }
     }
   }
 }

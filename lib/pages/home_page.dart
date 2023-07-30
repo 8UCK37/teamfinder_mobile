@@ -58,6 +58,14 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  // Future<void> getSteamInfo(String id) async {
+  //   final userService = Provider.of<ProviderService>(context, listen: false);
+  //   debugPrint(userService.user.toString());
+  //   if (userService.user["steamId "] != null) {
+  //     userService.getSteamInfo(id);
+  //   }
+  // }
+
   void fetchFeed() {
     //debugPrint('fetchFeedCalled');
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -97,8 +105,12 @@ class _HomePageState extends State<HomePage>
         var userData = json.decode(response.body);
         //print(userData);
         userService.updateCurrentUser(userData);
+        debugPrint(userData["steamId"].toString());
         socketService.setupSocketConnection();
         socketService.setSocketId(userData['id']);
+        if (userData["steamId"] != null) {
+          userService.getSteamInfo(userData["steamId"]);
+        }
       } else {
         // Request failed
         debugPrint('Failed to hit Express backend endpoint');
@@ -111,7 +123,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     // ignore: unused_local_variable
     final userData = userService.user;
     _isDark = userService.darkTheme!;
@@ -121,11 +133,11 @@ class _HomePageState extends State<HomePage>
         appBar: AppBar(
           automaticallyImplyLeading: false,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: _isDark? Brightness.light:Brightness.dark
-            
-          ),
-          backgroundColor:_isDark ? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness:
+                  _isDark ? Brightness.light : Brightness.dark),
+          backgroundColor:
+              _isDark ? const Color.fromRGBO(46, 46, 46, 1) : Colors.white,
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -162,7 +174,8 @@ class _HomePageState extends State<HomePage>
                             shape: CircleBorder(),
                             child: CircleAvatar(
                               radius: 20,
-                              backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                              backgroundColor:
+                                  Color.fromRGBO(222, 209, 242, 100),
                               child: Icon(Icons.search, color: Colors.blueGrey),
                             ),
                           ),

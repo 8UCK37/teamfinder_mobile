@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/games_screen.dart';
+import 'package:teamfinder_mobile/pages/menu_pages/linked_acc.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/settings.dart';
-import 'package:teamfinder_mobile/pages/onboarding_page.dart';
 import '../services/auth_service.dart';
 import '../services/data_service.dart';
 
@@ -137,12 +137,12 @@ class MenuTab extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    //TODO currently linked to onboarding page
+                    
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const ConcentricAnimationOnboarding()),
+                              const OwnLinkedAccounts()),
                     );
                   },
                   child: Container(
