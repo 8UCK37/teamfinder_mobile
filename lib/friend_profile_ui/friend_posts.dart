@@ -341,8 +341,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                           child: Icon(
                                             FontAwesomeIcons.discord,
                                             color:
-                                                discordData?['Discord'] !=
-                                                        null
+                                                discordData!=null
                                                     ? const Color
                                                             .fromRGBO(
                                                         114, 137, 218, 1)

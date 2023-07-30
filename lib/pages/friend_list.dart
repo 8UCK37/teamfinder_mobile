@@ -24,7 +24,6 @@ class _FriendListState extends State<FriendList>
   @override
   void initState() {
     super.initState();
-
     _getFriendList();
   }
 
@@ -47,8 +46,7 @@ class _FriendListState extends State<FriendList>
         // Parse the JSON response into a list of PostPojo objects
         List<UserPojo> parsedFriendList = userPojoListFromJson(res);
         setState(() {
-          friendList =
-              parsedFriendList; // Update the state variable with the parsed list
+          friendList = parsedFriendList; // Update the state variable with the parsed list
         });
         // Use the postList for further processing or display
         // ignore: unused_local_variable

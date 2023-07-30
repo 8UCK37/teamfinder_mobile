@@ -215,7 +215,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                   child: SizedBox(
                                       child: Icon(
                                     FontAwesomeIcons.discord,
-                                    color: discordData?['Discord'] != null
+                                    color: discordData!= null
                                         ? const Color.fromARGB(255, 114, 137, 218)
                                         : Colors.black,
                                   )),

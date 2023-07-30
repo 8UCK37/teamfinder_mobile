@@ -75,7 +75,7 @@ class _FriendsTabState extends State<FriendsTab>
         }
       });
       }
-      debugPrint(pendingInc.toString());
+      //debugPrint(pendingInc.toString());
     }
   }
 
