@@ -6,16 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 
 class FriendGamesShowCase extends StatefulWidget {
-  final String? friendName;
-  final String friendId;
-  final String? friendProfileImage;
 
-  const FriendGamesShowCase({
-    super.key,
-    required this.friendId,
-    required this.friendName,
-    required this.friendProfileImage,
-  });
+  const FriendGamesShowCase({super.key});
 
   @override
   State<FriendGamesShowCase> createState() => _FriendGamesShowCaseState();
@@ -39,7 +31,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
   Future<void> _handleRefresh() async {
     final profileService =
         Provider.of<FriendProfileService>(context, listen: false);
-    profileService.getShowCase(widget.friendId.toString());
+    profileService.getShowCase(profileService.friendProfile!.id.toString());
   }
 
   @override
@@ -61,7 +53,7 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                       children: [
                         CircleAvatar(
                           radius: 25,
-                          backgroundImage: NetworkImage(widget.friendProfileImage!)
+                          backgroundImage: NetworkImage(profileService.friendProfile!.profilePicture)
                         ),
                         Row(
                           children: [
@@ -69,8 +61,8 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 showcase.length == 0
-                                    ? "${widget.friendName!} has no favourite games"
-                                    : "${widget.friendName!}'s favourite games",
+                                    ? "${profileService.friendProfile!.name} has no favourite games"
+                                    : "${profileService.friendProfile!.name}'s favourite games",
                                 style:const TextStyle(
                                     color: Colors.deepPurpleAccent,
                                     fontWeight: FontWeight.bold,),   
