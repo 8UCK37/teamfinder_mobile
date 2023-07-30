@@ -61,6 +61,93 @@ class _PostWidgetState extends State<PostWidget>
     return (dump);
   }
 
+
+  void shareSheetBuilder(BuildContext context) {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            //border: Border.all(color: Colors.red),
+          ),
+          height: MediaQuery.of(context).size.height * .8,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 5,
+                      width: 60,
+                      decoration: const BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  decoration: BoxDecoration(border: Border.all(color:Colors.blue)),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(userService
+                                .user["profilePicture"] ??
+                            "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userService.user["name"],
+                              style: const TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
+                            const Text("Sharing to your feed!!",
+                              style:  TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height:50,
+                              width: 50,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(image: AssetImage("assets/images/launch.png"))
+                              ),
+                            )
+                            ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget UserReaction() {
     if (widget.post.noreaction!) {
       return SizedBox(
@@ -185,6 +272,15 @@ class _PostWidgetState extends State<PostWidget>
                   Text(convertToLocalTime(widget.post.createdAt))
                 ],
               ),
+              const Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.more_vert),
+                  ],
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 20.0),
@@ -200,7 +296,6 @@ class _PostWidgetState extends State<PostWidget>
           ),
           if (widget.post.shared != null)
             Container(
-              //color: const Color.fromARGB(110, 222, 221, 221),
               decoration: BoxDecoration(
                 color: userService.darkTheme!
                     ? const Color.fromARGB(255, 80, 80, 80)
@@ -316,7 +411,8 @@ class _PostWidgetState extends State<PostWidget>
                       key: key,
                       onLongPress: () {
                         CustomAnimatedFlutterReaction().showOverlay(
-                          overlaySize: MediaQuery.of(context).size.width * .62,
+                            overlaySize:
+                                MediaQuery.of(context).size.width * .62,
                             context: context,
                             key: key,
                             onReaction: (val) {
@@ -363,11 +459,16 @@ class _PostWidgetState extends State<PostWidget>
                           bottomWidget: Theme(
                             data: ThemeData.light(),
                             child: ChatMessageBar(
-                              messageBarColor:userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):const Color.fromARGB(255, 239, 239, 239),
-                              decoration:  BoxDecoration(
-                                color:  userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):const Color.fromARGB(255, 239, 239, 239),
-                                borderRadius: const BorderRadius.all(Radius.circular(15))
-                              ),
+                              messageBarColor: userService.darkTheme!
+                                  ? const Color.fromARGB(255, 74, 74, 74)
+                                  : const Color.fromARGB(255, 239, 239, 239),
+                              decoration: BoxDecoration(
+                                  color: userService.darkTheme!
+                                      ? const Color.fromARGB(255, 74, 74, 74)
+                                      : const Color.fromARGB(
+                                          255, 239, 239, 239),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(15))),
                               hintText: "   Write a comment here..",
                               textController: _textController,
                               onSend: (String typedMsg) {
@@ -500,7 +601,9 @@ class _PostWidgetState extends State<PostWidget>
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        shareSheetBuilder(context);
+                      },
                       child: const Row(
                         children: <Widget>[
                           Icon(FontAwesomeIcons.share, size: 20.0),
