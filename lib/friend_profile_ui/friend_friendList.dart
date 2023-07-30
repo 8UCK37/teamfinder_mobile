@@ -30,11 +30,21 @@ class _FriendsFriendListState extends State<FriendsFriendList> {
               child: Container(
                 decoration: const BoxDecoration(
                     //border: Border.all(color: Colors.red),
-                    borderRadius: const BorderRadius.all(Radius.circular(15))),
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8,8,8,20),
+                            child: Text("${profileService.friendProfile!.name}'s friend list",
+                            style: const TextStyle(color: Colors.deepPurple,fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      ),
                       CustomGrid(items: friendList),
                     ],
                   ),
@@ -74,14 +84,29 @@ class CustomGrid extends StatelessWidget {
 }
 
 class CustomCard extends StatelessWidget {
-  final dynamic friend;
+  final UserPojo friend;
 
   const CustomCard({Key? key, required this.friend}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
-      elevation: 10,
-    );
+    return Column(
+        children: [
+           Material(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            elevation: 10,
+            child:Container(
+              height: 80,
+              width: 80,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: NetworkImage(friend.profilePicture)),
+                borderRadius:const BorderRadius.all(Radius.circular(10))
+                ),
+            )
+          ),
+           Text(friend.name)
+        ],
+      );
+    
   }
 }

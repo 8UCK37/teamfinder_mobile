@@ -124,9 +124,25 @@ class _FriendListState extends State<FriendList>
                 ),
               const SizedBox(height:20),
               ListTile(
-                leading: CircleAvatar(
-                  maxRadius: 25,
-                  backgroundImage: NetworkImage(friendList![i].profilePicture),
+                leading: Stack(
+                  children:[
+                    CircleAvatar(
+                    maxRadius: 25,
+                    backgroundImage: NetworkImage(friendList![i].profilePicture),
+                  ),
+                   const Positioned(
+                    right: 1.0,
+                    bottom: 0,
+                     child: Material(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      elevation: 10,
+                      child: CircleAvatar(
+                        radius: 7,
+                        backgroundColor:Color.fromARGB(255, 12, 173, 17),
+                      ),
+                                     ),
+                   )
+                  ]
                 ),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
