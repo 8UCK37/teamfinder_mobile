@@ -84,35 +84,39 @@ class _FriendGamesShowCaseState extends State<FriendGamesShowCase> {
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Expanded(
-                    child: showcase.length != 0
-                        ? Column(
-                            children: [
-                              CustomGrid(items: showcase!),
-                            ],
-                          )
-                        :  Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: showcase.length != 0
+                            ? Column(
                                 children: [
-                                  Text("Sadly there's nothing to see here!!😪",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22)),
+                                  CustomGrid(items: showcase!),
+                                ],
+                              )
+                            :  Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Sadly there's nothing to see here!!😪",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22)),
+                                    ],
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    width: 200,
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("assets/images/loneliness.png"))),
+                                  )
                                 ],
                               ),
-                              Container(
-                                height: 200,
-                                width: 200,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("assets/images/loneliness.png"))),
-                              )
-                            ],
-                          ),
+                      ),
+                    ],
                   ),
                 ),
               ),

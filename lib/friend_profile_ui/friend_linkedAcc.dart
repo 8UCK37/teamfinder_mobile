@@ -90,93 +90,101 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
     twitchData = profileService.twitchData;
     discordData = profileService.discordData;
     return SafeArea(
-        child: Expanded(
+        child: Column(
+          children: [
+            Expanded(
       child: Padding(
-        padding: const EdgeInsets.all( 10.0),
-        child: Material(
-          elevation: 15,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          child: Container(
-            decoration: const BoxDecoration(
-                borderRadius:  BorderRadius.all(Radius.circular(20))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+            padding: const EdgeInsets.all( 10.0),
+            child: Material(
+              elevation: 15,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: Container(
+                decoration: const BoxDecoration(
+                    borderRadius:  BorderRadius.all(Radius.circular(20))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
+                    Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0, left: 10),
-                          child: CircleAvatar(
-                              radius: 25,
-                              backgroundImage:
-                                  NetworkImage(profileService.friendProfile!.profilePicture)),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0, left: 10),
+                              child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage:
+                                      NetworkImage(profileService.friendProfile!.profilePicture)),
+                            ),
+                            if (countNulls(steamData, discordData, twitchData) < 3)
+                              CustomPaint(
+                                willChange: true,
+                                painter: _MainLinePainter(yCoordinate: 15),
+                              ),
+                            if (countNulls(steamData, discordData, twitchData) < 2)
+                              CustomPaint(
+                                willChange: true,
+                                painter: _MainLinePainter(yCoordinate: 165),
+                              ),
+                            if (countNulls(steamData, discordData, twitchData) == 0)
+                              CustomPaint(
+                                willChange: true,
+                                painter: _MainLinePainter(yCoordinate: 310),
+                              ),
+                          ],
                         ),
-                        if (countNulls(steamData, discordData, twitchData) < 3)
-                          CustomPaint(
-                            willChange: true,
-                            painter: _MainLinePainter(yCoordinate: 15),
-                          ),
-                        if (countNulls(steamData, discordData, twitchData) < 2)
-                          CustomPaint(
-                            willChange: true,
-                            painter: _MainLinePainter(yCoordinate: 165),
-                          ),
-                        if (countNulls(steamData, discordData, twitchData) == 0)
-                          CustomPaint(
-                            willChange: true,
-                            painter: _MainLinePainter(yCoordinate: 310),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(left:15.0),
+                          child: Text(countNulls(steamData, twitchData, discordData)!=3
+                          ?"${profileService.friendProfile!.name}'s associated accounts"
+                          :"${profileService.friendProfile!.name} currently has no account linked!!",
+                          style: const TextStyle(
+                            color: Colors.deepPurpleAccent,
+                            fontWeight: FontWeight.bold),
+                            ),
+                        )
                       ],
+                      
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left:15.0),
-                      child: Text(countNulls(steamData, twitchData, discordData)!=3
-                      ?"${profileService.friendProfile!.name}'s associated accounts"
-                      :"${profileService.friendProfile!.name} currently has no account linked!!",
-                      style: const TextStyle(
-                        color: Colors.deepPurpleAccent,
-                        fontWeight: FontWeight.bold),
+                      padding: const EdgeInsets.only(left: 58, top: 15, right: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                if (steamData != null) 
+                                  AccountCard(steamData, "steam"),
+                                if (discordData != null)
+                                  AccountCard(discordData, "discord"),
+                                if (twitchData != null) 
+                                  AccountCard(twitchData, "twitch"),
+                                
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (countNulls(steamData, twitchData, discordData) == 3)
+                      Center(
+                        child: Container(
+                          height: 200,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("assets/images/sad.png"),
+                                  fit: BoxFit.fill)),
                         ),
-                    )
+                      )
                   ],
-                  
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 58, top: 15, right: 10),
-                  child: Expanded(
-                    child: Column(
-                      children: [
-                        if (steamData != null) 
-                          AccountCard(steamData, "steam"),
-                        if (discordData != null)
-                          AccountCard(discordData, "discord"),
-                        if (twitchData != null) 
-                          AccountCard(twitchData, "twitch"),
-                        
-                      ],
-                    ),
-                  ),
-                ),
-                if (countNulls(steamData, twitchData, discordData) == 3)
-                  Center(
-                    child: Container(
-                      height: 200,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("assets/images/sad.png"),
-                              fit: BoxFit.fill)),
-                    ),
-                  )
-              ],
+              ),
             ),
-          ),
-        ),
       ),
-    ));
+    ),
+          ],
+        ));
   }
 
   // ignore: non_constant_identifier_names
