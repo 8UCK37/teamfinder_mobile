@@ -22,7 +22,7 @@ class WriteSomethingWidget extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 28.0,
-                  backgroundImage: NetworkImage(userData['profilePicture'] ?? ''),
+                  backgroundImage: NetworkImage(userData['profilePicture']?? "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
                 ),
 
                 const SizedBox(width: 7.0),
