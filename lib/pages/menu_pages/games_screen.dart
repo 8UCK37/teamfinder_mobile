@@ -200,7 +200,7 @@ class _GamesPageState extends State<GamesPage> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Material(
-                  color: Colors.deepOrange,
+                  //color: Colors.deepOrange,
                   elevation: 15, // Elevation level
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: Padding(
