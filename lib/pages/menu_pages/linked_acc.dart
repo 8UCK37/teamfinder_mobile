@@ -232,8 +232,8 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
                                 countNulls(steamData, twitchData,
                                             discordData) !=
                                         3
-                                    ? "${userService.user["name"]}'s associated accounts"
-                                    : "${userService.user["name"]} currently has no account linked!!",
+                                    ? "Your associated accounts"
+                                    : "You currently have no account linked!!",
                                 style: const TextStyle(
                                     color: Colors.deepPurpleAccent,
                                     fontWeight: FontWeight.bold),
@@ -271,6 +271,7 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
                                       image:
                                           AssetImage("assets/images/sad.png"),
                                       fit: BoxFit.fill)),
+                              child: const Text("Tap on the button to add connections"),
                             ),
                           )
                       ],
@@ -280,7 +281,27 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
               ),
             ),
           ],
-        )),
+        )
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Container(
+          height:50,
+          width:200,
+          decoration: const BoxDecoration(
+            color:Color.fromARGB(255, 0, 212, 145),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(children: [
+              Icon(Icons.library_add),
+              Padding(
+                padding: EdgeInsets.only(left:8.0),
+                child: Text("Add Connections/All",
+                style: TextStyle(color: Colors.black),),
+              )
+            ],),
+          ),
+        ),
       ),
     );
   }
@@ -401,13 +422,13 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
                           decoration: BoxDecoration(
                               color: userService.darkTheme!
                                   ? const Color.fromRGBO(50, 38, 83, 1.0)
-                                  : Color.fromARGB(255, 22, 224, 224),
+                                  : const Color.fromARGB(255, 22, 224, 224),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Visit ${brand}Profile",
+                              "Go to ${brand}Profile",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
