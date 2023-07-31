@@ -516,11 +516,16 @@ class _PostWidgetState extends State<PostWidget>
                     ),
                     GestureDetector(
                       onTap: () {
-                        showModalBottomSheet(
+                        showModalBottomSheet<dynamic>(
                           context: context,
+                          isScrollControlled: true,
                           backgroundColor: Colors.transparent,
                           builder: (BuildContext context) {
-                            return ShareBottomSheet();
+                            return const Wrap(
+                              children:[
+                              ShareBottomSheet()
+                              ]
+                            );
                           },
                         );
                       },
