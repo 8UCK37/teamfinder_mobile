@@ -234,7 +234,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       ),
                     ],
                   ),
-                  const Divider(),
+                  Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
@@ -283,7 +283,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       ],
                     ),
                   ),
-                  const Divider(
+                  Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey,
                     height: 0.0,
                   ),
                   Container(
@@ -359,7 +359,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       ],
                     ),
                   ),
-                  const Divider(height: 40.0),
+                  Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey,height: 40.0),
                   Container(
                     //padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(

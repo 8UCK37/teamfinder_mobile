@@ -38,9 +38,9 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin<Ho
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const Divider(),
+            Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
             const OnlineWidget(),
-            SeparatorWidget(),
+            SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
             const WriteSomethingWidget(),
             if (postList != null) // Add a null check here
               for (PostPojo post in postList!) // Add a null check here
@@ -50,7 +50,7 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin<Ho
                     PostWidget(post: post),
                   ],
                 ),
-            SeparatorWidget(),
+            SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
           ],
         ),
       ),

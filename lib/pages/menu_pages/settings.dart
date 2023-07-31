@@ -56,8 +56,8 @@ class _SettingsPageState extends State<SettingsPage> {
             statusBarIconBrightness: _isDark? Brightness.light:Brightness.dark
             
           ),
-          backgroundColor:
-              _isDark ? const Color.fromRGBO(46, 46, 46, 100) : Colors.white,
+          backgroundColor: _isDark ? const Color.fromRGBO(46, 46, 46, 100) : Colors.white,
+          iconTheme: IconThemeData(color: _isDark ?Colors.white:Colors.deepPurple),
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

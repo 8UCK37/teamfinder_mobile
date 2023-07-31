@@ -94,9 +94,9 @@ class MenuTab extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
-            child: Divider(height: 20.0),
+           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Divider(height: 20.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
           ),
           Container(
             padding:

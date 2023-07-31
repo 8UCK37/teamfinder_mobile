@@ -158,7 +158,7 @@ class _FriendsTabState extends State<FriendsTab>
                   )
                 ],
               ),
-              const Divider(height: 30.0),
+              Divider(height: 30.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
               Row(
                 children: <Widget>[
                   const Text('Incoming Friend Requests',
@@ -174,7 +174,7 @@ class _FriendsTabState extends State<FriendsTab>
               ),
               const SizedBox(height: 20.0),
               for (dynamic user in pendingInc) pendingIncReq(user, true),
-              const Divider(height: 30.0),
+              Divider(height: 30.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
               Container(
                 key: _suggestionWidgetKey,
                 child: const Text('People You May Know',
@@ -243,7 +243,7 @@ class _FriendsTabState extends State<FriendsTab>
               ),
               const SizedBox(height: 20.0),
               for (dynamic user in pendingOut) pendingIncReq(user, false),
-              const Divider(height: 30.0),
+              Divider(height: 30.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
             ],
           )),
     );
