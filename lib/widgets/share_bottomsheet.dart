@@ -47,9 +47,9 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
     final userService = Provider.of<ProviderService>(context, listen: false);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration:  BoxDecoration(
+        color: userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 1):Colors.white,
+        borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         //border: Border.all(color: Colors.red),
       ),
@@ -74,74 +74,71 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Container(
-              //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(userService
+                                  .user["profilePicture"] ??
+                              "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userService.user["name"],
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const Text(
+                                "Sharing to your feed!!",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    sharePost();
+                  },
+                  child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(userService
-                                    .user["profilePicture"] ??
-                                "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  userService.user["name"],
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  "Sharing to your feed!!",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              ],
-                            ),
-                          ),
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/launch.png"))),
+                          )
                         ],
+                      ),
+                      const Text(
+                        "Share Now",
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      sharePost();
-                    },
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/launch.png"))),
-                            )
-                          ],
-                        ),
-                        const Text(
-                          "Share Now",
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
           Row(
@@ -188,14 +185,14 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
               color: userService.darkTheme! ? Colors.white : Colors.grey),
           Column(
             children: [
-              const Row(
+               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Or Share via...",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: userService.darkTheme!? Colors.white:const Color.fromRGBO(46, 46, 46, 1),
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
