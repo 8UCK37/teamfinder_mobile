@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
 class ShareBottomSheet extends StatefulWidget {
@@ -10,7 +12,7 @@ class ShareBottomSheet extends StatefulWidget {
 }
 
 class _ShareBottomSheetState extends State<ShareBottomSheet> {
-  double height = .55;
+  double height = .68;
   late TextEditingController textController;
   final FocusNode _focusNode = FocusNode();
   @override
@@ -23,6 +25,21 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
   void dispose() {
     super.dispose();
     textController.dispose();
+  }
+
+  void sharePost() {
+    if (textController.text.length != 0) {
+      debugPrint(textController.text);
+    } else {
+      debugPrint("field is empty i.e quick share");
+    }
+    QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: 'Post Shared!!!',
+          //autoCloseDuration: const Duration(seconds: 2),
+        );
+    //Navigator.of(context).pop();
   }
 
   @override
@@ -96,69 +113,120 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                       )
                     ],
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/launch.png"))),
-                          )
-                        ],
-                      ),
-                      const Text("Share",
-                      style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      sharePost();
+                    },
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/launch.png"))),
+                            )
+                          ],
+                        ),
+                        const Text(
+                          "Share Now",
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
             ),
           ),
-          Container(
-            //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFieldTapRegion(
+                    onTapInside: (event) {
+                      setState(() {
+                        height = .88;
+                      });
+                    },
+                    onTapOutside: (event) {
+                      setState(() {
+                        _focusNode.unfocus();
+                        height = .68;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      //decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
+                      height: 230,
+                      width: MediaQuery.of(context).size.width - 25,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                        child: TextField(
+                          focusNode: _focusNode,
+                          controller: textController,
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                              hintText: "Add a post description here...",
+                              border: InputBorder.none),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Divider(
+              height: 0,
+              color: userService.darkTheme! ? Colors.white : Colors.grey),
+          Column(
+            children: [
+              const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Or Share via...",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextFieldTapRegion(
-                        onTapInside: (event) {
-                          setState(() {
-                            height = .88;
-                          });
-                        },
-                        onTapOutside: (event) {
-                          setState(() {
-                            _focusNode.unfocus();
-                            height = .7;
-                          });
-                        },
-                        child: SizedBox(
-                          //decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
-                          height: 230,
-                          width: MediaQuery.of(context).size.width - 25,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 15.0, right: 15.0),
-                            child: TextField(
-                              focusNode: _focusNode,
-                              controller: textController,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                  hintText: "Add a post description here...",
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                        ))
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: AssetImage("assets/images/whatsapp.png"),
+                    ),
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage:
+                          AssetImage("assets/images/messenger.png"),
+                    ),
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: AssetImage("assets/images/telegram.png"),
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Divider(
+                  height: 0,
+                  color: userService.darkTheme! ? Colors.white : Colors.grey),
+            ],
           )
         ],
       ),

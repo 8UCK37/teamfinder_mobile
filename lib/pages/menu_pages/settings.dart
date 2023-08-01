@@ -8,8 +8,10 @@ import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
+// ignore: must_be_immutable
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  bool isDarkCurrent;
+  SettingsPage({Key? key, required this.isDarkCurrent}) : super(key: key);
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -17,7 +19,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late SharedPreferences _preferences;
-  late bool _isDark ;
+  late bool _isDark=widget.isDarkCurrent;
   @override
   void initState() {
     super.initState();
@@ -44,6 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
       _saveThemeValue(isDarkModeEnabled);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -52,12 +55,13 @@ class _SettingsPageState extends State<SettingsPage> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: _isDark? Brightness.light:Brightness.dark
-            
-          ),
-          backgroundColor: _isDark ? const Color.fromRGBO(46, 46, 46, 100) : Colors.white,
-          iconTheme: IconThemeData(color: _isDark ?Colors.white:Colors.deepPurple),
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness:
+                  _isDark ? Brightness.light : Brightness.dark),
+          backgroundColor:
+              _isDark ? const Color.fromRGBO(46, 46, 46, 100) : Colors.white,
+          iconTheme:
+              IconThemeData(color: _isDark ? Colors.white : Colors.deepPurple),
           title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -138,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: "General",
                   children: [
                     ListTile(
-                      title: Text(_isDark?"Dark Mode":"Light Mode"),
+                      title: Text(_isDark ? "Dark Mode" : "Light Mode"),
                       leading: DayNightSwitcherIcon(
                         isDarkModeEnabled: _isDark,
                         onStateChanged: onStateChanged,
