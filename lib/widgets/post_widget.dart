@@ -205,7 +205,7 @@ class _PostWidgetState extends State<PostWidget>
                 widget.post.mention?.list.length != 0
                     ? parseDescription(
                         widget.post.description!, widget.post.mention!)
-                    : widget.post.description!,
+                    : widget.post.description??"",
                 style: const TextStyle(fontSize: 15.0)),
           ),
           if (widget.post.shared != null)
@@ -521,9 +521,9 @@ class _PostWidgetState extends State<PostWidget>
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
                           builder: (BuildContext context) {
-                            return const Wrap(
+                            return Wrap(
                               children:[
-                              ShareBottomSheet()
+                              ShareBottomSheet(post: widget.post,)
                               ]
                             );
                           },
