@@ -58,6 +58,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       );
       if (response.statusCode == 200) {
         final userService =
+            // ignore: use_build_context_synchronously
             Provider.of<ProviderService>(context, listen: false);
             userService.getOwnPost();
         // ignore: use_build_context_synchronously

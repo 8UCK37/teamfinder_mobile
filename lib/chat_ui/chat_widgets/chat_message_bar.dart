@@ -45,6 +45,7 @@ class ChatMessageBar extends StatelessWidget {
   final void Function(String)? onTextChanged;
   final void Function(String)? onSend;
   final void Function()? onTapCloseReply;
+  final FocusNode? focusNode;
 
   /// [MessageBar] constructor
   ///
@@ -62,8 +63,9 @@ class ChatMessageBar extends StatelessWidget {
     this.onTextChanged,
     this.onSend,
     this.onTapCloseReply,
-    this.hintText, 
+    this.hintText,
     this.decoration,
+    this.focusNode
   });
 
   /// [MessageBar] builder method
@@ -115,8 +117,10 @@ class ChatMessageBar extends StatelessWidget {
                 )
               : Container(),
           Container(
-            decoration: decoration?? BoxDecoration(
-                color: messageBarColor,),
+            decoration: decoration ??
+                BoxDecoration(
+                  color: messageBarColor,
+                ),
             padding: const EdgeInsets.symmetric(
               vertical: 8,
               horizontal: 16,
@@ -126,6 +130,7 @@ class ChatMessageBar extends StatelessWidget {
                 ...actions,
                 Expanded(
                   child: TextField(
+                    focusNode: focusNode,
                     controller: textController,
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,

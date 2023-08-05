@@ -12,7 +12,8 @@ import 'package:teamfinder_mobile/services/data_service.dart';
 class CommentObj extends StatefulWidget {
   final int postId;
   final bool showLines;
-  const CommentObj({super.key, required this.postId, required this.showLines});
+  final FocusNode chatFocus;
+  const CommentObj({super.key, required this.postId, required this.showLines, required this.chatFocus});
 
   @override
   State<CommentObj> createState() => _CommentObjState();
@@ -132,35 +133,38 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:false);
+    final userService = Provider.of<ProviderService>(context, listen: false);
     return Column(
       children: <Widget>[
-    if(!showLoading)
-      const Divider(thickness: 4,),
-    if (showLoading)
-      ColorfulLinearProgressIndicator(
-        colors: const [
-          Colors.red,
-          Colors.green,
-          Colors.blue,
-          Colors.yellow,
-          Colors.purple,
-          Colors.orange,
-        ],
-        duration: Duration(milliseconds: 500),
-        initialColor: Colors.red,
-      ),
-    if(!showLoading && commentTree.length == 0)
-      Text('There are currently no comments for this post!!'),
-    if (commentTree.length != 0)
-      for (CommentPojo parentComment in commentTree)
-        commentBox(parentComment, 18, true, true, widget.showLines,userService.darkTheme!),
+        if (!showLoading)
+          const Divider(
+            thickness: 4,
+          ),
+        if (showLoading)
+          ColorfulLinearProgressIndicator(
+            colors: const [
+              Colors.red,
+              Colors.green,
+              Colors.blue,
+              Colors.yellow,
+              Colors.purple,
+              Colors.orange,
+            ],
+            duration: Duration(milliseconds: 500),
+            initialColor: Colors.red,
+          ),
+        if (!showLoading && commentTree.length == 0)
+          Text('There are currently no comments for this post!!'),
+        if (commentTree.length != 0)
+          for (CommentPojo parentComment in commentTree)
+            commentBox(parentComment, 18, true, true, widget.showLines,
+                userService.darkTheme!),
       ],
     );
   }
 
   Widget commentBox(CommentPojo comment, double radius, bool isFirst,
-      bool isLast, bool showLine,bool isDark) {
+      bool isLast, bool showLine, bool isDark) {
     return SizedBox(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,12 +214,11 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
               children: [
                 Card(
                   elevation: 0,
-                  surfaceTintColor: isDark 
-                          ?Color.fromARGB(255, 80, 80, 80)
-                          :Colors.grey,
-                  color: isDark 
-                          ?Color.fromARGB(255, 80, 80, 80)
-                          :Color.fromARGB(255, 241, 239, 239),
+                  surfaceTintColor:
+                      isDark ? Color.fromARGB(255, 80, 80, 80) : Colors.grey,
+                  color: isDark
+                      ? Color.fromARGB(255, 80, 80, 80)
+                      : Color.fromARGB(255, 241, 239, 239),
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Column(
@@ -244,11 +247,20 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                         'Like',
                         style: TextStyle(fontSize: 13),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 18.0),
-                        child: Text(
-                          'Reply',
-                          style: TextStyle(fontSize: 13),
+                      GestureDetector(
+                        onTap: () {
+                          final userService = Provider.of<ProviderService>(
+                              context,
+                              listen: false);
+                          userService.updateReplyingTo(comment.id!);
+                          widget.chatFocus.requestFocus();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 18.0),
+                          child: Text(
+                            'Reply',
+                            style: TextStyle(fontSize: 13),
+                          ),
                         ),
                       ),
                       if (comment.children!.length != 0)
@@ -282,7 +294,8 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                             index == 0,
                             index ==
                                 comment.children!.length - 1, // isFirst or no
-                            showLine,isDark),
+                            showLine,
+                            isDark),
                     ],
                   ),
               ],

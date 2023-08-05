@@ -15,6 +15,7 @@ class ProviderService extends ChangeNotifier {
   dynamic twitchData;
   dynamic discordData;
   bool? darkTheme = false;
+  int? replyingTo;
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -22,6 +23,11 @@ class ProviderService extends ChangeNotifier {
 
   void updateTheme(bool newValue) {
     darkTheme = newValue;
+    notifyListeners();
+  }
+  
+  void updateReplyingTo(int? newValue) {
+    replyingTo = newValue;
     notifyListeners();
   }
 
@@ -91,7 +97,7 @@ class ProviderService extends ChangeNotifier {
 
   Future<void> getSteamInfo(String id) async {
     Dio dio = Dio();
-    
+
     final userFromFirebase = FirebaseAuth.instance.currentUser;
     final idToken = await userFromFirebase!.getIdToken();
     Options options = Options(
