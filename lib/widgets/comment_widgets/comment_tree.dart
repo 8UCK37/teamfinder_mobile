@@ -5,6 +5,7 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:keyboard_service/keyboard_service.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/comment_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
@@ -13,7 +14,11 @@ class CommentObj extends StatefulWidget {
   final int postId;
   final bool showLines;
   final FocusNode chatFocus;
-  const CommentObj({super.key, required this.postId, required this.showLines, required this.chatFocus});
+  const CommentObj(
+      {super.key,
+      required this.postId,
+      required this.showLines,
+      required this.chatFocus});
 
   @override
   State<CommentObj> createState() => _CommentObjState();
@@ -253,7 +258,17 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                               context,
                               listen: false);
                           userService.updateReplyingTo(comment.id!);
-                          widget.chatFocus.requestFocus();
+                          if (widget.chatFocus.hasFocus && !KeyboardService.isVisible(context)){
+                            widget.chatFocus.unfocus();
+                            Future.delayed(Duration.zero, () {
+                              widget.chatFocus.requestFocus();
+                            });
+                          } else if ( widget.chatFocus.hasFocus && KeyboardService.isVisible(context)){
+                            widget.chatFocus.unfocus();
+                          }
+                          else {
+                            widget.chatFocus.requestFocus();
+                          }
                         },
                         child: Padding(
                           padding: EdgeInsets.only(left: 18.0),
