@@ -128,7 +128,7 @@ class FlexibleBottomSheet extends StatefulWidget {
     this.onDismiss,
     this.keyboardBarrierColor,
     this.bottomSheetColor,
-    this.draggableScrollableController, 
+    this.draggableScrollableController,
     required this.bottomWidget,
   })  : assert(minHeight >= 0 && minHeight <= 1),
         assert(maxHeight > 0 && maxHeight <= 1),
@@ -157,25 +157,24 @@ class FlexibleBottomSheet extends StatefulWidget {
     Color? bottomSheetColor,
     required Widget bottomWidget,
   }) : this(
-          key: key,
-          maxHeight: maxHeight,
-          draggableScrollableController: draggableScrollableController,
-          builder: builder,
-          headerBuilder: headerBuilder,
-          bodyBuilder: bodyBuilder,
-          minHeight: 0,
-          initHeight: initHeight,
-          isCollapsible: true,
-          isExpand: isExpand,
-          animationController: animationController,
-          anchors: anchors,
-          minHeaderHeight: minHeaderHeight,
-          maxHeaderHeight: maxHeaderHeight,
-          decoration: decoration,
-          keyboardBarrierColor: keyboardBarrierColor,
-          bottomSheetColor: bottomSheetColor,
-          bottomWidget: bottomWidget
-        );
+            key: key,
+            maxHeight: maxHeight,
+            draggableScrollableController: draggableScrollableController,
+            builder: builder,
+            headerBuilder: headerBuilder,
+            bodyBuilder: bodyBuilder,
+            minHeight: 0,
+            initHeight: initHeight,
+            isCollapsible: true,
+            isExpand: isExpand,
+            animationController: animationController,
+            anchors: anchors,
+            minHeaderHeight: minHeaderHeight,
+            maxHeaderHeight: maxHeaderHeight,
+            decoration: decoration,
+            keyboardBarrierColor: keyboardBarrierColor,
+            bottomSheetColor: bottomSheetColor,
+            bottomWidget: bottomWidget);
 
   @override
   _FlexibleBottomSheetState createState() => _FlexibleBottomSheetState();
@@ -458,13 +457,13 @@ class _ContentState extends State<_Content> {
                 topLeft: Radius.circular(15), topRight: Radius.circular(15))),
         child: Container(
           decoration: BoxDecoration(
-            color: userService.darkTheme!
-                ? const Color.fromRGBO(46, 46, 46, 1)
-                : Colors.white,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+              color: userService.darkTheme!
+                  ? const Color.fromRGBO(46, 46, 46, 1)
+                  : Colors.white,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15))),
           child: Padding(
-            padding: const EdgeInsets.only(top:15.0),
+            padding: const EdgeInsets.only(top: 15.0),
             child: Scaffold(
                 body: CustomScrollView(
                   cacheExtent: widget.cacheExtent,
@@ -477,8 +476,8 @@ class _ContentState extends State<_Content> {
                         delegate: FlexibleBottomSheetHeaderDelegate(
                           minHeight: widget.minHeaderHeight ?? 0.0,
                           maxHeight: widget.maxHeaderHeight ?? 1.0,
-                          child:
-                              widget.headerBuilder!(context, widget.currentExtent),
+                          child: widget.headerBuilder!(
+                              context, widget.currentExtent),
                         ),
                       ),
                     if (widget.bodyBuilder != null)
@@ -492,12 +491,14 @@ class _ContentState extends State<_Content> {
                 ),
                 bottomNavigationBar: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    if (constraints.maxHeight < 66) {
-                      return Container(); 
+                    if (constraints.maxHeight < 220) {
+                      return Container();
                     } else {
-                      return SizedBox(
-                        height: 66,
-                        child: widget.bottomWidget,
+                      return ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 0,maxHeight:220),
+                        child: IntrinsicHeight(
+                          child: OverflowBox(child: widget.bottomWidget),
+                        ),
                       );
                     }
                   },

@@ -46,27 +46,28 @@ class ChatMessageBar extends StatelessWidget {
   final void Function(String)? onSend;
   final void Function()? onTapCloseReply;
   final FocusNode? focusNode;
+  final int? maxLines;
 
   /// [MessageBar] constructor
   ///
   ///
-  ChatMessageBar({
-    this.replying = false,
-    this.replyingTo = "",
-    this.actions = const [],
-    required this.textController,
-    this.replyWidgetColor = const Color(0xffF4F4F5),
-    this.replyIconColor = Colors.blue,
-    this.replyCloseColor = Colors.black12,
-    this.messageBarColor = const Color(0xffF4F4F5),
-    this.sendButtonColor = Colors.blue,
-    this.onTextChanged,
-    this.onSend,
-    this.onTapCloseReply,
-    this.hintText,
-    this.decoration,
-    this.focusNode
-  });
+  ChatMessageBar(
+      {this.replying = false,
+      this.replyingTo = "",
+      this.actions = const [],
+      required this.textController,
+      this.replyWidgetColor = const Color(0xffF4F4F5),
+      this.replyIconColor = Colors.blue,
+      this.replyCloseColor = Colors.black12,
+      this.messageBarColor = const Color(0xffF4F4F5),
+      this.sendButtonColor = Colors.blue,
+      this.onTextChanged,
+      this.onSend,
+      this.onTapCloseReply,
+      this.hintText,
+      this.decoration,
+      this.focusNode,
+      this.maxLines});
 
   /// [MessageBar] builder method
   ///
@@ -135,13 +136,13 @@ class ChatMessageBar extends StatelessWidget {
                     keyboardType: TextInputType.multiline,
                     textCapitalization: TextCapitalization.sentences,
                     minLines: 1,
-                    maxLines: 3,
+                    maxLines: maxLines?? 3,
                     onChanged: onTextChanged,
                     decoration: InputDecoration(
-                      hintText: hintText ?? "   Type your message here",
+                      hintText: hintText ?? "Type your message here",
                       hintMaxLines: 1,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 10),
+                          horizontal: 20.0, vertical: 5),
                       hintStyle: const TextStyle(
                         fontSize: 16,
                       ),

@@ -33,18 +33,12 @@ class _PostWidgetState extends State<PostWidget>
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
-  }
-
-  void parentMethod() {
-    // This method will be triggered from the child widget
-    debugPrint("Parent method triggered!");
   }
 
   String convertToLocalTime(DateTime dateTime) {
@@ -395,6 +389,7 @@ class _PostWidgetState extends State<PostWidget>
                             data: ThemeData.light(),
                             child: ChatMessageBar(
                               focusNode: chatTextArea,
+                              maxLines: 10,
                               messageBarColor: userService.darkTheme!
                                   ? const Color.fromARGB(255, 74, 74, 74)
                                   : const Color.fromARGB(255, 239, 239, 239),
@@ -405,7 +400,7 @@ class _PostWidgetState extends State<PostWidget>
                                           255, 239, 239, 239),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(15))),
-                              hintText: "   Write a comment here..",
+                              hintText: "Write a comment here..",
                               textController: _textController,
                               onSend: (String typedMsg) {
                                 debugPrint(typedMsg);
