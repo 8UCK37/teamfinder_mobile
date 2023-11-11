@@ -105,7 +105,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           Text(userData['name'],
                               style: const TextStyle(
                                   fontSize: 24.0, fontWeight: FontWeight.bold)),
-                          Text(userData['bio'],
+                          Text(userData['bio']?? 'No Bio Given',
                               softWrap: true,
                               style: const TextStyle(
                                   fontSize: 15.0, fontWeight: FontWeight.normal))
@@ -128,7 +128,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         children: <Widget>[
                           const Icon(Icons.person_pin_circle,
                               color: Colors.green, size: 32.0),
-                          Text(' ${userData['userInfo']['Country']}',
+                          Text(userData['userInfo']['Country']?? 'No Info Given',
                               style: const TextStyle(fontSize: 16.0))
                         ],
                       ),
