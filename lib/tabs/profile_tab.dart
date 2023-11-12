@@ -126,8 +126,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     children: [
                       Row(
                         children: <Widget>[
-                          const Icon(Icons.person_pin_circle,
-                              color: Colors.green, size: 32.0),
+                          Image.asset("assets/images/icons8_location.png",
+                          scale:3.5,),
                           Text(userData['userInfo']['Country']?? 'No Info Given',
                               style: const TextStyle(fontSize: 16.0))
                         ],
@@ -135,19 +135,22 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       const SizedBox(width: 15.0),
                       Row(
                         children: <Widget>[
-                          const Icon(Icons.record_voice_over,
-                              color: Colors.blue, size: 30.0),
+                          // const Icon(Icons.record_voice_over,
+                          //     color: Colors.blue, size: 30.0),
+                          Image.asset("assets/images/speaking_right.png",
+                          scale:3.5,),
                           const SizedBox(width: 10.0),
                           Text('${userData['userInfo']['Language']}',
                               style: const TextStyle(fontSize: 16.0))
                         ],
                       ),
                       const SizedBox(width: 15.0),
-                      const Row(
+                      Row(
                         children: <Widget>[
-                          Icon(Icons.share, color: Colors.blue, size: 30.0),
-                          SizedBox(width: 10.0),
-                          Text('Share', style: TextStyle(fontSize: 16.0))
+                          Image.asset("assets/images/icons8_share.png",
+                          scale:3.5,),
+                          const SizedBox(width: 10.0),
+                          const Text('Share', style: TextStyle(fontSize: 16.0))
                         ],
                       ),
                     ],

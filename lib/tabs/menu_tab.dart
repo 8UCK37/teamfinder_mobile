@@ -53,7 +53,7 @@ class MenuTab extends StatelessWidget {
                               GestureDetector(
                                 // ignore: avoid_unnecessary_containers
                                 child: Container(
-                                  //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
+                                  decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.start,
