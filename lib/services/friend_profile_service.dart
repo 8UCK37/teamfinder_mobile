@@ -19,6 +19,9 @@ class FriendProfileService extends ChangeNotifier {
   String friendStatus = "default";
 
   void erasePreviousProfile() {
+    if(friendProfile==null){
+      return;
+    }
     friendPostList = [];
     friendList = [];
     friendProfile = null;
@@ -162,6 +165,7 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
+      debugPrint(discordData.toString());
       if (jsonDecode(response.data) != null) {
         discordData = jsonDecode(response.data)['Discord'];
         //debugPrint(discordData.toString());

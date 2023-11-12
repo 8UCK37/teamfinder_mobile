@@ -44,83 +44,102 @@ class MenuTab extends StatelessWidget {
                       : Colors.deepPurpleAccent,
                   child: Row(
                     children: <Widget>[
-                      //const SizedBox(height:15,width: 15.0),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: CircleAvatar(
-                          radius: 25.0,
-                          backgroundImage:
-                              NetworkImage(userData['profilePicture']),
-                        ),
-                      ),
-                      //const SizedBox(width: 20.0),
                       Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(userData['name'],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0)),
-                                  //const SizedBox(height: 5.0),
-                                  GestureDetector(
-                                    onTap: () => {tabController.animateTo(1)},
-                                    child: const Text(
-                                      'See your profile',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
+                        child: GestureDetector(
+                          onTap: () =>{tabController.animateTo(1)},
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                // ignore: avoid_unnecessary_containers
+                                child: Container(
+                                  //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0,top:7.5,bottom:7.5),
+                                        child: CircleAvatar(
+                                          radius: 25.0,
+                                          backgroundImage: NetworkImage(
+                                              userData['profilePicture']),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(userData['name'],
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0)),
+                                            //const SizedBox(height: 5.0),
+                                            const Text(
+                                              'See your profile',
+                                              style: TextStyle(
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            //const SizedBox(width: 120),
-                            GestureDetector(
-                              onTap: () => {
-                                //AuthService().signOut(context);
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.confirm,
-                                  text: 'Do you want to logout',
-                                  confirmBtnText: 'Yes',
-                                  cancelBtnText: 'No',
-                                  confirmBtnColor: Colors.white,
-                                  backgroundColor: Colors.black,
-                                  confirmBtnTextStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  barrierColor: const Color.fromARGB(107, 0, 0, 0),
-                                  titleColor: Colors.white,
-                                  textColor: Colors.white,
-                                  onConfirmBtnTap: () {
-                                    AuthService().signOut(context);
-                                  },
-                                )
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.logout,
-                                        size: 30.0,
-                                        color:
-                                            Color.fromARGB(255, 182, 86, 86)),
-                                    Center(
-                                        child: Text('Logout',
-                                            style: TextStyle(fontSize: 15.0))),
-                                  ],
                                 ),
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // ignore: avoid_unnecessary_containers
+                      Container(
+                        //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                        child: GestureDetector(
+                          onTap: () => {
+                            //AuthService().signOut(context);
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.confirm,
+                              text: 'Do you want to logout',
+                              confirmBtnText: 'Yes',
+                              cancelBtnText: 'No',
+                              confirmBtnColor: Colors.white,
+                              backgroundColor: Colors.black,
+                              confirmBtnTextStyle: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              barrierColor:
+                                  const Color.fromARGB(107, 0, 0, 0),
+                              titleColor: Colors.white,
+                              textColor: Colors.white,
+                              onConfirmBtnTap: () {
+                                AuthService().signOut(context);
+                              },
+                            )
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.logout,
+                                    size: 30.0,
+                                    color:
+                                        Color.fromARGB(255, 182, 86, 86)),
+                                Center(
+                                    child: Text('Logout',
+                                        style: TextStyle(fontSize: 15.0))),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ],
@@ -248,7 +267,8 @@ class MenuTab extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SettingsPage(isDarkCurrent: userService.darkTheme!)),
+                          builder: (context) => SettingsPage(
+                              isDarkCurrent: userService.darkTheme!)),
                     );
                   },
                   child: Container(

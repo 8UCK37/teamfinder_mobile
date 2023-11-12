@@ -42,7 +42,6 @@ class _PostWidgetState extends State<PostWidget>
     super.dispose();
   }
 
-  
   String convertToLocalTime(DateTime dateTime) {
     DateTime localDateTime = dateTime.toLocal();
     String formattedTime =
@@ -179,9 +178,22 @@ class _PostWidgetState extends State<PostWidget>
         children: <Widget>[
           Row(
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(widget.post.profilePicture!),
-                radius: 20.0,
+              GestureDetector(
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(widget.post.profilePicture!),
+                  radius: 20.0,
+                ),
+                onTap: () {
+                  debugPrint(widget.post.author);
+                  var route = MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                FriendProfileHome(
+                                  friendId: widget.post.author,
+                                  friendName: widget.post.name,
+                                  friendProfileImage:widget.post.profilePicture,
+                                ));
+                        Navigator.of(context).push(route);
+                },
               ),
               const SizedBox(width: 7.0),
               Column(
