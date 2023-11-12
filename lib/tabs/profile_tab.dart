@@ -6,6 +6,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
+import '../pages/edit_profileinfo_page..dart';
 import '../services/data_service.dart';
 import '../widgets/separator_widget.dart';
 
@@ -32,13 +33,15 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     // Unsubscribe the listener to avoid memory leaks
     super.dispose();
   }
+
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
     userService.getOwnPost();
   }
+
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen: true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
     postList = userService.ownPosts;
     twitchData = userService.twitchData;
@@ -81,7 +84,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-    
+
                 //const SizedBox(height: 20.0),
                 Row(
                   children: [
@@ -105,10 +108,11 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           Text(userData['name'],
                               style: const TextStyle(
                                   fontSize: 24.0, fontWeight: FontWeight.bold)),
-                          Text(userData['bio']?? 'No Bio Given',
+                          Text(userData['bio'] ?? 'No Bio Given',
                               softWrap: true,
                               style: const TextStyle(
-                                  fontSize: 15.0, fontWeight: FontWeight.normal))
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.normal))
                         ],
                       ),
                     )
@@ -126,9 +130,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     children: [
                       Row(
                         children: <Widget>[
-                          Image.asset("assets/images/icons8_location.png",
-                          scale:3.5,),
-                          Text(userData['userInfo']['Country']?? 'No Info Given',
+                          Image.asset(
+                            "assets/images/icons8_location.png",
+                            scale: 3.5,
+                          ),
+                          Text(
+                              userData['userInfo']['Country'] ??
+                                  'No Info Given',
                               style: const TextStyle(fontSize: 16.0))
                         ],
                       ),
@@ -137,8 +145,10 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         children: <Widget>[
                           // const Icon(Icons.record_voice_over,
                           //     color: Colors.blue, size: 30.0),
-                          Image.asset("assets/images/speaking_right.png",
-                          scale:3.5,),
+                          Image.asset(
+                            "assets/images/speaking_right.png",
+                            scale: 3.5,
+                          ),
                           const SizedBox(width: 10.0),
                           Text('${userData['userInfo']['Language']}',
                               style: const TextStyle(fontSize: 16.0))
@@ -147,8 +157,10 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       const SizedBox(width: 15.0),
                       Row(
                         children: <Widget>[
-                          Image.asset("assets/images/icons8_share.png",
-                          scale:3.5,),
+                          Image.asset(
+                            "assets/images/icons8_share.png",
+                            scale: 3.5,
+                          ),
                           const SizedBox(width: 10.0),
                           const Text('Share', style: TextStyle(fontSize: 16.0))
                         ],
@@ -156,28 +168,35 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     ],
                   ),
                   const SizedBox(height: 15.0),
-                  Container(
-                    height: 40.0,
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurpleAccent.withOpacity(0.25),
-                      borderRadius: BorderRadius.circular(5.0),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EditProfileInfo()),
+                      );
+                    },
+                    child: Container(
+                      height: 40.0,
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurpleAccent.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: const Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit, color: Colors.deepPurpleAccent),
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: Text('Edit Profile',
+                                style: TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                          ),
+                        ],
+                      )),
                     ),
-                    child: const Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.edit,
-                            color: Colors.deepPurpleAccent),
-                            Padding(
-                              padding: EdgeInsets.only(left:8.0),
-                              child: Text('Edit Profile',
-                                  style: TextStyle(
-                                      color: Colors.deepPurpleAccent,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0)),
-                            ),
-                          ],
-                        )),
                   ),
                 ],
               ),
@@ -228,8 +247,9 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                   child: SizedBox(
                                       child: Icon(
                                     FontAwesomeIcons.discord,
-                                    color: discordData!= null
-                                        ? const Color.fromARGB(255, 114, 137, 218)
+                                    color: discordData != null
+                                        ? const Color.fromARGB(
+                                            255, 114, 137, 218)
                                         : Colors.black,
                                   )),
                                 )
@@ -254,8 +274,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const Padding(
-                          padding: EdgeInsets.only (left:15.0),
-                          child:  Text('Your wall',
+                          padding: EdgeInsets.only(left: 15.0),
+                          child: Text('Your wall',
                               style: TextStyle(
                                   fontSize: 22.0,
                                   color: Colors.cyan,
@@ -264,16 +284,22 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         const SizedBox(height: 6.0),
                         if (postList != null)
                           Padding(
-                            padding: const EdgeInsets.only(left:15.0),
-                            child: Text('You have ${postList!.length.toString()} posts',
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: Text(
+                                'You have ${postList!.length.toString()} posts',
                                 style: TextStyle(
-                                    fontSize: 16.0, color:userService.darkTheme! ?Colors.white: Colors.grey[800])),
+                                    fontSize: 16.0,
+                                    color: userService.darkTheme!
+                                        ? Colors.white
+                                        : Colors.grey[800])),
                           ),
                       ],
                     ),
                   ],
                 ),
-                const Divider(height: 20,),
+                const Divider(
+                  height: 20,
+                ),
                 const SizedBox(height: 25),
                 if (postList != null) // Add a null check here
                   for (PostPojo post
@@ -281,8 +307,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     Column(
                       children: <Widget>[
                         //const SeparatorWidget(),
-                        PostWidget(post: post,),
-                        SeparatorWidget(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey[800]),
+                        PostWidget(
+                          post: post,
+                        ),
+                        SeparatorWidget(
+                            color: userService.darkTheme!
+                                ? const Color.fromARGB(255, 74, 74, 74)
+                                : Colors.grey[800]),
                       ],
                     ),
               ],
