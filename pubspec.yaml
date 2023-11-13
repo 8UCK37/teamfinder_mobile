@@ -51,6 +51,7 @@ dependencies:
   expandable_text: ^2.3.0
   firebase_auth: ^4.6.3
   firebase_core: ^2.14.0
+  flexi_chip: ^1.0.8
   flutter_advanced_networkimage_2: ^2.0.1
   flutter_animated_reaction: ^0.0.2
   flutter_dotenv: ^5.1.0

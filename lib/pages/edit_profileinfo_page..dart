@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flexi_chip/flexi_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 
 import '../services/data_service.dart';
 
@@ -12,9 +14,8 @@ class EditProfileInfo extends StatefulWidget {
 }
 
 class _EditProfileInfoState extends State<EditProfileInfo> {
-
   final TextEditingController genderController = TextEditingController();
-  GenderLabel? selectedGender=GenderLabel.Idk;
+  GenderLabel? selectedGender = GenderLabel.idk;
 
   final FocusNode bioTextArea = FocusNode();
   final TextEditingController _textControllerbio = TextEditingController();
@@ -35,13 +36,43 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     super.dispose();
   }
 
+  void deleteLingo(dynamic s) {
+    debugPrint(s as String);
+  }
+
+  List<Widget> buildFlexiChips() {
+    List<Widget> chips = [];
+
+    for (Language language in Language.values) {
+      if (SelectedLanguage().languageMap[language]!) {
+        chips.add(
+          FlexiChip(
+            label: Text(language.label),
+            style: FlexiChipStyle.outlined(),
+            checkmark: false,
+            selected: SelectedLanguage().languageMap[language]!,
+            onDeleted: () {
+              deleteLingo(SelectedLanguage().languageMap[language].toString());
+            },
+          ),
+        );
+      } else {
+        const SizedBox(height: 0, width: 0);
+      }
+    }
+    if (chips.isEmpty) {
+      return [const Text("No language preference has been set!!")];
+    } else {
+      return chips;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
     String bioHint = userData['bio'] ?? 'Add a bio';
-    String addressHint = userData['address']?? 'Add your Location';
+    String addressHint = userData['address'] ?? 'Add your Location';
 
     final List<DropdownMenuEntry<GenderLabel>> genderEntries =
         <DropdownMenuEntry<GenderLabel>>[];
@@ -51,7 +82,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
             value: color, label: color.label, enabled: color.label != 'Grey'),
       );
     }
-
 
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +109,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(bottom:30.0),
+          padding: const EdgeInsets.only(bottom: 30.0),
           child: Column(
             children: [
               const Divider(color: Colors.black, height: 7),
@@ -110,7 +140,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(userData['profilePicture']),
+                        backgroundImage:
+                            NetworkImage(userData['profilePicture']),
                         radius: 80,
                       )
                     ],
@@ -169,8 +200,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                   )
                 ],
               ),
-              Column(
-                children: [
+              Column(children: [
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Divider(
@@ -187,8 +217,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Bio",
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     GestureDetector(
@@ -218,12 +248,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                         controller: _textControllerbio,
                         maxLines: null,
                         decoration: InputDecoration(
-                          focusedBorder: const OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color.fromARGB(255, 83, 13, 95), // Change the color to your desired color
+                                color: Color.fromARGB(255, 83, 13,
+                                    95), // Change the color to your desired color
                                 width: 2.0, // Set the width of the border
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
                             ),
                             hintText: bioHint,
                             hintStyle: const TextStyle(
@@ -236,8 +268,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                   ],
                 )
               ]),
-              Column(
-                children: [
+              Column(children: [
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Divider(
@@ -254,8 +285,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Address",
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     GestureDetector(
@@ -285,12 +316,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                         controller: _textControlleraddress,
                         maxLines: null,
                         decoration: InputDecoration(
-                          focusedBorder: const OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Color.fromARGB(255, 83, 13, 95), // Change the color to your desired color
+                                color: Color.fromARGB(255, 83, 13,
+                                    95), // Change the color to your desired color
                                 width: 2.0, // Set the width of the border
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
                             ),
                             hintText: addressHint,
                             hintStyle: const TextStyle(
@@ -302,12 +335,49 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                     ),
                   ],
                 )
-              ]
-              ),
+              ]),
               Column(
                 children: [
                   const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
+                    padding: EdgeInsets.only(top: 8.0),
+                    child: Divider(
+                      color: Colors.black,
+                      height: 7,
+                      indent: 8,
+                      endIndent: 8,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: SizedBox(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width * .9,
+                          //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
+                          child: DropdownMenu<GenderLabel>(
+                            textStyle: TextStyle(color: selectedGender!.color),
+                            initialSelection: GenderLabel
+                                .idk, //TODO:interfacetyhis with a changing variable acc to the db value
+                            controller: genderController,
+                            label: const Text('Gender'),
+                            dropdownMenuEntries: genderEntries,
+                            onSelected: (GenderLabel? gender) {
+                              setState(() {
+                                selectedGender = gender;
+                              });
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              Column(children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 23.0),
                   child: Divider(
                     color: Colors.black,
                     height: 7,
@@ -315,34 +385,65 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                     endIndent: 8,
                   ),
                 ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top:15.0),
-                        child: SizedBox(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * .9,
-                          //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
-                          child:  DropdownMenu<GenderLabel>(
-                          textStyle: TextStyle(color: selectedGender!.color),
-                          initialSelection: GenderLabel.Idk,//TODO:interfacetyhis with a changing variable acc to the db value
-                          controller: genderController,
-                          label: const Text('Gender'),
-                          dropdownMenuEntries: genderEntries,
-                          onSelected: (GenderLabel? gender) {
-                            setState(() {
-                              selectedGender = gender;
-                            });
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Preffered Languages",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            debugPrint("save lingo preff");
                           },
-                        ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.save),
                           ),
-                      )
-                    ],
-                  )
-                ],
-        
-              )
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet<dynamic>(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (BuildContext context) {
+                                return Wrap(
+                                    children: [LanguageBottomSheet()]);
+                              },
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.edit),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Wrap(
+                          spacing: 10,
+                          children: buildFlexiChips(),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ]),
             ],
           ),
         ),
@@ -350,14 +451,37 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     );
   }
 }
-enum GenderLabel {
-  Male('Male', Colors.blue),
-  Female('Female', Colors.pink),
-  Idk('Prefer not to say',Colors.grey),
-  rainbow('LGTV',Colors.black);
 
+enum GenderLabel {
+  male('Male', Colors.blue),
+  female('Female', Colors.pink),
+  idk('Prefer not to say', Colors.grey),
+  rainbow('LGTV', Colors.black);
 
   const GenderLabel(this.label, this.color);
   final String label;
-  final Color color;
+  final Color? color;
+}
+
+class SelectedLanguage {
+  Map<Language, bool> languageMap = {
+    Language.bengali: true,
+    Language.english: true,
+    Language.hindi: true,
+  };
+
+  // Method to return the language map
+  Map<Language, bool> getList() {
+    return languageMap;
+  }
+}
+
+enum Language {
+  bengali('Bengali', 1),
+  hindi('Hindi', 2),
+  english('English', 3);
+
+  const Language(this.label, this.id);
+  final String label;
+  final int id;
 }
