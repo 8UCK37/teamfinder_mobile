@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flexi_chip/flexi_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 
 import '../services/data_service.dart';
+import '../utils/chip_helper.dart';
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
@@ -36,36 +36,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     super.dispose();
   }
 
-  void deleteLingo(dynamic s) {
-    debugPrint(s as String);
-  }
-
-  List<Widget> buildFlexiChips() {
-    List<Widget> chips = [];
-
-    for (Language language in Language.values) {
-      if (SelectedLanguage().languageMap[language]!) {
-        chips.add(
-          FlexiChip(
-            label: Text(language.label),
-            style: FlexiChipStyle.outlined(),
-            checkmark: false,
-            selected: SelectedLanguage().languageMap[language]!,
-            onDeleted: () {
-              deleteLingo(SelectedLanguage().languageMap[language].toString());
-            },
-          ),
-        );
-      } else {
-        const SizedBox(height: 0, width: 0);
-      }
-    }
-    if (chips.isEmpty) {
-      return [const Text("No language preference has been set!!")];
-    } else {
-      return chips;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -358,8 +328,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
                           child: DropdownMenu<GenderLabel>(
                             textStyle: TextStyle(color: selectedGender!.color),
-                            initialSelection: GenderLabel
-                                .idk, //TODO:interfacetyhis with a changing variable acc to the db value
+                            initialSelection: GenderLabel.idk, //TODO:interfacetyhis with a changing variable acc to the db value
                             controller: genderController,
                             label: const Text('Gender'),
                             dropdownMenuEntries: genderEntries,
@@ -414,12 +383,12 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
                               builder: (BuildContext context) {
-                                return Wrap(
+                                return const Wrap(
                                     children: [LanguageBottomSheet()]);
                               },
                             );
                           },
-                          child: Padding(
+                          child: const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Icon(Icons.edit),
                           ),
@@ -428,17 +397,15 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                     ),
                   ],
                 ),
-                SingleChildScrollView(
+                const SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Wrap(
-                          spacing: 10,
-                          children: buildFlexiChips(),
-                        ),
+                         ChipHelper(),
+                        
                       ],
                     ),
                   ),
@@ -463,25 +430,3 @@ enum GenderLabel {
   final Color? color;
 }
 
-class SelectedLanguage {
-  Map<Language, bool> languageMap = {
-    Language.bengali: true,
-    Language.english: true,
-    Language.hindi: true,
-  };
-
-  // Method to return the language map
-  Map<Language, bool> getList() {
-    return languageMap;
-  }
-}
-
-enum Language {
-  bengali('Bengali', 1),
-  hindi('Hindi', 2),
-  english('English', 3);
-
-  const Language(this.label, this.id);
-  final String label;
-  final int id;
-}

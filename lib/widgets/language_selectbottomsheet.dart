@@ -2,22 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
+import '../utils/chip_helper.dart';
+
 // ignore: must_be_immutable
 class LanguageBottomSheet extends StatefulWidget {
-
-  LanguageBottomSheet({super.key});
+  const LanguageBottomSheet({super.key});
 
   @override
   State<LanguageBottomSheet> createState() => _LanguageBottomSheetState();
 }
 
 class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
-  double height = .68;
+  double heightMultiplier = .80;
+  List<String> languages = [
+    'C',
+    'C++',
+    'Java',
+    'Python',
+    'JavaScript',
+    'Dart',
+    'Swift',
+    'Kotlin',
+  ];
+
+  Map<String, bool> languageCheckboxes = {};
 
   @override
   void initState() {
     super.initState();
-
+    // Initialize all checkboxes to false initially
+    for (String language in languages) {
+      languageCheckboxes[language] = false;
+    }
   }
 
   @override
@@ -25,11 +41,11 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
     super.dispose();
   }
 
-  
-
+ 
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: false);
+    var modalHeight = MediaQuery.of(context).size.height * heightMultiplier;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -40,7 +56,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         //border: Border.all(color: Colors.red),
       ),
-      height: MediaQuery.of(context).size.height * height,
+      height: MediaQuery.of(context).size.height * heightMultiplier,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,6 +73,101 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                 )
               ],
+            ),
+          ),
+          // ignore: sized_box_for_whitespace
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: modalHeight * 0.15,
+            //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SearchAnchor(builder:
+                      (BuildContext context, SearchController controller) {
+                    return SearchBar(
+                      controller: controller,
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width - 100,
+                          minHeight: 50),
+                      padding: const MaterialStatePropertyAll<EdgeInsets>(
+                          EdgeInsets.symmetric(horizontal: 16.0)),
+                      onTap: () {
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          setState(() {
+                            heightMultiplier =  0.95;
+                          });
+                        });
+                      },
+                      onChanged: (_) {
+                        //controller.openView();
+                      },
+                      leading: const Icon(Icons.search),
+                    );
+                  }, suggestionsBuilder:
+                      (BuildContext context, SearchController controller) {
+                    return List<ListTile>.generate(5, (int index) {
+                      final String item = 'item $index';
+                      return ListTile(
+                        title: Text(item),
+                        onTap: () {
+                          setState(() {
+                            controller.closeView(item);
+                          });
+                        },
+                      );
+                    });
+                  }),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: modalHeight * 0.10,
+            decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+            child: const SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                       ChipHelper()
+                      ],
+                    ),
+                  ),
+                ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: modalHeight * 0.65,
+            decoration: BoxDecoration(border: Border.all(color: Colors.purple)),
+            child: ListView.builder(
+              itemCount: languages.length,
+              itemBuilder: (context, index) {
+                String language = languages[index];
+                return ListTile(
+                  title: Text(language),
+                  trailing: Checkbox(
+                    value: languageCheckboxes[language] ?? false,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        languageCheckboxes[language] = value!;
+                      });
+                    },
+                  ),
+                  onTap: () {
+                    // Toggle the checkbox state when the list tile is tapped
+                    setState(() {
+                      languageCheckboxes[language] =
+                          !(languageCheckboxes[language] ?? false);
+                    });
+                  },
+                );
+              },
             ),
           ),
         ],
