@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-
 import '../utils/chip_helper.dart';
 
 // ignore: must_be_immutable
@@ -14,26 +13,12 @@ class LanguageBottomSheet extends StatefulWidget {
 
 class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
   double heightMultiplier = .80;
-  List<String> languages = [
-    'C',
-    'C++',
-    'Java',
-    'Python',
-    'JavaScript',
-    'Dart',
-    'Swift',
-    'Kotlin',
-  ];
 
-  Map<String, bool> languageCheckboxes = {};
+  late Map<Language, bool> languageCheckboxes = {};
 
   @override
   void initState() {
     super.initState();
-    // Initialize all checkboxes to false initially
-    for (String language in languages) {
-      languageCheckboxes[language] = false;
-    }
   }
 
   @override
@@ -41,11 +26,11 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
     super.dispose();
   }
 
- 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context, listen: false);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     var modalHeight = MediaQuery.of(context).size.height * heightMultiplier;
+    languageCheckboxes = userService.selectedLang;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -97,11 +82,11 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                       onTap: () {
                         Future.delayed(const Duration(milliseconds: 100), () {
                           setState(() {
-                            heightMultiplier =  0.95;
+                            heightMultiplier = 0.95;
                           });
                         });
                       },
-                      onChanged: (_) {
+                      onChanged: (s) {
                         //controller.openView();
                       },
                       leading: const Icon(Icons.search),
@@ -124,46 +109,47 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
               ],
             ),
           ),
+          // ignore: sized_box_for_whitespace
           Container(
             width: MediaQuery.of(context).size.width,
             height: modalHeight * 0.10,
-            decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+            //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
             child: const SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                       ChipHelper()
-                      ],
-                    ),
-                  ),
+              scrollDirection: Axis.horizontal,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [ChipHelper()],
                 ),
+              ),
+            ),
           ),
+          // ignore: sized_box_for_whitespace
           Container(
             width: MediaQuery.of(context).size.width,
             height: modalHeight * 0.65,
-            decoration: BoxDecoration(border: Border.all(color: Colors.purple)),
+            //decoration: BoxDecoration(border: Border.all(color: Colors.purple)),
             child: ListView.builder(
-              itemCount: languages.length,
+              itemCount: languageCheckboxes.length,
               itemBuilder: (context, index) {
-                String language = languages[index];
+                Language language = languageCheckboxes.keys.toList()[index];
                 return ListTile(
-                  title: Text(language),
+                  title: Text(language.label),
                   trailing: Checkbox(
-                    value: languageCheckboxes[language] ?? false,
+                    value: userService.selectedLang[language] ?? false,
                     onChanged: (bool? value) {
                       setState(() {
                         languageCheckboxes[language] = value!;
+                        userService.updateSelectedLangMap(languageCheckboxes);
                       });
                     },
                   ),
                   onTap: () {
                     // Toggle the checkbox state when the list tile is tapped
                     setState(() {
-                      languageCheckboxes[language] =
-                          !(languageCheckboxes[language] ?? false);
+                      languageCheckboxes[language] =!(languageCheckboxes[language] ?? false);
+                      userService.updateSelectedLangMap(languageCheckboxes);
                     });
                   },
                 );

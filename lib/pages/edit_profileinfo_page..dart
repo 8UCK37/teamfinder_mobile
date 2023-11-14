@@ -36,7 +36,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
@@ -328,7 +327,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
                           child: DropdownMenu<GenderLabel>(
                             textStyle: TextStyle(color: selectedGender!.color),
-                            initialSelection: GenderLabel.idk, //TODO:interfacetyhis with a changing variable acc to the db value
+                            initialSelection: GenderLabel
+                                .idk, //TODO:interfacetyhis with a changing variable acc to the db value
                             controller: genderController,
                             label: const Text('Gender'),
                             dropdownMenuEntries: genderEntries,
@@ -400,12 +400,11 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                 const SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         ChipHelper(),
-                        
+                        ChipHelper(),
                       ],
                     ),
                   ),
@@ -429,4 +428,3 @@ enum GenderLabel {
   final String label;
   final Color? color;
 }
-

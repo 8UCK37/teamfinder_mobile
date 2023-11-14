@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:http/http.dart' as http;
+import 'package:teamfinder_mobile/utils/chip_helper.dart';
 
 class ProviderService extends ChangeNotifier {
   Map<String, dynamic> user = {}; // Initialize as an empty map
@@ -16,6 +17,8 @@ class ProviderService extends ChangeNotifier {
   dynamic discordData;
   bool? darkTheme = false;
   int? replyingTo;
+  Map<Language, bool> selectedLang = Language.map();
+
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -25,7 +28,7 @@ class ProviderService extends ChangeNotifier {
     darkTheme = newValue;
     notifyListeners();
   }
-  
+
   void updateReplyingTo(int? newValue) {
     replyingTo = newValue;
     notifyListeners();
@@ -35,6 +38,12 @@ class ProviderService extends ChangeNotifier {
     feed = newValue;
     notifyListeners();
   }
+
+  void updateSelectedLangMap(Map<Language, bool> newValue) {
+    selectedLang = newValue;
+    notifyListeners();
+  }
+
 
   void fetchPosts() async {
     final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
