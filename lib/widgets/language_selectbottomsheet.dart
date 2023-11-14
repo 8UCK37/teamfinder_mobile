@@ -15,7 +15,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
   double heightMultiplier = .80;
 
   late Map<Language, bool> languageCheckboxes = {};
-
+  late Map<Language, bool> langMapCopy = Map<Language, bool>.from(languageCheckboxes);
   @override
   void initState() {
     super.initState();
@@ -26,11 +26,23 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
     super.dispose();
   }
 
+  Map<Language, bool> languageSearch(
+      String searchTerm, Map<Language, bool> inputMap) {
+    Map<Language, bool> newMap = {};
+    inputMap.forEach((key, value) {
+      if (key.label.toLowerCase().contains(searchTerm)) {
+        newMap[key] = inputMap[key]!;
+      }
+    });
+    return newMap;
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     var modalHeight = MediaQuery.of(context).size.height * heightMultiplier;
     languageCheckboxes = userService.selectedLang;
+    
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -71,7 +83,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SearchAnchor(builder:
-                      (BuildContext context, SearchController controller) {
+                      (context, SearchController controller) {
                     return SearchBar(
                       controller: controller,
                       constraints: BoxConstraints(
@@ -87,7 +99,10 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                         });
                       },
                       onChanged: (s) {
-                        //controller.openView();
+                        debugPrint(s);
+                        setState(() {
+                          langMapCopy = languageSearch(s, languageCheckboxes);
+                        });
                       },
                       leading: const Icon(Icons.search),
                     );
@@ -131,9 +146,9 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
             height: modalHeight * 0.65,
             //decoration: BoxDecoration(border: Border.all(color: Colors.purple)),
             child: ListView.builder(
-              itemCount: languageCheckboxes.length,
+              itemCount: langMapCopy.length,
               itemBuilder: (context, index) {
-                Language language = languageCheckboxes.keys.toList()[index];
+                Language language = langMapCopy.keys.toList()[index];
                 return ListTile(
                   title: Text(language.label),
                   trailing: Checkbox(
@@ -148,7 +163,8 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                   onTap: () {
                     // Toggle the checkbox state when the list tile is tapped
                     setState(() {
-                      languageCheckboxes[language] =!(languageCheckboxes[language] ?? false);
+                      languageCheckboxes[language] =
+                          !(languageCheckboxes[language] ?? false);
                       userService.updateSelectedLangMap(languageCheckboxes);
                     });
                   },
