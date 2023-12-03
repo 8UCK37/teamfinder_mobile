@@ -35,7 +35,7 @@ class _ChipHelperState extends State<ChipHelper> {
         chips.add(
           FlexiChip(
             label: Text(language.label),
-            style: FlexiChipStyle.outlined(),
+            style: FlexiChipStyle.outlined(color: userService.darkTheme!? Colors.white:Colors.deepPurple,),
             checkmark: false,
             selected: map[language]!,
             onDeleted: () {

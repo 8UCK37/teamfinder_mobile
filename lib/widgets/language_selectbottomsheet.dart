@@ -155,6 +155,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                   return ListTile(
                     title: Text(language.label),
                     trailing: Checkbox(
+                      activeColor: userService.darkTheme!? const Color.fromARGB(255, 11, 67, 0):Colors.deepPurple,
                       value: userService.selectedLang[language] ?? false,
                       onChanged: (bool? value) {
                         setState(() {

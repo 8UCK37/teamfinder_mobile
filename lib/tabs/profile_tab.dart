@@ -6,6 +6,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
+import 'package:teamfinder_mobile/widgets/create_post_bottomsheet.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../pages/edit_profileinfo_page..dart';
 import '../services/data_service.dart';
@@ -46,7 +47,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
       if (selectedLangString.isEmpty) {
         selectedLangString = Language.values[int.parse(index) - 1].label;
       } else {
-        selectedLangString = "$selectedLangString, ${Language.values[int.parse(index) - 1].label}";
+        selectedLangString =
+            "$selectedLangString, ${Language.values[int.parse(index) - 1].label}";
       }
     }
     return selectedLangString;
@@ -63,16 +65,29 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: Scaffold(
-        floatingActionButton: const Material(
-          elevation: 20,
-          shape: CircleBorder(),
-          child: ClipOval(
-            child: CircleAvatar(
-              backgroundColor: Colors.deepPurpleAccent,
-              radius: 25,
-              child: Icon(
-                Icons.post_add,
-                color: Colors.white,
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            showModalBottomSheet<dynamic>(
+              context: context,
+              isScrollControlled: true,
+              enableDrag: false,
+              //backgroundColor: Colors.transparent,
+              builder: (BuildContext context) {
+                return const Wrap(children: [CreatePost()]);
+              },
+            );
+          },
+          child: const Material(
+            elevation: 20,
+            shape: CircleBorder(),
+            child: ClipOval(
+              child: CircleAvatar(
+                backgroundColor: Colors.deepPurpleAccent,
+                radius: 25,
+                child: Icon(
+                  Icons.post_add,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -142,8 +157,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                   "assets/images/icons8_share.png",
                                   scale: 3.5,
                                 ),
-                                const SizedBox(width: 10.0),
-                                //const Text('Share',style: TextStyle(fontSize: 16.0))
                               ],
                             ),
                           ],
@@ -186,16 +199,16 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                             "assets/images/speaking_right.png",
                             scale: 3.5,
                           ),
-                          
+
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(5,0,0,0),
-                            child: Text(convertlistTolangString(userData['userInfo']),
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: Text(
+                                convertlistTolangString(userData['userInfo']),
                                 style: const TextStyle(fontSize: 16.0)),
                           )
                         ],
                       ),
                       const SizedBox(width: 15.0),
-                      
                     ],
                   ),
                   const SizedBox(height: 15.0),

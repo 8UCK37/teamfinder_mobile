@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/widgets/create_post_bottomsheet.dart';
 
 import '../services/data_service.dart';
 
@@ -27,20 +28,33 @@ class WriteSomethingWidget extends StatelessWidget {
 
                 const SizedBox(width: 7.0),
 
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  height: 50.0,
-                  width: MediaQuery.of(context).size.width/1.4,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1.0,
-                      color: Colors.grey
+                GestureDetector(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    height: 50.0,
+                    width: MediaQuery.of(context).size.width/1.4,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1.0,
+                        color: Colors.grey
+                      ),
+                      borderRadius: BorderRadius.circular(30.0)
                     ),
-                    borderRadius: BorderRadius.circular(30.0)
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Write something here...')),
                   ),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Write something here...')),
+                  onTap: () {
+                    showModalBottomSheet<dynamic>(
+                      context: context,
+                      isScrollControlled: true,
+                      enableDrag: false,
+                      //backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return const Wrap(children: [CreatePost()]);
+                      },
+                    );
+                  },
                 )
               ],
             ),
