@@ -16,7 +16,7 @@ class NotificationWidget extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 100.0,
-      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -28,14 +28,14 @@ class NotificationWidget extends StatelessWidget {
                 radius: 35.0,
               ),
 
-              SizedBox(width: 15.0),
+              const SizedBox(width: 15.0),
 
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(notification.content, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
-                  Text(notification.time, style: TextStyle(fontSize: 15.0, color: Colors.grey)),
+                  Text(notification.content, style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                  Text(notification.time, style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
                 ],
               ),
             ],
