@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:http/http.dart' as http;
-import 'package:teamfinder_mobile/utils/chip_helper.dart';
+import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 
 class ProviderService extends ChangeNotifier {
   Map<String, dynamic> user = {}; // Initialize as an empty map
@@ -17,7 +17,7 @@ class ProviderService extends ChangeNotifier {
   dynamic discordData;
   bool? darkTheme = false;
   int? replyingTo;
-  Map<Language, bool> selectedLang = Language.map();
+  Map<Language, bool> selectedLang = {};
 
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
@@ -43,7 +43,6 @@ class ProviderService extends ChangeNotifier {
     selectedLang = newValue;
     notifyListeners();
   }
-
 
   void fetchPosts() async {
     final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
@@ -184,5 +183,62 @@ class ProviderService extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  getUserSelectedLang() {
+    var selectedLangList = [];
+    var userInfo = user['userInfo'];
+    //debugPrint(userInfo['Language'].toString());
+    selectedLangList = userInfo['Language'].split(",");
+    var newMap = Language.map();
+    //debugPrint(Language.map().toString());
+    for (Language lang in Language.map().keys) {
+      for (String index in selectedLangList) {
+        if (int.parse(index) == lang.id) {
+          //debugPrint(lang.label);
+          newMap[lang] = true;
+        }
+      }
+    }
+    //debugPrint(newMap.toString());
+    selectedLang = newMap;
+  }
+
+  Future<void> updateSelectedLanguage() async {
+    debugPrint('selected lang db post');
+    Dio dio = Dio();
+    final userFrmFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFrmFirebase!.getIdToken();
+
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/updateUserSelectedLanguages',
+      data: {'data': user['userInfo'], 'list': convertSelectedLangToString()},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint(response.data.toString());
+      user['userInfo']['Language'] = convertSelectedLangToString();
+      notifyListeners();
+    }
+  }
+
+  String convertSelectedLangToString() {
+    String dbString = '';
+    for (Language lang in selectedLang.keys) {
+      if (selectedLang[lang]!) {
+        if (dbString.isEmpty) {
+          dbString = lang.id.toString();
+        } else {
+          dbString = "$dbString,${lang.id}";
+        }
+      }
+    }
+    debugPrint(dbString);
+    return dbString;
   }
 }

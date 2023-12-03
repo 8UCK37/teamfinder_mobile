@@ -12,15 +12,20 @@ class ChipHelper extends StatefulWidget {
 }
 
 class _ChipHelperState extends State<ChipHelper> {
+  var selectedLangList = [];
+
   @override
   void initState() {
     super.initState();
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.getUserSelectedLang();
   }
 
   @override
   void dispose() {
     super.dispose();
   }
+
 
   List<Widget> buildFlexiChips(Map<Language, bool> map) {
     List<Widget> chips = [];
@@ -37,6 +42,7 @@ class _ChipHelperState extends State<ChipHelper> {
               setState(() {
                 map[language] = false;
                 userService.updateSelectedLangMap(map);
+                userService.updateSelectedLanguage();
               });
             },
           ),

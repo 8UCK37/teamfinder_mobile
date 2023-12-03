@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import '../utils/chip_helper.dart';
+import '../utils/language_chip_helper.dart';
 
 // ignore: must_be_immutable
 class LanguageBottomSheet extends StatefulWidget {
@@ -15,7 +15,8 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
   double heightMultiplier = .80;
 
   late Map<Language, bool> languageCheckboxes = {};
-  late Map<Language, bool> langMapCopy = Map<Language, bool>.from(languageCheckboxes);
+  late Map<Language, bool> langMapCopy =
+      Map<Language, bool>.from(languageCheckboxes);
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
     final userService = Provider.of<ProviderService>(context, listen: true);
     var modalHeight = MediaQuery.of(context).size.height * heightMultiplier;
     languageCheckboxes = userService.selectedLang;
-    
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -82,8 +83,8 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SearchAnchor(builder:
-                      (context, SearchController controller) {
+                  child: SearchAnchor(
+                      builder: (context, SearchController controller) {
                     return SearchBar(
                       controller: controller,
                       constraints: BoxConstraints(
@@ -107,7 +108,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                       leading: const Icon(Icons.search),
                     );
                   }, suggestionsBuilder:
-                      (BuildContext context, SearchController controller) {
+                          (BuildContext context, SearchController controller) {
                     return List<ListTile>.generate(5, (int index) {
                       final String item = 'item $index';
                       return ListTile(
@@ -157,6 +158,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                       setState(() {
                         languageCheckboxes[language] = value!;
                         userService.updateSelectedLangMap(languageCheckboxes);
+                        userService.updateSelectedLanguage();
                       });
                     },
                   ),
@@ -166,6 +168,7 @@ class _LanguageBottomSheetState extends State<LanguageBottomSheet> {
                       languageCheckboxes[language] =
                           !(languageCheckboxes[language] ?? false);
                       userService.updateSelectedLangMap(languageCheckboxes);
+                      userService.updateSelectedLanguage();
                     });
                   },
                 );

@@ -172,7 +172,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EditProfileInfo()),
+                        MaterialPageRoute(builder: (context) => const EditProfileInfo()),
                       );
                     },
                     child: Container(

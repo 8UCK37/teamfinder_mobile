@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 
 import '../services/data_service.dart';
-import '../utils/chip_helper.dart';
+import '../utils/language_chip_helper.dart';
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
@@ -327,8 +327,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
                           child: DropdownMenu<GenderLabel>(
                             textStyle: TextStyle(color: selectedGender!.color),
-                            initialSelection: GenderLabel
-                                .idk, //TODO:interfacetyhis with a changing variable acc to the db value
+                            initialSelection: GenderLabel.idk, //TODO:interfacetyhis with a changing variable acc to the db value
                             controller: genderController,
                             label: const Text('Gender'),
                             dropdownMenuEntries: genderEntries,
@@ -400,7 +399,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                 const SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
