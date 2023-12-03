@@ -109,6 +109,7 @@ class _GamesPageState extends State<GamesPage> {
             statusBarIconBrightness: userService.darkTheme!? Brightness.light:Brightness.dark
           ),
           backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
+          foregroundColor: userService.darkTheme!? Colors.white:Colors.deepPurple ,
           title: Column(
             children: [
               Row(
