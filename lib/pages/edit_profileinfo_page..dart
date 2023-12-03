@@ -368,15 +368,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            debugPrint("save lingo preff");
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.save),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
                             showModalBottomSheet<dynamic>(
                               context: context,
                               isScrollControlled: true,

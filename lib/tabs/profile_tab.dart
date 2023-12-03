@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
+import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
 import '../pages/edit_profileinfo_page..dart';
 import '../services/data_service.dart';
@@ -39,10 +40,23 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     userService.getOwnPost();
   }
 
+  String convertlistTolangString(Map<String, dynamic> userInfo) {
+    String selectedLangString = '';
+    for (String index in userInfo['Language'].split(",")) {
+      if (selectedLangString.isEmpty) {
+        selectedLangString = Language.values[int.parse(index) - 1].label;
+      } else {
+        selectedLangString = "$selectedLangString, ${Language.values[int.parse(index) - 1].label}";
+      }
+    }
+    return selectedLangString;
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
+
     postList = userService.ownPosts;
     twitchData = userService.twitchData;
     discordData = userService.discordData;
@@ -84,7 +98,6 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-
                 //const SizedBox(height: 20.0),
                 Row(
                   children: [
@@ -101,19 +114,40 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 200, left: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(userData['name'],
-                              style: const TextStyle(
-                                  fontSize: 24.0, fontWeight: FontWeight.bold)),
-                          Text(userData['bio'] ?? 'No Bio Given',
-                              softWrap: true,
-                              style: const TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.normal))
-                        ],
+                      // ignore: sized_box_for_whitespace
+                      child: Container(
+                        //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(userData['name'],
+                                    style: const TextStyle(
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold)),
+                                Text(userData['bio'] ?? 'No Bio Given',
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.normal))
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Image.asset(
+                                  "assets/images/icons8_share.png",
+                                  scale: 3.5,
+                                ),
+                                const SizedBox(width: 10.0),
+                                //const Text('Share',style: TextStyle(fontSize: 16.0))
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -126,7 +160,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
               child: Column(
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: <Widget>[
@@ -134,10 +168,13 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                             "assets/images/icons8_location.png",
                             scale: 3.5,
                           ),
-                          Text(
-                              userData['userInfo']['Country'] ??
-                                  'No Info Given',
-                              style: const TextStyle(fontSize: 16.0))
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: Text(
+                                userData['userInfo']['Country'] ??
+                                    'No Info Given',
+                                style: const TextStyle(fontSize: 16.0)),
+                          )
                         ],
                       ),
                       const SizedBox(width: 15.0),
@@ -149,22 +186,16 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                             "assets/images/speaking_right.png",
                             scale: 3.5,
                           ),
-                          const SizedBox(width: 10.0),
-                          Text('${userData['userInfo']['Language']}',
-                              style: const TextStyle(fontSize: 16.0))
+                          
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(5,0,0,0),
+                            child: Text(convertlistTolangString(userData['userInfo']),
+                                style: const TextStyle(fontSize: 16.0)),
+                          )
                         ],
                       ),
                       const SizedBox(width: 15.0),
-                      Row(
-                        children: <Widget>[
-                          Image.asset(
-                            "assets/images/icons8_share.png",
-                            scale: 3.5,
-                          ),
-                          const SizedBox(width: 10.0),
-                          const Text('Share', style: TextStyle(fontSize: 16.0))
-                        ],
-                      ),
+                      
                     ],
                   ),
                   const SizedBox(height: 15.0),
@@ -172,7 +203,8 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const EditProfileInfo()),
+                        MaterialPageRoute(
+                            builder: (context) => const EditProfileInfo()),
                       );
                     },
                     child: Container(

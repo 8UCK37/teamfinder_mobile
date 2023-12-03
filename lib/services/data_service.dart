@@ -221,7 +221,7 @@ class ProviderService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      debugPrint(response.data.toString());
+      //debugPrint(response.data.toString());
       user['userInfo']['Language'] = convertSelectedLangToString();
       notifyListeners();
     }
@@ -238,7 +238,9 @@ class ProviderService extends ChangeNotifier {
         }
       }
     }
-    debugPrint(dbString);
+    //debugPrint(dbString);
     return dbString;
   }
+
+  
 }
