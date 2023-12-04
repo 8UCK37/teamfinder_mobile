@@ -2,16 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 
 class NotificationWidget extends StatelessWidget {
-
   final IncomingNotification notification;
 
-  const NotificationWidget({super.key, 
-    required this.notification
-  });
+  const NotificationWidget({super.key, required this.notification});
+
+  String notificationTextParser() {
+    String notificationText = '';
+    switch (notification.notification) {
+      case 'poke':
+        notificationText = 'has poked you';
+        break;
+      case 'frnd req':
+        notificationText = 'has sent you a friend request!!';
+        break;
+      case 'frndReqAcc':
+        notificationText = 'has accepted your friend request!!';
+        break;
+      case 'new mention':
+        notificationText = 'has mentioned you in a new post!!';
+        break;
+      case 'new comment':
+        notificationText = 'has mentioned you in a new comment!!';
+        break;
+      default:
+        notificationText = 'idk wtf this notification is!!';
+    }
+    return notificationText;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
       width: MediaQuery.of(context).size.width,
       height: 100.0,
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -22,26 +44,42 @@ class NotificationWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               CircleAvatar(
-                backgroundImage: NetworkImage(notification.senderProfilePicture),
+                backgroundImage:
+                    NetworkImage(notification.senderProfilePicture),
                 radius: 35.0,
               ),
-
               const SizedBox(width: 15.0),
-
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(notification.notification, style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
-                  Text('notification.time', style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
+                  // ignore: sized_box_for_whitespace
+                  Container(
+                    width: MediaQuery.of(context).size.width-150,
+                    child: RichText(
+                        text: TextSpan(
+                            style: const TextStyle(color: Colors.black),
+                            children: [
+                          TextSpan(
+                              text: notification.senderName,
+                              style: const TextStyle(
+                                  fontSize: 17.0, fontWeight: FontWeight.bold)),
+                          TextSpan(
+                              text: ' ${notificationTextParser()}',
+                              style: const TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.normal)),
+                        ])),
+                  ),
+                  const Text('notification.time',
+                      style: TextStyle(fontSize: 15.0, color: Colors.grey)),
                 ],
               ),
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Icon(Icons.more_horiz),
+          const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:  <Widget>[
+              Icon(Icons.more_vert),
               Text(''),
             ],
           )

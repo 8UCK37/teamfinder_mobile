@@ -47,7 +47,7 @@ class NotificationWizard extends ChangeNotifier {
           notification: data['notification'],
           data: data['data']);
 
-      if (newNoti.notification != "online" && newNoti.notification != "disc") {
+      if (newNoti.notification != "online" && newNoti.notification != "disc" && newNoti.notification != "imageUploadDone") {
         addToNotificationList(newNoti);
       } 
     }
