@@ -46,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     super.initState();
     _fetchChatMsgs(widget.friendId);
     final user = FirebaseAuth.instance.currentUser;
-    socketService.setupSocketConnection();
+    socketService.setupSocketConnection(context);
     socketService.setSocketId(user!.uid);
     incMsg();
     incNoti();

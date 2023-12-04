@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:teamfinder_mobile/services/notification_observer.dart';
 
 class SocketService {
   IO.Socket? socket;
@@ -10,7 +12,7 @@ class SocketService {
   final BehaviorSubject<Map<String, dynamic>> _incomingNotiSubject =
       BehaviorSubject<Map<String, dynamic>>();
 
-  void setupSocketConnection() {
+  void setupSocketConnection(BuildContext context) {
     socket = IO.io(dotenv.env['socket_endpoint'], <String, dynamic>{
       'transports': ['websocket'],
     });
@@ -31,6 +33,7 @@ class SocketService {
       } else {
         _incomingNotiSubject.add({});
       }
+      parseNewnotification(data, context);
     });
   }
 
@@ -59,5 +62,10 @@ class SocketService {
 
   ValueStream<Map<String, dynamic>> getIncomingNoti() {
     return _incomingNotiSubject.stream;
+  }
+
+  parseNewnotification(dynamic data, BuildContext context) {
+    final notiobserver = Provider.of<NotificationWizard>(context, listen: false);
+    notiobserver.getUserInfo(data);
   }
 }

@@ -25,7 +25,7 @@ class _OnlineWidgetState extends State<OnlineWidget>
   @override
   void initState() {
     super.initState();
-    socketService.setupSocketConnection();
+    socketService.setupSocketConnection(context);
     _getFriendList();
     incNoti();
   }

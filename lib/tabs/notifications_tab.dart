@@ -17,7 +17,8 @@ class NotificationsTab extends StatelessWidget {
               child: Text('Notifications', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
             ),
 
-            for(UserNotification notification in notifications) NotificationWidget(notification: notification)
+            for(UserNotification notification in notifications) 
+                NotificationWidget(notification: notification)
           ],
         )
       ),

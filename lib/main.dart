@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
+import 'package:teamfinder_mobile/services/notification_observer.dart';
 import 'chat_ui/camera_ui/CameraScreen.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -57,6 +58,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) => ProviderService()),
         ChangeNotifierProvider<FriendProfileService>(
             create: (context) => FriendProfileService()),
+        ChangeNotifierProvider<NotificationWizard>(
+            create: (context) => NotificationWizard()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -99,7 +99,8 @@ class _HomePageState extends State<HomePage>
         var userData = json.decode(response.body);
         //print(userData);
         userService.updateCurrentUser(userData);
-        socketService.setupSocketConnection();
+        // ignore: use_build_context_synchronously
+        socketService.setupSocketConnection(context);
         socketService.setSocketId(userData['id']);
         if (userData["steamId"] != null) {
           userService.getSteamInfo(userData["steamId"]);

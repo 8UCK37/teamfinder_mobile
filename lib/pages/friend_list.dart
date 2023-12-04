@@ -29,7 +29,7 @@ class _FriendListState extends State<FriendList>
   @override
   void initState() {
     super.initState();
-    socketService.setupSocketConnection();
+    socketService.setupSocketConnection(context);
     _getFriendList();
     incNoti();
   }
