@@ -55,7 +55,7 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      friendProfile = userPojoListFromJson(response.data)[0];
+      friendProfile = userPojoListFromJson(jsonEncode(response.data))[0];
       if (friendProfile!.steamId != null) {
         getSteamInfo(friendProfile!.steamId!);
       }
