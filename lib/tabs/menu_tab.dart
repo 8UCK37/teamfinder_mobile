@@ -177,15 +177,15 @@ class MenuTab extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: Colors.grey),
                         borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Icon(Icons.sports_esports,
-                            color: Colors.deepPurpleAccent.shade200,
+                            color: Colors.red,
                             size: 30.0),
-                        const SizedBox(height: 5.0),
-                        const Text('Games',
+                        SizedBox(height: 5.0),
+                        Text('Games',
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold))
                       ],
@@ -207,15 +207,15 @@ class MenuTab extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: Colors.grey),
                         borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Icon(Icons.account_tree,
-                            color: Colors.deepPurpleAccent.shade200,
+                            color: Colors.orange,
                             size: 30.0),
-                        const SizedBox(height: 5.0),
-                        const Text('Linked accounts',
+                        SizedBox(height: 5.0),
+                        Text('Linked accounts',
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold))
                       ],
@@ -246,15 +246,15 @@ class MenuTab extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: Colors.grey),
                         borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Icon(Icons.person,
-                            color: Colors.deepPurpleAccent.shade200,
+                            color: Colors.green,
                             size: 30.0),
-                        const SizedBox(height: 5.0),
-                        const Text('Friends',
+                        SizedBox(height: 5.0),
+                        Text('Friends',
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.bold))
                       ],

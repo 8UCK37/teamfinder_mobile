@@ -204,13 +204,13 @@ class _HomePageState extends State<HomePage>
             indicatorColor: Colors.deepPurple,
             controller: _tabController,
             unselectedLabelColor: Colors.grey,
-            labelColor: Colors.deepPurple,
+            //labelColor: Colors.deepPurple,
             tabs: const [
-              Tab(icon: Icon(Icons.receipt_long, size: 28.0)),
-              Tab(icon: Icon(Icons.co_present, size: 28.0)),
-              Tab(icon: Icon(Icons.diversity_3, size: 32.0)),
-              Tab(icon: Icon(FontAwesomeIcons.bell, size: 25.0)),
-              Tab(icon: Icon(Icons.menu, size: 30.0, key: Key('menuTab')))
+              Tab(icon: Icon(Icons.receipt_long, size: 28.0,color: Colors.blue,)),
+              Tab(icon: Icon(Icons.co_present, size: 28.0,color: Colors.green,)),
+              Tab(icon: Icon(Icons.diversity_3, size: 32.0,color: Colors.purple)),
+              Tab(icon: Icon(FontAwesomeIcons.bell, size: 25.0,color: Colors.red,)),
+              Tab(icon: Icon(Icons.menu, size: 30.0,color: Colors.orange, key: Key('menuTab')))
             ],
           ),
           //systemOverlayStyle: SystemUiOverlayStyle.dark,

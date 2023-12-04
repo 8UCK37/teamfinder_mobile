@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
-import '../models/user_notification.dart';
 import '../widgets/notification_widget.dart';
 
 class NotificationsTab extends StatefulWidget {
   const NotificationsTab({super.key});
   
   @override
+  // ignore: library_private_types_in_public_api
   _NotificationsTabState createState() => _NotificationsTabState();
   }
 
