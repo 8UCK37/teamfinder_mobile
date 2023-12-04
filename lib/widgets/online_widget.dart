@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,7 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/services/socket_service.dart';
 
 class OnlineWidget extends StatefulWidget {
-  const OnlineWidget({super.key});
+  final SocketService socketService;
+  const OnlineWidget({super.key, required this.socketService});
   @override
   // ignore: library_private_types_in_public_api
   _OnlineWidgetState createState() => _OnlineWidgetState();
@@ -20,12 +20,10 @@ class _OnlineWidgetState extends State<OnlineWidget>
     with SingleTickerProviderStateMixin {
   late List<UserPojo>? friendList = [];
   late Map<String, bool>? onlineMap;
-  final SocketService socketService = SocketService();
   StreamSubscription<dynamic>? _socketSubscription;
   @override
   void initState() {
     super.initState();
-    socketService.setupSocketConnection(context);
     _getFriendList();
     incNoti();
   }
@@ -38,7 +36,7 @@ class _OnlineWidgetState extends State<OnlineWidget>
   }
 
   void incNoti() {
-    _socketSubscription = socketService.getIncomingNoti().listen((data) {
+    _socketSubscription = widget.socketService.getIncomingNoti().listen((data) {
       //DateTime now = DateTime.now();
       //debugPrint('Received noti from socket: $data');
       if (data['notification'] == 'disc') {
@@ -79,25 +77,25 @@ class _OnlineWidgetState extends State<OnlineWidget>
         List<UserPojo> parsedFriendList = userPojoListFromJson(res);
         if (mounted) {
           setState(() {
-          parsedFriendList.sort((a, b) {
-            if (a.isConnected && !b.isConnected) {
-              return -1; // a comes before b
-            } else if (!a.isConnected && b.isConnected) {
-              return 1; // b comes before a
-            } else {
-              return 0; // order remains the same
-            }
-          });
-          onlineMap = {
-            for (var obj in parsedFriendList) obj.id: obj.isConnected
-          };
+            parsedFriendList.sort((a, b) {
+              if (a.isConnected && !b.isConnected) {
+                return -1; // a comes before b
+              } else if (!a.isConnected && b.isConnected) {
+                return 1; // b comes before a
+              } else {
+                return 0; // order remains the same
+              }
+            });
+            onlineMap = {
+              for (var obj in parsedFriendList) obj.id: obj.isConnected
+            };
 
-          friendList =
-              parsedFriendList; // Update the state variable with the parsed list
-        });
+            friendList =
+                parsedFriendList; // Update the state variable with the parsed list
+          });
         }
       }
-    } 
+    }
   }
 
   @override
@@ -142,17 +140,16 @@ class _OnlineWidgetState extends State<OnlineWidget>
           if (friendList != null) // Add a null check here
             for (UserPojo user in friendList!) // Add a null check here
               GestureDetector(
-                onTap:() {
-                  var route = MaterialPageRoute(
-                    builder: (BuildContext context) => FriendProfileHome(
-                          friendId: user.id,
-                          friendName: user.name,
-                          friendProfileImage: user.profilePicture,
-                        ));
-                Navigator.of(context).push(route);
-                },
-                child: friendBubble(user)
-              )
+                  onTap: () {
+                    var route = MaterialPageRoute(
+                        builder: (BuildContext context) => FriendProfileHome(
+                              friendId: user.id,
+                              friendName: user.name,
+                              friendProfileImage: user.profilePicture,
+                            ));
+                    Navigator.of(context).push(route);
+                  },
+                  child: friendBubble(user))
         ],
       ),
     );

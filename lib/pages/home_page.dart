@@ -216,10 +216,10 @@ class _HomePageState extends State<HomePage>
           //systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: TabBarView(controller: _tabController, children: [
-          const HomeTab(),
+          HomeTab(socketService: socketService,),
           const ProfileTab(),
           const FriendsTab(),
-          NotificationsTab(),
+          const NotificationsTab(),
           MenuTab(_tabController),
         ]),
       ),

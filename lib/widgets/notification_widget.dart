@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-
-import '../models/user_notification.dart';
-
+import 'package:teamfinder_mobile/services/notification_observer.dart';
 
 class NotificationWidget extends StatelessWidget {
 
-  final UserNotification notification;
+  final IncomingNotification notification;
 
-  NotificationWidget({
+  const NotificationWidget({super.key, 
     required this.notification
   });
 
@@ -24,7 +22,7 @@ class NotificationWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               CircleAvatar(
-                backgroundImage: AssetImage(notification.imageUrl),
+                backgroundImage: NetworkImage(notification.senderProfilePicture),
                 radius: 35.0,
               ),
 
@@ -34,8 +32,8 @@ class NotificationWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(notification.content, style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
-                  Text(notification.time, style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
+                  Text(notification.notification, style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold)),
+                  Text('notification.time', style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
                 ],
               ),
             ],

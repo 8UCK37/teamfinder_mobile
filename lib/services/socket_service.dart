@@ -65,7 +65,7 @@ class SocketService {
   }
 
   parseNewnotification(dynamic data, BuildContext context) {
-    final notiobserver = Provider.of<NotificationWizard>(context, listen: false);
-    notiobserver.getUserInfo(data);
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
+    notiObserver.getUserInfo(data);
   }
 }

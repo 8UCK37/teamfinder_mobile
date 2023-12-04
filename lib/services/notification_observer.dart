@@ -5,10 +5,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 
 class IncomingNotification {
-  final String  senderId;
-  final String  senderProfilePicture;
-  final String  senderName;
-  final String  notification;
+  final String senderId;
+  final String senderProfilePicture;
+  final String senderName;
+  final String notification;
   final dynamic data;
 
   IncomingNotification(
@@ -23,7 +23,6 @@ class NotificationWizard extends ChangeNotifier {
   List<IncomingNotification> incomingNotificationList = [];
 
   Future<void> getUserInfo(dynamic data) async {
-    debugPrint(incomingNotificationList.toString());
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
@@ -48,16 +47,17 @@ class NotificationWizard extends ChangeNotifier {
           notification: data['notification'],
           data: data['data']);
 
-      addToNotificationList(newNoti);
+      if (newNoti.notification != "online" && newNoti.notification != "disc") {
+        addToNotificationList(newNoti);
+      } 
     }
   }
 
   void addToNotificationList(IncomingNotification newValue) {
-    debugPrint(newValue.senderId);
+    debugPrint(newValue.senderId);//TODO remove these!!
     debugPrint(newValue.notification);
     debugPrint(newValue.data?.toString());
     incomingNotificationList.add(newValue);
     notifyListeners();
   }
-
 }
