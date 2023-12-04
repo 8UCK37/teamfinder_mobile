@@ -63,6 +63,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
     twitchData = userService.twitchData;
     discordData = userService.discordData;
     return RefreshIndicator(
+      
       onRefresh: _handleRefresh,
       child: Scaffold(
         floatingActionButton: GestureDetector(
@@ -93,6 +94,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
           ),
         ),
         body: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
           children: <Widget>[
             Stack(

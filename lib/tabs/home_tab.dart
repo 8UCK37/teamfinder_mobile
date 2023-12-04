@@ -37,6 +37,7 @@ class _HomeTabState extends State<HomeTab>
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           children: <Widget>[
             Divider(

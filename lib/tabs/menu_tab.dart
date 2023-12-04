@@ -19,6 +19,7 @@ class MenuTab extends StatelessWidget {
     final userService = Provider.of<ProviderService>(context);
     final userData = userService.user;
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       // ignore: avoid_unnecessary_containers
       child: Container(
           child: Column(
