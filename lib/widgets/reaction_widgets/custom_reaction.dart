@@ -33,7 +33,7 @@ class _CustomReactionState extends State<CustomReaction>
   @override
   void initState() {
     super.initState();
-    player.audioCache.prefix = "packages/flutter_animated_reaction/";
+    player.audioCache.prefix = "assets/audio/";
     iconScaleController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
 
@@ -63,7 +63,7 @@ class _CustomReactionState extends State<CustomReaction>
     /// if failed, you can do nothing
     // return success? !isLiked:isLiked;
     iconScaleController.forward().whenComplete(() async {
-      await player.play(AssetSource("assets/audio/pop.mp3"));
+      await player.play(AssetSource("pop.mp3"));
       Future.delayed(const Duration(milliseconds: 525), () {
         widget.onTap(widget.index);
       });
@@ -85,7 +85,7 @@ class _CustomReactionState extends State<CustomReaction>
       child: GestureDetector(
         onTap: () {
           iconScaleController.forward().whenComplete(() async {
-            await player.play(AssetSource("assets/audio/pop.mp3"));
+            await player.play(AssetSource("pop.mp3"));
             widget.onTap(widget.index);
           });
         },

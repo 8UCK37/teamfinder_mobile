@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:colorfilter_generator/colorfilter_generator.dart';
 import 'package:colorfilter_generator/presets.dart';
-//import 'package:extended_image/extended_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -842,30 +842,30 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                       //the solution is to start here and go deeper into this following method
                       //untill something sticks maybe implement a new cropper
                       onTap: () async {
-                        // resetTransformation();
-                        // LoadingScreen(scaffoldGlobalKey).show();
-                        // var mergedImage = await getMergedImage();
-                        // LoadingScreen(scaffoldGlobalKey).hide();
+                        resetTransformation();
+                        LoadingScreen(scaffoldGlobalKey).show();
+                        var mergedImage = await getMergedImage();
+                        LoadingScreen(scaffoldGlobalKey).hide();
 
-                        // if (!mounted) return;
+                        if (!mounted) return;
 
-                        // Uint8List? croppedImage = await Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ImageCropper(
-                        //       image: mergedImage!,
-                        //       availableRatios: widget.cropOption!.ratios,
-                        //     ),
-                        //   ),
-                        // );
+                        Uint8List? croppedImage = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageCropper(
+                              image: mergedImage!,
+                              availableRatios: widget.cropOption!.ratios,
+                            ),
+                          ),
+                        );
 
-                        // if (croppedImage == null) return;
+                        if (croppedImage == null) return;
 
-                        // flipValue = 0;
-                        // rotateValue = 0;
+                        flipValue = 0;
+                        rotateValue = 0;
 
-                        // await currentImage.load(croppedImage);
-                        // setState(() {});
+                        await currentImage.load(croppedImage);
+                        setState(() {});
                       },
                     ),
                   if (widget.brushOption != null)
@@ -1322,254 +1322,254 @@ class BottomButton extends StatelessWidget {
 }
 
 /// Crop given image with various aspect ratios
-// class ImageCropper extends StatefulWidget {
-//   final Uint8List image;
-//   final List<o.AspectRatio> availableRatios;
+class ImageCropper extends StatefulWidget {
+  final Uint8List image;
+  final List<o.AspectRatio> availableRatios;
 
-//   const ImageCropper({
-//     super.key,
-//     required this.image,
-//     this.availableRatios = const [
-//       o.AspectRatio(title: 'Freeform'),
-//       o.AspectRatio(title: '1:1', ratio: 1),
-//       o.AspectRatio(title: '4:3', ratio: 4 / 3),
-//       o.AspectRatio(title: '5:4', ratio: 5 / 4),
-//       o.AspectRatio(title: '7:5', ratio: 7 / 5),
-//       o.AspectRatio(title: '16:9', ratio: 16 / 9),
-//     ],
-//   });
+  const ImageCropper({
+    super.key,
+    required this.image,
+    this.availableRatios = const [
+      o.AspectRatio(title: 'Freeform'),
+      o.AspectRatio(title: '1:1', ratio: 1),
+      o.AspectRatio(title: '4:3', ratio: 4 / 3),
+      o.AspectRatio(title: '5:4', ratio: 5 / 4),
+      o.AspectRatio(title: '7:5', ratio: 7 / 5),
+      o.AspectRatio(title: '16:9', ratio: 16 / 9),
+    ],
+  });
 
-//   @override
-//   createState() => _ImageCropperState();
-// }
+  @override
+  createState() => _ImageCropperState();
+}
 
-// class _ImageCropperState extends State<ImageCropper> {
-//   final GlobalKey<ExtendedImageEditorState> _controller =
-//       GlobalKey<ExtendedImageEditorState>();
+class _ImageCropperState extends State<ImageCropper> {
+  final GlobalKey<ExtendedImageEditorState> _controller =
+      GlobalKey<ExtendedImageEditorState>();
 
-//   double? currentRatio;
-//   bool isLandscape = true;
-//   int rotateAngle = 0;
+  double? currentRatio;
+  bool isLandscape = true;
+  int rotateAngle = 0;
 
-//   double? get aspectRatio => currentRatio == null
-//       ? null
-//       : isLandscape
-//           ? currentRatio!
-//           : (1 / currentRatio!);
+  double? get aspectRatio => currentRatio == null
+      ? null
+      : isLandscape
+          ? currentRatio!
+          : (1 / currentRatio!);
 
-//   @override
-//   void initState() {
-//     if (widget.availableRatios.isNotEmpty) {
-//       currentRatio = widget.availableRatios.first.ratio;
-//     }
-//     _controller.currentState?.rotate(right: true);
+  @override
+  void initState() {
+    if (widget.availableRatios.isNotEmpty) {
+      currentRatio = widget.availableRatios.first.ratio;
+    }
+    _controller.currentState?.rotate(right: true);
 
-//     super.initState();
-//   }
+    super.initState();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_controller.currentState != null) {
-//       // _controller.currentState?.
-//     }
+  @override
+  Widget build(BuildContext context) {
+    if (_controller.currentState != null) {
+      // _controller.currentState?.
+    }
 
-//     return Theme(
-//       data: ImageEditor.theme,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           actions: [
-//             IconButton(
-//               padding: const EdgeInsets.symmetric(horizontal: 8),
-//               icon: const Icon(Icons.check),
-//               onPressed: () async {
-//                 var state = _controller.currentState;
+    return Theme(
+      data: ImageEditor.theme,
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              icon: const Icon(Icons.check),
+              onPressed: () async {
+                var state = _controller.currentState;
 
-//                 if (state == null || state.getCropRect() == null) {
-//                   Navigator.pop(context);
-//                 }
+                if (state == null || state.getCropRect() == null) {
+                  Navigator.pop(context);
+                }
 
-//                 var data = await cropImageWithThread(
-//                   imageBytes: state!.rawImageData,
-//                   rect: state.getCropRect()!,
-//                 );
+                var data = await cropImageWithThread(
+                  imageBytes: state!.rawImageData,
+                  rect: state.getCropRect()!,
+                );
 
-//                 if (mounted) Navigator.pop(context, data);
-//               },
-//             ),
-//           ],
-//         ),
-//         body: Container(
-//           color: Colors.black,
-//           child: ExtendedImage.memory(
-//             widget.image,
-//             cacheRawData: true,
-//             fit: BoxFit.contain,
-//             extendedImageEditorKey: _controller,
-//             mode: ExtendedImageMode.editor,
-//             initEditorConfigHandler: (state) {
-//               return EditorConfig(
-//                 cropAspectRatio: aspectRatio,
-//               );
-//             },
-//           ),
-//         ),
-//         bottomNavigationBar: SafeArea(
-//           child: SizedBox(
-//             height: 80,
-//             child: Column(
-//               children: [
-//                 // Container(
-//                 //   height: 48,
-//                 //   decoration: const BoxDecoration(
-//                 //     boxShadow: [
-//                 //       BoxShadow(
-//                 //         color: black,
-//                 //         blurRadius: 10,
-//                 //       ),
-//                 //     ],
-//                 //   ),
-//                 //   child: ListView(
-//                 //     scrollDirection: Axis.horizontal,
-//                 //     children: <Widget>[
-//                 //       IconButton(
-//                 //         icon: Icon(
-//                 //           Icons.portrait,
-//                 //           color: isLandscape ? gray : white,
-//                 //         ).paddingSymmetric(horizontal: 8, vertical: 4),
-//                 //         onPressed: () {
-//                 //           isLandscape = false;
-//                 //
-//                 //           setState(() {});
-//                 //         },
-//                 //       ),
-//                 //       IconButton(
-//                 //         icon: Icon(
-//                 //           Icons.landscape,
-//                 //           color: isLandscape ? white : gray,
-//                 //         ).paddingSymmetric(horizontal: 8, vertical: 4),
-//                 //         onPressed: () {
-//                 //           isLandscape = true;
-//                 //
-//                 //           setState(() {});
-//                 //         },
-//                 //       ),
-//                 //       Slider(
-//                 //         activeColor: Colors.white,
-//                 //         inactiveColor: Colors.grey,
-//                 //         value: rotateAngle.toDouble(),
-//                 //         min: 0.0,
-//                 //         max: 100.0,
-//                 //         onChangeEnd: (v) {
-//                 //           rotateAngle = v.toInt();
-//                 //           setState(() {});
-//                 //         },
-//                 //         onChanged: (v) {
-//                 //           rotateAngle = v.toInt();
-//                 //           setState(() {});
-//                 //         },
-//                 //       ),
-//                 //     ],
-//                 //   ),
-//                 // ),
-//                 Container(
-//                   height: 80,
-//                   decoration: const BoxDecoration(
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.black,
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: SingleChildScrollView(
-//                     scrollDirection: Axis.horizontal,
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: <Widget>[
-//                         if (currentRatio != null && currentRatio != 1)
-//                           IconButton(
-//                             padding: const EdgeInsets.symmetric(
-//                               horizontal: 8,
-//                               vertical: 4,
-//                             ),
-//                             icon: Icon(
-//                               Icons.portrait,
-//                               color: isLandscape ? Colors.grey : Colors.white,
-//                             ),
-//                             onPressed: () {
-//                               isLandscape = false;
+                if (mounted) Navigator.pop(context, data);
+              },
+            ),
+          ],
+        ),
+        body: Container(
+          color: Colors.black,
+          child: ExtendedImage.memory(
+            widget.image,
+            cacheRawData: true,
+            fit: BoxFit.contain,
+            extendedImageEditorKey: _controller,
+            mode: ExtendedImageMode.editor,
+            initEditorConfigHandler: (state) {
+              return EditorConfig(
+                cropAspectRatio: aspectRatio,
+              );
+            },
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: SizedBox(
+            height: 80,
+            child: Column(
+              children: [
+                // Container(
+                //   height: 48,
+                //   decoration: const BoxDecoration(
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: black,
+                //         blurRadius: 10,
+                //       ),
+                //     ],
+                //   ),
+                //   child: ListView(
+                //     scrollDirection: Axis.horizontal,
+                //     children: <Widget>[
+                //       IconButton(
+                //         icon: Icon(
+                //           Icons.portrait,
+                //           color: isLandscape ? gray : white,
+                //         ).paddingSymmetric(horizontal: 8, vertical: 4),
+                //         onPressed: () {
+                //           isLandscape = false;
+                //
+                //           setState(() {});
+                //         },
+                //       ),
+                //       IconButton(
+                //         icon: Icon(
+                //           Icons.landscape,
+                //           color: isLandscape ? white : gray,
+                //         ).paddingSymmetric(horizontal: 8, vertical: 4),
+                //         onPressed: () {
+                //           isLandscape = true;
+                //
+                //           setState(() {});
+                //         },
+                //       ),
+                //       Slider(
+                //         activeColor: Colors.white,
+                //         inactiveColor: Colors.grey,
+                //         value: rotateAngle.toDouble(),
+                //         min: 0.0,
+                //         max: 100.0,
+                //         onChangeEnd: (v) {
+                //           rotateAngle = v.toInt();
+                //           setState(() {});
+                //         },
+                //         onChanged: (v) {
+                //           rotateAngle = v.toInt();
+                //           setState(() {});
+                //         },
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                Container(
+                  height: 80,
+                  decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        if (currentRatio != null && currentRatio != 1)
+                          IconButton(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            icon: Icon(
+                              Icons.portrait,
+                              color: isLandscape ? Colors.grey : Colors.white,
+                            ),
+                            onPressed: () {
+                              isLandscape = false;
 
-//                               setState(() {});
-//                             },
-//                           ),
-//                         if (currentRatio != null && currentRatio != 1)
-//                           IconButton(
-//                             padding: const EdgeInsets.symmetric(
-//                               horizontal: 8,
-//                               vertical: 4,
-//                             ),
-//                             icon: Icon(
-//                               Icons.landscape,
-//                               color: isLandscape ? Colors.white : Colors.grey,
-//                             ),
-//                             onPressed: () {
-//                               isLandscape = true;
+                              setState(() {});
+                            },
+                          ),
+                        if (currentRatio != null && currentRatio != 1)
+                          IconButton(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            icon: Icon(
+                              Icons.landscape,
+                              color: isLandscape ? Colors.white : Colors.grey,
+                            ),
+                            onPressed: () {
+                              isLandscape = true;
 
-//                               setState(() {});
-//                             },
-//                           ),
-//                         for (var ratio in widget.availableRatios)
-//                           TextButton(
-//                             onPressed: () {
-//                               currentRatio = ratio.ratio;
+                              setState(() {});
+                            },
+                          ),
+                        for (var ratio in widget.availableRatios)
+                          TextButton(
+                            onPressed: () {
+                              currentRatio = ratio.ratio;
 
-//                               setState(() {});
-//                             },
-//                             child: Container(
-//                                 padding: const EdgeInsets.symmetric(
-//                                     horizontal: 8, vertical: 4),
-//                                 child: Text(
-//                                   i18n(ratio.title),
-//                                   style: TextStyle(
-//                                     color: currentRatio == ratio.ratio
-//                                         ? Colors.white
-//                                         : Colors.grey,
-//                                   ),
-//                                 )),
-//                           )
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
+                              setState(() {});
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                child: Text(
+                                  i18n(ratio.title),
+                                  style: TextStyle(
+                                    color: currentRatio == ratio.ratio
+                                        ? Colors.white
+                                        : Colors.grey,
+                                  ),
+                                )),
+                          )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-//   Future<Uint8List?> cropImageWithThread({
-//     required Uint8List imageBytes,
-//     required Rect rect,
-//   }) async {
-//     img.Command cropTask = img.Command();
-//     cropTask.decodeImage(imageBytes);
+  Future<Uint8List?> cropImageWithThread({
+    required Uint8List imageBytes,
+    required Rect rect,
+  }) async {
+    img.Command cropTask = img.Command();
+    cropTask.decodeImage(imageBytes);
 
-//     cropTask.copyCrop(
-//       x: rect.topLeft.dx.ceil(),
-//       y: rect.topLeft.dy.ceil(),
-//       height: rect.height.ceil(),
-//       width: rect.width.ceil(),
-//     );
+    cropTask.copyCrop(
+      x: rect.topLeft.dx.ceil(),
+      y: rect.topLeft.dy.ceil(),
+      height: rect.height.ceil(),
+      width: rect.width.ceil(),
+    );
 
-//     img.Command encodeTask = img.Command();
-//     encodeTask.subCommand = cropTask;
-//     encodeTask.encodeJpg();
+    img.Command encodeTask = img.Command();
+    encodeTask.subCommand = cropTask;
+    encodeTask.encodeJpg();
 
-//     return encodeTask.getBytesThread();
-//   }
-// }
+    return encodeTask.getBytesThread();
+  }
+}
 
 /// Return filter applied Uint8List image
 class ImageFilters extends StatefulWidget {
