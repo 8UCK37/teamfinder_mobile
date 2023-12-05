@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,6 +17,8 @@ import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
 import 'package:dio/dio.dart';
+
+import '../../widgets/custom_image_editor/image_editor_plus.dart';
 
 class ChatScreen extends StatefulWidget {
   final String name;
@@ -173,14 +176,37 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   Future<void> pickImage() async {
+    //TODO the save button insive ImageEditor doesn't actually do anything
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    _selectedImage = File(pickedImage!.path);
+    selectedImagePath = pickedImage.path;
+    Uint8List file = await fileToUint8List(_selectedImage!);
+    // ignore: use_build_context_synchronously, unused_local_variable
+    var editedImage = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageEditor(
+          image: file,
+        ),
+      ),
+    );
     setState(() {
       if (pickedImage != null) {
         _selectedImage = File(pickedImage.path);
         selectedImagePath = pickedImage.path;
       }
     });
+  }
+
+  Future<Uint8List> fileToUint8List(File file) async {
+    // Read the file as bytes
+    List<int> bytes = await file.readAsBytes();
+
+    // Convert the list of bytes to Uint8List
+    Uint8List uint8List = Uint8List.fromList(bytes);
+
+    return uint8List;
   }
 
   Future<void> sendMsg(String text) async {
