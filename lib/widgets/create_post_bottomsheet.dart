@@ -31,9 +31,11 @@ class _CreatePostState extends State<CreatePost> {
     final userService = Provider.of<ProviderService>(context, listen: true);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
-      height: MediaQuery.of(context).size.height - 25,
+      height: MediaQuery.of(context).size.height-25,
       child: Scaffold(
           appBar: AppBar(
+            titleSpacing: 0,
+            toolbarHeight: 50,
             automaticallyImplyLeading: true,
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,

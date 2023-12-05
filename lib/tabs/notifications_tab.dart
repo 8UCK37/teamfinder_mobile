@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
-import 'package:teamfinder_mobile/widgets/separator_widget.dart';
 import '../widgets/notification_widget.dart';
 
 class NotificationsTab extends StatefulWidget {
