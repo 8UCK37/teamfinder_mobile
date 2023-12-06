@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart';
@@ -17,9 +18,8 @@ import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
 import 'package:dio/dio.dart';
-
-import '../../widgets/custom_image_editor/image_editor_plus.dart';
-
+import '../camera_ui/CameraView.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
 class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
@@ -188,15 +188,33 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       MaterialPageRoute(
         builder: (context) => ImageEditor(
           image: file,
+          // friendId: widget.friendId,
+          // name:widget.name,
+          // profileImage: widget.profileImage,
         ),
       ),
     );
-    setState(() {
-      if (pickedImage != null) {
-        _selectedImage = File(pickedImage.path);
-        selectedImagePath = pickedImage.path;
-      }
-    });
+
+    String fileName = 'edited.jpg';
+    XFile? xFile = await convertUint8ListToXFile(editedImage!, fileName);
+
+    // ignore: use_build_context_synchronously
+    await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (builder) => CameraViewPage(
+                  path: xFile!.path,
+                  friendId: widget.friendId,
+                  name: widget.name,
+                  profileImage: widget.profileImage,
+                )));
+    // setState(() {
+    //   // ignore: unnecessary_null_comparison
+    //   if (pickedImage != null) {
+    //     _selectedImage = File(pickedImage.path);
+    //     selectedImagePath = pickedImage.path;
+    //   }
+    // });
   }
 
   Future<Uint8List> fileToUint8List(File file) async {
@@ -207,6 +225,19 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     Uint8List uint8List = Uint8List.fromList(bytes);
 
     return uint8List;
+  }
+
+  Future<XFile?> convertUint8ListToXFile(
+      Uint8List uint8List, String fileName) async {
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = tempDir.path;
+    final tempFilePath = '$tempPath/$fileName';
+
+    // Write the Uint8List to a file
+    await File(tempFilePath).writeAsBytes(uint8List);
+
+    // Create an XFile from the file path
+    return XFile(tempFilePath);
   }
 
   Future<void> sendMsg(String text) async {
@@ -287,12 +318,17 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => ChatHome()));
-          return false;
         },
+        // onPopInvoked: () async {
+        //   Navigator.pushReplacement(
+        //       context, MaterialPageRoute(builder: (context) => ChatHome()));
+        //   return false;
+        // },
         child: Scaffold(
           appBar: AppBar(
             iconTheme: const IconThemeData(color: Colors.white),
@@ -351,7 +387,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     controller: _scrollController,
                     padding: const EdgeInsets.all(8.0),
                     reverse: false,
-                    itemCount: chatMsgs!.length, 
+                    itemCount: chatMsgs!.length,
                     itemBuilder: (context, int i) {
                       if (chatMsgs![i].photoUrl != null) {
                         //debugPrint(chatMsgs![i].photoUrl);
@@ -388,22 +424,22 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     },
                   ),
                 ),
-                Visibility(
-                  visible: _selectedImage != null,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 0, vertical: 0.0),
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      image: _selectedImage != null
-                          ? DecorationImage(
-                              image: FileImage(_selectedImage!),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                  ),
-                ),
+                // Visibility(
+                //   visible: _selectedImage != null,
+                //   child: Container(
+                //     margin: const EdgeInsets.symmetric(
+                //         horizontal: 0, vertical: 0.0),
+                //     height: 200.0,
+                //     decoration: BoxDecoration(
+                //       image: _selectedImage != null
+                //           ? DecorationImage(
+                //               image: FileImage(_selectedImage!),
+                //               fit: BoxFit.cover,
+                //             )
+                //           : null,
+                //     ),
+                //   ),
+                // ),
                 //if (_selectedImage != null) Image.file(_selectedImage!),
                 const Divider(
                   height: 1.0,

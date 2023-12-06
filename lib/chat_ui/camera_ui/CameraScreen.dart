@@ -8,13 +8,17 @@ import 'package:path_provider/path_provider.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraView.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/VideoView.dart';
 
-List<CameraDescription> cameras=[];
+List<CameraDescription> cameras = [];
 
 class CameraScreen extends StatefulWidget {
   final String friendId;
   final String name;
   final String profileImage;
-  const CameraScreen({super.key, required this.friendId,required this.name, required this.profileImage});
+  const CameraScreen(
+      {super.key,
+      required this.friendId,
+      required this.name,
+      required this.profileImage});
   @override
   // ignore: library_private_types_in_public_api
   _CameraScreenState createState() => _CameraScreenState();
@@ -106,7 +110,8 @@ class _CameraScreenState extends State<CameraScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (builder) => VideoViewPage(
-                                        path: videopath.path, key: null,
+                                        path: videopath.path,
+                                        key: null,
                                       )));
                         },
                         onTap: () {
@@ -167,13 +172,15 @@ class _CameraScreenState extends State<CameraScreen> {
   void takePhoto(BuildContext context) async {
     XFile file = await _cameraController.takePicture();
     // ignore: use_build_context_synchronously
+    debugPrint("cameraview screen");
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (builder) => CameraViewPage(
                   path: file.path,
                   friendId: widget.friendId,
-                  name:widget.name,
+                  name: widget.name,
                   profileImage: widget.profileImage,
                 )));
   }

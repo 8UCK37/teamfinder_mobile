@@ -99,18 +99,18 @@ class _CameraViewState extends State<CameraViewPage>
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: [
-          IconButton(
-              icon: const Icon(
-                Icons.crop_rotate,
-                size: 27,
-              ),
-              onPressed: () {}),
-          IconButton(
-              icon: const Icon(
-                Icons.emoji_emotions_outlined,
-                size: 27,
-              ),
-              onPressed: () {}),
+          // IconButton(
+          //     icon: const Icon(
+          //       Icons.crop_rotate,
+          //       size: 27,
+          //     ),
+          //     onPressed: () {}),
+          // IconButton(
+          //     icon: const Icon(
+          //       Icons.emoji_emotions_outlined,
+          //       size: 27,
+          //     ),
+          //     onPressed: () {}),
           IconButton(
               icon: const Icon(
                 Icons.title,
