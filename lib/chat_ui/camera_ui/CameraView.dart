@@ -1,18 +1,20 @@
 // ignore_for_file: sized_box_for_whitespace, must_be_immutable
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 import '../../services/data_service.dart';
 import '../../services/socket_service.dart';
 
 class CameraViewPage extends StatefulWidget {
-  final String path;
+  String path;
   final String name;
   final String friendId;
   final String profileImage;
@@ -96,8 +98,24 @@ class _CameraViewState extends State<CameraViewPage>
     }
   }
 
+  Future<String> _saveEditedImage(Uint8List editedImage) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+
+    // Generate a unique filename based on the current timestamp.
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    String newImagePath = '$appDocPath/edited_image_$timestamp.png';
+
+    // Write the edited image data to the file.
+    File newImageFile = File(newImagePath);
+    await newImageFile.writeAsBytes(editedImage);
+
+    return newImagePath;
+  }
+
   @override
   Widget build(BuildContext context) {
+    String newImagePath = "";
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -109,6 +127,7 @@ class _CameraViewState extends State<CameraViewPage>
                 size: 27,
               ),
               onPressed: () async {
+                debugPrint(widget.path.toString());
                 // ignore: use_build_context_synchronously, unused_local_variable
                 var editedImage = await Navigator.push(
                   context,
@@ -118,8 +137,12 @@ class _CameraViewState extends State<CameraViewPage>
                     ),
                   ),
                 );
-
-                setState(() {});
+                
+                newImagePath = await _saveEditedImage(editedImage);
+                setState(() {
+                  debugPrint(newImagePath);
+                  widget.path = newImagePath;
+                });
               }),
         ],
       ),

@@ -391,26 +391,30 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     children: [
                       ChatMessageBar(
                         textController: _textController,
+                        sendButtonColor: Colors.teal,
                         onSend: (String typedMsg) {
                           sendMsg(typedMsg);
                         },
                         actions: [
-                          InkWell(
-                            child: const Icon(
-                              Icons.link,
-                              color: Colors.orangeAccent,
-                              size: 24,
+                          Transform.rotate(
+                            angle:45,
+                            child: InkWell(
+                              child: const Icon(
+                                Icons.attach_file,
+                                color: Colors.blue,
+                                size: 24,
+                              ),
+                              onTap: () {
+                                pickImage();
+                              },
                             ),
-                            onTap: () {
-                              pickImage();
-                            },
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8, right: 8),
                             child: InkWell(
                               child: const Icon(
                                 Icons.camera_alt,
-                                color: Colors.green,
+                                color: Color.fromARGB(255, 9, 38, 53),
                                 size: 24,
                               ),
                               onTap: () {

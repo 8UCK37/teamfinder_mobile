@@ -167,13 +167,14 @@ class ChatMessageBar extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
-                  child: InkWell(
-                    child: Icon(
-                      Icons.send,
-                      color: sendButtonColor,
-                      size: 24,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape:const CircleBorder(),
+                      padding:const EdgeInsets.all(12), // Adjust the padding as needed
+                      backgroundColor: sendButtonColor,
+                      elevation: 11,
                     ),
-                    onTap: () {
+                    onPressed: () {
                       if (textController.text.trim() != '') {
                         if (onSend != null) {
                           onSend!(textController.text.trim());
@@ -181,7 +182,13 @@ class ChatMessageBar extends StatelessWidget {
                         textController.text = '';
                       }
                     },
+                    child: const Icon(
+                      Icons.send,
+                      color: Colors.white, // Adjust the icon color as needed
+                      size: 20,
+                    ),
                   ),
+
                 ),
               ],
             ),
