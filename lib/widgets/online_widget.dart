@@ -2,15 +2,17 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/services/socket_service.dart';
 
+import '../services/data_service.dart';
+
 class OnlineWidget extends StatefulWidget {
-  final SocketService socketService;
-  const OnlineWidget({super.key, required this.socketService});
+  const OnlineWidget({super.key});
   @override
   // ignore: library_private_types_in_public_api
   _OnlineWidgetState createState() => _OnlineWidgetState();
@@ -36,7 +38,9 @@ class _OnlineWidgetState extends State<OnlineWidget>
   }
 
   void incNoti() {
-    _socketSubscription = widget.socketService.getIncomingNoti().listen((data) {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    SocketService socketService = userService.socketService;
+    _socketSubscription = socketService.getIncomingNoti().listen((data) {
       //DateTime now = DateTime.now();
       //debugPrint('Received noti from socket: $data');
       if (data['notification'] == 'disc') {

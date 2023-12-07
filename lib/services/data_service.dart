@@ -7,6 +7,8 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 
+import 'socket_service.dart';
+
 class ProviderService extends ChangeNotifier {
   Map<String, dynamic> user = {}; // Initialize as an empty map
   List<PostPojo>? feed;
@@ -17,7 +19,7 @@ class ProviderService extends ChangeNotifier {
   bool? darkTheme = false;
   int? replyingTo;
   Map<Language, bool> selectedLang = {};
-
+  SocketService  socketService = SocketService();
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -40,6 +42,11 @@ class ProviderService extends ChangeNotifier {
 
   void updateSelectedLangMap(Map<Language, bool> newValue) {
     selectedLang = newValue;
+    notifyListeners();
+  }
+
+  void setSocket(SocketService newValue) {
+    socketService = newValue;
     notifyListeners();
   }
 
@@ -240,6 +247,4 @@ class ProviderService extends ChangeNotifier {
     //debugPrint(dbString);
     return dbString;
   }
-
-  
 }

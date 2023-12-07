@@ -58,8 +58,6 @@ class _HomePageState extends State<HomePage>
     });
   }
 
-  
-  
   void fetchFeed() {
     //debugPrint('fetchFeedCalled');
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -102,6 +100,7 @@ class _HomePageState extends State<HomePage>
         // ignore: use_build_context_synchronously
         socketService.setupSocketConnection(context);
         socketService.setSocketId(userData['id']);
+        userService.setSocket(socketService);
         if (userData["steamId"] != null) {
           userService.getSteamInfo(userData["steamId"]);
         }
@@ -206,17 +205,36 @@ class _HomePageState extends State<HomePage>
             unselectedLabelColor: Colors.grey,
             //labelColor: Colors.deepPurple,
             tabs: const [
-              Tab(icon: Icon(Icons.receipt_long, size: 28.0,color: Colors.blue,)),
-              Tab(icon: Icon(Icons.co_present, size: 28.0,color: Colors.green,)),
-              Tab(icon: Icon(Icons.diversity_3, size: 32.0,color: Colors.purple)),
-              Tab(icon: Icon(FontAwesomeIcons.bell, size: 25.0,color: Colors.red,)),
-              Tab(icon: Icon(Icons.menu, size: 30.0,color: Colors.orange, key: Key('menuTab')))
+              Tab(
+                  icon: Icon(
+                Icons.receipt_long,
+                size: 28.0,
+                color: Colors.blue,
+              )),
+              Tab(
+                  icon: Icon(
+                Icons.co_present,
+                size: 28.0,
+                color: Colors.green,
+              )),
+              Tab(
+                  icon: Icon(Icons.diversity_3,
+                      size: 32.0, color: Colors.purple)),
+              Tab(
+                  icon: Icon(
+                FontAwesomeIcons.bell,
+                size: 25.0,
+                color: Colors.red,
+              )),
+              Tab(
+                  icon: Icon(Icons.menu,
+                      size: 30.0, color: Colors.orange, key: Key('menuTab')))
             ],
           ),
           //systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: TabBarView(controller: _tabController, children: [
-          HomeTab(socketService: socketService,),
+          const HomeTab(),
           const ProfileTab(),
           const FriendsTab(),
           const NotificationsTab(),

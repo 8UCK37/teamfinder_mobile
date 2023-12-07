@@ -2,24 +2,23 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import '../../pojos/chat_model_pojo.dart';
+import '../../services/data_service.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
 import 'package:dio/dio.dart';
 import '../camera_ui/CameraView.dart';
-import 'package:image_editor_plus/image_editor_plus.dart';
 class ChatScreen extends StatefulWidget {
   final String name;
   final String friendId;
@@ -36,7 +35,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   List<ChatModelPojo>? chatMsgs = [];
-  final SocketService socketService = SocketService();
+  SocketService? socketService;
   bool isType = false;
   final ScrollController _scrollController = ScrollController();
   File? _selectedImage;
@@ -48,9 +47,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _fetchChatMsgs(widget.friendId);
-    final user = FirebaseAuth.instance.currentUser;
-    socketService.setupSocketConnection(context);
-    socketService.setSocketId(user!.uid);
     incMsg();
     incNoti();
   }
@@ -75,6 +71,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   void incMsg() {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    SocketService socketService = userService.socketService;
     _socketSubscription = socketService.getIncomingMsg().listen((data) {
       // Process the received data here
       debugPrint('Received msg from socket: $data');
@@ -98,6 +96,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   void incNoti() {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    SocketService socketService = userService.socketService;
     _socketSubscription = socketService.getIncomingNoti().listen((data) {
       //DateTime now = DateTime.now();
       debugPrint('Received noti from socket: $data');
@@ -181,29 +181,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     _selectedImage = File(pickedImage!.path);
     selectedImagePath = pickedImage.path;
-    Uint8List file = await fileToUint8List(_selectedImage!);
-    // ignore: use_build_context_synchronously, unused_local_variable
-    var editedImage = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ImageEditor(
-          image: file,
-          // friendId: widget.friendId,
-          // name:widget.name,
-          // profileImage: widget.profileImage,
-        ),
-      ),
-    );
-
-    String fileName = 'edited.jpg';
-    XFile? xFile = await convertUint8ListToXFile(editedImage!, fileName);
 
     // ignore: use_build_context_synchronously
     await Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (builder) => CameraViewPage(
-                  path: xFile!.path,
+                  path: selectedImagePath!,
                   friendId: widget.friendId,
                   name: widget.name,
                   profileImage: widget.profileImage,
@@ -217,30 +201,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     // });
   }
 
-  Future<Uint8List> fileToUint8List(File file) async {
-    // Read the file as bytes
-    List<int> bytes = await file.readAsBytes();
-
-    // Convert the list of bytes to Uint8List
-    Uint8List uint8List = Uint8List.fromList(bytes);
-
-    return uint8List;
-  }
-
-  Future<XFile?> convertUint8ListToXFile(
-      Uint8List uint8List, String fileName) async {
-    final tempDir = await getTemporaryDirectory();
-    final tempPath = tempDir.path;
-    final tempFilePath = '$tempPath/$fileName';
-
-    // Write the Uint8List to a file
-    await File(tempFilePath).writeAsBytes(uint8List);
-
-    // Create an XFile from the file path
-    return XFile(tempFilePath);
-  }
 
   Future<void> sendMsg(String text) async {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    SocketService socketService = userService.socketService;
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     DateTime now = DateTime.now();

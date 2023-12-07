@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import 'package:teamfinder_mobile/services/socket_service.dart';
 import '../pojos/post_pojo.dart';
 import '../widgets/online_widget.dart';
 import '../widgets/post_widget.dart';
@@ -9,8 +8,8 @@ import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
 
 class HomeTab extends StatefulWidget {
-  final SocketService socketService;
-  const HomeTab({super.key, required this.socketService});
+  
+  const HomeTab({super.key,});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -44,7 +43,7 @@ class _HomeTabState extends State<HomeTab>
                 color: userService.darkTheme!
                     ? const Color.fromARGB(255, 74, 74, 74)
                     : Colors.grey),
-            OnlineWidget(socketService: widget.socketService,),
+            const OnlineWidget(),
             SeparatorWidget(
                 color: userService.darkTheme!
                     ? const Color.fromARGB(255, 74, 74, 74)

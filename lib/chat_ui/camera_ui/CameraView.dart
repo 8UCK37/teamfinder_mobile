@@ -5,7 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
+import '../../services/data_service.dart';
 import '../../services/socket_service.dart';
 
 class CameraViewPage extends StatefulWidget {
@@ -27,12 +30,12 @@ class CameraViewPage extends StatefulWidget {
 
 class _CameraViewState extends State<CameraViewPage>
     with TickerProviderStateMixin {
-  final SocketService socketService = SocketService();
+  SocketService? socketService;
   @override
   void initState() {
     super.initState();
     //final user = FirebaseAuth.instance.currentUser;
-    socketService.setupSocketConnection(context);
+    //socketService.setupSocketConnection(context);
     //socketService.setSocketId(user!.uid);
   }
 
@@ -42,14 +45,15 @@ class _CameraViewState extends State<CameraViewPage>
     //DateTime now = DateTime.now();
     debugPrint(widget.path);
     debugPrint(widget.caption);
-
+    final userService = Provider.of<ProviderService>(context, listen: true);
     var data = {
       'receiver': widget.friendId,
       'msg': text,
       'sender': user!.uid,
       'photo': true
     };
-    socketService.send(data);
+    socketService = userService.socketService;
+    socketService!.send(data);
     FocusScopeNode currentFocus = FocusScope.of(context);
 
     if (!currentFocus.hasPrimaryFocus) {
@@ -84,7 +88,7 @@ class _CameraViewState extends State<CameraViewPage>
                       friendId: widget.friendId,
                       name: widget.name,
                       profileImage: widget.profileImage,
-                      newChat: {'msg':widget.caption,'photoUrl':widget.path},
+                      newChat: {'msg': widget.caption, 'photoUrl': widget.path},
                     )));
       }
     } catch (e) {
@@ -99,30 +103,24 @@ class _CameraViewState extends State<CameraViewPage>
       appBar: AppBar(
         backgroundColor: Colors.black,
         actions: [
-          // IconButton(
-          //     icon: const Icon(
-          //       Icons.crop_rotate,
-          //       size: 27,
-          //     ),
-          //     onPressed: () {}),
-          // IconButton(
-          //     icon: const Icon(
-          //       Icons.emoji_emotions_outlined,
-          //       size: 27,
-          //     ),
-          //     onPressed: () {}),
-          IconButton(
-              icon: const Icon(
-                Icons.title,
-                size: 27,
-              ),
-              onPressed: () {}),
           IconButton(
               icon: const Icon(
                 Icons.edit,
                 size: 27,
               ),
-              onPressed: () {}),
+              onPressed: () async {
+                // ignore: use_build_context_synchronously, unused_local_variable
+                var editedImage = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImageEditor(
+                      image: File(widget.path),
+                    ),
+                  ),
+                );
+
+                setState(() {});
+              }),
         ],
       ),
       body: Container(
@@ -135,7 +133,7 @@ class _CameraViewState extends State<CameraViewPage>
               height: MediaQuery.of(context).size.height - 150,
               child: Image.file(
                 File(widget.path),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
             Positioned(

@@ -54,9 +54,9 @@ class NotificationWizard extends ChangeNotifier {
   }
 
   void addToNotificationList(IncomingNotification newValue) {
-    debugPrint(newValue.senderId);//TODO remove these!!
-    debugPrint(newValue.notification);
-    debugPrint(newValue.data?.toString());
+    // debugPrint(newValue.senderId);//TODO remove these!!
+    // debugPrint(newValue.notification);
+    // debugPrint(newValue.data?.toString());
     incomingNotificationList.add(newValue);
     notifyListeners();
   }
