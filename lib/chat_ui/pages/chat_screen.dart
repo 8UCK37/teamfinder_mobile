@@ -24,12 +24,14 @@ class ChatScreen extends StatefulWidget {
   final String friendId;
   final String profileImage;
   final dynamic newChat;
-  ChatScreen(
-      {required this.friendId,
+  const ChatScreen(
+      {super.key, 
+      required this.friendId,
       required this.name,
       required this.profileImage,
       this.newChat});
   @override
+  // ignore: library_private_types_in_public_api
   _ChatScreenState createState() => _ChatScreenState();
 }
 
@@ -148,8 +150,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         if (mounted) {
           setState(() {
             if (checkNewChat()) {
-              //debugPrint('from camera');
-              //debugPrint(widget.newChat.toString());
+              debugPrint('from camera');
+              debugPrint(widget.newChat.toString());
               DateTime now = DateTime.now();
               chatDump.add(ChatModelPojo(
                   msg: widget.newChat['msg'],
@@ -192,13 +194,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   name: widget.name,
                   profileImage: widget.profileImage,
                 )));
-    // setState(() {
-    //   // ignore: unnecessary_null_comparison
-    //   if (pickedImage != null) {
-    //     _selectedImage = File(pickedImage.path);
-    //     selectedImagePath = pickedImage.path;
-    //   }
-    // });
   }
 
 
@@ -388,23 +383,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     },
                   ),
                 ),
-                // Visibility(
-                //   visible: _selectedImage != null,
-                //   child: Container(
-                //     margin: const EdgeInsets.symmetric(
-                //         horizontal: 0, vertical: 0.0),
-                //     height: 200.0,
-                //     decoration: BoxDecoration(
-                //       image: _selectedImage != null
-                //           ? DecorationImage(
-                //               image: FileImage(_selectedImage!),
-                //               fit: BoxFit.cover,
-                //             )
-                //           : null,
-                //     ),
-                //   ),
-                // ),
-                //if (_selectedImage != null) Image.file(_selectedImage!),
                 const Divider(
                   height: 1.0,
                 ),

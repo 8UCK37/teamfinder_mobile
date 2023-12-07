@@ -37,7 +37,7 @@ dependencies:
   audioplayers: ^5.2.1
   auto_size_text: ^3.0.0
   bottom_sheet: ^3.1.2
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.0
   camera: ^0.10.5+2
   chat_bubbles: ^1.4.1
   colorful_circular_progress_indicator: ^0.0.2

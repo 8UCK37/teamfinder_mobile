@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
@@ -143,34 +145,11 @@ class ChatImageBubble extends StatelessWidget {
                                   ? CrossAxisAlignment.end
                                   : CrossAxisAlignment.start,
                               children: [
-                                CachedNetworkImage(
+                                ImageTypeSwitcher(
                                   imageUrl: imageUrl,
-                                  placeholder: (context, url) =>
-                                      const Center(
-                                          child: SizedBox(
-                                            height: 40,
-                                            width: 40,
-                                            child:
-                                                ColorfulCircularProgressIndicator(
-                                              colors: [
-                                                Colors.blue,
-                                                Colors.red,
-                                                Colors.amber,
-                                                Colors.green
-                                              ],
-                                              strokeWidth: 5,
-                                              indicatorHeight: 5,
-                                              indicatorWidth: 5,
-                                            ),
-                                          ),
-                                        ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
                                   fit: BoxFit.fill,
-                                  height: 200.0,
-                                  width:200.0
-                                ),
-                               
+                                  height: 200,
+                                  width: 200,),
                                 Padding(
                                   padding: stateTick
                                       ? const EdgeInsets.only(right: 20)
@@ -230,7 +209,7 @@ class ChatImageBubble extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return _DetailScreen(
                           tag: id,
-                          image: Image.network(imageUrl),
+                          imageWidget: ImageTypeSwitcher(imageUrl: imageUrl,fit: BoxFit.contain,),
                         );
                       }));
                     }),
@@ -244,9 +223,9 @@ class ChatImageBubble extends StatelessWidget {
 /// detail screen of the image, display when tap on the image bubble
 class _DetailScreen extends StatefulWidget {
   final String tag;
-  final Widget image;
+  final Widget imageWidget;
 
-  const _DetailScreen({Key? key, required this.tag, required this.image})
+  const _DetailScreen({Key? key, required this.tag, required this.imageWidget})
       : super(key: key);
 
   @override
@@ -269,16 +248,62 @@ class _DetailScreenState extends State<_DetailScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Center(
-          child: Hero(
-            tag: widget.tag,
-            child: widget.image,
-          ),
+          child:
+              Hero(tag: widget.tag, child: Center(child: widget.imageWidget)),
         ),
       ),
       onTap: () {
         Navigator.pop(context);
       },
     );
+  }
+}
+
+class ImageTypeSwitcher extends StatefulWidget {
+  final String imageUrl;
+  final double? height;
+  final double? width;
+  final BoxFit fit;
+  const ImageTypeSwitcher({super.key, 
+        required this.imageUrl, 
+        this.height, 
+        this.width, 
+        required this.fit});
+
+  @override
+  State<ImageTypeSwitcher> createState() => _ImageTypeSwitcherState();
+}
+
+class _ImageTypeSwitcherState extends State<ImageTypeSwitcher> {
+  @override
+  Widget build(BuildContext context) {
+    return widget.imageUrl.startsWith('https')
+        ? CachedNetworkImage(
+            imageUrl: widget.imageUrl,
+            placeholder: (context, url) => const Center(
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: ColorfulCircularProgressIndicator(
+                  colors: [Colors.blue, Colors.red, Colors.amber, Colors.green],
+                  strokeWidth: 5,
+                  indicatorHeight: 5,
+                  indicatorWidth: 5,
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+            fit: widget.fit,
+            height: widget.height,
+            width:widget.width
+          )
+        : Image.file(
+            File(widget.imageUrl), 
+            fit: widget.fit,
+            height: widget.height,
+            width:widget.width
+          );
   }
 }

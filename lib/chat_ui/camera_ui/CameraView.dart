@@ -45,7 +45,7 @@ class _CameraViewState extends State<CameraViewPage>
     //DateTime now = DateTime.now();
     debugPrint(widget.path);
     debugPrint(widget.caption);
-    final userService = Provider.of<ProviderService>(context, listen: true);
+    final userService = Provider.of<ProviderService>(context, listen: false);
     var data = {
       'receiver': widget.friendId,
       'msg': text,
@@ -167,7 +167,7 @@ class _CameraViewState extends State<CameraViewPage>
                       ),
                       suffixIcon: GestureDetector(
                         onTap: () {
-                          debugPrint(widget.path.toString());
+                          debugPrint('170: ${widget.path.toString()}');
                           debugPrint(widget.caption);
                           sendMsg(widget.caption);
                         },
