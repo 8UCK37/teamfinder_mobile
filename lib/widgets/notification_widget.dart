@@ -30,6 +30,29 @@ class NotificationWidget extends StatelessWidget {
     return notificationText;
   }
 
+  String getCurrentTimeAndDate() {
+    // Get the current date and time
+    DateTime now = DateTime.now();
+
+    // Format the date and time
+    String formattedDate ="${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}";
+    String formattedTime ="${_twoDigits(now.hour)}:${_twoDigits(now.minute)}:${_twoDigits(now.second)}";
+
+    // Combine date and time
+    String result = "$formattedDate $formattedTime";
+
+    return result;
+  }
+
+  // Helper function to ensure two digits for date and time components
+  String _twoDigits(int n) {
+    if (n >= 10) {
+      return "$n";
+    } else {
+      return "0$n";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -70,8 +93,8 @@ class NotificationWidget extends StatelessWidget {
                                   fontSize: 14, fontWeight: FontWeight.normal)),
                         ])),
                   ),
-                  const Text('notification.time',
-                      style: TextStyle(fontSize: 15.0, color: Colors.grey)),
+                  Text(getCurrentTimeAndDate(),
+                      style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
                 ],
               ),
             ],

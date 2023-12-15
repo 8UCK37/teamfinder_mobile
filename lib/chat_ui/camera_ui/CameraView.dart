@@ -6,12 +6,13 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:image_editor_plus/image_editor_plus.dart';
+//import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
 import '../../services/data_service.dart';
 import '../../services/socket_service.dart';
+import '../../utils/custom_image_editor.dart';
 
 class CameraViewPage extends StatefulWidget {
   String path;
@@ -137,11 +138,14 @@ class _CameraViewState extends State<CameraViewPage>
                     ),
                   ),
                 );
-                
-                newImagePath = await _saveEditedImage(editedImage);
+                if (editedImage != null) {
+                  newImagePath = await _saveEditedImage(editedImage);
+                }
                 setState(() {
                   debugPrint(newImagePath);
-                  widget.path = newImagePath;
+                  if (editedImage != null) {
+                    widget.path = newImagePath;
+                  }
                 });
               }),
         ],

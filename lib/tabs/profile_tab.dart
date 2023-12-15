@@ -43,13 +43,15 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
   String convertlistTolangString(Map<String, dynamic> userInfo) {
     String selectedLangString = '';
-    for (String index in userInfo['Language'].split(",")) {
+    if(userInfo['Language']!=null){
+      for (String index in userInfo['Language'].split(",")) {
       if (selectedLangString.isEmpty) {
         selectedLangString = Language.values[int.parse(index) - 1].label;
       } else {
         selectedLangString =
             "$selectedLangString, ${Language.values[int.parse(index) - 1].label}";
       }
+    }
     }
     return selectedLangString;
   }
