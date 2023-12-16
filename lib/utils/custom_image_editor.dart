@@ -35,6 +35,8 @@ Map<String, String> _translations = {};
 String i18n(String sourceString) =>
     _translations[sourceString.toLowerCase()] ?? sourceString;
 
+bool transformed = false;
+
 /// Single endpoint for MultiImageEditor & SingleImageEditor
 class ImageEditor extends StatelessWidget {
   final dynamic image;
@@ -576,8 +578,9 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
 
                   if (mounted) Navigator.pop(context, json);
                 } else {
-                  var editedImageBytes = await getMergedImage(widget.outputFormat & 0xFE);
-              
+                  var editedImageBytes =
+                      await getMergedImage(widget.outputFormat & 0xFE);
+
                   loadingScreen.hide();
 
                   if (mounted) Navigator.pop(context, editedImageBytes);
@@ -589,10 +592,6 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
       ),
     ];
   }
-
-  
-
- 
 
   @override
   void initState() {
@@ -627,13 +626,16 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
     Uint8List? image;
 
     if (layers.length == 1 && layers.first is BackgroundLayerData) {
-      image = (layers.first as BackgroundLayerData).image.bytes;
+      if (transformed) {
+        image = await screenshotController.capture();
+      } else {
+        image = (layers.first as BackgroundLayerData).image.bytes;
+      }
     } else if (layers.length == 1 && layers.first is ImageLayerData) {
       image = (layers.first as ImageLayerData).image.bytes;
     } else {
       image = await screenshotController.capture(pixelRatio: pixelRatio);
     }
-
     // conversion for non-png
     if (image != null &&
         (format == o.OutputFormat.heic ||
@@ -975,6 +977,7 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                       onTap: () {
                         setState(() {
                           flipValue = flipValue == 0 ? math.pi : 0;
+                          transformed = true;
                         });
                       },
                     ),
@@ -988,7 +991,9 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                         currentImage.height = t;
 
                         rotateValue--;
-                        setState(() {});
+                        setState(() {
+                          transformed = true;
+                        });
                       },
                     ),
                   if (widget.rotateOption != null)
@@ -1001,7 +1006,9 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                         currentImage.height = t;
 
                         rotateValue++;
-                        setState(() {});
+                        setState(() {
+                          transformed = true;
+                        });
                       },
                     ),
                   if (widget.blurOption != null)
