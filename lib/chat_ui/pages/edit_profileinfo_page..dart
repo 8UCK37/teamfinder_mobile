@@ -23,23 +23,28 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
   final FocusNode nameTextArea = FocusNode();
   final TextEditingController _textControllername = TextEditingController();
-  late String nameHint;
+  String namePlaceholder = '';
+  late String nameHint = 'wtf';
 
   final FocusNode bioTextArea = FocusNode();
   final TextEditingController _textControllerbio = TextEditingController();
-  late String bioHint;
+  late String bioPlaceholder = '';
+  late String bioHint = "Add bio";
 
   final FocusNode addressTextArea = FocusNode();
   final TextEditingController _textControlleraddress = TextEditingController();
-  late String addressHint;
+  late String addressPlaceholder = '';
+  late String addressHint = 'Add Address';
 
   File? _selectedBanner;
   String? selectedBannerPath;
   File? _selectedProfilePic;
   String? selectedProfilePicPath;
+
   @override
   void initState() {
     super.initState();
+    bioInitHandler();
   }
 
   @override
@@ -62,13 +67,33 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     });
   }
 
+  void handleUpload() {
+    if (selectedBannerPath != null && selectedProfilePicPath != null) {
+      debugPrint("both upload");
+    } else if (selectedBannerPath != null) {
+      debugPrint("only banner upload");
+    } else if (selectedProfilePicPath != null) {
+      debugPrint("only profile upload");
+    } else {
+      debugPrint("name+bio+address+gender+pref lingo");
+    }
+  }
+
+  void bioInitHandler() {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    final userData = userService.user;
+    nameHint = userData['name'];
+    namePlaceholder = nameHint;
+    bioHint = userData['bio'] ?? 'Add a bio';
+    bioPlaceholder = bioHint;
+    addressHint = userData['address'] ?? 'Add your Location';
+    addressPlaceholder = addressHint;
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
-    String nameHint = userData['name'] ?? 'wtf';
-    String bioHint = userData['bio'] ?? 'Add a bio';
-    String addressHint = userData['address'] ?? 'Add your Location';
 
     final List<DropdownMenuEntry<GenderLabel>> genderEntries =
         <DropdownMenuEntry<GenderLabel>>[];
@@ -85,6 +110,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         floatingActionButton: GestureDetector(
           onTap: () {
             debugPrint("saveChanges");
+            handleUpload();
           },
           child: const Material(
             elevation: 20,
@@ -174,6 +200,37 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                         child: const Icon(Icons.edit),
                       ),
                     ),
+                    Visibility(
+                      visible: selectedBannerPath != null,
+                      child: GestureDetector(
+                        onTap: () {
+                          debugPrint("deselect banner");
+                          setState(() {
+                            _selectedBanner = null;
+                            selectedBannerPath = null;
+                          });
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 8, top: 8),
+                          child: Icon(Icons.cancel),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: selectedProfilePicPath != null,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedProfilePic = null;
+                            selectedProfilePicPath = null;
+                          });
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 45, top: 125),
+                          child: Icon(Icons.cancel),
+                        ),
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         pickImage("dp");
@@ -215,11 +272,17 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(userData['name'] ?? 'person doe',
+                                    Text(
+                                        namePlaceholder.isEmpty
+                                            ? nameHint
+                                            : namePlaceholder,
                                         style: const TextStyle(
                                             fontSize: 24.0,
                                             fontWeight: FontWeight.bold)),
-                                    Text(userData['bio'] ?? 'No Bio Given',
+                                    Text(
+                                        bioPlaceholder.isEmpty
+                                            ? bioHint
+                                            : bioPlaceholder,
                                         softWrap: true,
                                         style: const TextStyle(
                                             fontSize: 15.0,
@@ -268,6 +331,11 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           focusNode: nameTextArea,
                           controller: _textControllername,
                           maxLines: null,
+                          onChanged: (value) {
+                            setState(() {
+                              namePlaceholder = value;
+                            });
+                          },
                           decoration: InputDecoration(
                               focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -323,6 +391,11 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           focusNode: bioTextArea,
                           controller: _textControllerbio,
                           maxLines: null,
+                          onChanged: (value) {
+                            setState(() {
+                              bioPlaceholder = value;
+                            });
+                          },
                           decoration: InputDecoration(
                               focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -378,6 +451,11 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           focusNode: addressTextArea,
                           controller: _textControlleraddress,
                           maxLines: null,
+                          onChanged: (value) {
+                            setState(() {
+                              addressPlaceholder = value;
+                            });
+                          },
                           decoration: InputDecoration(
                               focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(
