@@ -201,7 +201,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                             child: Text(
-                                userData['userInfo']['Country'] ??
+                                userData['userInfo']?['Country'] ??
                                     'No Info Given',
                                 style: const TextStyle(fontSize: 16.0)),
                           )
@@ -220,8 +220,11 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                             child: Text(
-                                convertlistTolangString(userData['userInfo']),
-                                style: const TextStyle(fontSize: 16.0)),
+                                    userData['userInfo'] != null
+                                        ? convertlistTolangString(
+                                            userData['userInfo'])
+                                        : 'no internet',
+                                    style: const TextStyle(fontSize: 16.0)),
                           )
                         ],
                       ),
