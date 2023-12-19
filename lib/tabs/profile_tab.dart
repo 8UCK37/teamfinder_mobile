@@ -8,7 +8,7 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import 'package:teamfinder_mobile/widgets/create_post_bottomsheet.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
-import '../pages/edit_profileinfo_page..dart';
+import '../chat_ui/pages/edit_profileinfo_page..dart';
 import '../services/data_service.dart';
 import '../widgets/separator_widget.dart';
 

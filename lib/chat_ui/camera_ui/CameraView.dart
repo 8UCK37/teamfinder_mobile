@@ -37,9 +37,7 @@ class _CameraViewState extends State<CameraViewPage>
   @override
   void initState() {
     super.initState();
-    //final user = FirebaseAuth.instance.currentUser;
-    //socketService.setupSocketConnection(context);
-    //socketService.setSocketId(user!.uid);
+    
   }
 
   Future<void> sendMsg(String text) async {

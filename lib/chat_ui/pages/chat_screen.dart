@@ -178,7 +178,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   Future<void> pickImage() async {
-    //TODO the save button insive ImageEditor doesn't actually do anything
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     _selectedImage = File(pickedImage!.path);
