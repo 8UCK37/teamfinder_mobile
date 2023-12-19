@@ -65,7 +65,7 @@ class MenuTab extends StatelessWidget {
                                         child: CircleAvatar(
                                           radius: 25.0,
                                           backgroundImage: NetworkImage(
-                                              userData['profilePicture']),
+                                              userData['profilePicture']??""),
                                         ),
                                       ),
                                       Padding(
@@ -77,7 +77,7 @@ class MenuTab extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Text(userData['name'],
+                                            Text(userData['name']??"",
                                                 style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18.0)),

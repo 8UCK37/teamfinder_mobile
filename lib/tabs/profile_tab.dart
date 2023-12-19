@@ -124,8 +124,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       bottomRight: Radius.circular(8.0),
                     ),
                     image: DecorationImage(
-                      image:
-                          CachedNetworkImageProvider(userData['profileBanner']),
+                      image:CachedNetworkImageProvider(userData['profileBanner']??''),
                       fit: BoxFit
                           .cover, // Set the fit property to determine how the image should be fitted
                     ),
@@ -140,7 +139,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                         padding: const EdgeInsets.only(left: 5.0, top: 150),
                         child: CircleAvatar(
                           backgroundImage:
-                              NetworkImage(userData['profilePicture']),
+                              NetworkImage(userData['profilePicture']??''),
                           radius: 50.0,
                         ),
                       ),
@@ -158,7 +157,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(userData['name'],
+                                Text(userData['name']??'person doe',
                                     style: const TextStyle(
                                         fontSize: 24.0,
                                         fontWeight: FontWeight.bold)),

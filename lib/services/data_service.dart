@@ -20,7 +20,7 @@ class ProviderService extends ChangeNotifier {
   bool? darkTheme = false;
   int? replyingTo;
   Map<Language, bool> selectedLang = {};
-  SocketService  socketService = SocketService();
+  SocketService socketService = SocketService();
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -60,7 +60,7 @@ class ProviderService extends ChangeNotifier {
     }
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
-   
+
     final idToken = await user!.getIdToken();
     Options options = Options(
       headers: {
@@ -82,7 +82,7 @@ class ProviderService extends ChangeNotifier {
       feed = parsedPosts; // Update the state variable with the parsed list
       notifyListeners();
     }
-    }
+  }
 
   void updateOwnPosts(List<PostPojo> newValue) {
     ownPosts = newValue;
@@ -228,9 +228,11 @@ class ProviderService extends ChangeNotifier {
   getUserSelectedLang() {
     var selectedLangList = [];
     var userInfo = user['userInfo'];
-    //debugPrint(userInfo['Language'].toString());
-    selectedLangList = userInfo['Language'].split(",");
     var newMap = Language.map();
+    //debugPrint(userInfo['Language'].toString());
+    if (userInfo['Language']!=null) {
+       selectedLangList = userInfo['Language'].split(",");
+    }
     //debugPrint(Language.map().toString());
     for (Language lang in Language.map().keys) {
       for (String index in selectedLangList) {
