@@ -2,6 +2,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../pages/home_page.dart';
+
+
 class NetworkController extends GetxController {
   final Connectivity _connectivity = Connectivity();
 
@@ -31,6 +34,12 @@ class NetworkController extends GetxController {
       debugPrint("internet on");
       if (Get.isSnackbarOpen) {
         Get.closeCurrentSnackbar();
+      } else {
+        debugPrint("ohh a livesaver");
+        Navigator.of(Get.overlayContext!).pop();
+        Navigator.of(Get.overlayContext!).push(MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ));
       }
     }
   }
