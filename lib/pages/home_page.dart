@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
+import 'package:teamfinder_mobile/controller/network_controller.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/socket_service.dart';
 import '../services/data_service.dart';
@@ -14,7 +16,6 @@ import '../tabs/home_tab.dart';
 import '../tabs/menu_tab.dart';
 import '../tabs/notifications_tab.dart';
 import '../tabs/profile_tab.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _initializePreferences();
     _tabController = TabController(vsync: this, length: 5);
-    _saveUser();
+    saveUser();
     fetchFeed();
     getOwnPost();
     getTwitchInfo();
@@ -79,23 +80,36 @@ class _HomePageState extends State<HomePage>
     userService.getDiscordInfo();
   }
 
-  void _saveUser() async {
-    debugPrint('saveuserCalled');
-    final url = Uri.parse('http://${dotenv.env['server_url']}/saveuser');
+  void saveUser() async {
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("saveUser called");
+    }
+    Dio dio = Dio();
+
     final user = FirebaseAuth.instance.currentUser;
     final userService = Provider.of<ProviderService>(context, listen: false);
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    // ignore: unnecessary_null_comparison
     if (user != null) {
-      final idToken = await user.getIdToken();
-
-      final response = await http.post(
-        url,
-        headers: {'Authorization': 'Bearer $idToken'},
+      //debugPrint(user.uid.toString());
+      var response = await dio.post(
+        'http://${dotenv.env['server_url']}/saveuser',
+        options: options,
       );
-
+      debugPrint(response.statusCode.toString());
       if (response.statusCode == 200) {
         // Request successful
-        var userData = json.decode(response.body);
-        //print(userData);
+        var userData = json.decode(response.data);
+        //debugPrint(userData.toString());
         userService.updateCurrentUser(userData);
         // ignore: use_build_context_synchronously
         socketService.setupSocketConnection(context);

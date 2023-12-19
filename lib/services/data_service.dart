@@ -4,12 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
-import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 
+import '../controller/network_controller.dart';
 import 'socket_service.dart';
 
 class ProviderService extends ChangeNotifier {
+  NetworkController networkController = NetworkController();
   Map<String, dynamic> user = {}; // Initialize as an empty map
   List<PostPojo>? feed;
   List<PostPojo>? ownPosts;
@@ -51,28 +52,37 @@ class ProviderService extends ChangeNotifier {
   }
 
   void fetchPosts() async {
-    final url = Uri.parse('http://${dotenv.env['server_url']}/getPost');
-    final user = FirebaseAuth.instance.currentUser;
-    //debugPrint('fetch post called');
-    if (user != null) {
-      final idToken = await user.getIdToken();
-
-      final response = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer $idToken'},
-      );
-
-      if (response.statusCode == 200) {
-        // Request successful
-        var res = response.body;
-        //print(res);
-        // Parse the JSON response into a list of PostPojo objects
-        List<PostPojo> parsedPosts = postPojoFromJson(res);
-        feed = parsedPosts; // Update the state variable with the parsed list
-        notifyListeners();
-      }
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("fetchPosts() called");
     }
-  }
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+   
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    //debugPrint('fetch post called');
+    final response = await dio.get(
+      'http://${dotenv.env['server_url']}/getPost',
+      options: options,
+    );
+
+    if (response.statusCode == 200) {
+      // Request successful
+      var res = response.data;
+      //print(res);
+      // Parse the JSON response into a list of PostPojo objects
+      List<PostPojo> parsedPosts = postPojoFromJson(res);
+      feed = parsedPosts; // Update the state variable with the parsed list
+      notifyListeners();
+    }
+    }
 
   void updateOwnPosts(List<PostPojo> newValue) {
     ownPosts = newValue;
@@ -80,6 +90,12 @@ class ProviderService extends ChangeNotifier {
   }
 
   Future<void> getOwnPost() async {
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("getOwnPost() called");
+    }
     Dio dio = Dio();
 
     final user = FirebaseAuth.instance.currentUser;
@@ -110,6 +126,12 @@ class ProviderService extends ChangeNotifier {
   }
 
   Future<void> getSteamInfo(String id) async {
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("getSteamInfo() called");
+    }
     Dio dio = Dio();
 
     final userFromFirebase = FirebaseAuth.instance.currentUser;
@@ -139,6 +161,12 @@ class ProviderService extends ChangeNotifier {
   }
 
   Future<void> getTwitchInfo() async {
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("getTwitchInfo() called");
+    }
     Dio dio = Dio();
 
     final user = FirebaseAuth.instance.currentUser;
@@ -168,6 +196,12 @@ class ProviderService extends ChangeNotifier {
   }
 
   Future<void> getDiscordInfo() async {
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("getDiscordInfo() called");
+    }
     Dio dio = Dio();
 
     final user = FirebaseAuth.instance.currentUser;
@@ -211,6 +245,12 @@ class ProviderService extends ChangeNotifier {
   }
 
   Future<void> updateSelectedLanguage() async {
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("updateSelectedLanguage() called");
+    }
     debugPrint('selected lang db post');
     Dio dio = Dio();
     final userFrmFirebase = FirebaseAuth.instance.currentUser;

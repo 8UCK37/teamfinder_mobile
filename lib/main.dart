@@ -7,10 +7,12 @@ import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import 'chat_ui/camera_ui/CameraScreen.dart';
+import 'dependency_injection.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,7 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
   // ignore: prefer_const_constructors
   runApp(MyApp());
+  DependencyInjection.init();
 }
 
 class MyApp extends StatefulWidget {
@@ -61,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<NotificationWizard>(
             create: (context) => NotificationWizard()),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TeamFinder',
         

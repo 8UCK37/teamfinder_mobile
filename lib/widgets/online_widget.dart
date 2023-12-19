@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -6,9 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
-import 'package:http/http.dart' as http;
 import 'package:teamfinder_mobile/services/socket_service.dart';
 
+import '../controller/network_controller.dart';
 import '../services/data_service.dart';
 
 class OnlineWidget extends StatefulWidget {
@@ -62,45 +63,54 @@ class _OnlineWidgetState extends State<OnlineWidget>
   }
 
   void _getFriendList() async {
-    final url = Uri.parse('http://${dotenv.env['server_url']}/friendData');
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("no_internet");
+      return;
+    } else {
+      debugPrint("_getFriendList() called");
+    }
+    Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
     //print('friend list called');
-    if (user != null) {
-      final idToken = await user.getIdToken();
+    final response = await dio.get(
+      'http://${dotenv.env['server_url']}/friendData',
+      options: options,
+    );
 
-      final response = await http.get(
-        url,
-        headers: {'Authorization': 'Bearer $idToken'},
-      );
-
-      if (response.statusCode == 200) {
-        // Request successful
-        var res = response.body;
-        //print(res);
-        // Parse the JSON response into a list of PostPojo objects
-        List<UserPojo> parsedFriendList = userPojoListFromJson(res);
-        if (mounted) {
-          setState(() {
-            parsedFriendList.sort((a, b) {
-              if (a.isConnected && !b.isConnected) {
-                return -1; // a comes before b
-              } else if (!a.isConnected && b.isConnected) {
-                return 1; // b comes before a
-              } else {
-                return 0; // order remains the same
-              }
-            });
-            onlineMap = {
-              for (var obj in parsedFriendList) obj.id: obj.isConnected
-            };
-
-            friendList =
-                parsedFriendList; // Update the state variable with the parsed list
+    if (response.statusCode == 200) {
+      // Request successful
+      var res = response.data;
+      //debugPrint(res);
+      // Parse the JSON response into a list of PostPojo objects
+      List<UserPojo> parsedFriendList = userPojoListFromJson(res);
+      if (mounted) {
+        setState(() {
+          parsedFriendList.sort((a, b) {
+            if (a.isConnected && !b.isConnected) {
+              return -1; // a comes before b
+            } else if (!a.isConnected && b.isConnected) {
+              return 1; // b comes before a
+            } else {
+              return 0; // order remains the same
+            }
           });
-        }
+          onlineMap = {
+            for (var obj in parsedFriendList) obj.id: obj.isConnected
+          };
+
+          friendList =
+              parsedFriendList; // Update the state variable with the parsed list
+        });
       }
     }
-  }
+    }
 
   @override
   Widget build(BuildContext context) {

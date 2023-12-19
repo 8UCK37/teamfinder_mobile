@@ -44,6 +44,7 @@ dependencies:
   colorful_progress_indicators: ^1.0.2
   comment_tree: ^0.3.0
   concentric_transition: ^1.0.3
+  connectivity_plus: ^5.0.2
   cupertino_icons: ^1.0.6
   day_night_switcher: ^0.2.0+1
   dialog: ^0.8.0
@@ -83,6 +84,7 @@ dependencies:
   socket_io_client: ^2.0.2
   video_player: ^2.7.0
   youtube_player_flutter: ^8.1.2
+  
   
 dev_dependencies:
   flutter_test:
