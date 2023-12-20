@@ -14,6 +14,7 @@ import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart'
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/data_service.dart';
+import '../../services/notification_observer.dart';
 import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
@@ -276,6 +277,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     return PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -323,9 +325,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 16.0)),
                       ),
-                      const Text(
-                        "last seen. 18:00",
-                        style: TextStyle(
+                      Text(
+                      notiObserver.onlineMap![widget.friendId]!? "online":"offline",
+                        style: const TextStyle(
                             fontSize: 13.0,
                             color: Colors.white,
                             fontStyle: FontStyle.italic),
