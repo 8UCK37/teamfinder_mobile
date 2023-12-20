@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
@@ -13,6 +14,7 @@ import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 import '../services/data_service.dart';
 import '../utils/image_compressor.dart';
 import '../utils/language_chip_helper.dart';
+import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
@@ -48,6 +50,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   File? _selectedProfilePic;
   String? selectedProfilePicPath;
 
+  late bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -76,8 +79,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     });
   }
 
-  void handleUpload() {
-    showLoading();
+  void handleUpload()async {
+   
     if (selectedBannerPath != null && selectedProfilePicPath != null) {
       debugPrint("both upload");
       uploadBanner();
@@ -90,7 +93,12 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       uploadProfilePic();
     } else {
       debugPrint("name+bio+address+gender+pref lingo");
-      showSucessPopup("every other thing updated");
+      // showSucessPopup("every other thing updated");
+      await Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          isLoading = !isLoading;
+        });
+      });
     }
   }
 
@@ -155,8 +163,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         debugPrint("banner upload succ");
         setState(() {
           cancelVisibilityBanner = false;
+          isLoading = false;
         });
-        
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -194,6 +202,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         debugPrint("profile upload succ");
         setState(() {
           cancelVisibilityAvatar = false;
+          isLoading = false;
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -219,383 +228,219 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
-      child: Scaffold(
-        floatingActionButton: GestureDetector(
-          onTap: () {
-            debugPrint("saveChanges");
-            handleUpload();
-          },
-          child: const Material(
-            elevation: 20,
-            shape: CircleBorder(),
-            child: ClipOval(
-              child: CircleAvatar(
-                backgroundColor: Colors.deepPurpleAccent,
-                radius: 25,
-                child: Icon(
-                  Icons.save,
-                  color: Colors.white,
+      child: BlurryModalProgressHUD(
+        inAsyncCall: isLoading,
+        blurEffectIntensity: 4,
+        progressIndicator: const SpinKitFadingCircle(
+          color: Colors.blue,
+          size: 90.0,
+        ),
+        dismissible: false,
+        opacity: 0.4,
+        color: const Color.fromARGB(45, 0, 0, 0),
+        child: Scaffold(
+          floatingActionButton: GestureDetector(
+            onTap: () {
+              debugPrint("saveChanges");
+              setState(() {
+                isLoading = true;
+              });
+              handleUpload();
+            },
+            child: const Material(
+              elevation: 20,
+              shape: CircleBorder(),
+              child: ClipOval(
+                child: CircleAvatar(
+                  backgroundColor: Colors.deepPurpleAccent,
+                  radius: 25,
+                  child: Icon(
+                    Icons.save,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        appBar: AppBar(
-          automaticallyImplyLeading: true,
-          systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness:
-                  userService.darkTheme! ? Brightness.light : Brightness.dark),
-          backgroundColor: userService.darkTheme!
-              ? const Color.fromRGBO(46, 46, 46, 1)
-              : Colors.white,
-          foregroundColor:
-              userService.darkTheme! ? Colors.white : Colors.deepPurple,
-          title: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Text('TeamFinder',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ],
-                ),
-              ]),
+          appBar: AppBar(
+            automaticallyImplyLeading: true,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: userService.darkTheme!
+                    ? Brightness.light
+                    : Brightness.dark),
+            backgroundColor: userService.darkTheme!
+                ? const Color.fromRGBO(46, 46, 46, 1)
+                : Colors.white,
+            foregroundColor:
+                userService.darkTheme! ? Colors.white : Colors.deepPurple,
+            title: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Text('TeamFinder',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ]),
 
-          elevation: 0.0,
-          //systemOverlayStyle: SystemUiOverlayStyle.dark,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 30.0),
-            child: Column(
-              children: [
-                const Divider(color: Colors.black, height: 7),
-                Stack(
-                  children: <Widget>[
-                    Container(
-                      height:
-                          200.0, // Set the desired fixed height for the banner
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(8.0),
-                          bottomRight: Radius.circular(8.0),
+            elevation: 0.0,
+            //systemOverlayStyle: SystemUiOverlayStyle.dark,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30.0),
+              child: Column(
+                children: [
+                  const Divider(color: Colors.black, height: 7),
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        height:
+                            200.0, // Set the desired fixed height for the banner
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(8.0),
+                            bottomRight: Radius.circular(8.0),
+                          ),
+                          image: selectedBannerPath != null
+                              ? DecorationImage(
+                                  image: FileImage(_selectedBanner!),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      userData['profileBanner'] ?? ''),
+                                  fit: BoxFit.cover,
+                                ),
                         ),
-                        image: selectedBannerPath != null
-                            ? DecorationImage(
-                                image: FileImage(_selectedBanner!),
-                                fit: BoxFit.cover,
-                              )
-                            : DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                    userData['profileBanner'] ?? ''),
-                                fit: BoxFit.cover,
-                              ),
                       ),
-                    ),
-                    //const SizedBox(height: 20.0),
-                    GestureDetector(
-                      onTap: () {
-                        pickImage("banner");
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width - 30,
-                            top: 8),
-                        child: const Icon(Icons.edit),
-                      ),
-                    ),
-                    Visibility(
-                      visible:
-                          selectedBannerPath != null && cancelVisibilityBanner,
-                      child: GestureDetector(
+                      //const SizedBox(height: 20.0),
+                      GestureDetector(
                         onTap: () {
-                          debugPrint("deselect banner");
-                          setState(() {
-                            _selectedBanner = null;
-                            selectedBannerPath = null;
-                            cancelVisibilityBanner = false;
-                          });
+                          pickImage("banner");
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.only(left: 8, top: 8),
-                          child: Icon(Icons.cancel),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width - 30,
+                              top: 8),
+                          child: const Icon(Icons.edit),
                         ),
                       ),
-                    ),
-                    Visibility(
-                      visible: selectedProfilePicPath != null &&
-                          cancelVisibilityAvatar,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedProfilePic = null;
-                            selectedProfilePicPath = null;
-                            cancelVisibilityAvatar = false;
-                          });
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.only(left: 45, top: 125),
-                          child: Icon(Icons.cancel),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        pickImage("dp");
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 105, top: 170),
-                        child: Icon(Icons.edit),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 5.0, top: 150),
-                            child: selectedProfilePicPath != null
-                                ? CircleAvatar(
-                                    backgroundImage:
-                                        FileImage(_selectedProfilePic!),
-                                    radius: 50.0,
-                                  )
-                                : CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        userData['profilePicture'] ?? ''),
-                                    radius: 50.0,
-                                  ),
+                      Visibility(
+                        visible: selectedBannerPath != null &&
+                            cancelVisibilityBanner,
+                        child: GestureDetector(
+                          onTap: () {
+                            debugPrint("deselect banner");
+                            setState(() {
+                              _selectedBanner = null;
+                              selectedBannerPath = null;
+                              cancelVisibilityBanner = false;
+                            });
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 8, top: 8),
+                            child: Icon(Icons.cancel),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 200, left: 10),
-                          // ignore: sized_box_for_whitespace
-                          child: Container(
-                            //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
-                            width: MediaQuery.of(context).size.width - 120,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                        namePlaceholder.isEmpty
-                                            ? nameHint
-                                            : namePlaceholder,
-                                        style: const TextStyle(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold)),
-                                    Text(
-                                        bioPlaceholder.isEmpty
-                                            ? bioHint
-                                            : bioPlaceholder,
-                                        softWrap: true,
-                                        style: const TextStyle(
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.normal))
-                                  ],
-                                ),
-                              ],
+                      ),
+                      Visibility(
+                        visible: selectedProfilePicPath != null &&
+                            cancelVisibilityAvatar,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedProfilePic = null;
+                              selectedProfilePicPath = null;
+                              cancelVisibilityAvatar = false;
+                            });
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 45, top: 125),
+                            child: Icon(Icons.cancel),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          pickImage("dp");
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 105, top: 170),
+                          child: Icon(Icons.edit),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 5.0, top: 150),
+                              child: selectedProfilePicPath != null
+                                  ? CircleAvatar(
+                                      backgroundImage:
+                                          FileImage(_selectedProfilePic!),
+                                      radius: 50.0,
+                                    )
+                                  : CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          userData['profilePicture'] ?? ''),
+                                      radius: 50.0,
+                                    ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Column(children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 7,
-                      indent: 8,
-                      endIndent: 8,
-                    ),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Display Name",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // ignore: sized_box_for_whitespace
-                      Container(
-                        //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          focusNode: nameTextArea,
-                          controller: _textControllername,
-                          maxLines: null,
-                          onChanged: (value) {
-                            setState(() {
-                              namePlaceholder = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 83, 13,
-                                      95), // Change the color to your desired color
-                                  width: 2.0, // Set the width of the border
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 200, left: 10),
+                            // ignore: sized_box_for_whitespace
+                            child: Container(
+                              //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
+                              width: MediaQuery.of(context).size.width - 120,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                          namePlaceholder.isEmpty
+                                              ? nameHint
+                                              : namePlaceholder,
+                                          style: const TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                          bioPlaceholder.isEmpty
+                                              ? bioHint
+                                              : bioPlaceholder,
+                                          softWrap: true,
+                                          style: const TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal))
+                                    ],
+                                  ),
+                                ],
                               ),
-                              hintText: nameHint,
-                              hintStyle: const TextStyle(
-                                  fontSize: 15, color: Colors.black),
-                              border: const OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)))),
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
-                Column(children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 7,
-                      indent: 8,
-                      endIndent: 8,
-                    ),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Bio",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // ignore: sized_box_for_whitespace
-                      Container(
-                        //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          focusNode: bioTextArea,
-                          controller: _textControllerbio,
-                          maxLines: null,
-                          onChanged: (value) {
-                            setState(() {
-                              bioPlaceholder = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 83, 13,
-                                      95), // Change the color to your desired color
-                                  width: 2.0, // Set the width of the border
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                              hintText: bioHint,
-                              hintStyle: const TextStyle(
-                                  fontSize: 15, color: Colors.black),
-                              border: const OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)))),
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
-                Column(children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 7,
-                      indent: 8,
-                      endIndent: 8,
-                    ),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Address",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // ignore: sized_box_for_whitespace
-                      Container(
-                        //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          focusNode: addressTextArea,
-                          controller: _textControlleraddress,
-                          maxLines: null,
-                          onChanged: (value) {
-                            setState(() {
-                              addressPlaceholder = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 83, 13,
-                                      95), // Change the color to your desired color
-                                  width: 2.0, // Set the width of the border
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                              hintText: addressHint,
-                              hintStyle: const TextStyle(
-                                  fontSize: 15, color: Colors.black),
-                              border: const OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)))),
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
-                Column(
-                  children: [
+                  Column(children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Divider(
@@ -605,93 +450,275 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                         endIndent: 8,
                       ),
                     ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Display Name",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: SizedBox(
-                            height: 50,
-                            width: MediaQuery.of(context).size.width * .9,
-                            //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
-                            child: DropdownMenu<GenderLabel>(
-                              textStyle:
-                                  TextStyle(color: selectedGender!.color),
-                              initialSelection: GenderLabel
-                                  .idk, //TODO:interfacetyhis with a changing variable acc to the db value
-                              controller: genderController,
-                              label: const Text('Gender'),
-                              dropdownMenuEntries: genderEntries,
-                              onSelected: (GenderLabel? gender) {
-                                setState(() {
-                                  selectedGender = gender;
-                                });
-                              },
-                            ),
+                        // ignore: sized_box_for_whitespace
+                        Container(
+                          //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                          width: MediaQuery.of(context).size.width * .9,
+                          child: TextField(
+                            focusNode: nameTextArea,
+                            controller: _textControllername,
+                            maxLines: null,
+                            onChanged: (value) {
+                              setState(() {
+                                namePlaceholder = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 83, 13,
+                                        95), // Change the color to your desired color
+                                    width: 2.0, // Set the width of the border
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                hintText: nameHint,
+                                hintStyle: const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)))),
                           ),
-                        )
+                        ),
                       ],
                     )
-                  ],
-                ),
-                Column(children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 23.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 7,
-                      indent: 8,
-                      endIndent: 8,
+                  ]),
+                  Column(children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Divider(
+                        color: Colors.black,
+                        height: 7,
+                        indent: 8,
+                        endIndent: 8,
+                      ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Bio",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ignore: sized_box_for_whitespace
+                        Container(
+                          //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                          width: MediaQuery.of(context).size.width * .9,
+                          child: TextField(
+                            focusNode: bioTextArea,
+                            controller: _textControllerbio,
+                            maxLines: null,
+                            onChanged: (value) {
+                              setState(() {
+                                bioPlaceholder = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 83, 13,
+                                        95), // Change the color to your desired color
+                                    width: 2.0, // Set the width of the border
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                hintText: bioHint,
+                                hintStyle: const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)))),
+                          ),
+                        ),
+                      ],
+                    )
+                  ]),
+                  Column(children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Divider(
+                        color: Colors.black,
+                        height: 7,
+                        indent: 8,
+                        endIndent: 8,
+                      ),
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Address",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ignore: sized_box_for_whitespace
+                        Container(
+                          //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                          width: MediaQuery.of(context).size.width * .9,
+                          child: TextField(
+                            focusNode: addressTextArea,
+                            controller: _textControlleraddress,
+                            maxLines: null,
+                            onChanged: (value) {
+                              setState(() {
+                                addressPlaceholder = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 83, 13,
+                                        95), // Change the color to your desired color
+                                    width: 2.0, // Set the width of the border
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                hintText: addressHint,
+                                hintStyle: const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)))),
+                          ),
+                        ),
+                      ],
+                    )
+                  ]),
+                  Column(
                     children: [
                       const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          "Preffered Languages",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Divider(
+                          color: Colors.black,
+                          height: 7,
+                          indent: 8,
+                          endIndent: 8,
                         ),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet<dynamic>(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (BuildContext context) {
-                                  return const Wrap(
-                                      children: [LanguageBottomSheet()]);
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: SizedBox(
+                              height: 50,
+                              width: MediaQuery.of(context).size.width * .9,
+                              //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
+                              child: DropdownMenu<GenderLabel>(
+                                textStyle:
+                                    TextStyle(color: selectedGender!.color),
+                                initialSelection: GenderLabel
+                                    .idk, //TODO:interfacetyhis with a changing variable acc to the db value
+                                controller: genderController,
+                                label: const Text('Gender'),
+                                dropdownMenuEntries: genderEntries,
+                                onSelected: (GenderLabel? gender) {
+                                  setState(() {
+                                    selectedGender = gender;
+                                  });
                                 },
-                              );
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.edit),
+                              ),
                             ),
                           )
                         ],
-                      ),
+                      )
                     ],
                   ),
-                  const SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ChipHelper(),
-                        ],
+                  Column(children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 23.0),
+                      child: Divider(
+                        color: Colors.black,
+                        height: 7,
+                        indent: 8,
+                        endIndent: 8,
                       ),
                     ),
-                  )
-                ]),
-              ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Preffered Languages",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet<dynamic>(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (BuildContext context) {
+                                    return const Wrap(
+                                        children: [LanguageBottomSheet()]);
+                                  },
+                                );
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(Icons.edit),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ChipHelper(),
+                          ],
+                        ),
+                      ),
+                    )
+                  ]),
+                ],
+              ),
             ),
           ),
         ),
