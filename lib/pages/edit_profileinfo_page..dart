@@ -1,14 +1,17 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
+import '../services/data_service.dart';
+import '../utils/image_compressor.dart';
+import '../utils/language_chip_helper.dart';
 
-import '../../services/data_service.dart';
-import '../../utils/language_chip_helper.dart';
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
@@ -67,13 +70,17 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     });
   }
 
-  void handleUpload() {
+  void handleUpload() async {
     if (selectedBannerPath != null && selectedProfilePicPath != null) {
       debugPrint("both upload");
+      uploadBanner();
+      uploadProfilePic();
     } else if (selectedBannerPath != null) {
       debugPrint("only banner upload");
+      uploadBanner();
     } else if (selectedProfilePicPath != null) {
       debugPrint("only profile upload");
+      uploadProfilePic();
     } else {
       debugPrint("name+bio+address+gender+pref lingo");
     }
@@ -88,6 +95,74 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     bioPlaceholder = bioHint;
     addressHint = userData['address'] ?? 'Add your Location';
     addressPlaceholder = addressHint;
+  }
+
+  void uploadBanner() async {
+    debugPrint("banner upload hit");
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'contentType': 'multipart/form-data'
+      },
+    );
+    try {
+      File compressedImage = await ImageCompressor.compressImage(selectedBannerPath!, 25);
+      FormData formData = FormData.fromMap({
+        'banner': await MultipartFile.fromFile(compressedImage.path),
+      });
+
+      Response response = await dio.post(
+        'http://${dotenv.env['server_url']}/uploadBanner',
+        data: formData,
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("banner upload succ");
+      } else {
+        debugPrint('failed with: ${response.statusCode.toString()}');
+      }
+    } catch (error) {
+      debugPrint('Error: $error');
+    }
+  }
+
+  void uploadProfilePic() async {
+    debugPrint("profilepic upload hit");
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'contentType': 'multipart/form-data'
+      },
+    );
+    try {
+      File compressedImage = await ImageCompressor.compressImage(selectedProfilePicPath!, 25);
+      FormData formData = FormData.fromMap({
+        'avatar': await MultipartFile.fromFile(compressedImage.path),
+      });
+
+      Response response = await dio.post(
+        'http://${dotenv.env['server_url']}/uploadProfile',
+        data: formData,
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("profile upload succ");
+      } else {
+        debugPrint('failed with: ${response.statusCode.toString()}');
+      }
+    } catch (error) {
+      debugPrint('Error: $error');
+    }
   }
 
   @override

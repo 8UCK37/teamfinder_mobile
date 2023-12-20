@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _initializePreferences();
     _tabController = TabController(vsync: this, length: 5);
-    saveUser();
+    saveUserInit();
     fetchFeed();
     getOwnPost();
     getTwitchInfo();
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage>
     userService.getDiscordInfo();
   }
 
-  void saveUser() async {
+  void saveUserInit() async {
     NetworkController networkController = NetworkController();
     if (await networkController.noInternet()) {
       debugPrint("no_internet");
@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage>
     Dio dio = Dio();
 
     final user = FirebaseAuth.instance.currentUser;
+    // ignore: use_build_context_synchronously
     final userService = Provider.of<ProviderService>(context, listen: false);
     final idToken = await user!.getIdToken();
     Options options = Options(
