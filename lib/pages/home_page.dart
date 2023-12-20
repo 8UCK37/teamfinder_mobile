@@ -113,9 +113,11 @@ class _HomePageState extends State<HomePage>
         //debugPrint(userData.toString());
         userService.updateCurrentUser(userData);
         // ignore: use_build_context_synchronously
-        socketService.setupSocketConnection(context);
-        socketService.setSocketId(userData['id']);
-        userService.setSocket(socketService);
+        if(mounted){
+          socketService.setupSocketConnection(context);
+          socketService.setSocketId(userData['id']);
+          userService.setSocket(socketService);
+        }
         if (userData["steamId"] != null) {
           userService.getSteamInfo(userData["steamId"]);
         }

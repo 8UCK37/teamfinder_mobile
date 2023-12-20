@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
-import 'package:teamfinder_mobile/services/socket_service.dart';
-
 import '../controller/network_controller.dart';
-import '../services/data_service.dart';
+import '../services/notification_observer.dart';
 
 class OnlineWidget extends StatefulWidget {
   const OnlineWidget({super.key});
@@ -23,43 +20,10 @@ class _OnlineWidgetState extends State<OnlineWidget>
     with SingleTickerProviderStateMixin {
   late List<UserPojo>? friendList = [];
   late Map<String, bool>? onlineMap;
-  StreamSubscription<dynamic>? _socketSubscription;
   @override
   void initState() {
     super.initState();
     _getFriendList();
-    incNoti();
-  }
-
-  @override
-  void dispose() {
-    // Unsubscribe the listener to avoid memory leaks
-    _socketSubscription?.cancel();
-    super.dispose();
-  }
-
-  void incNoti() {
-    final userService = Provider.of<ProviderService>(context, listen: false);
-    SocketService socketService = userService.socketService;
-    _socketSubscription = socketService.getIncomingNoti().listen((data) {
-      //DateTime now = DateTime.now();
-      //debugPrint('Received noti from socket: $data');
-      if (data['notification'] == 'disc') {
-        //debugPrint('${data['sender']} disconnected');
-        if (mounted) {
-          setState(() {
-            onlineMap![data['sender']] = false;
-          });
-        }
-      } else if (data['notification'] == 'online') {
-        //debugPrint('${data['sender']} is now online');
-        if (mounted) {
-          setState(() {
-            onlineMap![data['sender']] = true;
-          });
-        }
-      }
-    });
   }
 
   void _getFriendList() async {
@@ -104,13 +68,14 @@ class _OnlineWidgetState extends State<OnlineWidget>
           onlineMap = {
             for (var obj in parsedFriendList) obj.id: obj.isConnected
           };
-
+          final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
+          notiObserver.updateOnlineMap(onlineMap);
           friendList =
               parsedFriendList; // Update the state variable with the parsed list
         });
       }
     }
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +135,7 @@ class _OnlineWidgetState extends State<OnlineWidget>
   }
 
   Widget friendBubble(UserPojo user) {
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Stack(
@@ -178,7 +144,7 @@ class _OnlineWidgetState extends State<OnlineWidget>
             radius: 22.0,
             backgroundImage: NetworkImage(user.profilePicture),
           ),
-          if (onlineMap![user.id]!)
+          if (notiObserver.onlineMap![user.id]!)
             const Positioned(
               right: 1.0,
               bottom: 5.0,

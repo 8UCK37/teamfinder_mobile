@@ -185,7 +185,7 @@ class _FriendsTabState extends State<FriendsTab>
               Row(
                 children: <Widget>[
                   const CircleAvatar(
-                    backgroundImage: AssetImage('assets/mathew.jpg'),
+                    backgroundImage: AssetImage('assets/images/dp_placeholder.png'),
                     radius: 30.0,
                   ),
                   const SizedBox(width: 20.0),

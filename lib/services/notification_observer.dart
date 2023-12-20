@@ -21,6 +21,12 @@ class IncomingNotification {
 
 class NotificationWizard extends ChangeNotifier {
   List<IncomingNotification> incomingNotificationList = [];
+  Map<String, bool>? onlineMap;
+
+  void updateOnlineMap(Map<String, bool>? newMap) {
+    onlineMap = newMap;
+    notifyListeners();
+  }
 
   Future<void> getUserInfo(dynamic data) async {
     Dio dio = Dio();
@@ -39,22 +45,29 @@ class NotificationWizard extends ChangeNotifier {
     if (response.statusCode == 200) {
       //debugPrint(response.data.toString());
       UserPojo senderData = UserPojo.fromJson(response.data[0]);
-      debugPrint(senderData.profilePicture);
+      //debugPrint(senderData.profilePicture);
       IncomingNotification newNoti = IncomingNotification(
           senderId: senderData.id,
           senderProfilePicture: senderData.profilePicture,
           senderName: senderData.name,
           notification: data['notification'],
           data: data['data']);
-
-      if (newNoti.notification != "online" && newNoti.notification != "disc" && newNoti.notification != "imageUploadDone") {
-        addToNotificationList(newNoti);
-      } 
+      if (newNoti.notification == "disc") {
+            onlineMap![newNoti.senderId] = false;
+            notifyListeners();
+      } else if (newNoti.notification == "online") {
+            onlineMap![newNoti.senderId] = true;
+            notifyListeners(); 
+      } else if (newNoti.notification != "online" &&
+          newNoti.notification != "disc" &&
+          newNoti.notification != "imageUploadDone") {
+          addToNotificationList(newNoti);
+      }
     }
   }
 
   void addToNotificationList(IncomingNotification newValue) {
-    // debugPrint(newValue.senderId);//TODO remove these!!
+    // debugPrint(newValue.senderId);
     // debugPrint(newValue.notification);
     // debugPrint(newValue.data?.toString());
     incomingNotificationList.add(newValue);
