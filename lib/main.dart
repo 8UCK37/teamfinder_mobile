@@ -8,6 +8,7 @@ import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import 'chat_ui/camera_ui/CameraScreen.dart';
 import 'dependency_injection.dart';
+import 'global.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
@@ -73,6 +74,7 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
         home: isLogin ? const HomePage() : const LoginActivity(),
+        navigatorKey: GlobalVariable.navState,
       ),
     );
   }

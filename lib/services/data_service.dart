@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
-
 import '../controller/network_controller.dart';
 import 'socket_service.dart';
 
@@ -51,9 +50,59 @@ class ProviderService extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reloadUser(BuildContext context) async {
+    debugPrint("user reload hit");
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("reloadUser() no_internet");
+      return;
+    } else {
+      debugPrint("saveUser called");
+    }
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+    // ignore: use_build_context_synchronously
+    //final userService = Provider.of<ProviderService>(context, listen: false);
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    // ignore: unnecessary_null_comparison
+    if (user != null) {
+      //debugPrint(user.uid.toString());
+      var response = await dio.post(
+        'http://${dotenv.env['server_url']}/saveuser',
+        options: options,
+      );
+      //debugPrint(response.statusCode.toString());
+      if (response.statusCode == 200) {
+        // Request successful
+        var userData = json.decode(response.data);
+        //debugPrint(userData.toString());
+        updateCurrentUser(userData);
+        // ignore: use_build_context_synchronously
+        socketService.setSocketId(userData['id']);
+        setSocket(socketService);
+
+        if (userData["steamId"] != null) {
+          getSteamInfo(userData["steamId"]);
+        }
+      } else {
+        // Request failed
+        debugPrint('Failed to hit Express backend endpoint');
+      }
+    } else {
+      // User not logged in
+      debugPrint('User is not logged in');
+    }
+  }
+
   void fetchPosts() async {
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("fetchPosts() no_internet");
       return;
     } else {
       debugPrint("fetchPosts() called");
@@ -91,7 +140,7 @@ class ProviderService extends ChangeNotifier {
 
   Future<void> getOwnPost() async {
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("getOwnPost() no_internet");
       return;
     } else {
       debugPrint("getOwnPost() called");
@@ -127,7 +176,7 @@ class ProviderService extends ChangeNotifier {
 
   Future<void> getSteamInfo(String id) async {
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("getSteamInfo() no_internet");
       return;
     } else {
       debugPrint("getSteamInfo() called");
@@ -162,7 +211,7 @@ class ProviderService extends ChangeNotifier {
 
   Future<void> getTwitchInfo() async {
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("getTwitchInfo() no_internet");
       return;
     } else {
       debugPrint("getTwitchInfo() called");
@@ -197,7 +246,7 @@ class ProviderService extends ChangeNotifier {
 
   Future<void> getDiscordInfo() async {
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("getDiscordInfo() no_internet");
       return;
     } else {
       debugPrint("getDiscordInfo() called");
@@ -230,8 +279,8 @@ class ProviderService extends ChangeNotifier {
     var userInfo = user['userInfo'];
     var newMap = Language.map();
     //debugPrint(userInfo['Language'].toString());
-    if (userInfo['Language']!=null) {
-       selectedLangList = userInfo['Language'].split(",");
+    if (userInfo['Language'] != null) {
+      selectedLangList = userInfo['Language'].split(",");
     }
     //debugPrint(Language.map().toString());
     for (Language lang in Language.map().keys) {
@@ -248,7 +297,7 @@ class ProviderService extends ChangeNotifier {
 
   Future<void> updateSelectedLanguage() async {
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("updateSelectedLanguage() no_internet");
       return;
     } else {
       debugPrint("updateSelectedLanguage() called");

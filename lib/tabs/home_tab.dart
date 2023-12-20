@@ -25,6 +25,7 @@ class _HomeTabState extends State<HomeTab>
 
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.reloadUser(context);
     userService.fetchPosts();
   }
 

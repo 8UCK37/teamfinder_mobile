@@ -29,7 +29,7 @@ class _OnlineWidgetState extends State<OnlineWidget>
   void _getFriendList() async {
     NetworkController networkController = NetworkController();
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("_getFriendList() no_internet");
       return;
     } else {
       debugPrint("_getFriendList() called");

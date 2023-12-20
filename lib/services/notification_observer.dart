@@ -28,6 +28,20 @@ class NotificationWizard extends ChangeNotifier {
     notifyListeners();
   }
 
+  void parseNotification(dynamic data) {
+    if (data['notification'] == "disc") {
+      onlineMap![data['sender']] = false;
+      notifyListeners();
+      return;
+    } else if (data['notification'] == "online") {
+      onlineMap![data['sender']] = true;
+      notifyListeners();
+      return;
+    } else if (data['notification'] != "imageUploadDone") {
+      getUserInfo(data);
+    }
+  }
+
   Future<void> getUserInfo(dynamic data) async {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
@@ -52,16 +66,10 @@ class NotificationWizard extends ChangeNotifier {
           senderName: senderData.name,
           notification: data['notification'],
           data: data['data']);
-      if (newNoti.notification == "disc") {
-            onlineMap![newNoti.senderId] = false;
-            notifyListeners();
-      } else if (newNoti.notification == "online") {
-            onlineMap![newNoti.senderId] = true;
-            notifyListeners(); 
-      } else if (newNoti.notification != "online" &&
+      if (newNoti.notification != "online" &&
           newNoti.notification != "disc" &&
           newNoti.notification != "imageUploadDone") {
-          addToNotificationList(newNoti);
+        addToNotificationList(newNoti);
       }
     }
   }

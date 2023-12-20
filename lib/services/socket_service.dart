@@ -13,6 +13,7 @@ class SocketService {
       BehaviorSubject<Map<String, dynamic>>();
 
   void setupSocketConnection(BuildContext context) {
+    socket = null;
     socket = IO.io(dotenv.env['socket_endpoint'], <String, dynamic>{
       'transports': ['websocket'],
     });
@@ -25,7 +26,7 @@ class SocketService {
 
     socket?.on('notification', (data) {
       debugPrint('incoming notification');
-      //debugPrint(data.toString());
+      debugPrint(data.toString());
       if (data is Map<String, dynamic>) {
         _incomingNotiSubject.add(data);
       } else if (data is String) {
@@ -65,7 +66,7 @@ class SocketService {
   }
 
   parseNewnotification(dynamic data, BuildContext context) {
-    final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
-    notiObserver.getUserInfo(data);
+    final notiObserver =Provider.of<NotificationWizard>(context, listen: false);
+    notiObserver.parseNotification(data);
   }
 }

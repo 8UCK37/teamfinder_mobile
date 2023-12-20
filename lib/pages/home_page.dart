@@ -29,7 +29,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final SocketService socketService = SocketService();
   late SharedPreferences _preferences;
   late bool _isDark;
   @override
@@ -83,7 +82,7 @@ class _HomePageState extends State<HomePage>
   void saveUserInit() async {
     NetworkController networkController = NetworkController();
     if (await networkController.noInternet()) {
-      debugPrint("no_internet");
+      debugPrint("saveUserInit() no_internet");
       return;
     } else {
       debugPrint("saveUser called");
@@ -106,14 +105,15 @@ class _HomePageState extends State<HomePage>
         'http://${dotenv.env['server_url']}/saveuser',
         options: options,
       );
-      debugPrint(response.statusCode.toString());
+      //debugPrint(response.statusCode.toString());
       if (response.statusCode == 200) {
         // Request successful
         var userData = json.decode(response.data);
         //debugPrint(userData.toString());
         userService.updateCurrentUser(userData);
         // ignore: use_build_context_synchronously
-        if(mounted){
+        if (mounted) {
+          final SocketService socketService = SocketService();
           socketService.setupSocketConnection(context);
           socketService.setSocketId(userData['id']);
           userService.setSocket(socketService);

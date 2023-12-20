@@ -3,7 +3,7 @@ import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
 class ImageCompressor {
-  static Future<File> compressImage(String imagePath, int quality) async {
+  static Future<File> compressImage(String imagePath, int quality,String name) async {
     File imageFile = File(imagePath);
     img.Image image = img.decodeImage(imageFile.readAsBytesSync())!;
 
@@ -11,7 +11,7 @@ class ImageCompressor {
     List<int> compressedBytes = img.encodeJpg(image, quality: quality);
 
     Directory tempDir = await getTemporaryDirectory();
-    String compressedImagePath = '${tempDir.path}/compressed_image.jpg';
+    String compressedImagePath = '${tempDir.path}/$name.jpg';
 
     // Save the compressed image to a new file
     File compressedImageFile = File(compressedImagePath);

@@ -2,8 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../pages/home_page.dart';
-
 
 class NetworkController extends GetxController {
   final Connectivity _connectivity = Connectivity();
@@ -32,21 +30,18 @@ class NetworkController extends GetxController {
           snackStyle: SnackStyle.GROUNDED);
     } else {
       debugPrint("internet on");
+
       if (Get.isSnackbarOpen) {
         Get.closeCurrentSnackbar();
       } else {
         debugPrint("ohh a livesaver");
-        Navigator.of(Get.overlayContext!).pop();
-        Navigator.of(Get.overlayContext!).push(MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ));
       }
     }
   }
 
   Future<bool> noInternet() async {
     final connectivityResult = await (Connectivity().checkConnectivity());
-    debugPrint('40: ${connectivityResult.toString()}');
+    //debugPrint('40: ${connectivityResult.toString()}');
     if (connectivityResult == ConnectivityResult.none) {
       return true;
     } else {

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // ignore: unused_import
@@ -123,8 +122,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           bottomRight: Radius.circular(8.0),
                         ),
                         image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                              userData['profileBanner'] ?? ''),
+                          image: NetworkImage(userData['profileBanner'] ?? ''),
                           fit: BoxFit
                               .cover, // Set the fit property to determine how the image should be fitted
                         ),
@@ -138,7 +136,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 5.0, top: 150),
                             child: CircleAvatar(
-                              backgroundImage:CachedNetworkImageProvider(
+                              backgroundImage: NetworkImage(
                                   userData['profilePicture'] ?? ''),
                               radius: 50.0,
                             ),
@@ -234,10 +232,34 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                       const SizedBox(height: 15.0),
                       GestureDetector(
                         onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => const EditProfileInfo()),
+                          // );
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => const EditProfileInfo()),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const EditProfileInfo(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
+
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+
+                                var offsetAnimation = animation.drive(tween);
+
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
+                            ),
                           );
                         },
                         child: Container(
@@ -303,7 +325,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                                       child: SizedBox(
                                         child: Icon(
                                           FontAwesomeIcons.twitch,
-                                          color: twitchData != "not logged in"
+                                          color: twitchData!= null && twitchData != "not logged in" 
                                               ? const Color.fromRGBO(
                                                   145, 70, 250, 100)
                                               : Colors.black,

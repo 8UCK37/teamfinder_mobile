@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -7,11 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 import '../services/data_service.dart';
 import '../utils/image_compressor.dart';
 import '../utils/language_chip_helper.dart';
-
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
@@ -23,6 +24,9 @@ class EditProfileInfo extends StatefulWidget {
 class _EditProfileInfoState extends State<EditProfileInfo> {
   final TextEditingController genderController = TextEditingController();
   GenderLabel? selectedGender = GenderLabel.idk;
+
+  bool cancelVisibilityBanner = true;
+  bool cancelVisibilityAvatar = true;
 
   final FocusNode nameTextArea = FocusNode();
   final TextEditingController _textControllername = TextEditingController();
@@ -63,14 +67,17 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       if (type == "banner") {
         _selectedBanner = File(pickedImage!.path);
         selectedBannerPath = pickedImage.path;
+        cancelVisibilityBanner = true;
       } else if (type == "dp") {
         _selectedProfilePic = File(pickedImage!.path);
         selectedProfilePicPath = pickedImage.path;
+        cancelVisibilityAvatar = true;
       }
     });
   }
 
-  void handleUpload() async {
+  void handleUpload() {
+    showLoading();
     if (selectedBannerPath != null && selectedProfilePicPath != null) {
       debugPrint("both upload");
       uploadBanner();
@@ -83,7 +90,29 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       uploadProfilePic();
     } else {
       debugPrint("name+bio+address+gender+pref lingo");
+      showSucessPopup("every other thing updated");
     }
+  }
+
+  void showLoading() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.loading,
+      title: 'Loading',
+      text: 'Fetching your data',
+    );
+  }
+
+  void showSucessPopup(String msg) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      text: msg,
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+      //autoCloseDuration: const Duration(seconds: 2),
+    );
   }
 
   void bioInitHandler() {
@@ -110,7 +139,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       },
     );
     try {
-      File compressedImage = await ImageCompressor.compressImage(selectedBannerPath!, 25);
+      File compressedImage = await ImageCompressor.compressImage(
+          selectedBannerPath!, 25, "compressedBanner");
       FormData formData = FormData.fromMap({
         'banner': await MultipartFile.fromFile(compressedImage.path),
       });
@@ -123,6 +153,10 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
       if (response.statusCode == 200) {
         debugPrint("banner upload succ");
+        setState(() {
+          cancelVisibilityBanner = false;
+        });
+        
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -144,7 +178,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       },
     );
     try {
-      File compressedImage = await ImageCompressor.compressImage(selectedProfilePicPath!, 25);
+      File compressedImage = await ImageCompressor.compressImage(
+          selectedProfilePicPath!, 25, "compressedAvatar");
       FormData formData = FormData.fromMap({
         'avatar': await MultipartFile.fromFile(compressedImage.path),
       });
@@ -157,6 +192,9 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
       if (response.statusCode == 200) {
         debugPrint("profile upload succ");
+        setState(() {
+          cancelVisibilityAvatar = false;
+        });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -276,13 +314,15 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                       ),
                     ),
                     Visibility(
-                      visible: selectedBannerPath != null,
+                      visible:
+                          selectedBannerPath != null && cancelVisibilityBanner,
                       child: GestureDetector(
                         onTap: () {
                           debugPrint("deselect banner");
                           setState(() {
                             _selectedBanner = null;
                             selectedBannerPath = null;
+                            cancelVisibilityBanner = false;
                           });
                         },
                         child: const Padding(
@@ -292,12 +332,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                       ),
                     ),
                     Visibility(
-                      visible: selectedProfilePicPath != null,
+                      visible: selectedProfilePicPath != null &&
+                          cancelVisibilityAvatar,
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             _selectedProfilePic = null;
                             selectedProfilePicPath = null;
+                            cancelVisibilityAvatar = false;
                           });
                         },
                         child: const Padding(
