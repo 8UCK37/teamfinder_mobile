@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/create_post_bottomsheet.dart';
@@ -27,7 +28,9 @@ class WriteSomethingWidget extends StatelessWidget {
                     child: FadeInImage(
                       placeholder:
                           const AssetImage('assets/images/dp_placeholder.png'),
-                      image: NetworkImage(userData['profilePicture']??'https://cdn-icons-png.flaticon.com/512/1985/1985782.png'),
+                      image: CachedNetworkImageProvider(
+                        cacheKey:userService.profileImagecacheKey,
+                        userData['profilePicture']??''),
                       width: 56.0,
                       height: 56.0,
                       fit: BoxFit.cover,

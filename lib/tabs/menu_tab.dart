@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -64,7 +65,8 @@ class MenuTab extends StatelessWidget {
                                             const EdgeInsets.only(left: 8.0,top:7.5,bottom:7.5),
                                         child: CircleAvatar(
                                           radius: 25.0,
-                                          backgroundImage: NetworkImage(
+                                          backgroundImage: CachedNetworkImageProvider(
+                                              cacheKey:userService.profileImagecacheKey,
                                               userData['profilePicture']??""),
                                         ),
                                       ),

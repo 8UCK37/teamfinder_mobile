@@ -111,6 +111,7 @@ class _HomePageState extends State<HomePage>
         var userData = json.decode(response.data);
         //debugPrint(userData.toString());
         userService.updateCurrentUser(userData);
+        userService.refreashCache();
         // ignore: use_build_context_synchronously
         if (mounted) {
           final SocketService socketService = SocketService();

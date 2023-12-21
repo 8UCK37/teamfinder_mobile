@@ -20,6 +20,10 @@ class ProviderService extends ChangeNotifier {
   int? replyingTo;
   Map<Language, bool> selectedLang = {};
   SocketService socketService = SocketService();
+
+  String profileImagecacheKey = "dp1";
+  String bannerImagecacheKey = "ban1";
+
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -47,6 +51,13 @@ class ProviderService extends ChangeNotifier {
 
   void setSocket(SocketService newValue) {
     socketService = newValue;
+    notifyListeners();
+  }
+
+  void refreashCache() {
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    profileImagecacheKey = "dp2$timestamp";
+    bannerImagecacheKey = "ban2$timestamp";
     notifyListeners();
   }
 
@@ -79,6 +90,7 @@ class ProviderService extends ChangeNotifier {
       );
       //debugPrint(response.statusCode.toString());
       if (response.statusCode == 200) {
+        refreashCache();
         // Request successful
         var userData = json.decode(response.data);
         //debugPrint(userData.toString());

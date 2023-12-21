@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'dart:io';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   late String addressPlaceholder = '';
   late String addressHint = 'Add Address';
 
-
   String? selectedBannerPath;
 
   String? selectedProfilePicPath;
@@ -71,7 +71,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       return;
     }
     setState(() {
-      if (type == "banner") { 
+      if (type == "banner") {
         selectedBannerPath = pickedImage.path;
         cancelVisibilityBanner = true;
       } else if (type == "dp") {
@@ -137,8 +137,10 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         setState(() {
           cancelVisibilityBanner = false;
           selectedBannerPath = null;
-          
         });
+        // ignore: use_build_context_synchronously
+        final userService = Provider.of<ProviderService>(context, listen: false);
+        userService.refreashCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -179,6 +181,10 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           cancelVisibilityAvatar = false;
           selectedProfilePicPath = null;
         });
+        
+        // ignore: use_build_context_synchronously
+        final userService = Provider.of<ProviderService>(context, listen: false);
+        userService.refreashCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -223,6 +229,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               Future.delayed(const Duration(seconds: 1), () {
                 handleUpload();
               });
+              
             });
           },
           child: const Material(
@@ -296,7 +303,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   fit: BoxFit.cover,
                                 )
                               : DecorationImage(
-                                  image: NetworkImage(
+                                  image: CachedNetworkImageProvider(
+                                      cacheKey: userService.bannerImagecacheKey,
                                       userData['profileBanner'] ?? ''),
                                   fit: BoxFit.cover,
                                 ),
@@ -357,16 +365,35 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                             if (selectedProfilePicPath != null) {
                               var editedImage = await Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => CropperScreen(
-                                          imagePath: selectedProfilePicPath!,
-                                        )),
-                              );
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      CropperScreen(
+                                    imagePath: selectedProfilePicPath!,
+                                  ),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = Offset(0.0, 1.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.easeInOut;
 
+                                    var tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: curve));
+
+                                    var offsetAnimation =
+                                        animation.drive(tween);
+
+                                    return SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
                               if (editedImage != null) {
                                 String newImagePath =
                                     await ImageHelper.saveEditedImage(
-                                        editedImage, "texting_image");
+                                        editedImage, "profile_image");
                                 setState(() {
                                   selectedProfilePicPath = newImagePath;
                                 });
@@ -402,8 +429,11 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                       radius: 50.0,
                                     )
                                   : CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          userData['profilePicture'] ?? ''),
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                              cacheKey: userService
+                                                  .profileImagecacheKey,
+                                              userData['profilePicture'] ?? ''),
                                       radius: 50.0,
                                     ),
                             ),
