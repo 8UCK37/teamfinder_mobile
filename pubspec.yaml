@@ -46,6 +46,7 @@ dependencies:
   comment_tree: ^0.3.0
   concentric_transition: ^1.0.3
   connectivity_plus: ^5.0.2
+  cropperx: ^1.1.1
   cupertino_icons: ^1.0.6
   day_night_switcher: ^0.2.0+1
   dialog: ^0.8.0

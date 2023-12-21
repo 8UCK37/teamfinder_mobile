@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
-class ImageCompressor {
+class ImageHelper {
+
   static Future<File> compressImage(String imagePath, int quality,String name) async {
     File imageFile = File(imagePath);
     img.Image image = img.decodeImage(imageFile.readAsBytesSync())!;
@@ -18,5 +20,20 @@ class ImageCompressor {
     await compressedImageFile.writeAsBytes(compressedBytes);
 
     return compressedImageFile;
+  }
+
+  static Future<String> saveEditedImage(Uint8List editedImage,String name) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+
+    // Generate a unique filename based on the current timestamp.
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    String newImagePath = '$appDocPath/$name"_"$timestamp.png';
+
+    // Write the edited image data to the file.
+    File newImageFile = File(newImagePath);
+    await newImageFile.writeAsBytes(editedImage);
+
+    return newImagePath;
   }
 }

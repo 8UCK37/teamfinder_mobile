@@ -284,11 +284,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => ChatHome()));
         },
-        // onPopInvoked: () async {
-        //   Navigator.pushReplacement(
-        //       context, MaterialPageRoute(builder: (context) => ChatHome()));
-        //   return false;
-        // },
         child: Scaffold(
           appBar: AppBar(
             iconTheme: const IconThemeData(color: Colors.white),

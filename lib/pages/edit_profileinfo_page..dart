@@ -10,9 +10,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:teamfinder_mobile/utils/profile_image_cropper.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 import '../services/data_service.dart';
-import '../utils/image_compressor.dart';
+import '../utils/image_helper.dart';
 import '../utils/language_chip_helper.dart';
 
 class EditProfileInfo extends StatefulWidget {
@@ -44,12 +45,13 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   late String addressPlaceholder = '';
   late String addressHint = 'Add Address';
 
-  File? _selectedBanner;
+
   String? selectedBannerPath;
-  File? _selectedProfilePic;
+
   String? selectedProfilePicPath;
 
   bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -65,13 +67,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   Future<void> pickImage(String type) async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) {
+      return;
+    }
     setState(() {
-      if (type == "banner") {
-        _selectedBanner = File(pickedImage!.path);
+      if (type == "banner") { 
         selectedBannerPath = pickedImage.path;
         cancelVisibilityBanner = true;
       } else if (type == "dp") {
-        _selectedProfilePic = File(pickedImage!.path);
         selectedProfilePicPath = pickedImage.path;
         cancelVisibilityAvatar = true;
       }
@@ -117,7 +120,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       },
     );
     try {
-      File compressedImage = await ImageCompressor.compressImage(
+      File compressedImage = await ImageHelper.compressImage(
           selectedBannerPath!, 25, "compressedBanner");
       FormData formData = FormData.fromMap({
         'banner': await MultipartFile.fromFile(compressedImage.path),
@@ -134,7 +137,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         setState(() {
           cancelVisibilityBanner = false;
           selectedBannerPath = null;
-          _selectedBanner = null;
+          
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -159,7 +162,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
       },
     );
     try {
-      File compressedImage = await ImageCompressor.compressImage(
+      File compressedImage = await ImageHelper.compressImage(
           selectedProfilePicPath!, 25, "compressedAvatar");
       FormData formData = FormData.fromMap({
         'avatar': await MultipartFile.fromFile(compressedImage.path),
@@ -175,7 +178,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         setState(() {
           cancelVisibilityAvatar = false;
           selectedProfilePicPath = null;
-          _selectedProfilePic = null;
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -290,7 +292,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           ),
                           image: selectedBannerPath != null
                               ? DecorationImage(
-                                  image: FileImage(_selectedBanner!),
+                                  image: FileImage(File(selectedBannerPath!)),
                                   fit: BoxFit.cover,
                                 )
                               : DecorationImage(
@@ -309,7 +311,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           padding: EdgeInsets.only(
                               left: MediaQuery.of(context).size.width - 30,
                               top: 8),
-                          child: const Icon(Icons.edit),
+                          child: const Icon(Icons.add_a_photo),
                         ),
                       ),
                       Visibility(
@@ -319,7 +321,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           onTap: () {
                             debugPrint("deselect banner");
                             setState(() {
-                              _selectedBanner = null;
                               selectedBannerPath = null;
                               cancelVisibilityBanner = false;
                             });
@@ -336,7 +337,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedProfilePic = null;
                               selectedProfilePicPath = null;
                               cancelVisibilityAvatar = false;
                             });
@@ -347,13 +347,45 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           ),
                         ),
                       ),
+                      Visibility(
+                        visible: selectedProfilePicPath != null &&
+                            cancelVisibilityAvatar,
+                        child: GestureDetector(
+                          onTap: () async {
+                            debugPrint("goto crop");
+
+                            if (selectedProfilePicPath != null) {
+                              var editedImage = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CropperScreen(
+                                          imagePath: selectedProfilePicPath!,
+                                        )),
+                              );
+
+                              if (editedImage != null) {
+                                String newImagePath =
+                                    await ImageHelper.saveEditedImage(
+                                        editedImage, "texting_image");
+                                setState(() {
+                                  selectedProfilePicPath = newImagePath;
+                                });
+                              }
+                            }
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 150, top: 170),
+                            child: Icon(Icons.crop),
+                          ),
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () {
                           pickImage("dp");
                         },
                         child: const Padding(
                           padding: EdgeInsets.only(left: 105, top: 170),
-                          child: Icon(Icons.edit),
+                          child: Icon(Icons.add_a_photo),
                         ),
                       ),
                       Row(
@@ -365,8 +397,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   const EdgeInsets.only(left: 5.0, top: 150),
                               child: selectedProfilePicPath != null
                                   ? CircleAvatar(
-                                      backgroundImage:
-                                          FileImage(_selectedProfilePic!),
+                                      backgroundImage: FileImage(
+                                          File(selectedProfilePicPath!)),
                                       radius: 50.0,
                                     )
                                   : CircleAvatar(
