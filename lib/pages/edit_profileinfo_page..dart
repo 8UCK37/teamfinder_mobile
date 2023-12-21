@@ -1,20 +1,19 @@
 // ignore: file_names
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:ui';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 import '../services/data_service.dart';
 import '../utils/image_compressor.dart';
 import '../utils/language_chip_helper.dart';
-import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 
 class EditProfileInfo extends StatefulWidget {
   const EditProfileInfo({super.key});
@@ -50,7 +49,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   File? _selectedProfilePic;
   String? selectedProfilePicPath;
 
-  late bool isLoading = false;
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -79,48 +78,19 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     });
   }
 
-  void handleUpload()async {
-   
+  void handleUpload() async {
     if (selectedBannerPath != null && selectedProfilePicPath != null) {
-      debugPrint("both upload");
       uploadBanner();
       uploadProfilePic();
     } else if (selectedBannerPath != null) {
-      debugPrint("only banner upload");
       uploadBanner();
     } else if (selectedProfilePicPath != null) {
-      debugPrint("only profile upload");
       uploadProfilePic();
     } else {
       debugPrint("name+bio+address+gender+pref lingo");
-      // showSucessPopup("every other thing updated");
-      await Future.delayed(const Duration(seconds: 1), () {
-        setState(() {
-          isLoading = !isLoading;
-        });
-      });
     }
-  }
-
-  void showLoading() {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.loading,
-      title: 'Loading',
-      text: 'Fetching your data',
-    );
-  }
-
-  void showSucessPopup(String msg) {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.success,
-      text: msg,
-      onConfirmBtnTap: () {
-        Navigator.of(context).pop();
-      },
-      //autoCloseDuration: const Duration(seconds: 2),
-    );
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.reloadUser(context);
   }
 
   void bioInitHandler() {
@@ -163,7 +133,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         debugPrint("banner upload succ");
         setState(() {
           cancelVisibilityBanner = false;
-          isLoading = false;
+          selectedBannerPath = null;
+          _selectedBanner = null;
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -175,8 +146,10 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
   void uploadProfilePic() async {
     debugPrint("profilepic upload hit");
+    setState(() {
+      cancelVisibilityAvatar = false;
+    });
     Dio dio = Dio();
-
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
     Options options = Options(
@@ -197,12 +170,12 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         data: formData,
         options: options,
       );
-
       if (response.statusCode == 200) {
         debugPrint("profile upload succ");
         setState(() {
           cancelVisibilityAvatar = false;
-          isLoading = false;
+          selectedProfilePicPath = null;
+          _selectedProfilePic = null;
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -228,74 +201,77 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
 
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
-      child: BlurryModalProgressHUD(
-        inAsyncCall: isLoading,
-        blurEffectIntensity: 4,
-        progressIndicator: const SpinKitFadingCircle(
-          color: Colors.blue,
-          size: 90.0,
-        ),
-        dismissible: false,
-        opacity: 0.4,
-        color: const Color.fromARGB(45, 0, 0, 0),
-        child: Scaffold(
-          floatingActionButton: GestureDetector(
-            onTap: () {
-              debugPrint("saveChanges");
+      child: Scaffold(
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            setState(() {
+              isLoading = true;
+            });
+            debugPrint("saveChanges");
+            Future.delayed(const Duration(seconds: 1), () {
+              QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.success,
+                  text: 'Wait a moment !!!',
+                  showConfirmBtn: false,
+                  autoCloseDuration: const Duration(seconds: 1));
               setState(() {
-                isLoading = true;
+                isLoading = false;
               });
-              handleUpload();
-            },
-            child: const Material(
-              elevation: 20,
-              shape: CircleBorder(),
-              child: ClipOval(
-                child: CircleAvatar(
-                  backgroundColor: Colors.deepPurpleAccent,
-                  radius: 25,
-                  child: Icon(
-                    Icons.save,
-                    color: Colors.white,
-                  ),
+              Future.delayed(const Duration(seconds: 1), () {
+                handleUpload();
+              });
+            });
+          },
+          child: const Material(
+            elevation: 20,
+            shape: CircleBorder(),
+            child: ClipOval(
+              child: CircleAvatar(
+                backgroundColor: Colors.deepPurpleAccent,
+                radius: 25,
+                child: Icon(
+                  Icons.save,
+                  color: Colors.white,
                 ),
               ),
             ),
           ),
-          appBar: AppBar(
-            automaticallyImplyLeading: true,
-            systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: userService.darkTheme!
-                    ? Brightness.light
-                    : Brightness.dark),
-            backgroundColor: userService.darkTheme!
-                ? const Color.fromRGBO(46, 46, 46, 1)
-                : Colors.white,
-            foregroundColor:
-                userService.darkTheme! ? Colors.white : Colors.deepPurple,
-            title: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Text('TeamFinder',
-                              style: TextStyle(
-                                  color: Colors.deepPurple,
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ]),
+        ),
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness:
+                  userService.darkTheme! ? Brightness.light : Brightness.dark),
+          backgroundColor: userService.darkTheme!
+              ? const Color.fromRGBO(46, 46, 46, 1)
+              : Colors.white,
+          foregroundColor:
+              userService.darkTheme! ? Colors.white : Colors.deepPurple,
+          title: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        Text('TeamFinder',
+                            style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
 
-            elevation: 0.0,
-            //systemOverlayStyle: SystemUiOverlayStyle.dark,
-          ),
-          body: SingleChildScrollView(
+          elevation: 0.0,
+          //systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
+        body: Stack(children: [
+          SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 30.0),
               child: Column(
@@ -318,7 +294,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                                   fit: BoxFit.cover,
                                 )
                               : DecorationImage(
-                                  image: CachedNetworkImageProvider(
+                                  image: NetworkImage(
                                       userData['profileBanner'] ?? ''),
                                   fit: BoxFit.cover,
                                 ),
@@ -721,7 +697,20 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               ),
             ),
           ),
-        ),
+          // Blurry overlay when isLoading is true
+          if (isLoading)
+            Container(
+              color:
+                  Colors.black.withOpacity(0.5), // Adjust the opacity as needed
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                    sigmaX: 5, sigmaY: 5), // Adjust the blur amount
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+        ]),
       ),
     );
   }

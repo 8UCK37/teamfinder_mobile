@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // ignore: unused_import
@@ -37,6 +38,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.reloadUser(context);
     userService.getOwnPost();
   }
 
@@ -122,7 +124,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
                           bottomRight: Radius.circular(8.0),
                         ),
                         image: DecorationImage(
-                          image: NetworkImage(userData['profileBanner'] ?? ''),
+                          image: CachedNetworkImageProvider(userData['profileBanner'] ?? ''),
                           fit: BoxFit
                               .cover, // Set the fit property to determine how the image should be fitted
                         ),
