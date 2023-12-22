@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
+import '../services/notification_observer.dart';
+
 class FriendsTab extends StatefulWidget {
   const FriendsTab({super.key});
 
@@ -275,6 +277,8 @@ class _FriendsTabState extends State<FriendsTab>
 
   Widget pendingFrndReq(dynamic user, bool isInc) {
     final userService = Provider.of<ProviderService>(context, listen: true);
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(
@@ -302,6 +306,7 @@ class _FriendsTabState extends State<FriendsTab>
                         setState(() {
                           pendingInc.remove(user["id"]);
                         });
+                        notiObserver.getFriendList();
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
