@@ -367,6 +367,36 @@ class ProviderService extends ChangeNotifier {
     }
   }
 
+  void rejectReq(String frndId) async {
+    debugPrint("rejecting frnd req for $frndId");
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("rejecting frnd req no_internet");
+      return;
+    } else {
+      debugPrint("in terms internet we have internet");
+    }
+
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/rejectFriend',
+      data: {'frnd_id': frndId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("rejected frnd req for $frndId");
+    }
+  }
+
   String convertSelectedLangToString() {
     String dbString = '';
     for (Language lang in selectedLang.keys) {

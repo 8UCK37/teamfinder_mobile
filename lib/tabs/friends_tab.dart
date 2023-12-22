@@ -323,7 +323,11 @@ class _FriendsTabState extends State<FriendsTab>
                     const SizedBox(width: 10.0),
                     GestureDetector(
                       onTap: () async {
-                        debugPrint('Manual print with stack trace');
+                        debugPrint(user["name"]);
+                        userService.rejectReq(user["id"]);
+                        setState(() {
+                          pendingInc.remove(user["id"]);
+                        });
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
