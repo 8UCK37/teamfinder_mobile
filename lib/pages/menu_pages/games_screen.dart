@@ -51,11 +51,13 @@ class _GamesPageState extends State<GamesPage> {
       options: options,
     );
     if (response.statusCode == 200) {
-      //debugPrint(response.data.toString());
-      setState(() {
+      //debugPrint(response.toString());
+      if(response.data.length>2){
+        setState(() {
         ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
         getSelectedGames(ownedGames);
       });
+      }
     }
   }
 
@@ -98,18 +100,21 @@ class _GamesPageState extends State<GamesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     return Theme(
-      data:userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: userService.darkTheme!? Brightness.light:Brightness.dark
-          ),
-          backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 1): Colors.white,
-          foregroundColor: userService.darkTheme!? Colors.white:Colors.deepPurple ,
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness:
+                  userService.darkTheme! ? Brightness.light : Brightness.dark),
+          backgroundColor: userService.darkTheme!
+              ? const Color.fromRGBO(46, 46, 46, 1)
+              : Colors.white,
+          foregroundColor:
+              userService.darkTheme! ? Colors.white : Colors.deepPurple,
           title: Column(
             children: [
               Row(
@@ -148,9 +153,10 @@ class _GamesPageState extends State<GamesPage> {
                                 shape: CircleBorder(),
                                 child: CircleAvatar(
                                   radius: 20,
-                                  backgroundColor: Color.fromRGBO(222, 209, 242, 100),
-                                  child:
-                                      Icon(Icons.search, color: Colors.blueGrey),
+                                  backgroundColor:
+                                      Color.fromRGBO(222, 209, 242, 100),
+                                  child: Icon(Icons.search,
+                                      color: Colors.blueGrey),
                                 ),
                               ),
                             ),
@@ -158,7 +164,7 @@ class _GamesPageState extends State<GamesPage> {
                           GestureDetector(
                             onTap: () {
                               debugPrint('goto chat');
-    
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -171,7 +177,8 @@ class _GamesPageState extends State<GamesPage> {
                               shape: CircleBorder(),
                               child: CircleAvatar(
                                 radius: 20,
-                                backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                                backgroundColor:
+                                    Color.fromRGBO(222, 209, 242, 100),
                                 child: Icon(Icons.question_answer,
                                     color: Colors.deepPurple),
                               ),
@@ -184,38 +191,36 @@ class _GamesPageState extends State<GamesPage> {
           elevation: 0.0,
         ),
         body: Column(
-            children: [
-              
-              const Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Your favourite games',
-                      style: TextStyle(
-                          color: Colors.deepPurpleAccent,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold)),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Material(
-                  //color: Colors.deepOrange,
-                  elevation: 15, // Elevation level
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .79,
-                      child: CustomGrid(items: showcase),
-                    ),
+          children: [
+            const Row(
+              children: [
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Your favourite games',
+                    style: TextStyle(
+                        color: Colors.deepPurpleAccent,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 10, 10, 0),
+              child: Material(
+                //color: Colors.deepOrange,
+                elevation: 15, // Elevation level
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * .79,
+                    child: CustomGrid(items: showcase),
                   ),
                 ),
               ),
-            ],
-          ),
-        
+            ),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           splashColor: Colors.blueAccent,
           backgroundColor: const Color.fromARGB(
