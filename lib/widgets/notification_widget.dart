@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 
@@ -55,6 +56,7 @@ class NotificationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     return Container(
       //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
       width: MediaQuery.of(context).size.width,
@@ -65,11 +67,16 @@ class NotificationWidget extends StatelessWidget {
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: (notification.notification=="poke")? CrossAxisAlignment.center : CrossAxisAlignment.start,
             children: <Widget>[
-              CircleAvatar(
-                backgroundImage:
-                    NetworkImage(notification.senderProfilePicture),
-                radius: 35.0,
+              Padding(
+                padding: const EdgeInsets.only(top:8.0),
+                child: CircleAvatar(
+                  backgroundImage:CachedNetworkImageProvider(
+                    cacheKey:"notification_avatar$timestamp",
+                    notification.senderProfilePicture),
+                  radius: 25.0,
+                ),
               ),
               const SizedBox(width: 15.0),
               Column(
@@ -95,6 +102,32 @@ class NotificationWidget extends StatelessWidget {
                   ),
                   Text(getCurrentTimeAndDate(),
                       style: const TextStyle(fontSize: 15.0, color: Colors.grey)),
+                  if(notification.notification=="frnd req")
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25.0, vertical: 5.0),
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: const Text('Confirm',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 15.0)),
+                      ),
+                      const SizedBox(width: 10.0),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25.0, vertical: 5.0),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: const Text('Delete',
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 15.0)),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
