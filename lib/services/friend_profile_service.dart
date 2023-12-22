@@ -19,7 +19,7 @@ class FriendProfileService extends ChangeNotifier {
   String friendStatus = "default";
 
   void erasePreviousProfile() {
-    if(friendProfile==null){
+    if (friendProfile == null) {
       return;
     }
     friendPostList = [];
@@ -295,6 +295,25 @@ class FriendProfileService extends ChangeNotifier {
       friendList = userPojoListFromJson(jsonEncode(response.data));
       debugPrint('line 292 ${friendList.toString()}');
       notifyListeners();
+    }
+  }
+
+  Future<void> sendRequest(String id) async {
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/addFriend',
+      data: {'to': id},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      updateFriendStatus("pending");
     }
   }
 }

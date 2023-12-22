@@ -41,14 +41,20 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _fadeAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);  }
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _fadeAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+  }
 
   @override
   void dispose() {
@@ -68,10 +74,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   }
 
   Widget statusDependentwidget() {
-    final profileService = Provider.of<FriendProfileService>(context, listen: true);
+    final profileService =
+        Provider.of<FriendProfileService>(context, listen: true);
     if (profileService.friendStatus == 'accepted') {
       return const Padding(
-        padding: EdgeInsets.only(top: 4, left: 15.0,bottom:4),
+        padding: EdgeInsets.all(10),
         child: CircleAvatar(
           backgroundColor: Colors.deepPurpleAccent,
           radius: 15,
@@ -83,7 +90,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
       return FadeTransition(
         opacity: _fadeAnimation,
         child: const Padding(
-          padding: EdgeInsets.only(top: 4, left: 15.0,bottom:4),
+          padding: EdgeInsets.all(10),
           child: Column(
             children: [
               CircleAvatar(
@@ -91,66 +98,40 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                 radius: 15,
                 backgroundImage: AssetImage("assets/images/hourglass.png"),
               ),
-              Text(
-                "Pending",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
             ],
           ),
         ),
       );
     } else {
-      return  Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-          child: GestureDetector(
-            onTap: () {
-              debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
-              profileService.updateFriendStatus("pending");
-              MotionToast(
-                icon: Icons.rocket_launch,
-                primaryColor: Colors.purple,
-                displaySideBar: false,
-                displayBorder: true,
-                title: const Text(
-                  'Sucess!!',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                description: const Text(
-                  'Friend Request sent',
-                ),
-              ).show(context);
-            },
-            child: Material(
-              elevation: 20,
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              child: ClipPath(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white12,
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: const Column(
-                    children: [
-                      CircleAvatar(
-                          radius: 15,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: AssetImage("assets/images/wave.png")),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-                        child: Text(
-                          "Send Request",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
+      return GestureDetector(
+          onTap: () {
+            debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
+            // profileService.updateFriendStatus("pending");
+            profileService.sendRequest(widget.friendId);
+            MotionToast(
+              icon: Icons.rocket_launch,
+              primaryColor: Colors.purple,
+              displaySideBar: false,
+              displayBorder: true,
+              title: const Text(
+                'Sucess!!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              description: const Text(
+                'Friend Request sent',
+              ),
+            ).show(context);
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(
+              Icons.person_add,
+              color: Colors.blue,
+              size: 30,
             ),
-          ),
-        );
+          ));
     }
   }
 
@@ -189,17 +170,19 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                               image: DecorationImage(
                                 image: CachedNetworkImageProvider(
                                     friendProfile!.profileBanner),
-                                fit: BoxFit.cover, // Set the fit property to determine how the image should be fitted
+                                fit: BoxFit
+                                    .cover, // Set the fit property to determine how the image should be fitted
                               ),
                             ),
                           ),
                           SafeArea(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5, left: 110),
+                                  padding:
+                                      const EdgeInsets.only(top: 5, left: 110),
                                   child: SizedBox(
                                     width: 167,
                                     child: Text(friendProfile!.name,
@@ -221,11 +204,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 5.0, top: 150),
+                              padding:
+                                  const EdgeInsets.only(left: 5.0, top: 150),
                               child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    friendProfile!.profilePicture),
+                                backgroundImage:
+                                    NetworkImage(friendProfile!.profilePicture),
                                 radius: 50.0,
                               ),
                             ),
@@ -234,24 +217,24 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       ),
                     ],
                   ),
-                  Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
+                  Divider(
+                      color: userService.darkTheme!
+                          ? const Color.fromARGB(255, 74, 74, 74)
+                          : Colors.grey),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
                       children: <Widget>[
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Row(
                               children: <Widget>[
                                 const Icon(Icons.person_pin_circle,
                                     color: Colors.green, size: 32.0),
                                 const SizedBox(width: 10.0),
-                                Text(
-                                    '${friendProfile!.userInfo!.country}',
-                                    style:
-                                        const TextStyle(fontSize: 16.0))
+                                Text('${friendProfile!.userInfo!.country}',
+                                    style: const TextStyle(fontSize: 16.0))
                               ],
                             ),
                             const SizedBox(height: 15.0),
@@ -260,10 +243,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                 const Icon(Icons.record_voice_over,
                                     color: Colors.blue, size: 30.0),
                                 const SizedBox(width: 10.0),
-                                Text(
-                                    '${friendProfile!.userInfo!.language}',
-                                    style:
-                                        const TextStyle(fontSize: 16.0))
+                                Text('${friendProfile!.userInfo!.language}',
+                                    style: const TextStyle(fontSize: 16.0))
                               ],
                             ),
                           ],
@@ -274,8 +255,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                             const Icon(Icons.more_horiz,
                                 color: Colors.grey, size: 30.0),
                             const SizedBox(width: 10.0),
-                            Text(
-                                "See ${friendProfile!.name}'s About Info",
+                            Text("See ${friendProfile!.name}'s About Info",
                                 style: const TextStyle(fontSize: 16.0))
                           ],
                         ),
@@ -283,7 +263,10 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       ],
                     ),
                   ),
-                  Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey,
+                  Divider(
+                    color: userService.darkTheme!
+                        ? const Color.fromARGB(255, 74, 74, 74)
+                        : Colors.grey,
                     height: 0.0,
                   ),
                   Container(
@@ -292,8 +275,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Column(
                               key: _linkedAccWidgetKey,
@@ -302,32 +284,29 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                     style: TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(
-                                            255, 60, 159, 209))),
+                                        color:
+                                            Color.fromARGB(255, 60, 159, 209))),
                                 const SizedBox(height: 6.0),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 15.0),
+                                  padding: const EdgeInsets.only(left: 15.0),
                                   child: Row(
                                     children: [
                                       SizedBox(
                                         child: Icon(
                                           FontAwesomeIcons.steam,
-                                          color: friendProfile?.steamId !=
-                                                  null
+                                          color: friendProfile?.steamId != null
                                               ? const Color.fromRGBO(
                                                   29, 92, 234, 85)
                                               : Colors.black,
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 15.0),
+                                        padding:
+                                            const EdgeInsets.only(left: 15.0),
                                         child: SizedBox(
                                           child: Icon(
                                             FontAwesomeIcons.twitch,
-                                            color: twitchData !=
-                                                    "not logged in"
+                                            color: twitchData != "not logged in"
                                                 ? const Color.fromRGBO(
                                                     145, 70, 250, 100)
                                                 : Colors.black,
@@ -335,17 +314,15 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 15.0),
+                                        padding:
+                                            const EdgeInsets.only(left: 15.0),
                                         child: SizedBox(
                                           child: Icon(
                                             FontAwesomeIcons.discord,
-                                            color:
-                                                discordData!=null
-                                                    ? const Color
-                                                            .fromRGBO(
-                                                        114, 137, 218, 1)
-                                                    : Colors.black,
+                                            color: discordData != null
+                                                ? const Color.fromRGBO(
+                                                    114, 137, 218, 1)
+                                                : Colors.black,
                                           ),
                                         ),
                                       )
@@ -359,21 +336,23 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                       ],
                     ),
                   ),
-                  Divider(color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey,height: 40.0),
+                  Divider(
+                      color: userService.darkTheme!
+                          ? const Color.fromARGB(255, 74, 74, 74)
+                          : Colors.grey,
+                      height: 40.0),
                   Container(
                     //padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
                       children: <Widget>[
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(left:15.0),
+                              padding: const EdgeInsets.only(left: 15.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text("${friendProfile!.name}'s wall",
                                       style: const TextStyle(
@@ -405,8 +384,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                               children: <Widget>[
                                 SeparatorWidget(
                                     color: userService.darkTheme!
-                                    ?const Color.fromARGB(255, 74, 74, 74)
-                                    :Color.fromARGB(255, 182, 182, 182)),
+                                        ? const Color.fromARGB(255, 74, 74, 74)
+                                        : Color.fromARGB(255, 182, 182, 182)),
                                 PostWidget(post: post),
                               ],
                             ),
