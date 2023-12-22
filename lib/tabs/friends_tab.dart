@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-
+import '../friend_profile_ui/friend_profilehome.dart';
 import '../services/notification_observer.dart';
 
 class FriendsTab extends StatefulWidget {
@@ -277,91 +277,107 @@ class _FriendsTabState extends State<FriendsTab>
 
   Widget pendingFrndReq(dynamic user, bool isInc) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    final notiObserver =
-        Provider.of<NotificationWizard>(context, listen: false);
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: Row(
-        children: <Widget>[
-          CircleAvatar(
-            backgroundImage: NetworkImage(user['profilePicture']),
-            radius: 30.0,
-          ),
-          const SizedBox(width: 20.0),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => FriendProfileHome(
+                    friendId: user["id"],
+                    friendName: user["name"],
+                    friendProfileImage: user["profilePicture"],
+                  )),
+        );
+      },
+      child: Container(
+        decoration:
+            BoxDecoration(border: Border.all(color: Colors.transparent)),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          child: Row(
             children: <Widget>[
-              Text(user!['name'],
-                  style: const TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 5.0),
-              if (isInc)
-                Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () async {
-                        debugPrint(user["name"]);
-                        userService.acceptReq(user["id"]);
-                        setState(() {
-                          pendingInc.remove(user["id"]);
-                        });
-                        notiObserver.getFriendList();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35.0, vertical: 10.0),
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 16, 153, 78),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: const Text('Accept',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontSize: 15.0)),
-                      ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(user['profilePicture']),
+                radius: 30.0,
+              ),
+              const SizedBox(width: 20.0),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(user!['name'],
+                      style: const TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 5.0),
+                  if (isInc)
+                    Row(
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () async {
+                            debugPrint("accept: ${user["name"]}");
+                            userService.acceptReq(user["id"]);
+                            setState(() {
+                              pendingInc.remove(user["id"]);
+                            });
+                            notiObserver.getFriendList();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 35.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 16, 153, 78),
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: const Text('Accept',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontSize: 15.0)),
+                          ),
+                        ),
+                        const SizedBox(width: 10.0),
+                        GestureDetector(
+                          onTap: () async {
+                            debugPrint("reject: ${user["name"]}");
+                            userService.rejectReq(user["id"]);
+                            setState(() {
+                              pendingInc.remove(user["id"]);
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 35.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 229, 61, 61),
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: const Text('Reject',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 15.0)),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10.0),
-                    GestureDetector(
-                      onTap: () async {
-                        debugPrint(user["name"]);
-                        userService.rejectReq(user["id"]);
-                        setState(() {
-                          pendingInc.remove(user["id"]);
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35.0, vertical: 10.0),
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 229, 61, 61),
-                            borderRadius: BorderRadius.circular(5.0)),
-                        child: const Text('Reject',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 15.0)),
-                      ),
-                    ),
-                  ],
-                ),
-              if (!isInc)
-                Row(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35.0, vertical: 10.0),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 16, 153, 78),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: const Text('Revoke',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 15.0)),
-                    ),
-                    const SizedBox(width: 10.0),
-                  ],
-                )
+                  if (!isInc)
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 35.0, vertical: 10.0),
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 16, 153, 78),
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: const Text('Revoke',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: 15.0)),
+                        ),
+                        const SizedBox(width: 10.0),
+                      ],
+                    )
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
