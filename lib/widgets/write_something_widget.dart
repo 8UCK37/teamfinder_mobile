@@ -10,7 +10,7 @@ class WriteSomethingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context);
+    final userService = Provider.of<ProviderService>(context,listen:true);
     final userData = userService.user;
     // ignore: avoid_unnecessary_containers
     return Container(

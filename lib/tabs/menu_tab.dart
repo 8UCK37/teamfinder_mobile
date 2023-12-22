@@ -17,7 +17,7 @@ class MenuTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),

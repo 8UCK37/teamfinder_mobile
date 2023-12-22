@@ -24,6 +24,7 @@ class ProviderService extends ChangeNotifier {
   String profileImagecacheKey = "dp1";
   String bannerImagecacheKey = "ban1";
 
+
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -333,6 +334,36 @@ class ProviderService extends ChangeNotifier {
       //debugPrint(response.data.toString());
       user['userInfo']['Language'] = convertSelectedLangToString();
       notifyListeners();
+    }
+  }
+
+  void acceptReq(String frndId) async {
+    debugPrint("accepting frnd req for $frndId");
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("accepting frnd req no_internet");
+      return;
+    } else {
+      debugPrint("in terms internet we have internet");
+    }
+
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/acceptFriend',
+      data: {'frnd_id': frndId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("accepted frnd req for $frndId");
     }
   }
 

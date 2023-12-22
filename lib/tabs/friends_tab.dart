@@ -20,8 +20,8 @@ class _FriendsTabState extends State<FriendsTab>
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _suggestionWidgetKey = GlobalKey();
   final GlobalKey _outgoingReqWidgetkey = GlobalKey();
-  late List<dynamic> pendingInc = [];
-  late List<dynamic> pendingOut = [];
+  late Map<String, dynamic> pendingInc = {};
+  late Map<String, dynamic> pendingOut = {};
   @override
   void initState() {
     super.initState();
@@ -64,16 +64,17 @@ class _FriendsTabState extends State<FriendsTab>
     );
     if (response.statusCode == 200) {
       //debugPrint(response.data);
-      if(mounted){
+      if (mounted) {
         setState(() {
-        for (dynamic user in json.decode(response.data)) {
-          if (user['status'] == 'incoming') {
-            pendingInc.add(user);
-          } else if (user['status'] == 'outgoing') {
-            pendingOut.add(user);
+          for (dynamic user in json.decode(response.data)) {
+            if (user['status'] == 'incoming') {
+              //pendingInc.add(user);
+              pendingInc[user['id']] = user;
+            } else if (user['status'] == 'outgoing') {
+              pendingOut[user['id']] = user;
+            }
           }
-        }
-      });
+        });
       }
       //debugPrint(pendingInc.toString());
     }
@@ -81,7 +82,7 @@ class _FriendsTabState extends State<FriendsTab>
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     return SingleChildScrollView(
       controller: _scrollController,
       child: Container(
@@ -112,8 +113,11 @@ class _FriendsTabState extends State<FriendsTab>
                           borderRadius: BorderRadius.circular(30.0)),
                       child: Text('Suggestions',
                           style: TextStyle(
-                              color: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 100): Colors.grey[800],
-                              fontSize: 17.0, fontWeight: FontWeight.bold)),
+                              color: userService.darkTheme!
+                                  ? const Color.fromRGBO(46, 46, 46, 100)
+                                  : Colors.grey[800],
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ),
                   //const SizedBox(width: 10.0),
@@ -123,8 +127,7 @@ class _FriendsTabState extends State<FriendsTab>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const FriendList()
-                        ),
+                            builder: (context) => const FriendList()),
                       );
                     },
                     child: Container(
@@ -135,8 +138,11 @@ class _FriendsTabState extends State<FriendsTab>
                           borderRadius: BorderRadius.circular(30.0)),
                       child: Text('All Friends',
                           style: TextStyle(
-                              color: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 100): Colors.grey[800],
-                              fontSize: 17.0, fontWeight: FontWeight.bold)),
+                              color: userService.darkTheme!
+                                  ? const Color.fromRGBO(46, 46, 46, 100)
+                                  : Colors.grey[800],
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold)),
                     ),
                   ),
                   //const SizedBox(width: 10.0),
@@ -150,15 +156,22 @@ class _FriendsTabState extends State<FriendsTab>
                       decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(30.0)),
-                      child:  Text('Pending',
+                      child: Text('Pending',
                           style: TextStyle(
-                              color: userService.darkTheme! ? const Color.fromRGBO(46, 46, 46, 100): Colors.grey[800],
-                              fontSize: 17.0, fontWeight: FontWeight.bold)),
+                              color: userService.darkTheme!
+                                  ? const Color.fromRGBO(46, 46, 46, 100)
+                                  : Colors.grey[800],
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold)),
                     ),
                   )
                 ],
               ),
-              Divider(height: 30.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
+              Divider(
+                  height: 30.0,
+                  color: userService.darkTheme!
+                      ? const Color.fromARGB(255, 74, 74, 74)
+                      : Colors.grey),
               Row(
                 children: <Widget>[
                   const Text('Incoming Friend Requests',
@@ -173,8 +186,13 @@ class _FriendsTabState extends State<FriendsTab>
                 ],
               ),
               const SizedBox(height: 20.0),
-              for (dynamic user in pendingInc) pendingIncReq(user, true),
-              Divider(height: 30.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
+              for (String id in pendingInc.keys.toList())
+                pendingFrndReq(pendingInc[id], true),
+              Divider(
+                  height: 30.0,
+                  color: userService.darkTheme!
+                      ? const Color.fromARGB(255, 74, 74, 74)
+                      : Colors.grey),
               Container(
                 key: _suggestionWidgetKey,
                 child: const Text('People You May Know',
@@ -185,7 +203,8 @@ class _FriendsTabState extends State<FriendsTab>
               Row(
                 children: <Widget>[
                   const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/dp_placeholder.png'),
+                    backgroundImage:
+                        AssetImage('assets/images/dp_placeholder.png'),
                     radius: 30.0,
                   ),
                   const SizedBox(width: 20.0),
@@ -242,14 +261,20 @@ class _FriendsTabState extends State<FriendsTab>
                 ],
               ),
               const SizedBox(height: 20.0),
-              for (dynamic user in pendingOut) pendingIncReq(user, false),
-              Divider(height: 30.0,color: userService.darkTheme!? const Color.fromARGB(255, 74, 74, 74):Colors.grey),
+              for (String id in pendingOut.keys.toList())
+                pendingFrndReq(pendingOut[id], false),
+              Divider(
+                  height: 30.0,
+                  color: userService.darkTheme!
+                      ? const Color.fromARGB(255, 74, 74, 74)
+                      : Colors.grey),
             ],
           )),
     );
   }
 
-  Widget pendingIncReq(dynamic user, bool isInc) {
+  Widget pendingFrndReq(dynamic user, bool isInc) {
+    final userService = Provider.of<ProviderService>(context, listen: true);
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(
@@ -270,31 +295,45 @@ class _FriendsTabState extends State<FriendsTab>
               if (isInc)
                 Row(
                   children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35.0, vertical: 10.0),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 16, 153, 78),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: const Text('Accept',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 15.0)),
+                    GestureDetector(
+                      onTap: () async {
+                        debugPrint(user["name"]);
+                        userService.acceptReq(user["id"]);
+                        setState(() {
+                          pendingInc.remove(user["id"]);
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 35.0, vertical: 10.0),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 16, 153, 78),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: const Text('Accept',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 15.0)),
+                      ),
                     ),
                     const SizedBox(width: 10.0),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35.0, vertical: 10.0),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 229, 61, 61),
-                          borderRadius: BorderRadius.circular(5.0)),
-                      child: const Text('Reject',
-                          style:
-                              TextStyle(color: Colors.black, fontSize: 15.0)),
+                    GestureDetector(
+                      onTap: () async {
+                        debugPrint('Manual print with stack trace');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 35.0, vertical: 10.0),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 229, 61, 61),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        child: const Text('Reject',
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 15.0)),
+                      ),
                     ),
                   ],
                 ),
-                if(!isInc)
+              if (!isInc)
                 Row(
                   children: <Widget>[
                     Container(

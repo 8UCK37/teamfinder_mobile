@@ -1,12 +1,8 @@
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
-import '../controller/network_controller.dart';
 import '../services/notification_observer.dart';
 
 class OnlineWidget extends StatefulWidget {
@@ -18,7 +14,6 @@ class OnlineWidget extends StatefulWidget {
 
 class _OnlineWidgetState extends State<OnlineWidget>
     with SingleTickerProviderStateMixin {
-  late List<UserPojo>? friendList = [];
   late Map<String, bool>? onlineMap;
   @override
   void initState() {
@@ -27,58 +22,14 @@ class _OnlineWidgetState extends State<OnlineWidget>
   }
 
   void _getFriendList() async {
-    NetworkController networkController = NetworkController();
-    if (await networkController.noInternet()) {
-      debugPrint("_getFriendList() no_internet");
-      return;
-    } else {
-      debugPrint("_getFriendList() called");
-    }
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-    //print('friend list called');
-    final response = await dio.get(
-      'http://${dotenv.env['server_url']}/friendData',
-      options: options,
-    );
-
-    if (response.statusCode == 200) {
-      // Request successful
-      var res = response.data;
-      //debugPrint(res);
-      // Parse the JSON response into a list of PostPojo objects
-      List<UserPojo> parsedFriendList = userPojoListFromJson(res);
-      if (mounted) {
-        setState(() {
-          parsedFriendList.sort((a, b) {
-            if (a.isConnected && !b.isConnected) {
-              return -1; // a comes before b
-            } else if (!a.isConnected && b.isConnected) {
-              return 1; // b comes before a
-            } else {
-              return 0; // order remains the same
-            }
-          });
-          onlineMap = {
-            for (var obj in parsedFriendList) obj.id: obj.isConnected
-          };
-          final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
-          notiObserver.updateOnlineMap(onlineMap);
-          friendList =
-              parsedFriendList; // Update the state variable with the parsed list
-        });
-      }
-    }
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
+    notiObserver.getFriendList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     return Container(
       height: 80.0,
       padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -116,8 +67,9 @@ class _OnlineWidgetState extends State<OnlineWidget>
               ),
             ),
           ),
-          if (friendList != null) // Add a null check here
-            for (UserPojo user in friendList!) // Add a null check here
+          if (notiObserver.friendList != null) // Add a null check here
+            for (UserPojo user
+                in notiObserver.friendList!) // Add a null check here
               GestureDetector(
                   onTap: () {
                     var route = MaterialPageRoute(
