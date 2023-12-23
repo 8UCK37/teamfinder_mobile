@@ -113,22 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
-  auto_size_text:
-    dependency: "direct main"
-    description:
-      name: auto_size_text
-      sha256: "3f5261cd3fb5f2a9ab4e2fc3fba84fd9fcaac8821f20a1d4e71f557521b22599"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
-  blurry_modal_progress_hud:
-    dependency: "direct main"
-    description:
-      name: blurry_modal_progress_hud
-      sha256: f3b176830f026bbe0f477029c785b1c3a842f2bb4393da05cc7ef7eb0587f25c
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -465,14 +449,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.10"
-  dialog:
-    dependency: "direct main"
-    description:
-      name: dialog
-      sha256: ed34ef7add51e3c1a5bbc042b39f5baf399d4494be47362ebe9999e236be459f
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.0"
   dio:
     dependency: "direct main"
     description:
@@ -750,14 +726,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
-  flutter_spinkit:
-    dependency: "direct main"
-    description:
-      name: flutter_spinkit
-      sha256: b39c753e909d4796906c5696a14daf33639a76e017136c8d82bf3e620ce5bb8e
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -888,14 +856,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
-  hidden_drawer_menu:
-    dependency: "direct main"
-    description:
-      name: hidden_drawer_menu
-      sha256: "74ca9c4ffc45c05dec3fd4e12cd6bd0851029d909ee5531bf31244b7160f96b9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
   hive:
     dependency: "direct main"
     description:

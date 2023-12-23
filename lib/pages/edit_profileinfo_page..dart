@@ -10,7 +10,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/widgets/profile_image_cropper.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
 import '../services/data_service.dart';

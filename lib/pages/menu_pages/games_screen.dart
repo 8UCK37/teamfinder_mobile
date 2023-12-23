@@ -78,17 +78,25 @@ class _GamesPageState extends State<GamesPage> {
     );
     if (response.statusCode == 200) {
       //debugPrint(response.data.toString());
-      dynamic res = jsonDecode(response.data)[0];
+      dynamic res;
+      if (response.data.length > 2) {
+        res = jsonDecode(response.data)[0];
+      } else {
+        res=[];
+      }
+
       //debugPrint(res.toString());
       setState(() {
         showcase = [];
         for (dynamic game in gamesList) {
           game['selected'] = false;
-          for (dynamic appid in res['appid'].split(',')) {
+          if(res.length!=0){
+            for (dynamic appid in res['appid'].split(',')) {
             if (game['appid'].toString() == appid.toString()) {
               game['selected'] = true;
               showcase.add(game);
             }
+          }
           }
         }
         showcase.sort((a, b) =>
@@ -108,7 +116,7 @@ class _GamesPageState extends State<GamesPage> {
           titleText: "Games",
           isDark: userService.darkTheme!,
           implyLeading: true,
-          height:55,
+          height: 55,
           showNotificationCount: false,
         ),
         body: Column(
@@ -134,7 +142,7 @@ class _GamesPageState extends State<GamesPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .79,
+                    height: MediaQuery.of(context).size.height - 155,
                     child: CustomGrid(items: showcase),
                   ),
                 ),
@@ -142,34 +150,37 @@ class _GamesPageState extends State<GamesPage> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          splashColor: Colors.blueAccent,
-          backgroundColor: const Color.fromARGB(
-              255, 22, 125, 99), //Theme.of(context).accentColor
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom:8.0),
+          child: FloatingActionButton(
+            splashColor: Colors.blueAccent,
+            backgroundColor: const Color.fromARGB(
+                255, 22, 125, 99), //Theme.of(context).accentColor
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              debugPrint('add new games page');
+              //debugPrint(ownedGames.toString());
+              if (ownedGames != null) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddNewGames(
+                            list: ownedGames,
+                          )),
+                );
+              } else {
+                QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.error,
+                  title: 'No games found',
+                  text: 'Sorry, but you have to link Steam first',
+                );
+              }
+            },
           ),
-          onPressed: () {
-            debugPrint('add new games page');
-            //debugPrint(ownedGames.toString());
-            if (ownedGames != null) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddNewGames(
-                          list: ownedGames,
-                        )),
-              );
-            } else {
-              QuickAlert.show(
-                context: context,
-                type: QuickAlertType.error,
-                title: 'No games found',
-                text: 'Sorry, but you have to link Steam first',
-              );
-            }
-          },
         ),
       ),
     );

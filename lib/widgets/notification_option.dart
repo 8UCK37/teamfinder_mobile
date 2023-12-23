@@ -116,6 +116,7 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                               .indexOf(widget.notification);
                           //debugPrint(index.toString());
                           notiObserver.removeNotificationFromList(index);
+                          Navigator.of(context).pop();
                         },
                         child: Container(
                           decoration: const BoxDecoration(

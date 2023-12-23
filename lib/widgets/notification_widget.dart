@@ -86,7 +86,7 @@ class NotificationWidget extends StatelessWidget {
                       width: MediaQuery.of(context).size.width - 150,
                       child: RichText(
                           text: TextSpan(
-                              style: const TextStyle(color: Colors.black),
+                              style: TextStyle(color: userService.darkTheme!? Colors.white:Colors.black),
                               children: [
                             TextSpan(
                                 text: notification.senderName,
