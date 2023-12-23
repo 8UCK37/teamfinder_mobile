@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
-import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:intl/intl.dart';
+import '../../widgets/custom_appbar.dart';
 
 class OwnLinkedAccounts extends StatefulWidget {
   const OwnLinkedAccounts({super.key});
@@ -92,89 +90,12 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: true,
-          systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness:
-                  userService.darkTheme! ? Brightness.light : Brightness.dark),
-          backgroundColor: userService.darkTheme!
-              ? const Color.fromRGBO(46, 46, 46, 1)
-              : Colors.white,
-          title: Column(
-            children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Row(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Text('TeamFinder',
-                                style: TextStyle(
-                                    color: Colors.deepPurple,
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              debugPrint('search clicked');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SearchPage()),
-                              );
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Material(
-                                elevation: 5,
-                                shadowColor: Colors.grey,
-                                shape: CircleBorder(),
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor:
-                                      Color.fromRGBO(222, 209, 242, 100),
-                                  child: Icon(Icons.search,
-                                      color: Colors.blueGrey),
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              debugPrint('goto chat');
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatHome()),
-                              );
-                            },
-                            child: const Material(
-                              elevation: 5,
-                              shadowColor: Colors.grey,
-                              shape: CircleBorder(),
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor:
-                                    Color.fromRGBO(222, 209, 242, 100),
-                                child: Icon(Icons.question_answer,
-                                    color: Colors.deepPurple),
-                              ),
-                            ),
-                          ),
-                        ]),
-                  ]),
-            ],
-          ),
-          elevation: 0.0,
+        appBar: TeamFinderAppBar(
+          titleText: "Linked Acoounts",
+          isDark: userService.darkTheme!,
+          implyLeading: true,
+          height:55,
+          showNotificationCount: false,
         ),
         body: SafeArea(
             child: Column(

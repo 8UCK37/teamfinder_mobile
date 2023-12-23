@@ -147,8 +147,11 @@ class _HomePageState extends State<HomePage>
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: TeamFinderAppBar(
+          titleText: "TeamFinder",
           isDark: _isDark,
-          tabController: _tabController,
+          tabController: _tabController, 
+          implyLeading: false,
+          showNotificationCount: true,
         ),
         body: TabBarView(controller: _tabController, children: [
           const HomeTab(),

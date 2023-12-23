@@ -6,9 +6,9 @@
 6.  profile share options
 7.  Standalone post viewer widget
 8.  comment counter + Reaction counter
-9.  handling friend requests from notification
+9.  handling friend requests from notification ✅
 10. redesign menu pages without using elevated cards
 11. Local db to store Notifications and maybe chats one day ✅
 12. Edit userinfo has to be implemented
-13. Refactor and extract the repeating appBar into a widget✅
+13. Refactor and extract the repeating appBar into a widget ✅
 14. Implement notificaiton mute from a particular user
