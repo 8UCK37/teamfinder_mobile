@@ -47,19 +47,11 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
       title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Row(
-                  children: [
-                    Text(widget.titleText,
-                        style:  widget.titleStyle?? const TextStyle(
-                            color: Colors.deepPurple,
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
-            ),
+            Text(widget.titleText,
+                style:  widget.titleStyle?? const TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
               if (widget.showNotificationCount &&
                   notiObserver.incomingNotificationList.isNotEmpty)

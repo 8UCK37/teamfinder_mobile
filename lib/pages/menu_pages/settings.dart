@@ -1,5 +1,4 @@
 import 'package:day_night_switcher/day_night_switcher.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +16,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late SharedPreferences _preferences;
-  late bool _isDark=widget.isDarkCurrent;
+  late bool _isDark = widget.isDarkCurrent;
   @override
   void initState() {
     super.initState();
@@ -54,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
           titleText: "Settings",
           isDark: _isDark,
           implyLeading: true,
-          height:55,
+          height: 55,
           showNotificationCount: false,
         ),
         body: Center(
@@ -79,22 +78,70 @@ class _SettingsPageState extends State<SettingsPage> {
                         onStateChanged: onStateChanged,
                       ),
                     ),
-                    const _CustomListTile(
-                        title: "Notifications",
-                        icon: Icons.notifications_none_rounded),
-                    const _CustomListTile(
-                        title: "Security Status",
-                        icon: CupertinoIcons.lock_shield),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "Notifications",
+                          leading: Icon(Icons.notifications_none_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]),
+                    ),
+                    Visibility(child: Container()),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "Security Status",
+                          leading: Icon(Icons.lock_outline_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]),
+                    ),
                   ],
                 ),
                 const Divider(),
                 const _SingleSection(
                   title: "App component",
                   children: [
-                    _CustomListTile(
-                        title: "Profile", icon: Icons.person_outline_rounded),
-                    _CustomListTile(
-                        title: "Chat", icon: Icons.message_outlined),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                        title: "Profile",
+                        leading: Icon(Icons.person_outline_rounded),
+                        children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "Chat",
+                          leading: Icon(Icons.messenger_outline_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]),
+                    ),
                     // _CustomListTile(
                     //     title: "Calling", icon: Icons.phone_outlined),
                     // _CustomListTile(
@@ -106,11 +153,34 @@ class _SettingsPageState extends State<SettingsPage> {
                 const Divider(),
                 const _SingleSection(
                   children: [
-                    _CustomListTile(
-                        title: "Help & Feedback",
-                        icon: Icons.help_outline_rounded),
-                    _CustomListTile(
-                        title: "About", icon: Icons.info_outline_rounded),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "Help & Feedback",
+                          leading: Icon(Icons.help_outline_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "About",
+                          leading: Icon(Icons.info_outline_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ],),
+                    ),
                   ],
                 ),
               ],
@@ -124,19 +194,28 @@ class _SettingsPageState extends State<SettingsPage> {
 
 class _CustomListTile extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final Widget? leading;
   final Widget? trailing;
-  const _CustomListTile(
-      {Key? key, required this.title, required this.icon, this.trailing})
-      : super(key: key);
+  final List<Widget> children;
+  const _CustomListTile({
+    Key? key,
+    required this.title,
+    required this.leading,
+    this.trailing, 
+    required this.children,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      leading: Icon(icon),
+    return ExpansionTile(
+      title: Padding(
+        padding: const EdgeInsets.only(left: 5.0),
+        child: Text(title),
+      ),
+      leading: leading,
       trailing: trailing,
-      onTap: () {},
+      childrenPadding: const EdgeInsets.only(left: 50),
+      children: children,
     );
   }
 }
