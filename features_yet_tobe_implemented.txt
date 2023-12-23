@@ -11,3 +11,4 @@
 11. Local db to store Notifications and maybe chats one day ✅
 12. Edit userinfo has to be implemented
 13. Refactor and extract the repeating appBar into a widget✅
+14. Implement notificaiton mute from a particular user

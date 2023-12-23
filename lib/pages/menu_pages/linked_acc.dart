@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -200,7 +201,8 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
                                       const EdgeInsets.only(top: 5.0, left: 10),
                                   child: CircleAvatar(
                                       radius: 25,
-                                      backgroundImage: NetworkImage(
+                                      backgroundImage: CachedNetworkImageProvider(
+                                          cacheKey:userService.profileImagecacheKey,
                                           userService.user["profilePicture"])),
                                 ),
                                 if (countNulls(
@@ -250,11 +252,11 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
                                 child: Column(
                                   children: [
                                     if (steamData != null)
-                                      AccountCard(steamData, "steam"),
+                                      accountCard(steamData, "steam"),
                                     if (discordData != null)
-                                      AccountCard(discordData, "discord"),
+                                      accountCard(discordData, "discord"),
                                     if (twitchData != null)
-                                      AccountCard(twitchData, "twitch"),
+                                      accountCard(twitchData, "twitch"),
                                   ],
                                 ),
                               ),
@@ -271,7 +273,8 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
                                       image:
                                           AssetImage("assets/images/sad.png"),
                                       fit: BoxFit.fill)),
-                              child: const Text("Tap on the button to add connections"),
+                              child: const Text(
+                                  "Tap on the button to add connections"),
                             ),
                           )
                       ],
@@ -281,32 +284,31 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
               ),
             ),
           ],
-        )
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Container(
-          height:50,
-          width:200,
-          decoration: const BoxDecoration(
-            color:Color.fromARGB(255, 0, 212, 145),
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(children: [
-              Icon(Icons.library_add),
-              Padding(
-                padding: EdgeInsets.only(left:8.0),
-                child: Text("Add Connections/All",
-                style: TextStyle(color: Colors.black),),
-              )
-            ],),
+        )),
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            debugPrint("Link new acc not implemented");
+          },
+          child: const Material(
+            elevation: 25,
+            shape: CircleBorder(),
+            child: ClipOval(
+              child: CircleAvatar(
+                backgroundColor: Color.fromARGB(255, 41, 112, 89),
+                radius: 25,
+                child: Icon(
+                  Icons.library_add,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget AccountCard(dynamic data, String type) {
+  Widget accountCard(dynamic data, String type) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     String logo = "";
     String brand = "";

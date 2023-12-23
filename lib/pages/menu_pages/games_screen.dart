@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/add_new_games_screen.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
@@ -52,11 +54,11 @@ class _GamesPageState extends State<GamesPage> {
     );
     if (response.statusCode == 200) {
       //debugPrint(response.toString());
-      if(response.data.length>2){
+      if (response.data.length > 2) {
         setState(() {
-        ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
-        getSelectedGames(ownedGames);
-      });
+          ownedGames = jsonDecode(jsonDecode(response.data)[0]['games']);
+          getSelectedGames(ownedGames);
+        });
       }
     }
   }
@@ -232,13 +234,22 @@ class _GamesPageState extends State<GamesPage> {
           onPressed: () {
             debugPrint('add new games page');
             //debugPrint(ownedGames.toString());
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddNewGames(
-                        list: ownedGames,
-                      )),
-            );
+            if (ownedGames != null) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddNewGames(
+                          list: ownedGames,
+                        )),
+              );
+            } else {
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'No games found',
+                text: 'Sorry, but you have to link Steam first',
+              );
+            }
           },
         ),
       ),
