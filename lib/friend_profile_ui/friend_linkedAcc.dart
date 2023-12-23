@@ -141,7 +141,7 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                           child: Text(
                             countNulls(steamData, twitchData, discordData) != 3
                                 ? "${profileService.friendProfile!.name}'s associated accounts"
-                                : "${profileService.friendProfile!.name} currently has no account linked!!",
+                                : "${profileService.friendProfile!.name.split(" ")[0]} currently has no account linked!!",
                             style: const TextStyle(
                                 color: Colors.deepPurpleAccent,
                                 fontWeight: FontWeight.bold),
@@ -308,7 +308,7 @@ class _FriendLinkedAccState extends State<FriendLinkedAcc> {
                           decoration: BoxDecoration(
                               color: userService.darkTheme!
                                   ? const Color.fromRGBO(50, 38, 83, 1.0)
-                                  : Color.fromARGB(255, 22, 224, 224),
+                                  : const Color.fromARGB(255, 22, 224, 224),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10))),
                           child: Padding(

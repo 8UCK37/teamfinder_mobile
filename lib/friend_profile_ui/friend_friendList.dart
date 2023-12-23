@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
@@ -39,7 +40,7 @@ class _FriendsFriendListState extends State<FriendsFriendList> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(8,8,8,20),
-                            child: Text("${profileService.friendProfile!.name}'s friend list",
+                            child: Text("${profileService.friendProfile!.name.split(" ")[0]}'s friend list",
                             style: const TextStyle(color: Colors.deepPurple,fontSize: 18),
                             ),
                           ),
@@ -99,7 +100,11 @@ class CustomCard extends StatelessWidget {
               height: 80,
               width: 80,
               decoration: BoxDecoration(
-                image: DecorationImage(image: NetworkImage(friend.profilePicture)),
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: CachedNetworkImageProvider(
+                    friend.profilePicture)
+                    ),
                 borderRadius:const BorderRadius.all(Radius.circular(10))
                 ),
             )

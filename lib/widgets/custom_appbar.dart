@@ -14,14 +14,16 @@ class TeamFinderAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool implyLeading;
   final double? height;
   final bool showNotificationCount;
+  final TextStyle? titleStyle;
   const TeamFinderAppBar(
       {super.key,
       required this.isDark,
       this.tabController,
       required this.titleText,
       required this.implyLeading,
-      this.height, 
-      required this.showNotificationCount});
+      this.height,
+      required this.showNotificationCount, 
+      this.titleStyle});
 
   @override
   State<TeamFinderAppBar> createState() => _TeamFinderAppBarState();
@@ -50,7 +52,7 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                 Row(
                   children: [
                     Text(widget.titleText,
-                        style: const TextStyle(
+                        style:  widget.titleStyle?? const TextStyle(
                             color: Colors.deepPurple,
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold)),
@@ -59,7 +61,8 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
               ],
             ),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-              if (widget.showNotificationCount && notiObserver.incomingNotificationList.isNotEmpty)
+              if (widget.showNotificationCount &&
+                  notiObserver.incomingNotificationList.isNotEmpty)
                 Container(
                   height: 25,
                   width: 25,

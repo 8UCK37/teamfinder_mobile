@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_friendList.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_linkedAcc.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_posts.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_games_showcase.dart';
-import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
+import '../widgets/custom_appbar.dart';
 
 class FriendProfileHome extends StatefulWidget {
   final String? friendName;
@@ -115,71 +113,16 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
     return Theme(
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness:
-                  userService.darkTheme! ? Brightness.light : Brightness.dark),
-          backgroundColor: userService.darkTheme!
-              ? const Color.fromRGBO(46, 46, 46, 100)
-              : Colors.white,
-          title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Row(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Text('TeamFinder',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          debugPrint('search clicked');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SearchPage()),
-                          );
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Color.fromRGBO(222, 209, 242, 100),
-                            child: Icon(Icons.search, color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          debugPrint('goto chat');
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ChatHome()),
-                          );
-                        },
-                        child: const CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Color.fromRGBO(222, 209, 242, 100),
-                          child: Icon(Icons.question_answer,
-                              color: Colors.deepPurple),
-                        ),
-                      ),
-                    ]),
-              ]),
-          elevation: 0.0,
+        appBar: TeamFinderAppBar(
+          titleText: "${widget.friendName!.split(" ")[0]}'s Profile",
+          isDark: userService.darkTheme!,
+          implyLeading: true,
+          height: 55,
+          showNotificationCount: false,
+          titleStyle: const TextStyle(
+              color: Colors.deepPurple,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold),
         ),
         bottomNavigationBar: SizedBox(
           height: 75,
