@@ -43,7 +43,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
               )
             else
               for (IncomingNotification notification
-                  in notiObserver.incomingNotificationList)
+                  in notiObserver.incomingNotificationList.reversed)
                 NotificationWidget(notification: notification),
             ],
           )

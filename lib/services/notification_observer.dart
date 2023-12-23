@@ -11,20 +11,21 @@ class IncomingNotification {
   final String senderName;
   final String notification;
   final dynamic data;
-
+  final String timeStamp;
   IncomingNotification(
       {required this.senderId,
       required this.senderProfilePicture,
       required this.senderName,
       required this.notification,
-      required this.data});
+      required this.data,
+      required this.timeStamp});
 }
 
 class NotificationWizard extends ChangeNotifier {
   List<IncomingNotification> incomingNotificationList = [];
   Map<String, bool>? onlineMap;
-   List<UserPojo>? friendList = [];
-  
+  List<UserPojo>? friendList = [];
+
   void updateOnlineMap(Map<String, bool>? newMap) {
     onlineMap = newMap;
     notifyListeners();
@@ -32,6 +33,11 @@ class NotificationWizard extends ChangeNotifier {
 
   void updateFriendList(List<UserPojo>? newValue) {
     friendList = newValue;
+    notifyListeners();
+  }
+
+  void removeNotificationFromList(int index) {
+    incomingNotificationList.removeAt(index);
     notifyListeners();
   }
 
@@ -46,6 +52,31 @@ class NotificationWizard extends ChangeNotifier {
       return;
     } else if (data['notification'] != "imageUploadDone") {
       getUserInfo(data);
+    }
+  }
+
+  String getCurrentTimeAndDate() {
+    // Get the current date and time
+    DateTime now = DateTime.now();
+
+    // Format the date and time
+    String formattedDate =
+        "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}";
+    String formattedTime =
+        "${_twoDigits(now.hour)}:${_twoDigits(now.minute)}:${_twoDigits(now.second)}";
+
+    // Combine date and time
+    String result = "$formattedDate $formattedTime";
+
+    return result;
+  }
+
+  // Helper function to ensure two digits for date and time components
+  String _twoDigits(int n) {
+    if (n >= 10) {
+      return "$n";
+    } else {
+      return "0$n";
     }
   }
 
@@ -67,12 +98,15 @@ class NotificationWizard extends ChangeNotifier {
       //debugPrint(response.data.toString());
       UserPojo senderData = UserPojo.fromJson(response.data[0]);
       //debugPrint(senderData.profilePicture);
+
       IncomingNotification newNoti = IncomingNotification(
           senderId: senderData.id,
           senderProfilePicture: senderData.profilePicture,
           senderName: senderData.name,
           notification: data['notification'],
-          data: data['data']);
+          data: data['data'],
+          timeStamp: getCurrentTimeAndDate());
+
       if (newNoti.notification != "online" &&
           newNoti.notification != "disc" &&
           newNoti.notification != "imageUploadDone") {
@@ -109,25 +143,23 @@ class NotificationWizard extends ChangeNotifier {
       //debugPrint(res);
       // Parse the JSON response into a list of PostPojo objects
       List<UserPojo> parsedFriendList = userPojoListFromJson(res);
-      
-          parsedFriendList.sort((a, b) {
-            if (a.isConnected && !b.isConnected) {
-              return -1; // a comes before b
-            } else if (!a.isConnected && b.isConnected) {
-              return 1; // b comes before a
-            } else {
-              return 0; // order remains the same
-            }
-          });
-          onlineMap = {
-            for (var obj in parsedFriendList) obj.id: obj.isConnected
-          };
-          updateOnlineMap(onlineMap);
-          updateFriendList(parsedFriendList);
-          //friendList = parsedFriendList; // Update the state variable with the parsed list
+
+      parsedFriendList.sort((a, b) {
+        if (a.isConnected && !b.isConnected) {
+          return -1; // a comes before b
+        } else if (!a.isConnected && b.isConnected) {
+          return 1; // b comes before a
+        } else {
+          return 0; // order remains the same
+        }
+      });
+      onlineMap = {for (var obj in parsedFriendList) obj.id: obj.isConnected};
+      updateOnlineMap(onlineMap);
+      updateFriendList(parsedFriendList);
+      //friendList = parsedFriendList; // Update the state variable with the parsed list
     }
   }
-  
+
   void addToNotificationList(IncomingNotification newValue) {
     // debugPrint(newValue.senderId);
     // debugPrint(newValue.notification);

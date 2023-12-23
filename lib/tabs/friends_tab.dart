@@ -277,7 +277,7 @@ class _FriendsTabState extends State<FriendsTab>
 
   Widget pendingFrndReq(dynamic user, bool isInc) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     return GestureDetector(
       onTap: () {
         Navigator.push(

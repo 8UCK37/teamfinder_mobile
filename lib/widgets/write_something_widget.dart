@@ -30,7 +30,7 @@ class WriteSomethingWidget extends StatelessWidget {
                           const AssetImage('assets/images/dp_placeholder.png'),
                       image: CachedNetworkImageProvider(
                         cacheKey:userService.profileImagecacheKey,
-                        userData['profilePicture']??''),
+                        userData['profilePicture']??'https://cdn-icons-png.flaticon.com/512/1985/1985782.png'),
                       width: 56.0,
                       height: 56.0,
                       fit: BoxFit.cover,

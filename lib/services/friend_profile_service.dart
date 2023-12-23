@@ -31,7 +31,6 @@ class FriendProfileService extends ChangeNotifier {
     ownedGames = [];
     showcase = [];
     friendStatus = "default";
-    notifyListeners();
   }
 
   void updateFriendProfile(UserPojo newValue) {
