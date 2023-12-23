@@ -2,29 +2,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import '../controller/network_controller.dart';
+import 'package:hive/hive.dart';
 
-class IncomingNotification {
-  final String senderId;
-  final String senderProfilePicture;
-  final String senderName;
-  final String notification;
-  final dynamic data;
-  final String timeStamp;
-  IncomingNotification(
-      {required this.senderId,
-      required this.senderProfilePicture,
-      required this.senderName,
-      required this.notification,
-      required this.data,
-      required this.timeStamp});
-}
+import '../pojos/incoming_notification.dart';
+// Generated file
 
 class NotificationWizard extends ChangeNotifier {
   List<IncomingNotification> incomingNotificationList = [];
   Map<String, bool>? onlineMap;
   List<UserPojo>? friendList = [];
+
+  final notificationBox = Hive.box('notificationBox');
+
+  void writeTonotificationBox() {
+    notificationBox.put("notificationList", incomingNotificationList);
+    debugPrint(notificationBox.get("notificationList").toString());
+  }
+
+  void readNotificationBox() {
+    debugPrint("wtf bro?");
+    if (notificationBox.get("notificationList") != null) {
+      List<dynamic> newList = notificationBox.get("notificationList");
+      debugPrint(newList.toString());
+      for (IncomingNotification savedNoti in newList) {
+        incomingNotificationList.add(savedNoti);
+      }
+    }
+  }
+
+  void deleteAllNotification() {
+    notificationBox.delete("notificationList");
+    incomingNotificationList = [];
+    notifyListeners();
+  }
 
   void updateOnlineMap(Map<String, bool>? newMap) {
     onlineMap = newMap;
@@ -38,6 +51,7 @@ class NotificationWizard extends ChangeNotifier {
 
   void removeNotificationFromList(int index) {
     incomingNotificationList.removeAt(index);
+    notificationBox.put("notificationList", incomingNotificationList);
     notifyListeners();
   }
 
@@ -111,6 +125,7 @@ class NotificationWizard extends ChangeNotifier {
           newNoti.notification != "disc" &&
           newNoti.notification != "imageUploadDone") {
         addToNotificationList(newNoti);
+        writeTonotificationBox();
       }
     }
   }

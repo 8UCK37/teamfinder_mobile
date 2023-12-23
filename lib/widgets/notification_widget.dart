@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import '../friend_profile_ui/friend_profilehome.dart';
+import '../pojos/incoming_notification.dart';
 
 class NotificationWidget extends StatelessWidget {
   final IncomingNotification notification;
@@ -110,8 +111,7 @@ class NotificationWidget extends StatelessWidget {
                               userService.acceptReq(notification.senderId);
                               int index = notiObserver.incomingNotificationList
                                   .indexOf(notification);
-                              debugPrint(index.toString());
-
+                              //debugPrint(index.toString());
                               notiObserver.removeNotificationFromList(index);
                             },
                             child: Container(
@@ -132,7 +132,7 @@ class NotificationWidget extends StatelessWidget {
                               userService.rejectReq(notification.senderId);
                               int index = notiObserver.incomingNotificationList
                                   .indexOf(notification);
-                              debugPrint(index.toString());
+                              //debugPrint(index.toString());
                               notiObserver.removeNotificationFromList(index);
                             },
                             child: Container(

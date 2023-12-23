@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
@@ -11,6 +12,7 @@ import 'dependency_injection.dart';
 import 'global.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'pojos/incoming_notification.dart';
 import 'services/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //Hive init
+  await Hive.initFlutter();
+  // ignore: unused_local_variable
+  Hive.registerAdapter(NotificationAdapter());
+  await Hive.openBox('notificationBox');
+  //dotenv init
   await dotenv.load(fileName: ".env");
   // ignore: prefer_const_constructors
   runApp(MyApp());
@@ -44,6 +52,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    
+    super.dispose();
+  }
   checkIfLogin() async {
     auth.authStateChanges().listen((User? user) {
       if (user != null && mounted) {
@@ -68,7 +81,6 @@ class _MyAppState extends State<MyApp> {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TeamFinder',
-        
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
           useMaterial3: true,

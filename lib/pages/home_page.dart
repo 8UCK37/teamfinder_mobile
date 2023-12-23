@@ -8,6 +8,7 @@ import 'package:teamfinder_mobile/controller/network_controller.dart';
 import 'package:teamfinder_mobile/services/socket_service.dart';
 import 'package:teamfinder_mobile/widgets/custom_appbar.dart';
 import '../services/data_service.dart';
+import '../services/notification_observer.dart';
 import '../tabs/friends_tab.dart';
 import '../tabs/home_tab.dart';
 import '../tabs/menu_tab.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _initializePreferences();
     _tabController = TabController(vsync: this, length: 5);
+    loadNotifocationList();
     saveUserInit();
     fetchFeed();
     getOwnPost();
@@ -74,6 +76,12 @@ class _HomePageState extends State<HomePage>
   Future<void> getDiscordInfo() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
     userService.getDiscordInfo();
+  }
+
+  Future<void> loadNotifocationList() async {
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
+    notiObserver.readNotificationBox();
   }
 
   void saveUserInit() async {
@@ -138,7 +146,10 @@ class _HomePageState extends State<HomePage>
     return Theme(
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
-        appBar: TeamFinderAppBar(isDark: _isDark,tabController: _tabController,),
+        appBar: TeamFinderAppBar(
+          isDark: _isDark,
+          tabController: _tabController,
+        ),
         body: TabBarView(controller: _tabController, children: [
           const HomeTab(),
           const ProfileTab(),
