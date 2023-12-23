@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../chat_ui/chat_home.dart';
 import '../pages/search_page.dart';
+import '../services/notification_observer.dart';
 
 class TeamFinderAppBar extends StatefulWidget implements PreferredSizeWidget{
   final bool isDark;
@@ -18,8 +20,10 @@ class TeamFinderAppBar extends StatefulWidget implements PreferredSizeWidget{
 }
 
 class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
+  
   @override
   Widget build(BuildContext context) {
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     return AppBar(
           automaticallyImplyLeading: false,
           systemOverlayStyle: SystemUiOverlayStyle(
@@ -47,6 +51,26 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
+                      if(notiObserver.incomingNotificationList.isNotEmpty)
+                      Container(
+                        height: 25,
+                        width: 25,
+                        decoration: const BoxDecoration(
+                          color: Colors.deepPurple,
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                        ),
+                        child:  Center(
+                          child: Text(
+                            notiObserver.incomingNotificationList.length.toString(), // Your superscript text
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () {
                           debugPrint('search clicked');
@@ -92,7 +116,8 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                           ),
                         ),
                       ),
-                    ]),
+                    ]
+                ),
               ]),
           elevation: 0.0,
           bottom: TabBar(

@@ -32,9 +32,10 @@ class NetworkController extends GetxController {
 
       if (Get.isSnackbarOpen) {
         Get.closeCurrentSnackbar();
-      } else {
-        debugPrint("ohh a livesaver");
-      }
+      } 
+      // else {
+      //   debugPrint("ohh a livesaver");
+      // }
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
+import 'package:teamfinder_mobile/widgets/notification_option.dart';
 import '../friend_profile_ui/friend_profilehome.dart';
 import '../pojos/incoming_notification.dart';
 
@@ -154,8 +155,20 @@ class NotificationWidget extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                debugPrint("elipsis clicked");
+                //debugPrint("elipsis clicked");
                 //userService.rejectReq(user["id"]);
+                showModalBottomSheet<dynamic>(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext context) {
+                            return Wrap(children: [
+                              NotificationOptions(
+                                notification: notification,
+                              )
+                            ]);
+                          },
+                        );
               },
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,

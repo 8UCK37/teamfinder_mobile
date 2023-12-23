@@ -19,14 +19,14 @@ class NotificationWizard extends ChangeNotifier {
 
   void writeTonotificationBox() {
     notificationBox.put("notificationList", incomingNotificationList);
-    debugPrint(notificationBox.get("notificationList").toString());
+    //debugPrint(notificationBox.get("notificationList").toString());
   }
 
   void readNotificationBox() {
-    debugPrint("wtf bro?");
+    //debugPrint("wtf bro?");
     if (notificationBox.get("notificationList") != null) {
       List<dynamic> newList = notificationBox.get("notificationList");
-      debugPrint(newList.toString());
+      //debugPrint(newList.toString());
       for (IncomingNotification savedNoti in newList) {
         incomingNotificationList.add(savedNoti);
       }
