@@ -50,7 +50,7 @@ class _NotificationsTabState extends State<NotificationsTab>
                 height: MediaQuery.of(context).size.height - 190,
                 width: double.infinity,
                 child: const Text(
-                  'No notifications available.',
+                  'All caught up for now!!',
                   textAlign: TextAlign.center,
                 ),
               )

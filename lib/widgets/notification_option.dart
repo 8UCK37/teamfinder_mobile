@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/incoming_notification.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
+import '../services/notification_observer.dart';
+
 class NotificationOptions extends StatefulWidget {
   final IncomingNotification notification;
   const NotificationOptions({super.key, required this.notification});
@@ -41,6 +43,8 @@ class _NotificationOptionsState extends State<NotificationOptions> {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: false);
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -101,41 +105,53 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(10.0,10,0,0),
+                padding: const EdgeInsets.fromLTRB(10.0, 10, 0, 0),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0,0,8.0,0),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 220, 154, 214),
-                            borderRadius: BorderRadius.all(Radius.circular(30))),
-                        child: Row(
-                          children: [
-                            IconButton.filledTonal(
-                                onPressed: () {},
-                                color: const Color.fromARGB(255, 115, 172, 220),
-                                icon: const Icon(Icons.delete_sweep)),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(8.0,0,0,0),
-                              child: RichText(
-                                  text: const TextSpan(
-                                      text:"Remove this notification",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.bold))),
-                            ),
-                          ],
+                      padding: const EdgeInsets.fromLTRB(0, 0, 8.0, 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          int index = notiObserver.incomingNotificationList
+                              .indexOf(widget.notification);
+                          //debugPrint(index.toString());
+                          notiObserver.removeNotificationFromList(index);
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 220, 154, 214),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          child: Row(
+                            children: [
+                              IconButton.filledTonal(
+                                  onPressed: () {},
+                                  color:
+                                      const Color.fromARGB(255, 115, 172, 220),
+                                  icon: const Icon(Icons.delete_sweep)),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+                                child: RichText(
+                                    text: const TextSpan(
+                                        text: "Remove this notification",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold))),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0,5,8,0),
+                      padding: const EdgeInsets.fromLTRB(0, 5, 8, 0),
                       child: Container(
                         decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 50, 185, 108),
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
+                            color: Color.fromARGB(255, 50, 185, 108),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
                         child: Row(
                           children: [
                             IconButton.filledTonal(
@@ -143,10 +159,11 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                                 color: const Color.fromARGB(255, 220, 121, 114),
                                 icon: const Icon(Icons.do_not_disturb_off)),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(8.0,0,0,0),
+                              padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
                               child: RichText(
                                   text: TextSpan(
-                                      text:"Mute ${widget.notification.senderName}",
+                                      text:
+                                          "Mute ${widget.notification.senderName}",
                                       style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 15.0,
