@@ -91,7 +91,7 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: TeamFinderAppBar(
-          titleText: "Linked Acoounts",
+          titleText: "Linked Accounts",
           isDark: userService.darkTheme!,
           implyLeading: true,
           height:55,
@@ -103,104 +103,96 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Material(
-                  elevation: 15,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
+                        Column(
                           children: [
-                            Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5.0, left: 10),
-                                  child: CircleAvatar(
-                                      radius: 25,
-                                      backgroundImage: CachedNetworkImageProvider(
-                                          cacheKey:userService.profileImagecacheKey,
-                                          userService.user["profilePicture"])),
-                                ),
-                                if (countNulls(
-                                        steamData, discordData, twitchData) <
-                                    3)
-                                  CustomPaint(
-                                    willChange: true,
-                                    painter: _MainLinePainter(yCoordinate: 15),
-                                  ),
-                                if (countNulls(
-                                        steamData, discordData, twitchData) <
-                                    2)
-                                  CustomPaint(
-                                    willChange: true,
-                                    painter: _MainLinePainter(yCoordinate: 165),
-                                  ),
-                                if (countNulls(
-                                        steamData, discordData, twitchData) ==
-                                    0)
-                                  CustomPaint(
-                                    willChange: true,
-                                    painter: _MainLinePainter(yCoordinate: 310),
-                                  ),
-                              ],
-                            ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Text(
-                                countNulls(steamData, twitchData,
-                                            discordData) !=
-                                        3
-                                    ? "Your associated accounts"
-                                    : "You currently have no account linked!!",
-                                style: const TextStyle(
-                                    color: Colors.deepPurpleAccent,
-                                    fontWeight: FontWeight.bold),
+                              padding:
+                                  const EdgeInsets.only(top: 5.0, left: 10),
+                              child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      cacheKey:userService.profileImagecacheKey,
+                                      userService.user["profilePicture"])),
+                            ),
+                            if (countNulls(
+                                    steamData, discordData, twitchData) <
+                                3)
+                              CustomPaint(
+                                willChange: true,
+                                painter: _MainLinePainter(yCoordinate: 15),
                               ),
-                            )
+                            if (countNulls(
+                                    steamData, discordData, twitchData) <
+                                2)
+                              CustomPaint(
+                                willChange: true,
+                                painter: _MainLinePainter(yCoordinate: 165),
+                              ),
+                            if (countNulls(
+                                    steamData, discordData, twitchData) ==
+                                0)
+                              CustomPaint(
+                                willChange: true,
+                                painter: _MainLinePainter(yCoordinate: 310),
+                              ),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 58, top: 15, right: 10),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    if (steamData != null)
-                                      accountCard(steamData, "steam"),
-                                    if (discordData != null)
-                                      accountCard(discordData, "discord"),
-                                    if (twitchData != null)
-                                      accountCard(twitchData, "twitch"),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Text(
+                            countNulls(steamData, twitchData,
+                                        discordData) !=
+                                    3
+                                ? "Your associated accounts"
+                                : "You currently have no account linked!!",
+                            style: const TextStyle(
+                                color: Colors.deepPurpleAccent,
+                                fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        if (countNulls(steamData, twitchData, discordData) == 3)
-                          Center(
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                      image:
-                                          AssetImage("assets/images/sad.png"),
-                                      fit: BoxFit.fill)),
-                              child: const Text(
-                                  "Tap on the button to add connections"),
-                            ),
-                          )
+                        )
                       ],
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 58, top: 15, right: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                if (steamData != null)
+                                  accountCard(steamData, "steam"),
+                                if (discordData != null)
+                                  accountCard(discordData, "discord"),
+                                if (twitchData != null)
+                                  accountCard(twitchData, "twitch"),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (countNulls(steamData, twitchData, discordData) == 3)
+                      Center(
+                        child: Container(
+                          height: 200,
+                          width: 200,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/images/sad.png"),
+                                  fit: BoxFit.fill)),
+                          child: const Text(
+                              "Tap on the button to add connections"),
+                        ),
+                      )
+                  ],
                 ),
               ),
             ),

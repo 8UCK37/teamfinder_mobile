@@ -53,7 +53,9 @@ class _AddNewGamesState extends State<AddNewGames>
   // ignore: unnecessary_overrides
   @override
   void dispose() {
-    _textController.dispose();
+    if(!mounted){
+      _textController.dispose();
+    }
     super.dispose();
   }
 
