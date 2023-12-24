@@ -23,7 +23,7 @@ class EasySplashScreen extends StatefulWidget {
   final Color loaderColor;
 
   /// Loading text
-  final Text loadingText;
+  final Text? loadingText;
 
   /// Padding for long Loading text, default: EdgeInsets.all(0)
   final EdgeInsets loadingTextPadding;
@@ -111,57 +111,63 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
               color: widget.backgroundColor,
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
+          Container(
+            //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            child: widget.logo,
+                            radius: widget.logoWidth,
+                          ),
+                          
+                          if (widget.title != null) Padding(
+                            padding: const EdgeInsets.only(top: 25.0),
+                            child:widget.title!
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if(widget.loadingText!=null)
+                Align(
+                  alignment: Alignment.bottomCenter,
                   child: Container(
+                    padding: EdgeInsets.only(bottom: 25),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: widget.logo,
-                          radius: widget.logoWidth,
-                        ),
+                      children: <Widget>[
+                        widget.showLoader
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color?>(
+                                  widget.loaderColor,
+                                ),
+                              )
+                            : Container(),
+                        if (widget.loadingText!.data!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                          ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 25.0),
+                          padding: widget.loadingTextPadding,
+                          child: widget.loadingText,
                         ),
-                        if (widget.title != null) widget.title!
                       ],
                     ),
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 25),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      widget.showLoader
-                          ? CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color?>(
-                                widget.loaderColor,
-                              ),
-                            )
-                          : Container(),
-                      if (widget.loadingText.data!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                        ),
-                      Padding(
-                        padding: widget.loadingTextPadding,
-                        child: widget.loadingText,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

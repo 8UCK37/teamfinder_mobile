@@ -139,16 +139,10 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
   Widget build(BuildContext context) {
     return EasySplashScreen(
       logo: Image.asset('assets/images/megaphone.png'),
-      title: const Text(
-        "",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       backgroundColor: const Color.fromARGB(255, 218, 74, 69),
       showLoader: false,
-      loadingText: Text(loadingText),
+      logoWidth: 80,
+      loadingText: null,
       durationInSeconds: 1,
       navigator: hasInternet ? const HomePage() : null,
     );

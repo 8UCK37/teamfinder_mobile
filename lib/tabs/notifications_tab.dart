@@ -80,6 +80,7 @@ class _NotificationsTabState extends State<NotificationsTab>
               actions: [
                 IconButton(
                   onPressed: () {
+                    //TODO maybe add a undo logic and maybe animate the removal
                     notiObserver.deleteAllNotification();
                   },
                   icon: const Icon(Icons.clear_all),
