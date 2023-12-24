@@ -1,5 +1,4 @@
 // ignore: file_names
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -199,7 +198,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   void bioInitHandler() {
     final userService = Provider.of<ProviderService>(context, listen: false);
     final userData = userService.user;
-    debugPrint(userData['userInfo'].toString());
+    //debugPrint(userData['userInfo'].toString());
     nameHint = userData['name'];
     namePlaceholder = userData['name'];
     bioHint = userData['bio'] ?? 'Add a bio';

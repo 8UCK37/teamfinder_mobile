@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,7 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
+import 'package:teamfinder_mobile/utils/custom_splash_screen.dart';
 import '../controller/network_controller.dart';
+import '../services/socket_service.dart';
 
 class SplashFuturePage extends StatefulWidget {
   const SplashFuturePage({Key? key}) : super(key: key);
@@ -115,12 +116,12 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
         userService.updateCurrentUser(userData);
         userService.refreashCache();
         // ignore: use_build_context_synchronously
-        // if (mounted) {
-        //   final SocketService socketService = SocketService();
-        //   socketService.setupSocketConnection(context);
-        //   socketService.setSocketId(userData['id']);
-        //   userService.setSocket(socketService);
-        // }
+        if (mounted) {
+          final SocketService socketService = SocketService();
+          socketService.setupSocketConnection(context);
+          socketService.setSocketId(userData['id']);
+          userService.setSocket(socketService);
+        }
         if (userData["steamId"] != null) {
           userService.getSteamInfo(userData["steamId"]);
         }
