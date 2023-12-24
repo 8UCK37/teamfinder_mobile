@@ -26,8 +26,14 @@ class EditProfileInfo extends StatefulWidget {
 
 class _EditProfileInfoState extends State<EditProfileInfo> {
   final TextEditingController genderController = TextEditingController();
-  GenderLabel? selectedGender = GenderLabel.idk;
+  GenderLabel selectedGender = GenderLabel.idk;
 
+  Map<String, GenderLabel> genderMap = {
+    'Male':GenderLabel.male,
+    'Female':GenderLabel.female,
+    'Prefer not to say':GenderLabel.idk,
+    'LGTV':GenderLabel.rainbow
+  };
   bool cancelVisibilityBanner = true;
   bool cancelVisibilityAvatar = true;
 
@@ -168,7 +174,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     }
     // ignore: use_build_context_synchronously
     final userService = Provider.of<ProviderService>(context, listen: false);
-    
+
     Dio dio = Dio();
     final userFromFirebase = FirebaseAuth.instance.currentUser;
     final idToken = await userFromFirebase!.getIdToken();
@@ -184,7 +190,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           'id': userService.user['userInfo']['id'],
           'Address': addressPlaceholder,
           'Country': countryPlaceholder,
-          'Gender': 'male',
+          'Gender': selectedGender.label,
           'Language': userService.convertSelectedLangToString()
         }
       },
@@ -198,7 +204,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   void bioInitHandler() {
     final userService = Provider.of<ProviderService>(context, listen: false);
     final userData = userService.user;
-    //debugPrint(userData['userInfo'].toString());
+    //debugPrint(userData['userInfo']['Gender'].toString());
     nameHint = userData['name'];
     namePlaceholder = userData['name'];
     bioHint = userData['bio'] ?? 'Add a bio';
@@ -207,6 +213,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     countryPlaceholder = userData['userInfo']['Country'] ?? '';
     addressHint = userData['userInfo']['Address'] ?? 'Add your Address';
     addressPlaceholder = userData['userInfo']['Address'] ?? '';
+    selectedGender=genderMap[userData['userInfo']['Gender']]?? GenderLabel.idk;
   }
 
   void uploadBanner() async {
@@ -842,16 +849,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                               width: MediaQuery.of(context).size.width * .9,
                               //decoration: BoxDecoration(border:Border.all(color:Colors.red)),
                               child: DropdownMenu<GenderLabel>(
-                                textStyle:
-                                    TextStyle(color: selectedGender!.color),
-                                initialSelection: GenderLabel
-                                    .idk, //TODO:interfacetyhis with a changing variable acc to the db value
+                                textStyle:TextStyle(color: selectedGender.color),
+                                initialSelection: selectedGender,
                                 controller: genderController,
                                 label: const Text('Gender'),
                                 dropdownMenuEntries: genderEntries,
                                 onSelected: (GenderLabel? gender) {
                                   setState(() {
-                                    selectedGender = gender;
+                                    selectedGender = gender!;
                                   });
                                 },
                               ),
