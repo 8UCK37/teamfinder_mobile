@@ -142,37 +142,34 @@ class _GamesPageState extends State<GamesPage> {
             ),
           ],
         ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom:8.0),
-          child: FloatingActionButton(
-            splashColor: Colors.blueAccent,
-            backgroundColor: const Color.fromARGB(
-                255, 22, 125, 99), //Theme.of(context).accentColor
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              debugPrint('add new games page');
-              //debugPrint(ownedGames.toString());
-              if (ownedGames != null) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddNewGames(
-                            list: ownedGames,
-                          )),
-                );
-              } else {
-                QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.error,
-                  title: 'No games found',
-                  text: 'Sorry, but you have to link Steam first',
-                );
-              }
-            },
+        floatingActionButton: FloatingActionButton(
+          splashColor: Colors.blueAccent,
+          backgroundColor: const Color.fromARGB(
+              255, 22, 125, 99), //Theme.of(context).accentColor
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
           ),
+          onPressed: () {
+            debugPrint('add new games page');
+            //debugPrint(ownedGames.toString());
+            if (ownedGames != null) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddNewGames(
+                          list: ownedGames,
+                        )),
+              );
+            } else {
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'No games found',
+                text: 'Sorry, but you have to link Steam first',
+              );
+            }
+          },
         ),
       ),
     );

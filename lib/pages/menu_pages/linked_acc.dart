@@ -198,24 +198,17 @@ class _OwnLinkedAccountsState extends State<OwnLinkedAccounts> {
             ),
           ],
         )),
-        floatingActionButton: GestureDetector(
-          onTap: () {
-            debugPrint("Link new acc not implemented");
-          },
-          child: const Material(
-            elevation: 25,
-            shape: CircleBorder(),
-            child: ClipOval(
-              child: CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 41, 112, 89),
-                radius: 25,
-                child: Icon(
-                  Icons.library_add,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+        floatingActionButton: FloatingActionButton(
+          splashColor: Colors.blueAccent,
+          backgroundColor: const Color.fromARGB(
+              255, 22, 125, 99), //Theme.of(context).accentColor
+          child: const Icon(
+            Icons.library_add,
+            color: Colors.white,
           ),
+          onPressed: () {
+            debugPrint('not implemented yet');
+          },
         ),
       ),
     );
