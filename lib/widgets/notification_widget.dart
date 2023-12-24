@@ -54,9 +54,16 @@ class NotificationWidget extends StatelessWidget {
         );
       },
       child: Container(
-        //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+        decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top:BorderSide(color: Colors.grey,width:1),
+          bottom: BorderSide(color: Colors.grey,width:1)
+        )),
         width: MediaQuery.of(context).size.width,
-        height: 100.0,
+        height: (notification.notification != "frnd req")
+                  ? 75
+                  : 100,
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
