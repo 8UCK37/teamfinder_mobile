@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
@@ -12,6 +11,7 @@ import 'dependency_injection.dart';
 import 'global.dart';
 import 'pages/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'pages/splash_screen.dart';
 import 'pojos/incoming_notification.dart';
 import 'services/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.deepPurple,
           useMaterial3: true,
         ),
-        home: isLogin ? const HomePage() : const LoginActivity(),
+        home: isLogin ? SplashFuturePage() : const LoginActivity(),
         navigatorKey: GlobalVariable.navState,
       ),
     );
