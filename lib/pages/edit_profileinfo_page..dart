@@ -1,4 +1,5 @@
 // ignore: file_names
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:teamfinder_mobile/widgets/profile_image_cropper.dart';
 import 'package:teamfinder_mobile/widgets/language_selectbottomsheet.dart';
+import '../controller/network_controller.dart';
 import '../services/data_service.dart';
 import '../utils/image_helper.dart';
 import '../utils/language_chip_helper.dart';
@@ -40,6 +42,11 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   late String bioPlaceholder = '';
   late String bioHint = "Add bio";
 
+  final FocusNode countryTextArea = FocusNode();
+  final TextEditingController _textControllerCountry = TextEditingController();
+  late String countryPlaceholder = '';
+  late String countryHint = 'Add Country';
+
   final FocusNode addressTextArea = FocusNode();
   final TextEditingController _textControlleraddress = TextEditingController();
   late String addressPlaceholder = '';
@@ -50,7 +57,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   String? selectedProfilePicPath;
 
   bool isLoading = false;
-
+  NetworkController networkController = NetworkController();
   @override
   void initState() {
     super.initState();
@@ -81,6 +88,9 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
   }
 
   void handleUpload() async {
+    updateBio();
+    updateName();
+    updateUserInfo();
     if (selectedBannerPath != null && selectedProfilePicPath != null) {
       uploadBanner();
       uploadProfilePic();
@@ -93,17 +103,111 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
     }
     final userService = Provider.of<ProviderService>(context, listen: false);
     userService.reloadUser(context);
+    nameTextArea.unfocus();
+    bioTextArea.unfocus();
+    addressTextArea.unfocus();
+  }
+
+  Future<void> updateBio() async {
+    if (await networkController.noInternet()) {
+      debugPrint("updateSelectedLanguage() no_internet");
+      return;
+    } else {
+      debugPrint("updateSelectedLanguage() called");
+    }
+    Dio dio = Dio();
+
+    final userFromFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFromFirebase!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/updateBio',
+      data: {'bio': bioPlaceholder},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("bio updated");
+    }
+  }
+
+  Future<void> updateName() async {
+    if (await networkController.noInternet()) {
+      debugPrint("updateSelectedLanguage() no_internet");
+      return;
+    } else {
+      debugPrint("updateSelectedLanguage() called");
+    }
+    Dio dio = Dio();
+
+    final userFromFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFromFirebase!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/userNameUpdate',
+      data: {'name': namePlaceholder},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("name updated");
+    }
+  }
+
+  Future<void> updateUserInfo() async {
+    if (await networkController.noInternet()) {
+      debugPrint("updateSelectedLanguage() no_internet");
+      return;
+    } else {
+      debugPrint("updateSelectedLanguage() called");
+    }
+    // ignore: use_build_context_synchronously
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    
+    Dio dio = Dio();
+    final userFromFirebase = FirebaseAuth.instance.currentUser;
+    final idToken = await userFromFirebase!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/updateUserData',
+      data: {
+        'data': {
+          'id': userService.user['userInfo']['id'],
+          'Address': addressPlaceholder,
+          'Country': countryPlaceholder,
+          'Gender': 'male',
+          'Language': userService.convertSelectedLangToString()
+        }
+      },
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("userinfo updated");
+    }
   }
 
   void bioInitHandler() {
     final userService = Provider.of<ProviderService>(context, listen: false);
     final userData = userService.user;
+    debugPrint(userData['userInfo'].toString());
     nameHint = userData['name'];
-    namePlaceholder = nameHint;
+    namePlaceholder = userData['name'];
     bioHint = userData['bio'] ?? 'Add a bio';
-    bioPlaceholder = bioHint;
-    addressHint = userData['address'] ?? 'Add your Location';
-    addressPlaceholder = addressHint;
+    bioPlaceholder = userData['bio'] ?? '';
+    countryHint = userData['userInfo']['Country'] ?? 'Add your Country';
+    countryPlaceholder = userData['userInfo']['Country'] ?? '';
+    addressHint = userData['userInfo']['Address'] ?? 'Add your Address';
+    addressPlaceholder = userData['userInfo']['Address'] ?? '';
   }
 
   void uploadBanner() async {
@@ -138,7 +242,8 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           selectedBannerPath = null;
         });
         // ignore: use_build_context_synchronously
-        final userService = Provider.of<ProviderService>(context, listen: false);
+        final userService =
+            Provider.of<ProviderService>(context, listen: false);
         userService.refreashCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -180,9 +285,10 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           cancelVisibilityAvatar = false;
           selectedProfilePicPath = null;
         });
-        
+
         // ignore: use_build_context_synchronously
-        final userService = Provider.of<ProviderService>(context, listen: false);
+        final userService =
+            Provider.of<ProviderService>(context, listen: false);
         userService.refreashCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -228,7 +334,6 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
               Future.delayed(const Duration(seconds: 1), () {
                 handleUpload();
               });
-              
             });
           },
           child: const Material(
@@ -613,6 +718,66 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
+                            "Country",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ignore: sized_box_for_whitespace
+                        Container(
+                          //decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+                          width: MediaQuery.of(context).size.width * .9,
+                          child: TextField(
+                            focusNode: countryTextArea,
+                            controller: _textControllerCountry,
+                            maxLines: null,
+                            onChanged: (value) {
+                              setState(() {
+                                countryPlaceholder = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 83, 13,
+                                        95), // Change the color to your desired color
+                                    width: 2.0, // Set the width of the border
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                ),
+                                hintText: countryHint,
+                                hintStyle: const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]),
+                  Column(children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Divider(
+                        color: Colors.black,
+                        height: 7,
+                        indent: 8,
+                        endIndent: 8,
+                      ),
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
                             "Address",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
@@ -655,7 +820,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ]),
                   Column(
                     children: [
