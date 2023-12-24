@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
-import 'package:teamfinder_mobile/services/socket_service.dart';
 import '../controller/network_controller.dart';
 
 class SplashFuturePage extends StatefulWidget {
@@ -116,12 +115,12 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
         userService.updateCurrentUser(userData);
         userService.refreashCache();
         // ignore: use_build_context_synchronously
-        if (mounted) {
-          final SocketService socketService = SocketService();
-          socketService.setupSocketConnection(context);
-          socketService.setSocketId(userData['id']);
-          userService.setSocket(socketService);
-        }
+        // if (mounted) {
+        //   final SocketService socketService = SocketService();
+        //   socketService.setupSocketConnection(context);
+        //   socketService.setSocketId(userData['id']);
+        //   userService.setSocket(socketService);
+        // }
         if (userData["steamId"] != null) {
           userService.getSteamInfo(userData["steamId"]);
         }

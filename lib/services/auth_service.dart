@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:teamfinder_mobile/pages/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/pages/splash_screen.dart';
+import 'package:teamfinder_mobile/services/notification_observer.dart';
 import '../pages/login_screen.dart';
 
 class AuthService {
@@ -20,27 +22,29 @@ class AuthService {
 
     // Check if the user is successfully signed in
     if (userCredential.user != null) {
-      
       // Navigate to the HomeScreenWidget
       // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
         // ignore: prefer_const_constructors
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => SplashFuturePage()),
       );
     }
   }
 
   Future<void> signOut(BuildContext context) async {
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
+    notiObserver.updateNotiList([]);
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
 
     // Navigate to the SignInScreen or any other screen you want
     // ignore: use_build_context_synchronously
     Navigator.push(
-        context,
-        // ignore: prefer_const_constructors
-        MaterialPageRoute(builder: (context) => LoginActivity()),
-      );
+      context,
+      // ignore: prefer_const_constructors
+      MaterialPageRoute(builder: (context) => LoginActivity()),
+    );
   }
 }

@@ -23,16 +23,18 @@ class NotificationWizard extends ChangeNotifier {
   }
 
   void readNotificationBox() {
-    //debugPrint("wtf bro?");
     if (notificationBox.get("notificationList") != null) {
       List<dynamic> newList = notificationBox.get("notificationList");
-      //debugPrint(newList.toString());
       for (IncomingNotification savedNoti in newList) {
         incomingNotificationList.add(savedNoti);
       }
     }
   }
 
+  void updateNotiList(List<IncomingNotification> newValue) {
+    incomingNotificationList = newValue;
+    notifyListeners();
+  }
   void deleteAllNotification() {
     notificationBox.delete("notificationList");
     incomingNotificationList = [];
