@@ -15,11 +15,49 @@ class NotificationsTab extends StatefulWidget {
 class _NotificationsTabState extends State<NotificationsTab>
     with TickerProviderStateMixin {
   Future<void> _handleRefresh() async {}
+  GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+  late int length;
+
+  @override
+  void initState() {
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
+    length = notiObserver.incomingNotificationList.length;
+    super.initState();
+  }
+
+  void rebuildAnimatedList() {
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
+    //debugPrint("init: $length");
+    //debugPrint("changed: ${notiObserver.incomingNotificationList.length}");
+    if (listKey.currentState != null) {
+      if (length < notiObserver.incomingNotificationList.length) {
+        listKey.currentState!
+            .insertItem(0, duration: const Duration(milliseconds: 100));
+        length = notiObserver.incomingNotificationList.length;
+      }
+    }
+  }
+
+  void removeItem(IncomingNotification noti, int index) {
+    setState(() {
+      length = length-1;
+    });
+    //debugPrint("removed $index");
+    //debugPrint("removal length $length");
+    listKey.currentState!.removeItem(
+        index,
+        (context, animation) => NotificationWidget(
+              notification: noti,
+              animation: animation,
+            ));
+  }
 
   @override
   Widget build(BuildContext context) {
     final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
-
+    rebuildAnimatedList();
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: Scaffold(
@@ -29,6 +67,7 @@ class _NotificationsTabState extends State<NotificationsTab>
             SliverAppBar(
               expandedHeight: 25.0,
               elevation: 15,
+              automaticallyImplyLeading: false,
               floating: false,
               pinned: true,
               title: const Text(
@@ -49,7 +88,7 @@ class _NotificationsTabState extends State<NotificationsTab>
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                childCount: notiObserver.incomingNotificationList.length,
+                childCount: 1,
                 (BuildContext context, int index) {
                   if (notiObserver.incomingNotificationList.isEmpty) {
                     // This is where the fixed header would be
@@ -62,9 +101,32 @@ class _NotificationsTabState extends State<NotificationsTab>
                       ),
                     );
                   } else {
-                    // This is where your scrollable content would be
-                    IncomingNotification notification = notiObserver.incomingNotificationList.reversed.toList()[index];
-                    return NotificationWidget(notification: notification);
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          border: Border.all(color: Colors.transparent)),
+                      height: MediaQuery.of(context).size.height - 185,
+                      child: AnimatedList(
+                        key: listKey,
+                        initialItemCount:
+                            notiObserver.incomingNotificationList.length,
+                        itemBuilder: (BuildContext context, int index,
+                            Animation<double> animation) {
+                          IncomingNotification notification = notiObserver
+                              .incomingNotificationList.reversed
+                              .toList()[index];
+                          return FadeTransition(
+                            opacity: animation,
+                            child: NotificationWidget(
+                              notification: notification,
+                              animation: animation,
+                              removeClicked: () =>
+                                  removeItem(notification, index),
+                            ),
+                          );
+                        },
+                      ),
+                    );
                   }
                 },
               ),

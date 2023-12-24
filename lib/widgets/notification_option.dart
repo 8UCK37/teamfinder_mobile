@@ -8,7 +8,9 @@ import '../services/notification_observer.dart';
 
 class NotificationOptions extends StatefulWidget {
   final IncomingNotification notification;
-  const NotificationOptions({super.key, required this.notification});
+  final VoidCallback? removeClicked;
+  const NotificationOptions(
+      {super.key, required this.notification, this.removeClicked});
 
   @override
   State<NotificationOptions> createState() => _NotificationOptionsState();
@@ -115,6 +117,7 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                           int index = notiObserver.incomingNotificationList
                               .indexOf(widget.notification);
                           //debugPrint(index.toString());
+                          widget.removeClicked!();
                           notiObserver.removeNotificationFromList(index);
                           Navigator.of(context).pop();
                         },
