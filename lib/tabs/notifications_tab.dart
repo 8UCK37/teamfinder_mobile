@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import '../pojos/incoming_notification.dart';
+import '../services/data_service.dart';
 import '../widgets/notification_widget.dart';
 
 class NotificationsTab extends StatefulWidget {
@@ -57,6 +58,8 @@ class _NotificationsTabState extends State<NotificationsTab>
   @override
   Widget build(BuildContext context) {
     final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
+    bool isDark = userService.darkTheme!;
     rebuildAnimatedList();
     return RefreshIndicator(
       onRefresh: _handleRefresh,
@@ -70,10 +73,10 @@ class _NotificationsTabState extends State<NotificationsTab>
               automaticallyImplyLeading: false,
               floating: false,
               pinned: true,
-              title: const Text(
+              title:  Text(
                 'Notifications',
                 style: TextStyle(
-                    color: Color.fromARGB(255, 31, 29, 29),
+                    color: isDark? Colors.white:const Color.fromARGB(255, 31, 29, 29),
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold),
               ),

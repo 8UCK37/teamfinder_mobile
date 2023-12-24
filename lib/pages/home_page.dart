@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
+    
     // ignore: unused_local_variable
     final userData = userService.user;
     _isDark = userService.darkTheme!;
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage>
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: TeamFinderAppBar(
-          titleText: "TeamFinder",
+          titleText: "CallOut",
           isDark: _isDark,
           tabController: _tabController,
           implyLeading: false,

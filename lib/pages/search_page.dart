@@ -74,7 +74,7 @@ class _SearchPageState extends State<SearchPage> {
                   children: <Widget>[
                     Row(
                       children: [
-                        Text('TeamFinder',
+                        Text('CallOut',
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontSize: 25.0,

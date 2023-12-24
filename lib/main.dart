@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'TeamFinder',
+        title: 'CallOut',
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
           useMaterial3: true,

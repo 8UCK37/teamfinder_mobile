@@ -34,7 +34,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
         appBar: AppBar(
           backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
           iconTheme: IconThemeData(color: userService.darkTheme! ?Colors.white:Colors.grey),
-          title:  Text('Teamfinder Chat', style: TextStyle(color: userService.darkTheme! ?Colors.white:Colors.deepPurpleAccent)),
+          title:  Text('CallOut Chat', style: TextStyle(color: userService.darkTheme! ?Colors.white:Colors.deepPurpleAccent)),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.search),

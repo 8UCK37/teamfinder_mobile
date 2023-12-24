@@ -375,7 +375,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                   children: <Widget>[
                     Row(
                       children: [
-                        Text('TeamFinder',
+                        Text('CallOut',
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontSize: 25.0,

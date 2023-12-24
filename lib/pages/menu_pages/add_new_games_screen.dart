@@ -128,7 +128,7 @@ class _AddNewGamesState extends State<AddNewGames>
                         children: <Widget>[
                           Row(
                             children: [
-                              Text('TeamFinder',
+                              Text('CallOut',
                                   style: TextStyle(
                                       color: Colors.deepPurple,
                                       fontSize: 25.0,
@@ -406,8 +406,8 @@ class CustomCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 70,
-            left: 70,
+            bottom: 65,
+            left: 65,
             child: Checkbox(
               side: game['selected']
                   ? null
