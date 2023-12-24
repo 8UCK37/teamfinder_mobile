@@ -125,8 +125,14 @@ flutter:
     - assets/images/
     - assets/icon/
     - assets/audio/
+    - assets/fonts/
     - .env
-
+  fonts:
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/Caveat-Regular.ttf
+        
+          
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
