@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-List<PostPojo> postPojoFromJson(String str) =>
-    List<PostPojo>.from(json.decode(str).map((x) => PostPojo.fromJson(x)));
+List<PostPojo> postPojoFromJson(String str,bool isOwnPost) =>
+    List<PostPojo>.from(json.decode(str).map((x) => PostPojo.fromJson(x,isOwnPost)));
 
 String postPojoToJson(List<PostPojo> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -34,6 +34,7 @@ class PostPojo {
   Parentpostauthor parentpostauthor;
   String? commentCount;
   String? sharedCount;
+  bool isOwnPost;
 
   PostPojo({
     required this.id,
@@ -58,10 +59,11 @@ class PostPojo {
     required this.parentpost,
     required this.parentpostauthor,
     required this.commentCount,
-    required this.sharedCount
+    required this.sharedCount,
+    required this.isOwnPost
   });
 
-  factory PostPojo.fromJson(Map<String, dynamic> json) {
+  factory PostPojo.fromJson(Map<String, dynamic> json,bool isOwnPost) {
     final post = PostPojo(
       id: json["id"],
       author: json["author"],
@@ -85,9 +87,11 @@ class PostPojo {
       lovecount: json["lovecount"],
       poopcount: json["poopcount"],
       parentpost: json["parentpost"] != null
-          ? PostPojo.fromJson(jsonDecode(json["parentpost"]))
+          ? PostPojo.fromJson(jsonDecode(json["parentpost"]),isOwnPost)
           : null,
-      parentpostauthor: Parentpostauthor.fromJson(json["parentpostauthor"]),
+      parentpostauthor: Parentpostauthor.fromJson(json["parentpostauthor"]), 
+      isOwnPost: isOwnPost,
+      
     );
 
     return post;

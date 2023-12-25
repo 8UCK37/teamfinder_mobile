@@ -140,7 +140,7 @@ class ProviderService extends ChangeNotifier {
       var res = response.data;
       //print(res);
       // Parse the JSON response into a list of PostPojo objects
-      List<PostPojo> parsedPosts = postPojoFromJson(res);
+      List<PostPojo> parsedPosts = postPojoFromJson(res,false);
       feed = parsedPosts; // Update the state variable with the parsed list
       notifyListeners();
     }
@@ -174,7 +174,7 @@ class ProviderService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      List<PostPojo> parsedPosts = postPojoFromJson(response.data);
+      List<PostPojo> parsedPosts = postPojoFromJson(response.data,true);
       if (parsedPosts.isNotEmpty) {
         ownPosts = parsedPosts;
         notifyListeners();

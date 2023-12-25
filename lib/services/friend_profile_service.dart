@@ -84,7 +84,7 @@ class FriendProfileService extends ChangeNotifier {
       options: options,
     );
     if (response.statusCode == 200) {
-      List<PostPojo> parsedPosts = postPojoFromJson(response.data);
+      List<PostPojo> parsedPosts = postPojoFromJson(response.data,false);
       friendPostList = parsedPosts;
       notifyListeners();
     }

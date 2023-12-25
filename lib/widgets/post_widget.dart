@@ -37,6 +37,8 @@ class _PostWidgetState extends State<PostWidget>
 
   @override
   void initState() {
+    debugPrint("post id${widget.post.id}");
+    debugPrint("shared id${widget.post.shared}");
     super.initState();
   }
 
@@ -44,6 +46,74 @@ class _PostWidgetState extends State<PostWidget>
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  List<CircularMenuItem> buildMenuItems() {
+    final listForOwnPost = [
+      CircularMenuItem(
+          iconSize: iconSize,
+          padding: smallerIconPadding,
+          boxShadow: [],
+          icon: Icons.edit_note,
+          color: Colors.green,
+          onTap: () {
+            setState(() {});
+          }),
+      CircularMenuItem(
+          iconSize: iconSize,
+          padding: smallerIconPadding,
+          boxShadow: [],
+          icon: Icons.delete,
+          color: Colors.blue,
+          onTap: () {
+            setState(() {});
+          }),
+      CircularMenuItem(
+          iconSize: iconSize,
+          padding: smallerIconPadding,
+          boxShadow: [],
+          icon: Icons.open_in_new,
+          color: Colors.orange,
+          onTap: () {
+            setState(() {});
+          }),
+    ];
+
+    final listForFeedPost = [
+      CircularMenuItem(
+          iconSize: iconSize,
+          padding: smallerIconPadding,
+          boxShadow: [],
+          icon: Icons.collections_bookmark,
+          color: Colors.green,
+          onTap: () {
+            setState(() {});
+          }),
+      CircularMenuItem(
+          iconSize: iconSize,
+          padding: smallerIconPadding,
+          boxShadow: [],
+          icon: Icons.report,
+          color: const Color.fromARGB(255, 172, 47, 38),
+          onTap: () {
+            setState(() {});
+          }),
+      CircularMenuItem(
+          iconSize: iconSize,
+          padding: smallerIconPadding,
+          boxShadow: [],
+          icon: Icons.open_in_new,
+          color: const Color.fromARGB(255, 58, 136, 199),
+          onTap: () {
+            setState(() {});
+          }),
+    ];
+
+  if (widget.post.isOwnPost) {
+      return listForOwnPost;
+    } else {
+      return listForFeedPost;
+    }
   }
 
   String convertToLocalTime(DateTime dateTime) {
@@ -67,7 +137,7 @@ class _PostWidgetState extends State<PostWidget>
     return (dump);
   }
 
-  Widget UserReaction() {
+  Widget userReaction() {
     if (widget.post.noreaction!) {
       return SizedBox(
         height: 45,
@@ -178,47 +248,13 @@ class _PostWidgetState extends State<PostWidget>
     final userService = Provider.of<ProviderService>(context, listen: false);
     return CircularMenu(
       alignment: Alignment.topRight,
-            toggleButtonSize: 15,
-            toggleButtonPadding: 5,
-            toggleButtonBoxShadow: [],
-            radius: 35,
-            animationDuration: const Duration(milliseconds: 250),
-            toggleButtonColor: Colors.teal,
-            items: [
-              CircularMenuItem(
-                  iconSize: iconSize,
-                  padding: smallerIconPadding,
-                  boxShadow: [],
-                  icon: Icons.home,
-                  color: Colors.green,
-                  onTap: () {
-                    setState(() {
-                      
-                    });
-                  }),
-              CircularMenuItem(
-                  iconSize: iconSize,
-                  padding: smallerIconPadding,
-                  boxShadow: [],
-                  icon: Icons.search,
-                  color: Colors.blue,
-                  onTap: () {
-                    setState(() {
-                      
-                    });
-                  }),
-              CircularMenuItem(
-                  iconSize: iconSize,
-                  padding: smallerIconPadding,
-                  boxShadow: [],
-                  icon: Icons.settings,
-                  color: Colors.orange,
-                  onTap: () {
-                    setState(() {
-                      
-                    });
-                  }),
-            ],
+      toggleButtonSize: 15,
+      toggleButtonPadding: 5,
+      toggleButtonBoxShadow: [],
+      radius: 35,
+      animationDuration: const Duration(milliseconds: 250),
+      toggleButtonColor: Colors.teal,
+      items: buildMenuItems(),
       backgroundWidget: Container(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -233,13 +269,12 @@ class _PostWidgetState extends State<PostWidget>
                   onTap: () {
                     debugPrint(widget.post.author);
                     var route = MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  FriendProfileHome(
-                                    friendId: widget.post.author,
-                                    friendName: widget.post.name,
-                                    friendProfileImage:widget.post.profilePicture,
-                                  ));
-                          Navigator.of(context).push(route);
+                        builder: (BuildContext context) => FriendProfileHome(
+                              friendId: widget.post.author,
+                              friendName: widget.post.name,
+                              friendProfileImage: widget.post.profilePicture,
+                            ));
+                    Navigator.of(context).push(route);
                   },
                 ),
                 const SizedBox(width: 7.0),
@@ -309,7 +344,8 @@ class _PostWidgetState extends State<PostWidget>
                     ),
                     const SizedBox(height: 20.0),
                     Padding(
-                      padding: const EdgeInsets.only(top: 8, left: 16, bottom: 8),
+                      padding:
+                          const EdgeInsets.only(top: 8, left: 16, bottom: 8),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: parseDescriptionWidget(
@@ -321,7 +357,7 @@ class _PostWidgetState extends State<PostWidget>
                 ),
               ),
             //const SizedBox(height: 5.0),
-      
+
             ImageGrid(
                 imageUrls: (widget.post.shared == null)
                     ? widget.post.photoUrl!.split(',')
@@ -375,7 +411,8 @@ class _PostWidgetState extends State<PostWidget>
                 children: [
                   Divider(
                       height: 20,
-                      color: userService.darkTheme! ? Colors.white : Colors.grey),
+                      color:
+                          userService.darkTheme! ? Colors.white : Colors.grey),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -404,18 +441,20 @@ class _PostWidgetState extends State<PostWidget>
                                   end: ColorSplash.getColorPalette(0)
                                       .circleColorEnd),
                               bubblesColor: BubblesColor(
-                                  dotPrimaryColor: ColorSplash.getColorPalette(0)
-                                      .dotPrimaryColor,
+                                  dotPrimaryColor:
+                                      ColorSplash.getColorPalette(0)
+                                          .dotPrimaryColor,
                                   dotSecondaryColor:
                                       ColorSplash.getColorPalette(0)
                                           .dotSecondaryColor),
                               likeBuilder: (bool isLiked) {
-                                return UserReaction();
+                                return userReaction();
                               },
                               likeCount: null,
                             ),
                             const SizedBox(width: 5.0),
-                            const Text('Like', style: TextStyle(fontSize: 14.0)),
+                            const Text('Like',
+                                style: TextStyle(fontSize: 14.0)),
                           ],
                         ),
                       ),
@@ -459,7 +498,8 @@ class _PostWidgetState extends State<PostWidget>
                             bottomSheetColor: userService.darkTheme!
                                 ? const Color.fromRGBO(46, 46, 46, 1)
                                 : Colors.white,
-                            headerBuilder: (BuildContext context, double offset) {
+                            headerBuilder:
+                                (BuildContext context, double offset) {
                               return Container(
                                 decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.only(
@@ -475,9 +515,12 @@ class _PostWidgetState extends State<PostWidget>
                                                 ? const Color.fromRGBO(
                                                     46, 46, 46, 1)
                                                 : Colors.white,
-                                            borderRadius: const BorderRadius.only(
-                                                topLeft: Radius.circular(15),
-                                                topRight: Radius.circular(15))),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(15),
+                                                    topRight:
+                                                        Radius.circular(15))),
                                         child: Theme(
                                           data: userService.darkTheme!
                                               ? ThemeData.dark()
@@ -489,22 +532,23 @@ class _PostWidgetState extends State<PostWidget>
                                                 children: [
                                                   Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.center,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
-                                                                top: 0.0),
+                                                            const EdgeInsets
+                                                                .only(top: 0.0),
                                                         child: Container(
                                                           height: 5,
                                                           width: 60,
                                                           decoration: const BoxDecoration(
-                                                              color: Colors.grey,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .all(Radius
-                                                                          .circular(
-                                                                              15))),
+                                                              color:
+                                                                  Colors.grey,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          15))),
                                                         ),
                                                       )
                                                     ],
@@ -521,15 +565,16 @@ class _PostWidgetState extends State<PostWidget>
                                                         ),
                                                         GestureDetector(
                                                           onTap: () {
-                                                            Navigator.of(context)
+                                                            Navigator.of(
+                                                                    context)
                                                                 .pop();
                                                           },
                                                           child: const Padding(
                                                             padding:
                                                                 EdgeInsets.all(
                                                                     10.0),
-                                                            child:
-                                                                Icon(Icons.close),
+                                                            child: Icon(
+                                                                Icons.close),
                                                           ),
                                                         )
                                                       ]),
@@ -542,7 +587,8 @@ class _PostWidgetState extends State<PostWidget>
                                       height: 0,
                                       color: userService.darkTheme!
                                           ? Colors.grey
-                                          : const Color.fromARGB(255, 36, 36, 36),
+                                          : const Color.fromARGB(
+                                              255, 36, 36, 36),
                                     ),
                                   ],
                                 ),
