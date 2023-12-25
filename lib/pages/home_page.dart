@@ -44,6 +44,11 @@ class _HomePageState extends State<HomePage>
       child: Scaffold(
         appBar: TeamFinderAppBar(
           titleText: "CallOut",
+          titleStyle: const TextStyle(
+                    fontFamily: 'caveat',
+                    color: Color.fromARGB(255, 200, 66, 72),
+                    fontSize: 35.0,
+                    fontWeight: FontWeight.bold),
           isDark: _isDark,
           tabController: _tabController,
           implyLeading: false,

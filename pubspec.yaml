@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^3.3.0
   camera: ^0.10.5+2
   chat_bubbles: ^1.4.1
+  circular_menu: ^2.0.1
   colorful_circular_progress_indicator: ^0.0.2
   colorful_progress_indicators: ^1.0.2
   comment_tree: ^0.3.0

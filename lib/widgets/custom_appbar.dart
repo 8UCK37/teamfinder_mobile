@@ -59,7 +59,7 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                   height: 25,
                   width: 25,
                   decoration: const BoxDecoration(
-                    color: Colors.deepPurple,
+                    color: Color.fromARGB(255, 200, 66, 72),
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   child: Center(
