@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/custom_appbar.dart';
@@ -35,32 +37,38 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    
+
     // ignore: unused_local_variable
     final userData = userService.user;
     _isDark = userService.darkTheme!;
     return Theme(
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
-      child: Scaffold(
-        appBar: TeamFinderAppBar(
-          titleText: "CallOut",
-          titleStyle: const TextStyle(
-                    fontFamily: 'caveat',
-                    color: Color.fromARGB(255, 200, 66, 72),
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.bold),
-          isDark: _isDark,
-          tabController: _tabController,
-          implyLeading: false,
-          showNotificationCount: true,
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          exit(0);
+        },
+        child: Scaffold(
+          appBar: TeamFinderAppBar(
+            titleText: "CallOut",
+            titleStyle: const TextStyle(
+                fontFamily: 'caveat',
+                color: Color.fromARGB(255, 200, 66, 72),
+                fontSize: 35.0,
+                fontWeight: FontWeight.bold),
+            isDark: _isDark,
+            tabController: _tabController,
+            implyLeading: false,
+            showNotificationCount: true,
+          ),
+          body: TabBarView(controller: _tabController, children: [
+            HomeTab(tabController: _tabController),
+            const ProfileTab(),
+            const FriendsTab(),
+            const NotificationsTab(),
+            MenuTab(_tabController),
+          ]),
         ),
-        body: TabBarView(controller: _tabController, children: [
-          HomeTab(tabController:_tabController),
-          const ProfileTab(),
-          const FriendsTab(),
-          const NotificationsTab(),
-          MenuTab(_tabController),
-        ]),
       ),
     );
   }
