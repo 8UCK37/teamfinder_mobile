@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage>
           showNotificationCount: true,
         ),
         body: TabBarView(controller: _tabController, children: [
-          const HomeTab(),
+          HomeTab(tabController:_tabController),
           const ProfileTab(),
           const FriendsTab(),
           const NotificationsTab(),

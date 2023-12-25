@@ -8,8 +8,8 @@ import '../widgets/separator_widget.dart';
 import '../widgets/write_something_widget.dart';
 
 class HomeTab extends StatefulWidget {
-  
-  const HomeTab({super.key,});
+  final TabController tabController;
+  const HomeTab({super.key, required this.tabController,});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -58,7 +58,7 @@ class _HomeTabState extends State<HomeTab>
                         color: userService.darkTheme!
                             ? const Color.fromARGB(255, 74, 74, 74)
                             : Colors.grey),
-                    PostWidget(post: post),
+                    PostWidget(post: post,tabController: widget.tabController,),
                   ],
                 ),
             SeparatorWidget(

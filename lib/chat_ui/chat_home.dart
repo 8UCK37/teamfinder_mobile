@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/chats.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/contacts.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
+import '../pages/friend_list.dart';
 import '../pages/search_page.dart';
 
 
@@ -39,7 +39,10 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
         appBar: AppBar(
           backgroundColor:userService.darkTheme!? const Color.fromRGBO(46, 46, 46, 100): Colors.white,
           iconTheme: IconThemeData(color: userService.darkTheme! ?Colors.white:Colors.grey),
-          title:  Text('CallOut Chat', style: TextStyle(color: userService.darkTheme! ?Colors.white:Colors.deepPurpleAccent)),
+          title:  const Text('Chat', style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
           actions: <Widget>[
             GestureDetector(
                 onTap: () {
@@ -87,7 +90,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
           ),
           onPressed: (){
             var router = MaterialPageRoute(
-              builder: (BuildContext context) =>const Contacts());
+              builder: (BuildContext context) =>const FriendList());
               Navigator.of(context).push(router);
           },
         ),

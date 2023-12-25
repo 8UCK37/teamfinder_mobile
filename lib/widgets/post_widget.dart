@@ -19,8 +19,8 @@ import 'comment_widgets/new_bottomSheet_route.dart';
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
-
-  const PostWidget({super.key, required this.post});
+  final TabController? tabController;
+  const PostWidget({super.key, required this.post, this.tabController});
 
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -37,8 +37,6 @@ class _PostWidgetState extends State<PostWidget>
 
   @override
   void initState() {
-    debugPrint("post id${widget.post.id}");
-    debugPrint("shared id${widget.post.shared}");
     super.initState();
   }
 
@@ -53,7 +51,7 @@ class _PostWidgetState extends State<PostWidget>
       CircularMenuItem(
           iconSize: iconSize,
           padding: smallerIconPadding,
-          boxShadow: [],
+          boxShadow: const [],
           icon: Icons.edit_note,
           color: Colors.green,
           onTap: () {
@@ -62,16 +60,16 @@ class _PostWidgetState extends State<PostWidget>
       CircularMenuItem(
           iconSize: iconSize,
           padding: smallerIconPadding,
-          boxShadow: [],
+          boxShadow: const [],
           icon: Icons.delete,
-          color: Color.fromARGB(255, 221, 61, 50),
+          color: const Color.fromARGB(255, 221, 61, 50),
           onTap: () {
             setState(() {});
           }),
       CircularMenuItem(
           iconSize: iconSize,
           padding: smallerIconPadding,
-          boxShadow: [],
+          boxShadow: const [],
           icon: Icons.open_in_new,
           color: Colors.orange,
           onTap: () {
@@ -83,7 +81,7 @@ class _PostWidgetState extends State<PostWidget>
       CircularMenuItem(
           iconSize: iconSize,
           padding: smallerIconPadding,
-          boxShadow: [],
+          boxShadow: const [],
           icon: Icons.collections_bookmark,
           color: Colors.green,
           onTap: () {
@@ -92,7 +90,7 @@ class _PostWidgetState extends State<PostWidget>
       CircularMenuItem(
           iconSize: iconSize,
           padding: smallerIconPadding,
-          boxShadow: [],
+          boxShadow: const [],
           icon: Icons.report,
           color: const Color.fromARGB(255, 172, 47, 38),
           onTap: () {
@@ -101,7 +99,7 @@ class _PostWidgetState extends State<PostWidget>
       CircularMenuItem(
           iconSize: iconSize,
           padding: smallerIconPadding,
-          boxShadow: [],
+          boxShadow: const [],
           icon: Icons.open_in_new,
           color: const Color.fromARGB(255, 58, 136, 199),
           onTap: () {
@@ -109,7 +107,7 @@ class _PostWidgetState extends State<PostWidget>
           }),
     ];
 
-  if (widget.post.isOwnPost) {
+    if (widget.post.isOwnPost) {
       return listForOwnPost;
     } else {
       return listForFeedPost;
@@ -193,8 +191,15 @@ class _PostWidgetState extends State<PostWidget>
     }
   }
 
-  Widget parseDescriptionWidget(String desc, Mention mentionList) {
+  Widget parseDescriptionWidget(
+      String desc, Mention mentionList, String userId) {
     String sanitizedDesc = desc.substring(0, desc.length - 1);
+    debugPrint(desc);
+    if (mentionList.list.isNotEmpty) {
+      debugPrint(mentionList.list[0]['id']);
+    } else {
+      debugPrint('empty mention');
+    }
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };
@@ -208,13 +213,19 @@ class _PostWidgetState extends State<PostWidget>
               text: '${idNameMap[word]} ',
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  var route = MaterialPageRoute(
-                      builder: (BuildContext context) => FriendProfileHome(
-                            friendId: word,
-                            friendName: idNameMap[word],
-                          ));
-                  Navigator.of(context)
-                      .push(route); // Prints the corresponding ID
+                  debugPrint(word);
+                  if (userId != word) {
+                    var route = MaterialPageRoute(
+                        builder: (BuildContext context) => FriendProfileHome(
+                              friendId: word,
+                              friendName: idNameMap[word],
+                            ));
+                    Navigator.of(context).push(route);
+                  } else {
+                    if (widget.tabController != null) {
+                        widget.tabController!.animateTo(1);
+                      }
+                  }
                 },
               style: const TextStyle(
                   color: Colors.blue,
@@ -223,10 +234,10 @@ class _PostWidgetState extends State<PostWidget>
                   fontSize: 18)),
         );
       } else {
-        textSpans.add(TextSpan(text: '$word '));
+        textSpans.add(
+            TextSpan(text: '$word ', style: const TextStyle(fontSize: 18)));
       }
     }
-
     return RichText(
       text: TextSpan(
         children: textSpans,
@@ -250,7 +261,7 @@ class _PostWidgetState extends State<PostWidget>
       alignment: Alignment.topRight,
       toggleButtonSize: 15,
       toggleButtonPadding: 5,
-      toggleButtonBoxShadow: [],
+      toggleButtonBoxShadow: const [],
       radius: 35,
       animationDuration: const Duration(milliseconds: 250),
       toggleButtonColor: Colors.teal,
@@ -268,13 +279,19 @@ class _PostWidgetState extends State<PostWidget>
                   ),
                   onTap: () {
                     debugPrint(widget.post.author);
-                    var route = MaterialPageRoute(
-                        builder: (BuildContext context) => FriendProfileHome(
-                              friendId: widget.post.author,
-                              friendName: widget.post.name,
-                              friendProfileImage: widget.post.profilePicture,
-                            ));
-                    Navigator.of(context).push(route);
+                    if (userService.user['id'] != widget.post.author) {
+                      var route = MaterialPageRoute(
+                          builder: (BuildContext context) => FriendProfileHome(
+                                friendId: widget.post.author,
+                                friendName: widget.post.name,
+                                friendProfileImage: widget.post.profilePicture,
+                              ));
+                      Navigator.of(context).push(route);
+                    } else {
+                      if (widget.tabController != null) {
+                        widget.tabController!.animateTo(1);
+                      }
+                    }
                   },
                 ),
                 const SizedBox(width: 7.0),
@@ -294,13 +311,10 @@ class _PostWidgetState extends State<PostWidget>
             const SizedBox(height: 20.0),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                  // ignore: prefer_is_empty
-                  widget.post.mention?.list.length != 0
-                      ? parseDescription(
-                          widget.post.description!, widget.post.mention!)
-                      : widget.post.description ?? "",
-                  style: const TextStyle(fontSize: 15.0)),
+              child: widget.post.description != null
+                  ? parseDescriptionWidget(widget.post.description!,
+                      widget.post.mention!, userService.user['id'])
+                  : const Text(""),
             ),
             if (widget.post.shared != null)
               Container(
@@ -350,7 +364,8 @@ class _PostWidgetState extends State<PostWidget>
                         alignment: Alignment.centerLeft,
                         child: parseDescriptionWidget(
                             widget.post.parentpost!.description!,
-                            widget.post.parentpost!.mention!),
+                            widget.post.parentpost!.mention!,
+                            userService.user['id']),
                       ),
                     ),
                   ],
