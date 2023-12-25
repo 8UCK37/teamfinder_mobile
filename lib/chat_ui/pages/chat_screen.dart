@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
@@ -278,10 +279,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     return PopScope(
-        canPop: true,
+        canPop: false,
         onPopInvoked: (didPop) {
-          // Navigator.pushReplacement(
-          //     context, MaterialPageRoute(builder: (context) => ChatHome()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const ChatHome()));
         },
         child: Scaffold(
           appBar: AppBar(

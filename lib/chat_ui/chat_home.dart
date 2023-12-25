@@ -4,9 +4,14 @@ import 'package:teamfinder_mobile/chat_ui/pages/chats.dart';
 import 'package:teamfinder_mobile/chat_ui/pages/contacts.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
+import '../pages/search_page.dart';
+
 
 class ChatHome extends StatefulWidget {
+  const ChatHome({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _HomeState createState() => _HomeState();
 }
 
@@ -36,11 +41,28 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
           iconTheme: IconThemeData(color: userService.darkTheme! ?Colors.white:Colors.grey),
           title:  Text('CallOut Chat', style: TextStyle(color: userService.darkTheme! ?Colors.white:Colors.deepPurpleAccent)),
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.search),
-              color: userService.darkTheme! ?Colors.white:Colors.grey,
-              onPressed: (){},
-            ),
+            GestureDetector(
+                onTap: () {
+                  debugPrint('search clicked');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchPage()),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Material(
+                    elevation: 5,
+                    shadowColor: Colors.grey,
+                    shape: CircleBorder(),
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Color.fromRGBO(222, 209, 242, 100),
+                      child: Icon(Icons.search, color: Colors.blueGrey),
+                    ),
+                  ),
+                ),
+              ),
             IconButton(
               icon: const Icon(Icons.more_vert),
               color: userService.darkTheme! ?Colors.white:Colors.grey,
@@ -60,7 +82,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
         floatingActionButton: FloatingActionButton(
           backgroundColor:const Color.fromARGB(255, 22, 125, 99), //Theme.of(context).accentColor
           child: const Icon(
-            Icons.message,
+            Icons.recent_actors,
             color: Colors.white,
           ),
           onPressed: (){

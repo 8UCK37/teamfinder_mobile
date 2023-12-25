@@ -27,23 +27,23 @@ class _NotificationsTabState extends State<NotificationsTab>
     super.initState();
   }
 
-  void rebuildAnimatedList() {
+  void animateInsert() {
     final notiObserver =
         Provider.of<NotificationWizard>(context, listen: false);
-    //debugPrint("init: $length");
-    //debugPrint("changed: ${notiObserver.incomingNotificationList.length}");
+    debugPrint("init: $length");
+    debugPrint("changed: ${notiObserver.incomingNotificationList.length}");
     if (listKey.currentState != null) {
       if (length < notiObserver.incomingNotificationList.length) {
-        listKey.currentState!
-            .insertItem(0, duration: const Duration(milliseconds: 100));
         length = notiObserver.incomingNotificationList.length;
+        listKey.currentState!
+            .insertItem(0, duration: const Duration(milliseconds: 50));
       }
     }
   }
 
   void removeItem(IncomingNotification noti, int index) {
     setState(() {
-      length = length-1;
+      length = length - 1;
     });
     //debugPrint("removed $index");
     //debugPrint("removal length $length");
@@ -60,7 +60,7 @@ class _NotificationsTabState extends State<NotificationsTab>
     final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     final userService = Provider.of<ProviderService>(context, listen: true);
     bool isDark = userService.darkTheme!;
-    rebuildAnimatedList();
+    animateInsert();
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: Scaffold(
@@ -73,10 +73,12 @@ class _NotificationsTabState extends State<NotificationsTab>
               automaticallyImplyLeading: false,
               floating: false,
               pinned: true,
-              title:  Text(
+              title: Text(
                 'Notifications',
                 style: TextStyle(
-                    color: isDark? Colors.white:const Color.fromARGB(255, 31, 29, 29),
+                    color: isDark
+                        ? Colors.white
+                        : const Color.fromARGB(255, 31, 29, 29),
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold),
               ),
@@ -96,6 +98,7 @@ class _NotificationsTabState extends State<NotificationsTab>
                 (BuildContext context, int index) {
                   if (notiObserver.incomingNotificationList.isEmpty) {
                     // This is where the fixed header would be
+                    length = 0;
                     return SizedBox(
                       height: MediaQuery.of(context).size.height - 190,
                       width: double.infinity,

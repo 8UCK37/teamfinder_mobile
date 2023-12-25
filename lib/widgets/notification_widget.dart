@@ -44,7 +44,8 @@ class NotificationWidget extends StatelessWidget {
     final userService = Provider.of<ProviderService>(context, listen: true);
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     return SlideTransition(
-      position: Tween<Offset>(
+        key: ValueKey(timestamp),
+        position: Tween<Offset>(
         begin:const Offset(1, 0),
         end:Offset.zero).animate(CurvedAnimation(parent: animation, curve: Curves.linear)),
       child: GestureDetector(
@@ -96,10 +97,8 @@ class NotificationWidget extends StatelessWidget {
                         width: MediaQuery.of(context).size.width - 150,
                         child: RichText(
                             text: TextSpan(
-                                style: TextStyle(
-                                    color: userService.darkTheme!
-                                        ? Colors.white
-                                        : Colors.black),
+                                style:const TextStyle(
+                                    color:  Colors.black),
                                 children: [
                               TextSpan(
                                   text: notification.senderName,
@@ -109,6 +108,7 @@ class NotificationWidget extends StatelessWidget {
                               TextSpan(
                                   text: ' ${notificationTextParser()}',
                                   style: const TextStyle(
+                                      color: Colors.blue,
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal)),
                             ])),
@@ -187,7 +187,9 @@ class NotificationWidget extends StatelessWidget {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(Icons.more_vert),
+                    Icon(
+                      color:Colors.teal,
+                      Icons.more_vert),
                     Text(''),
                   ],
                 ),
