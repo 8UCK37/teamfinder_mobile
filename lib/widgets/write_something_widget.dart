@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/widgets/create_post_bottomsheet.dart';
+import 'package:teamfinder_mobile/pages/create_post_page.dart';
 
 import '../services/data_service.dart';
 
