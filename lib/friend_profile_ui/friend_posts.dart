@@ -341,6 +341,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                           ? const Color.fromARGB(255, 74, 74, 74)
                           : Colors.grey,
                       height: 40.0),
+                  // ignore: avoid_unnecessary_containers
                   Container(
                     //padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
@@ -385,7 +386,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                 SeparatorWidget(
                                     color: userService.darkTheme!
                                         ? const Color.fromARGB(255, 74, 74, 74)
-                                        : Color.fromARGB(255, 182, 182, 182)),
+                                        : const Color.fromARGB(255, 182, 182, 182)),
                                 PostWidget(post: post),
                               ],
                             ),

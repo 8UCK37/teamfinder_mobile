@@ -194,12 +194,6 @@ class _PostWidgetState extends State<PostWidget>
   Widget parseDescriptionWidget(
       String desc, Mention mentionList, String userId) {
     String sanitizedDesc = desc.substring(0, desc.length - 1);
-    debugPrint(desc);
-    if (mentionList.list.isNotEmpty) {
-      debugPrint(mentionList.list[0]['id']);
-    } else {
-      debugPrint('empty mention');
-    }
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };

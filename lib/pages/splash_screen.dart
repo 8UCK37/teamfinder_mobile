@@ -26,7 +26,7 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
   bool hasInternet = false;
   String loadingText = "";
   @override
-  void initState() {
+  void initState(){
     super.initState();
     _initializePreferences();
     saveUserInit();
@@ -77,7 +77,7 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
     notiObserver.readNotificationBox(userId);
   }
 
-  void saveUserInit() async {
+  Future<void> saveUserInit() async {
     NetworkController networkController = NetworkController();
     if (await networkController.noInternet()) {
       debugPrint("saveUserInit() no_internet");

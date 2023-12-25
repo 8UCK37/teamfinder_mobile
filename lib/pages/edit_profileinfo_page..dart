@@ -248,8 +248,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
           selectedBannerPath = null;
         });
         // ignore: use_build_context_synchronously
-        final userService =
-            Provider.of<ProviderService>(context, listen: false);
+        final userService = Provider.of<ProviderService>(context, listen: false);
         userService.refreashCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -293,8 +292,7 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
         });
 
         // ignore: use_build_context_synchronously
-        final userService =
-            Provider.of<ProviderService>(context, listen: false);
+        final userService = Provider.of<ProviderService>(context, listen: false);
         userService.refreashCache();
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
