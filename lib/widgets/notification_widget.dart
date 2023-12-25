@@ -126,7 +126,7 @@ class NotificationWidget extends StatelessWidget {
                                 int index = notiObserver.incomingNotificationList
                                     .indexOf(notification);
                                 //debugPrint(index.toString());
-                                notiObserver.removeNotificationFromList(index);
+                                notiObserver.removeNotificationFromList(index,userService.user['id']);
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -147,7 +147,7 @@ class NotificationWidget extends StatelessWidget {
                                 int index = notiObserver.incomingNotificationList
                                     .indexOf(notification);
                                 //debugPrint(index.toString());
-                                notiObserver.removeNotificationFromList(index);
+                                notiObserver.removeNotificationFromList(index,userService.user['id']);
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(

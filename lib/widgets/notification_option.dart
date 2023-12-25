@@ -118,7 +118,7 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                               .indexOf(widget.notification);
                           //debugPrint(index.toString());
                           widget.removeClicked!();
-                          notiObserver.removeNotificationFromList(index);
+                          notiObserver.removeNotificationFromList(index,userService.user['id']);
                           Navigator.of(context).pop();
                         },
                         child: Container(

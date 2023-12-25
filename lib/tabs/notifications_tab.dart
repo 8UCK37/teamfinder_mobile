@@ -84,7 +84,7 @@ class _NotificationsTabState extends State<NotificationsTab>
                 IconButton(
                   onPressed: () {
                     //TODO maybe add a undo logic and maybe animate the removal
-                    notiObserver.deleteAllNotification();
+                    notiObserver.deleteAllNotification(userService.user['id']);
                   },
                   icon: const Icon(Icons.clear_all),
                 ),

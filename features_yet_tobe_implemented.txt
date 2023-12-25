@@ -12,3 +12,4 @@
 12. Edit userinfo has to be implemented ✅
 13. Refactor and extract the repeating appBar into a widget ✅
 14. Implement notificaiton mute from a particular user
+15. fix notification text not changing with theme

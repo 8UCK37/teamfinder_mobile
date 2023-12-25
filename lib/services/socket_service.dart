@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 
 class SocketService {
@@ -67,6 +68,7 @@ class SocketService {
 
   parseNewnotification(dynamic data, BuildContext context) {
     final notiObserver = Provider.of<NotificationWizard>(context, listen: false);
-    notiObserver.parseNotification(data);
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    notiObserver.parseNotification(data,userService.user['id']);
   }
 }

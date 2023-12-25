@@ -29,7 +29,6 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
   void initState() {
     super.initState();
     _initializePreferences();
-    loadNotifocationList();
     saveUserInit();
     fetchFeed();
     getOwnPost();
@@ -73,10 +72,9 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
     userService.getDiscordInfo();
   }
 
-  Future<void> loadNotifocationList() async {
-    final notiObserver =
-        Provider.of<NotificationWizard>(context, listen: false);
-    notiObserver.readNotificationBox();
+  Future<void> loadNotifocationList(String userId) async {
+    final notiObserver =Provider.of<NotificationWizard>(context, listen: false);
+    notiObserver.readNotificationBox(userId);
   }
 
   void saveUserInit() async {
@@ -121,6 +119,7 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
           socketService.setupSocketConnection(context);
           socketService.setSocketId(userData['id']);
           userService.setSocket(socketService);
+          loadNotifocationList(userData['id']);
         }
         if (userData["steamId"] != null) {
           userService.getSteamInfo(userData["steamId"]);

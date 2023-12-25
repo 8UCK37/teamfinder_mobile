@@ -6,7 +6,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import '../controller/network_controller.dart';
 import 'package:hive/hive.dart';
-
 import '../pojos/incoming_notification.dart';
 // Generated file
 
@@ -17,14 +16,15 @@ class NotificationWizard extends ChangeNotifier {
 
   final notificationBox = Hive.box('notificationBox');
 
-  void writeTonotificationBox() {
-    notificationBox.put("notificationList", incomingNotificationList);
-    //debugPrint(notificationBox.get("notificationList").toString());
+  void writeTonotificationBox(String userId) {
+    //debugPrint("writing to this user's notiBox: $userId");
+    notificationBox.put(userId, incomingNotificationList);
   }
 
-  void readNotificationBox() {
-    if (notificationBox.get("notificationList") != null) {
-      List<dynamic> newList = notificationBox.get("notificationList");
+  void readNotificationBox(String userId) {
+    //debugPrint('noti obs 29: $userId');
+    if (notificationBox.get(userId) != null) {
+      List<dynamic> newList = notificationBox.get(userId);
       for (IncomingNotification savedNoti in newList) {
         incomingNotificationList.add(savedNoti);
       }
@@ -35,8 +35,9 @@ class NotificationWizard extends ChangeNotifier {
     incomingNotificationList = newValue;
     notifyListeners();
   }
-  void deleteAllNotification() {
-    notificationBox.delete("notificationList");
+
+  void deleteAllNotification(String userId) {
+    notificationBox.delete(userId);
     incomingNotificationList = [];
     notifyListeners();
   }
@@ -51,13 +52,13 @@ class NotificationWizard extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeNotificationFromList(int index) {
+  void removeNotificationFromList(int index,String userId) {
     incomingNotificationList.removeAt(index);
-    notificationBox.put("notificationList", incomingNotificationList);
+    notificationBox.put(userId, incomingNotificationList);
     notifyListeners();
   }
 
-  void parseNotification(dynamic data) {
+  void parseNotification(dynamic data,String userId) {
     if (data['notification'] == "disc") {
       onlineMap![data['sender']] = false;
       notifyListeners();
@@ -67,7 +68,7 @@ class NotificationWizard extends ChangeNotifier {
       notifyListeners();
       return;
     } else if (data['notification'] != "imageUploadDone") {
-      getUserInfo(data);
+      getUserInfo(data, userId);
     }
   }
 
@@ -96,7 +97,7 @@ class NotificationWizard extends ChangeNotifier {
     }
   }
 
-  Future<void> getUserInfo(dynamic data) async {
+  Future<void> getUserInfo(dynamic data, String userId) async {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
@@ -127,7 +128,8 @@ class NotificationWizard extends ChangeNotifier {
           newNoti.notification != "disc" &&
           newNoti.notification != "imageUploadDone") {
         addToNotificationList(newNoti);
-        writeTonotificationBox();
+        // ignore: use_build_context_synchronously
+        writeTonotificationBox(userId);
       }
     }
   }
