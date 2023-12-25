@@ -135,7 +135,7 @@ class _AddNewGamesState extends State<AddNewGames>
                           children: <Widget>[
                             Row(
                               children: [
-                                Text('CallOut',
+                                Text('Library',
                                     style: TextStyle(
                                         color: Colors.deepPurple,
                                         fontSize: 25.0,

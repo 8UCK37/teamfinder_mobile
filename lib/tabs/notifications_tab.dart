@@ -30,13 +30,13 @@ class _NotificationsTabState extends State<NotificationsTab>
   void animateInsert() {
     final notiObserver =
         Provider.of<NotificationWizard>(context, listen: false);
-    debugPrint("init: $length");
-    debugPrint("changed: ${notiObserver.incomingNotificationList.length}");
+    //debugPrint("init: $length");
+    //debugPrint("changed: ${notiObserver.incomingNotificationList.length}");
     if (listKey.currentState != null) {
       if (length < notiObserver.incomingNotificationList.length) {
         length = notiObserver.incomingNotificationList.length;
         listKey.currentState!
-            .insertItem(0, duration: const Duration(milliseconds: 50));
+            .insertItem(0, duration: const Duration(milliseconds: 150));
       }
     }
   }

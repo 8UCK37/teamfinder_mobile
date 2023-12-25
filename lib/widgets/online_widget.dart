@@ -14,7 +14,7 @@ class OnlineWidget extends StatefulWidget {
 
 class _OnlineWidgetState extends State<OnlineWidget>
     with SingleTickerProviderStateMixin {
-  late Map<String, bool>? onlineMap;
+
   @override
   void initState() {
     super.initState();

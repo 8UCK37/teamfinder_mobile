@@ -64,7 +64,7 @@ class _PostWidgetState extends State<PostWidget>
           padding: smallerIconPadding,
           boxShadow: [],
           icon: Icons.delete,
-          color: Colors.blue,
+          color: Color.fromARGB(255, 221, 61, 50),
           onTap: () {
             setState(() {});
           }),
