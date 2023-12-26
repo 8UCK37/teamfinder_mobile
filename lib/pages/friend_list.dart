@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
+import 'package:teamfinder_mobile/chat_ui/chat%20pages/chat_screen.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import '../services/notification_observer.dart';
+import '../utils/router_animation.dart';
 
 class FriendList extends StatefulWidget {
   const FriendList({super.key});
@@ -153,13 +154,11 @@ class _FriendListState extends State<FriendList>
                 ),
                 onTap: () {
                   //debugPrint('list tile clicked');
-                  var route = MaterialPageRoute(
-                      builder: (BuildContext context) => FriendProfileHome(
+                  AnimatedRouter.slideToPageBottom(context,  FriendProfileHome(
                             friendId: notiObserver.friendList![i].id,
                             friendName: notiObserver.friendList![i].name,
                             friendProfileImage: notiObserver.friendList![i].profilePicture,
                           ));
-                  Navigator.of(context).push(route);
                 },
               ),
             ],

@@ -19,6 +19,7 @@ import '../../services/socket_service.dart';
 import 'package:intl/intl.dart';
 import 'package:teamfinder_mobile/chat_ui/camera_ui/CameraScreen.dart';
 import 'package:dio/dio.dart';
+import '../../utils/router_animation.dart';
 import '../camera_ui/CameraView.dart';
 class ChatScreen extends StatefulWidget {
   final String name;
@@ -281,8 +282,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     return PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const ChatHome()));
+          AnimatedRouter.slideToPageRightReplace(context, const ChatHome());
         },
         child: Scaffold(
           appBar: AppBar(

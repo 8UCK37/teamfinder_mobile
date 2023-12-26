@@ -9,6 +9,7 @@ import 'package:teamfinder_mobile/pages/menu_pages/linked_acc.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/settings.dart';
 import '../services/auth_service.dart';
 import '../services/data_service.dart';
+import '../utils/router_animation.dart';
 
 class MenuTab extends StatelessWidget {
   final TabController tabController;
@@ -167,11 +168,7 @@ class MenuTab extends StatelessWidget {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GamesPage()),
-                    );
+                    AnimatedRouter.slideToPageLeft(context, const GamesPage());
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2 - 20,
@@ -197,11 +194,7 @@ class MenuTab extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OwnLinkedAccounts()),
-                    );
+                    AnimatedRouter.slideToPageLeft(context, const OwnLinkedAccounts());
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2 - 30,
@@ -236,11 +229,7 @@ class MenuTab extends StatelessWidget {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FriendList()),
-                    );
+                    AnimatedRouter.slideToPageLeft(context, const FriendList());
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2 - 20,
@@ -266,13 +255,8 @@ class MenuTab extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    debugPrint('goto settings');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingsPage(
-                              isDarkCurrent: userService.darkTheme!)),
-                    );
+                    AnimatedRouter.slideToPageLeft(context, SettingsPage(
+                              isDarkCurrent: userService.darkTheme!));
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2 - 30,

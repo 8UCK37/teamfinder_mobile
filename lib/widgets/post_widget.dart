@@ -15,6 +15,7 @@ import 'package:teamfinder_mobile/widgets/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 import 'package:teamfinder_mobile/widgets/share_bottomsheet.dart';
+import '../utils/router_animation.dart';
 import 'comment_widgets/new_bottomSheet_route.dart';
 
 class PostWidget extends StatefulWidget {
@@ -191,9 +192,9 @@ class _PostWidgetState extends State<PostWidget>
     }
   }
 
-  Widget parseDescriptionWidget(
-      String desc, Mention mentionList, String userId) {
+  Widget parseDescriptionWidget(String desc, Mention mentionList,BuildContext context) {
     String sanitizedDesc = desc.substring(0, desc.length - 1);
+    final userService = Provider.of<ProviderService>(context, listen: false);
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };
@@ -208,13 +209,11 @@ class _PostWidgetState extends State<PostWidget>
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   debugPrint(word);
-                  if (userId != word) {
-                    var route = MaterialPageRoute(
-                        builder: (BuildContext context) => FriendProfileHome(
+                  if (userService.user['id'] != word) {
+                    AnimatedRouter.slideToPageLeft(context,FriendProfileHome(
                               friendId: word,
                               friendName: idNameMap[word],
                             ));
-                    Navigator.of(context).push(route);
                   } else {
                     if (widget.tabController != null) {
                         widget.tabController!.animateTo(1);
@@ -223,7 +222,6 @@ class _PostWidgetState extends State<PostWidget>
                 },
               style: const TextStyle(
                   color: Colors.blue,
-                  decoration: TextDecoration.underline,
                   decorationColor: Colors.blue,
                   fontSize: 18)),
         );
@@ -274,13 +272,11 @@ class _PostWidgetState extends State<PostWidget>
                   onTap: () {
                     debugPrint(widget.post.author);
                     if (userService.user['id'] != widget.post.author) {
-                      var route = MaterialPageRoute(
-                          builder: (BuildContext context) => FriendProfileHome(
+                      AnimatedRouter.slideToPageLeft(context,FriendProfileHome(
                                 friendId: widget.post.author,
                                 friendName: widget.post.name,
                                 friendProfileImage: widget.post.profilePicture,
                               ));
-                      Navigator.of(context).push(route);
                     } else {
                       if (widget.tabController != null) {
                         widget.tabController!.animateTo(1);
@@ -307,7 +303,7 @@ class _PostWidgetState extends State<PostWidget>
               alignment: Alignment.centerLeft,
               child: widget.post.description != null
                   ? parseDescriptionWidget(widget.post.description!,
-                      widget.post.mention!, userService.user['id'])
+                      widget.post.mention!,context)
                   : const Text(""),
             ),
             if (widget.post.shared != null)
@@ -359,7 +355,7 @@ class _PostWidgetState extends State<PostWidget>
                         child: parseDescriptionWidget(
                             widget.post.parentpost!.description!,
                             widget.post.parentpost!.mention!,
-                            userService.user['id']),
+                            context),
                       ),
                     ),
                   ],

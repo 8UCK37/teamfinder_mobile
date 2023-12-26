@@ -4,6 +4,7 @@ import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import '../services/notification_observer.dart';
+import '../utils/router_animation.dart';
 
 class OnlineWidget extends StatefulWidget {
   const OnlineWidget({super.key});
@@ -37,19 +38,16 @@ class _OnlineWidgetState extends State<OnlineWidget>
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           const SizedBox(width: 15.0),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40.0),
-                border: Border.all(width: 1.0, color: Colors.blue)),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FriendList()),
-                );
+          GestureDetector(
+            onTap: () {
+                AnimatedRouter.slideToPageLeft(context, const FriendList());
               },
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40.0),
+                  border: Border.all(width: 1.0, color: Colors.blue)),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,13 +70,11 @@ class _OnlineWidgetState extends State<OnlineWidget>
                 in notiObserver.friendList!) // Add a null check here
               GestureDetector(
                   onTap: () {
-                    var route = MaterialPageRoute(
-                        builder: (BuildContext context) => FriendProfileHome(
+                    AnimatedRouter.slideToPageLeft(context, FriendProfileHome(
                               friendId: user.id,
                               friendName: user.name,
                               friendProfileImage: user.profilePicture,
                             ));
-                    Navigator.of(context).push(route);
                   },
                   child: friendBubble(user))
         ],

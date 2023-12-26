@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 //import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/chat_ui/pages/chat_screen.dart';
+import 'package:teamfinder_mobile/chat_ui/chat%20pages/chat_screen.dart';
 import '../../services/data_service.dart';
 import '../../services/socket_service.dart';
 import '../../widgets/custom_image_editor.dart';

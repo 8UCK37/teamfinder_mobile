@@ -11,6 +11,7 @@ import 'package:teamfinder_mobile/pages/menu_pages/add_new_games_screen.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
+import '../../utils/router_animation.dart';
 import '../../widgets/custom_appbar.dart';
 
 class GamesPage extends StatefulWidget {
@@ -151,16 +152,10 @@ class _GamesPageState extends State<GamesPage> {
             color: Colors.white,
           ),
           onPressed: () {
-            debugPrint('add new games page');
-            //debugPrint(ownedGames.toString());
             if (ownedGames != null) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddNewGames(
+              AnimatedRouter.slideToPageBottomReplace(context, AddNewGames(
                           list: ownedGames,
-                        )),
-              );
+                        ));
             } else {
               QuickAlert.show(
                 context: context,

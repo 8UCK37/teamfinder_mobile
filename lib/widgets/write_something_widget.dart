@@ -2,22 +2,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/create_post_page.dart';
-
 import '../services/data_service.dart';
+import '../utils/router_animation.dart';
 
 class WriteSomethingWidget extends StatelessWidget {
   const WriteSomethingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context,listen:true);
+    final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
     // ignore: avoid_unnecessary_containers
     return Container(
       child: Column(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,8 +30,9 @@ class WriteSomethingWidget extends StatelessWidget {
                       placeholder:
                           const AssetImage('assets/images/dp_placeholder.png'),
                       image: CachedNetworkImageProvider(
-                        cacheKey:userService.profileImagecacheKey,
-                        userData['profilePicture']??'https://cdn-icons-png.flaticon.com/512/1985/1985782.png'),
+                          cacheKey: userService.profileImagecacheKey,
+                          userData['profilePicture'] ??
+                              'https://cdn-icons-png.flaticon.com/512/1985/1985782.png'),
                       width: 56.0,
                       height: 56.0,
                       fit: BoxFit.cover,
@@ -46,49 +48,22 @@ class WriteSomethingWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(width: 7.0),
-
                 GestureDetector(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     height: 50.0,
-                    width: MediaQuery.of(context).size.width/1.4,
+                    width: MediaQuery.of(context).size.width / 1.4,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1.0,
-                        color: Colors.grey
-                      ),
-                      borderRadius: BorderRadius.circular(30.0)
-                    ),
+                        border: Border.all(width: 1.0, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(30.0)),
                     child: const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Write something here...')),
+                        alignment: Alignment.centerLeft,
+                        child: Text('Write something here...')),
                   ),
                   onTap: () {
-                     Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            const CreatePost(),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(0.0,1.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-
-                          var tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: curve));
-
-                          var offsetAnimation = animation.drive(tween);
-
-                          return SlideTransition(
-                            position: offsetAnimation,
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
+                    AnimatedRouter.slideToPageBottom(context, const CreatePost());
                   },
                 )
               ],

@@ -14,6 +14,8 @@ import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/search_bar.dart';
 
+import '../../utils/router_animation.dart';
+
 class AddNewGames extends StatefulWidget {
   final List<dynamic> list;
   const AddNewGames({super.key, required this.list});
@@ -116,8 +118,7 @@ class _AddNewGamesState extends State<AddNewGames>
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const GamesPage()));
+          AnimatedRouter.slideToPageRightReplace(context, const GamesPage());
         },
         child: Scaffold(
             resizeToAvoidBottomInset: false,
