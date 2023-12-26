@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
+import 'package:teamfinder_mobile/widgets/mention_widget.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -15,10 +17,10 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   late TextEditingController textController;
-  final FocusNode _focusNode = FocusNode();
   String description = '';
   String nameSearchTerm = '';
   List<String> selectedImages = [];
+  QuillController controller = QuillController.basic();
 
   @override
   void initState() {
@@ -160,35 +162,13 @@ class _CreatePostState extends State<CreatePost> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
+                height: 150,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: Colors.blue)),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8),
-                  child: TextField(
-                    maxLength: 1000,
-                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    focusNode: _focusNode,
-                    controller: textController,
-                    decoration: const InputDecoration(
-                        hintText: "Type away...", border: InputBorder.none),
-                    minLines: 1,
-                    maxLines: 7,
-                    onChanged: (value) {
-                      if (value.contains('@')) {
-                        setState(() {
-                          description = value.split('@')[0];
-                          nameSearchTerm = value.split('@')[1];
-                        });
-                      } else {
-                        setState(() {
-                          description = value;
-                        });
-                      }
-                      debugPrint(description);
-                      debugPrint(nameSearchTerm);
-                    },
-                  ),
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 8.0, right: 8),
+                  child: MentionWidget(),
                 ),
               ),
             ),
