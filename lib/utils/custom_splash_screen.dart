@@ -46,7 +46,8 @@ class EasySplashScreen extends StatefulWidget {
   /// If both futureNavigator and navigator are provided, futureNavigator will take priority
   final Future<Object>? futureNavigator;
 
-  const EasySplashScreen({super.key, 
+  const EasySplashScreen({
+    super.key,
     this.loaderColor = Colors.black,
     this.futureNavigator,
     this.navigator,
@@ -78,8 +79,10 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
             widget.navigator as String,
           );
         } else if (widget.navigator is Widget) {
-          Navigator.of(context).push(MaterialPageRoute(
+          if (mounted) {
+            Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => widget.navigator as Widget));
+          }
         }
       });
     } else {
@@ -133,43 +136,42 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
                             radius: widget.logoWidth,
                             child: widget.logo,
                           ),
-                          
-                          if (widget.title != null) Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child:widget.title!
-                          ),
+                          if (widget.title != null)
+                            Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: widget.title!),
                         ],
                       ),
                     ),
                   ),
                 ),
-                if(widget.loadingText!=null)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        widget.showLoader
-                            ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color?>(
-                                  widget.loaderColor,
-                                ),
-                              )
-                            : Container(),
-                        if (widget.loadingText!.data!.isNotEmpty)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 20.0),
+                if (widget.loadingText != null)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          widget.showLoader
+                              ? CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color?>(
+                                    widget.loaderColor,
+                                  ),
+                                )
+                              : Container(),
+                          if (widget.loadingText!.data!.isNotEmpty)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                            ),
+                          Padding(
+                            padding: widget.loadingTextPadding,
+                            child: widget.loadingText,
                           ),
-                        Padding(
-                          padding: widget.loadingTextPadding,
-                          child: widget.loadingText,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

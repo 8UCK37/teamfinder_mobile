@@ -16,7 +16,8 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   late TextEditingController textController;
   final FocusNode _focusNode = FocusNode();
-  String checkIfEmpty = '';
+  String description = '';
+  String nameSearchTerm = '';
   List<String> selectedImages = [];
 
   @override
@@ -41,21 +42,21 @@ class _CreatePostState extends State<CreatePost> {
       });
     }
   }
-
+  
+  
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           titleSpacing: 0,
           toolbarHeight: 50,
           automaticallyImplyLeading: true,
           systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
-              statusBarIconBrightness: userService.darkTheme!
-                  ? Brightness.light
-                  : Brightness.dark),
+              statusBarIconBrightness:
+                  userService.darkTheme! ? Brightness.light : Brightness.dark),
           backgroundColor: userService.darkTheme!
               ? const Color.fromRGBO(46, 46, 46, 1)
               : Colors.white,
@@ -95,7 +96,7 @@ class _CreatePostState extends State<CreatePost> {
                                 child: Text(
                                   "POST",
                                   style: TextStyle(
-                                      color: checkIfEmpty.isNotEmpty
+                                      color: description.isNotEmpty
                                           ? Colors.blue
                                           : Colors.grey),
                                 ),
@@ -160,33 +161,39 @@ class _CreatePostState extends State<CreatePost> {
               padding: const EdgeInsets.all(10.0),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: Colors.blue)),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.blue)),
                 child: Padding(
-                  padding: const EdgeInsets.only(left:8.0,right:8),
+                  padding: const EdgeInsets.only(left: 8.0, right: 8),
                   child: TextField(
                     maxLength: 1000,
                     maxLengthEnforcement: MaxLengthEnforcement.enforced,
                     focusNode: _focusNode,
                     controller: textController,
                     decoration: const InputDecoration(
-                                hintText: "Type away...",
-                                border: InputBorder.none),
+                        hintText: "Type away...", border: InputBorder.none),
                     minLines: 1,
                     maxLines: 7,
                     onChanged: (value) {
+                      if (value.contains('@')) {
                         setState(() {
-                          checkIfEmpty = value;
-                          });
-                      },
-                    
+                          description = value.split('@')[0];
+                          nameSearchTerm = value.split('@')[1];
+                        });
+                      } else {
+                        setState(() {
+                          description = value;
+                        });
+                      }
+                      debugPrint(description);
+                      debugPrint(nameSearchTerm);
+                    },
                   ),
                 ),
               ),
             ),
-
             Visibility(
-              visible:selectedImages.isNotEmpty,
+              visible: selectedImages.isNotEmpty,
               child: ImageSlideshow(
                 initialPage: 0,
                 width: MediaQuery.of(context).size.width,
@@ -194,13 +201,10 @@ class _CreatePostState extends State<CreatePost> {
                 indicatorColor: Colors.red,
                 indicatorBackgroundColor: Colors.grey,
                 isLoop: selectedImages.length > 1,
-                children: selectedImages.map(
+                children: selectedImages
+                    .map(
                       (e) => ClipRect(
-                          child: Image.file(
-                            File(e),
-                            fit:BoxFit.fill
-                            )
-                      ),
+                          child: Image.file(File(e), fit: BoxFit.fill)),
                     )
                     .toList(),
               ),
@@ -222,8 +226,7 @@ class _CreatePostState extends State<CreatePost> {
                           elevation: 5,
                           color: Color.fromARGB(255, 130, 210, 133),
                           shadowColor: Colors.green,
-                          surfaceTintColor:
-                              Color.fromARGB(255, 130, 210, 133),
+                          surfaceTintColor: Color.fromARGB(255, 130, 210, 133),
                           child: Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Row(
@@ -244,7 +247,6 @@ class _CreatePostState extends State<CreatePost> {
               ],
             )
           ],
-        )
-    );
+        ));
   }
 }
