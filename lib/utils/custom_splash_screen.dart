@@ -46,7 +46,7 @@ class EasySplashScreen extends StatefulWidget {
   /// If both futureNavigator and navigator are provided, futureNavigator will take priority
   final Future<Object>? futureNavigator;
 
-  EasySplashScreen({
+  const EasySplashScreen({super.key, 
     this.loaderColor = Colors.black,
     this.futureNavigator,
     this.navigator,
@@ -63,6 +63,7 @@ class EasySplashScreen extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _EasySplashScreenState createState() => _EasySplashScreenState();
 }
 
@@ -82,6 +83,7 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
         }
       });
     } else {
+      // ignore: no_leading_underscores_for_local_identifiers
       widget.futureNavigator!.then((_route) {
         if (_route is String) {
           Navigator.of(context).pushNamed(_route);
@@ -111,6 +113,7 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
               color: widget.backgroundColor,
             ),
           ),
+          // ignore: avoid_unnecessary_containers
           Container(
             //decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
             child: Column(
@@ -119,6 +122,7 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
+                    // ignore: avoid_unnecessary_containers
                     child: Container(
                       //decoration: BoxDecoration(border: Border.all(color: Colors.green)),
                       child: Column(
@@ -126,8 +130,8 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Colors.transparent,
-                            child: widget.logo,
                             radius: widget.logoWidth,
+                            child: widget.logo,
                           ),
                           
                           if (widget.title != null) Padding(
@@ -143,7 +147,7 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.only(bottom: 25),
+                    padding: const EdgeInsets.only(bottom: 25),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -155,8 +159,8 @@ class _EasySplashScreenState extends State<EasySplashScreen> {
                               )
                             : Container(),
                         if (widget.loadingText!.data!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20.0),
                           ),
                         Padding(
                           padding: widget.loadingTextPadding,

@@ -118,7 +118,7 @@ class _AddNewGamesState extends State<AddNewGames>
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
-          AnimatedRouter.slideToPageRightReplace(context, const GamesPage());
+          AnimatedRouter.slideToPageTopReplace(context, const GamesPage());
         },
         child: Scaffold(
             resizeToAvoidBottomInset: false,
