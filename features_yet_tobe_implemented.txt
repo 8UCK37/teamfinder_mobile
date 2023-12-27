@@ -4,5 +4,5 @@
 4.  profile share options ❓
 5.  Standalone post viewer widget
 6.  comment counter + Reaction counter
-7. Implement notificaiton mute from a particular user
-8. add gestureListner to parentpost author dp
+7.  Implement notificaiton mute from a particular user
+8.  add gestureListner to parentpost author dp

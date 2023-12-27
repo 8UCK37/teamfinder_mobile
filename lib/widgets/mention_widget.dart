@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill/quill_delta.dart';
 import '../pojos/user_pojo.dart';
 
 class MentionWidget extends StatefulWidget {
@@ -14,9 +15,10 @@ class MentionWidget extends StatefulWidget {
 
 class _MentionWidgetState extends State<MentionWidget> {
   final FocusNode focusNode = FocusNode();
-  final QuillController controller = QuillController.basic();
+  final quill.QuillController controller = quill.QuillController.basic();
   bool showRecommend = false;
   int indexOfChar = 0;
+  String userInput = '';
   late List<UserPojo>? userList = [];
   final List<ListTile> mockRecommend = [
     const ListTile(
@@ -51,14 +53,16 @@ class _MentionWidgetState extends State<MentionWidget> {
   void quillListener() {
     controller.addListener(() {
       final delta = controller.document.toDelta();
-      debugPrint('line 47:${delta.toString()}');
-      debugPrint('line 48:${controller.document.length}');
+      debugPrint('line 56:${delta.toString()}');
+      debugPrint('line 57:${controller.document.length}');
       debugPrint(
-          'line 48:${controller.document.toPlainText().substring(0, controller.document.length - 1)}');
+          'line 58:${controller.document.toPlainText().substring(0, controller.document.length - 1)}');
 
-      String userInput = controller.document
-          .toPlainText()
-          .substring(0, controller.document.length - 1);
+      setState(() {
+        userInput = controller.document
+            .toPlainText()
+            .substring(0, controller.document.length - 1);
+      });
       if (userInput.length > 2) {
         String lastTwoChar =
             userInput.substring(userInput.length - 2, userInput.length);
@@ -90,8 +94,34 @@ class _MentionWidgetState extends State<MentionWidget> {
     });
   }
 
+  void onTap(String mentionText) {
+    // Calculate the position to insert the mention text
+    final insertionIndex = indexOfChar + 1;
+
+    // Create a delta for the mention text with blue color
+    final mentionDelta = Delta()
+      ..retain(
+          insertionIndex) // Retain the existing content up to insertionIndex
+      ..insert(
+        mentionText,
+        {'color': 'blue'},
+      )
+      ..insert(" ", {'color':'black'})
+      ..delete(userInput.length - indexOfChar - 1);
+    // Add a space after the mention to continue typing
+
+    // Retain the existing content up to insertionIndex
+
+    // Apply the delta to the controller
+    controller.compose(
+      mentionDelta,
+      controller.selection,
+      quill.ChangeSource.local,
+    );
+  }
+
   void searchUser(String userInp) async {
-    debugPrint("called");
+    //debugPrint("called");
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
@@ -102,7 +132,7 @@ class _MentionWidgetState extends State<MentionWidget> {
       });
       return;
     }
-    debugPrint('from search userinp: $userInp');
+    //debugPrint('from search userinp: $userInp');
     Options options = Options(
       headers: {
         'Authorization': 'Bearer $idToken',
@@ -115,14 +145,14 @@ class _MentionWidgetState extends State<MentionWidget> {
       options: options,
     );
     if (response.statusCode == 200) {
-      debugPrint('user data searched');
+      //debugPrint('user data searched');
       //debugPrint(response.data);
       setState(() {
         userList = userPojoListFromJson(response.data)
             .where((userPojo) => userPojo.id != user.uid)
             .toList();
       });
-      debugPrint(userList.toString());
+      //debugPrint(userList.toString());
     }
   }
 
@@ -133,17 +163,19 @@ class _MentionWidgetState extends State<MentionWidget> {
         onTap: () {
           focusNode.requestFocus();
         },
-        child: Container(
-          height: 150,
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.transparent)),
-          child: QuillEditor.basic(
-            focusNode: focusNode,
-            configurations: QuillEditorConfigurations(
-              controller: controller,
-              readOnly: false,
-              sharedConfigurations: const QuillSharedConfigurations(
-                locale: Locale('de'),
+        child: quill.QuillProvider(
+          configurations: quill.QuillConfigurations(
+            controller: controller,
+            sharedConfigurations: const quill.QuillSharedConfigurations(
+              locale: Locale('de'),
+            ),
+          ),
+          child: SizedBox(
+            height: 150,
+            child: quill.QuillEditor.basic(
+              focusNode: focusNode,
+              configurations: const quill.QuillEditorConfigurations(
+                readOnly: false,
               ),
             ),
           ),
@@ -157,30 +189,36 @@ class _MentionWidgetState extends State<MentionWidget> {
   }
 
   Widget buildMentionSuggestions() {
-    // Implement your mention suggestion UI here
-    // This could be a ListView.builder showing user suggestions as they type
     return Container(
         height: 150,
-        width: 210,
+        width: 215,
         decoration: BoxDecoration(border: Border.all(color: Colors.red)),
         child: ListView.builder(
             itemCount: userList?.length,
             itemBuilder: (context, int i) {
-              return ListTile(
-                leading: CircleAvatar(
-                  maxRadius: 10,
-                  backgroundImage: NetworkImage(userList![i].profilePicture),
+              return Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.blue)),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    maxRadius: 15,
+                    backgroundImage: NetworkImage(userList![i].profilePicture),
+                  ),
+                  title: Text(
+                    userList![i].name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      showRecommend = false;
+                    });
+                    // debugPrint(userInput.substring(0, indexOfChar + 1));
+                    // debugPrint(userList![i].id.toString());
+                    // debugPrint(userInput.substring(0, indexOfChar + 1) +
+                    //     userList![i].name.toString());
+                    onTap(userList![i].name.toString());
+                  },
                 ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      userList![i].name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                onTap: () {},
               );
             }));
   }

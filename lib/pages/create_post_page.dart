@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+//import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
@@ -20,7 +20,6 @@ class _CreatePostState extends State<CreatePost> {
   String description = '';
   String nameSearchTerm = '';
   List<String> selectedImages = [];
-  QuillController controller = QuillController.basic();
 
   @override
   void initState() {
