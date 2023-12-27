@@ -97,7 +97,6 @@ class _DetectionTextFieldState extends State<DetectionTextField> {
               )
             ],
           ),
-        
       ],
     );
   }
