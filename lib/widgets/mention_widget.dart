@@ -2,9 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+//important: quill version 9.0.0 upwards throws path_provider error
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:provider/provider.dart';
 import '../pojos/user_pojo.dart';
+import '../services/data_service.dart';
 
 class MentionWidget extends StatefulWidget {
   const MentionWidget({super.key});
@@ -20,24 +23,7 @@ class _MentionWidgetState extends State<MentionWidget> {
   int indexOfChar = 0;
   String userInput = '';
   late List<UserPojo>? userList = [];
-  final List<ListTile> mockRecommend = [
-    const ListTile(
-      leading: Icon(Icons.person),
-      trailing: Text("tom"),
-    ),
-    const ListTile(
-      leading: Icon(Icons.person),
-      trailing: Text("dick"),
-    ),
-    const ListTile(
-      leading: Icon(Icons.person),
-      trailing: Text("harry"),
-    ),
-    const ListTile(
-      leading: Icon(Icons.person),
-      trailing: Text("rob"),
-    ),
-  ];
+  List<Map> mantionMapList = [];
 
   @override
   void initState() {
@@ -51,10 +37,14 @@ class _MentionWidgetState extends State<MentionWidget> {
   }
 
   void quillListener() {
+    final userService = Provider.of<ProviderService>(context, listen: false);
     controller.addListener(() {
       final delta = controller.document.toDelta();
       debugPrint('line 56:${delta.toString()}');
       debugPrint('line 57:${controller.document.length}');
+
+      userService.updateDescDelta(controller.document.toDelta());
+
       debugPrint(
           'line 58:${controller.document.toPlainText().substring(0, controller.document.length - 1)}');
 
@@ -75,7 +65,7 @@ class _MentionWidgetState extends State<MentionWidget> {
           });
         }
       } else if (userInput.length == 1) {
-        //case when the first character is @
+        //TODO:case when the first character is @
         if (userInput == '@') {
           debugPrint('first @ caught');
         }
@@ -94,9 +84,14 @@ class _MentionWidgetState extends State<MentionWidget> {
     });
   }
 
-  void onTap(String mentionText) {
+  void onTap(String mentionText, String id) {
+    final userService = Provider.of<ProviderService>(context, listen: false);
     // Calculate the position to insert the mention text
     final insertionIndex = indexOfChar + 1;
+    setState(() {
+      mantionMapList.add({id: mentionText});
+      userService.updateMentionMapList(mantionMapList);
+    });
 
     // Create a delta for the mention text with blue color
     final mentionDelta = Delta()
@@ -106,8 +101,9 @@ class _MentionWidgetState extends State<MentionWidget> {
         mentionText,
         {'color': 'blue'},
       )
-      ..insert(" ", {'color':'black'})
+      ..insert(" ", {'color': 'black'})
       ..delete(userInput.length - indexOfChar - 1);
+
     // Add a space after the mention to continue typing
 
     // Retain the existing content up to insertionIndex
@@ -175,6 +171,7 @@ class _MentionWidgetState extends State<MentionWidget> {
             child: quill.QuillEditor.basic(
               focusNode: focusNode,
               configurations: const quill.QuillEditorConfigurations(
+                placeholder: "Type away...",
                 readOnly: false,
               ),
             ),
@@ -216,7 +213,8 @@ class _MentionWidgetState extends State<MentionWidget> {
                     // debugPrint(userList![i].id.toString());
                     // debugPrint(userInput.substring(0, indexOfChar + 1) +
                     //     userList![i].name.toString());
-                    onTap(userList![i].name.toString());
+                    onTap(userList![i].name.toString(),
+                        userList![i].id.toString());
                   },
                 ),
               );

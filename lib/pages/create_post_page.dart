@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 //import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -16,21 +17,41 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
-  late TextEditingController textController;
-  String description = '';
-  String nameSearchTerm = '';
   List<String> selectedImages = [];
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    textController.dispose();
+  }
+
+  void parseDelta(Delta delta, List<Map> mentionMapList) {
+    //debugPrint('this is the content list frm 33: ${delta.toList().toString()}');
+    //debugPrint('this is the mention list frm 34: ${mentionMapList.toString()}');
+    List<Operation> opsList = delta.toList();
+    List<dynamic> ops = [];
+    int i = 0;
+    for (var element in opsList) {
+      // debugPrint('data:${element.data.toString()}');
+      // debugPrint('attr:${element.attributes.toString()}');
+      if (element.attributes != null &&
+          element.attributes!['color'] == 'blue') {
+        var mapEle = mentionMapList[i];
+        var id = mapEle.keys.toList()[0];
+        ops.add({
+          'insert':{'mention': {'id': id, 'value': element.data.toString()}}
+        });
+
+        i = i + 1;
+      } else {
+        ops.add({'insert': element.data.toString()});
+      }
+    }
+    debugPrint('opslist: ${ops.toString()}');
   }
 
   void selectImageFile() async {
@@ -43,8 +64,7 @@ class _CreatePostState extends State<CreatePost> {
       });
     }
   }
-  
-  
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
@@ -86,8 +106,8 @@ class _CreatePostState extends State<CreatePost> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              debugPrint(
-                                  'this is the text: ${textController.text}');
+                              parseDelta(userService.descriptionDelta!,
+                                  userService.mentionMapList);
                             },
                             child: Card(
                               elevation: 3,
@@ -97,7 +117,10 @@ class _CreatePostState extends State<CreatePost> {
                                 child: Text(
                                   "POST",
                                   style: TextStyle(
-                                      color: description.isNotEmpty
+                                      color: (userService.descriptionDelta !=
+                                                  null &&
+                                              userService
+                                                  .descriptionDelta!.isNotEmpty)
                                           ? Colors.blue
                                           : Colors.grey),
                                 ),
@@ -143,7 +166,7 @@ class _CreatePostState extends State<CreatePost> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 const Text(
-                                  "Sharing to your feed!!",
+                                  "",
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal),
