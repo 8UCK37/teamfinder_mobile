@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import '../controller/network_controller.dart';
@@ -25,8 +24,6 @@ class ProviderService extends ChangeNotifier {
   String profileImagecacheKey = "dp1";
   String bannerImagecacheKey = "ban1";
 
-  Delta? descriptionDelta;
-  List<Map> mentionMapList = [];
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
     notifyListeners();
@@ -57,15 +54,6 @@ class ProviderService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDescDelta(dynamic newValue) {
-    descriptionDelta = newValue;
-    notifyListeners();
-  }
-
-  void updateMentionMapList(dynamic newValue) {
-    mentionMapList= newValue;
-    notifyListeners();
-  }
   void refreashCache() {
     String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
     profileImagecacheKey = "dp2$timestamp";

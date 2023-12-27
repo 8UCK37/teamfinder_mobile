@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-//import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
@@ -18,7 +17,7 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   List<String> selectedImages = [];
-
+  GlobalKey<FlutterMentionsState> mentionKey = GlobalKey<FlutterMentionsState>();
   @override
   void initState() {
     super.initState();
@@ -27,31 +26,6 @@ class _CreatePostState extends State<CreatePost> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void parseDelta(Delta delta, List<Map> mentionMapList) {
-    //debugPrint('this is the content list frm 33: ${delta.toList().toString()}');
-    //debugPrint('this is the mention list frm 34: ${mentionMapList.toString()}');
-    List<Operation> opsList = delta.toList();
-    List<dynamic> ops = [];
-    int i = 0;
-    for (var element in opsList) {
-      // debugPrint('data:${element.data.toString()}');
-      // debugPrint('attr:${element.attributes.toString()}');
-      if (element.attributes != null &&
-          element.attributes!['color'] == 'blue') {
-        var mapEle = mentionMapList[i];
-        var id = mapEle.keys.toList()[0];
-        ops.add({
-          'insert':{'mention': {'id': id, 'value': element.data.toString()}}
-        });
-
-        i = i + 1;
-      } else {
-        ops.add({'insert': element.data.toString()});
-      }
-    }
-    debugPrint('opslist: ${ops.toString()}');
   }
 
   void selectImageFile() async {
@@ -106,23 +80,16 @@ class _CreatePostState extends State<CreatePost> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              parseDelta(userService.descriptionDelta!,
-                                  userService.mentionMapList);
+                              debugPrint(mentionKey.currentState!.controller!.markupText);
                             },
-                            child: Card(
+                            child: const Card(
                               elevation: 3,
                               surfaceTintColor: Colors.grey,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.0),
                                 child: Text(
                                   "POST",
-                                  style: TextStyle(
-                                      color: (userService.descriptionDelta !=
-                                                  null &&
-                                              userService
-                                                  .descriptionDelta!.isNotEmpty)
-                                          ? Colors.blue
-                                          : Colors.grey),
+                                  style: TextStyle(color:Colors.red,)
                                 ),
                               ),
                             ),
@@ -181,18 +148,10 @@ class _CreatePostState extends State<CreatePost> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.blue)),
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 8.0, right: 8),
-                  child: MentionWidget(),
-                ),
-              ),
+            Container(
+              height:150,
+              decoration: BoxDecoration(border: Border.all(color:Colors.green)),
+              child:  DetectionTextField(mentionKey: mentionKey,),
             ),
             Visibility(
               visible: selectedImages.isNotEmpty,
@@ -246,7 +205,7 @@ class _CreatePostState extends State<CreatePost> {
                 const SizedBox(
                   height: 10,
                 ),
-              ],
+             ],
             )
           ],
         ));

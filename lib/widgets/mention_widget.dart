@@ -1,223 +1,104 @@
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-//important: quill version 9.0.0 upwards throws path_provider error
-import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:flutter_quill/quill_delta.dart';
-import 'package:provider/provider.dart';
-import '../pojos/user_pojo.dart';
-import '../services/data_service.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 
-class MentionWidget extends StatefulWidget {
-  const MentionWidget({super.key});
+class DetectionTextField extends StatefulWidget {
+  final GlobalKey<FlutterMentionsState> mentionKey;
+  const DetectionTextField({super.key, required this.mentionKey});
 
   @override
-  State<MentionWidget> createState() => _MentionWidgetState();
+  State<DetectionTextField> createState() => _DetectionTextFieldState();
 }
 
-class _MentionWidgetState extends State<MentionWidget> {
-  final FocusNode focusNode = FocusNode();
-  final quill.QuillController controller = quill.QuillController.basic();
-  bool showRecommend = false;
-  int indexOfChar = 0;
-  String userInput = '';
-  late List<UserPojo>? userList = [];
-  List<Map> mantionMapList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    quillListener();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void quillListener() {
-    final userService = Provider.of<ProviderService>(context, listen: false);
-    controller.addListener(() {
-      final delta = controller.document.toDelta();
-      debugPrint('line 56:${delta.toString()}');
-      debugPrint('line 57:${controller.document.length}');
-
-      userService.updateDescDelta(controller.document.toDelta());
-
-      debugPrint(
-          'line 58:${controller.document.toPlainText().substring(0, controller.document.length - 1)}');
-
-      setState(() {
-        userInput = controller.document
-            .toPlainText()
-            .substring(0, controller.document.length - 1);
-      });
-      if (userInput.length > 2) {
-        String lastTwoChar =
-            userInput.substring(userInput.length - 2, userInput.length);
-        debugPrint('last two:$lastTwoChar');
-        //case when the there is a sapce followed by'@'
-        if (lastTwoChar == ' @') {
-          setState(() {
-            indexOfChar = userInput.length - 2;
-            showRecommend = true;
-          });
-        }
-      } else if (userInput.length == 1) {
-        //TODO:case when the first character is @
-        if (userInput == '@') {
-          debugPrint('first @ caught');
-        }
-      }
-      if (indexOfChar + 1 == userInput.length) {
-        //case when user backspaces the @
-        setState(() {
-          showRecommend = false;
-        });
-      }
-      if (showRecommend) {
-        String searchTerm = userInput.substring(indexOfChar + 2);
-        debugPrint('searchTerm:$searchTerm');
-        searchUser(searchTerm);
-      }
-    });
-  }
-
-  void onTap(String mentionText, String id) {
-    final userService = Provider.of<ProviderService>(context, listen: false);
-    // Calculate the position to insert the mention text
-    final insertionIndex = indexOfChar + 1;
-    setState(() {
-      mantionMapList.add({id: mentionText});
-      userService.updateMentionMapList(mantionMapList);
-    });
-
-    // Create a delta for the mention text with blue color
-    final mentionDelta = Delta()
-      ..retain(
-          insertionIndex) // Retain the existing content up to insertionIndex
-      ..insert(
-        mentionText,
-        {'color': 'blue'},
-      )
-      ..insert(" ", {'color': 'black'})
-      ..delete(userInput.length - indexOfChar - 1);
-
-    // Add a space after the mention to continue typing
-
-    // Retain the existing content up to insertionIndex
-
-    // Apply the delta to the controller
-    controller.compose(
-      mentionDelta,
-      controller.selection,
-      quill.ChangeSource.local,
-    );
-  }
-
-  void searchUser(String userInp) async {
-    //debugPrint("called");
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    //ignore: prefer_is_empty
-    if (userInp.length == 0) {
-      setState(() {
-        userList = [];
-      });
-      return;
-    }
-    //debugPrint('from search userinp: $userInp');
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/searchFriend',
-      data: {'searchTerm': userInp},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint('user data searched');
-      //debugPrint(response.data);
-      setState(() {
-        userList = userPojoListFromJson(response.data)
-            .where((userPojo) => userPojo.id != user.uid)
-            .toList();
-      });
-      //debugPrint(userList.toString());
-    }
-  }
-
+class _DetectionTextFieldState extends State<DetectionTextField> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      GestureDetector(
-        onTap: () {
-          focusNode.requestFocus();
-        },
-        child: quill.QuillProvider(
-          configurations: quill.QuillConfigurations(
-            controller: controller,
-            sharedConfigurations: const quill.QuillSharedConfigurations(
-              locale: Locale('de'),
-            ),
-          ),
-          child: SizedBox(
-            height: 150,
-            child: quill.QuillEditor.basic(
-              focusNode: focusNode,
-              configurations: const quill.QuillEditorConfigurations(
-                placeholder: "Type away...",
-                readOnly: false,
-              ),
-            ),
-          ),
-        ),
-      ),
-      Positioned(
-          left: 150,
-          child: Visibility(
-              visible: showRecommend, child: buildMentionSuggestions()))
-    ]);
-  }
-
-  Widget buildMentionSuggestions() {
-    return Container(
-        height: 150,
-        width: 215,
-        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-        child: ListView.builder(
-            itemCount: userList?.length,
-            itemBuilder: (context, int i) {
-              return Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.blue)),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    maxRadius: 15,
-                    backgroundImage: NetworkImage(userList![i].profilePicture),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+         FlutterMentions(
+            suggestionListHeight: 150,
+            key: widget.mentionKey,
+            suggestionPosition: SuggestionPosition.Top,
+            maxLines: 5,
+            minLines: 1,
+            decoration: const InputDecoration(hintText: 'hello'),
+            mentions: [
+              Mention(
+                  trigger: '@',
+                  style: TextStyle(
+                    color: Colors.amber,
                   ),
-                  title: Text(
-                    userList![i].name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      showRecommend = false;
-                    });
-                    // debugPrint(userInput.substring(0, indexOfChar + 1));
-                    // debugPrint(userList![i].id.toString());
-                    // debugPrint(userInput.substring(0, indexOfChar + 1) +
-                    //     userList![i].name.toString());
-                    onTap(userList![i].name.toString(),
-                        userList![i].id.toString());
-                  },
+                  data: [
+                    {
+                      'id': '61as61fsa',
+                      'display': 'fayeedP',
+                      'full_name': 'Fayeed Pawaskar',
+                      'photo':
+                          'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+                    },
+                    {
+                      'id': '61asasgasgsag6a',
+                      'display': 'khaled',
+                      'full_name': 'DJ Khaled',
+                      'style': TextStyle(color: Colors.purple),
+                      'photo':
+                          'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+                    },
+                    {
+                      'id': 'asfgasga41',
+                      'display': 'markT',
+                      'full_name': 'Mark Twain',
+                      'photo':
+                          'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+                    },
+                    {
+                      'id': 'asfsaf451a',
+                      'display': 'JhonL',
+                      'full_name': 'Jhon Legend',
+                      'photo':
+                          'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+                    },
+                  ],
+                  matchAll: false,
+                  suggestionBuilder: (data) {
+                    return Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Row(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              data['photo'],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20.0,
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Text(data['full_name']),
+                              Text('@${data['display']}'),
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+              Mention(
+                trigger: '#',
+                disableMarkup: true,
+                style: TextStyle(
+                  color: Colors.blue,
                 ),
-              );
-            }));
+                data: [
+                  {'id': 'reactjs', 'display': 'reactjs'},
+                  {'id': 'javascript', 'display': 'javascript'},
+                ],
+                matchAll: true,
+              )
+            ],
+          ),
+        
+      ],
+    );
   }
 }
