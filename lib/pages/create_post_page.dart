@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/Lab/my_mention.dart';
+import 'package:teamfinder_mobile/widgets/mention_widget.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
 import '../services/mention_service.dart';
@@ -19,8 +17,7 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   List<String> selectedImages = [];
-  GlobalKey<FlutterMentionsState> mentionKey =
-      GlobalKey<FlutterMentionsState>();
+
   @override
   void initState() {
     super.initState();
@@ -40,33 +37,6 @@ class _CreatePostState extends State<CreatePost> {
         selectedImages.addAll(pickedImages.map((image) => image.path));
       });
     }
-  }
-
-  void parseDelta(Delta delta, List<Map> mentionMapList) {
-    //debugPrint('this is the content list frm 33: ${delta.toList().toString()}');
-    //debugPrint('this is the mention list frm 34: ${mentionMapList.toString()}');
-    List<Operation> opsList = delta.toList();
-    List<dynamic> ops = [];
-    int i = 0;
-    for (var element in opsList) {
-      // debugPrint('data:${element.data.toString()}');
-      // debugPrint('attr:${element.attributes.toString()}');
-      if (element.attributes != null &&
-          element.attributes!['color'] == 'blue') {
-        var mapEle = mentionMapList[i];
-        var id = mapEle.keys.toList()[0];
-        ops.add({
-          'insert': {
-            'mention': {'id': id, 'value': element.data.toString()}
-          }
-        });
-
-        i = i + 1;
-      } else {
-        ops.add({'insert': element.data.toString()});
-      }
-    }
-    debugPrint('opslist: ${ops.toString()}');
   }
 
   @override
@@ -111,8 +81,7 @@ class _CreatePostState extends State<CreatePost> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              parseDelta(mentionService.descriptionDelta!,
-                                  mentionService.mentionMapList);
+                              debugPrint("opsList${mentionService.parseDelta()}");
                             },
                             child: Card(
                               elevation: 3,
@@ -122,9 +91,10 @@ class _CreatePostState extends State<CreatePost> {
                                 child: Text(
                                   "POST",
                                   style: TextStyle(
-                                      color: mentionService.description.isNotEmpty
-                                          ? Colors.blue
-                                          : Colors.grey),
+                                      color:
+                                          mentionService.description.isNotEmpty
+                                              ? Colors.blue
+                                              : Colors.grey),
                                 ),
                               ),
                             ),
