@@ -2,11 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/Lab/my_mention.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
-import 'package:teamfinder_mobile/widgets/mention_widget.dart';
+import '../services/mention_service.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -17,7 +19,8 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   List<String> selectedImages = [];
-  GlobalKey<FlutterMentionsState> mentionKey = GlobalKey<FlutterMentionsState>();
+  GlobalKey<FlutterMentionsState> mentionKey =
+      GlobalKey<FlutterMentionsState>();
   @override
   void initState() {
     super.initState();
@@ -39,9 +42,37 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
+  void parseDelta(Delta delta, List<Map> mentionMapList) {
+    //debugPrint('this is the content list frm 33: ${delta.toList().toString()}');
+    //debugPrint('this is the mention list frm 34: ${mentionMapList.toString()}');
+    List<Operation> opsList = delta.toList();
+    List<dynamic> ops = [];
+    int i = 0;
+    for (var element in opsList) {
+      // debugPrint('data:${element.data.toString()}');
+      // debugPrint('attr:${element.attributes.toString()}');
+      if (element.attributes != null &&
+          element.attributes!['color'] == 'blue') {
+        var mapEle = mentionMapList[i];
+        var id = mapEle.keys.toList()[0];
+        ops.add({
+          'insert': {
+            'mention': {'id': id, 'value': element.data.toString()}
+          }
+        });
+
+        i = i + 1;
+      } else {
+        ops.add({'insert': element.data.toString()});
+      }
+    }
+    debugPrint('opslist: ${ops.toString()}');
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
+    final mentionService = Provider.of<MentionService>(context, listen: true);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -80,16 +111,20 @@ class _CreatePostState extends State<CreatePost> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              debugPrint(mentionKey.currentState!.controller!.markupText);
+                              parseDelta(mentionService.descriptionDelta!,
+                                  mentionService.mentionMapList);
                             },
-                            child: const Card(
+                            child: Card(
                               elevation: 3,
                               surfaceTintColor: Colors.grey,
                               child: Padding(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   "POST",
-                                  style: TextStyle(color:Colors.red,)
+                                  style: TextStyle(
+                                      color: mentionService.description.isNotEmpty
+                                          ? Colors.blue
+                                          : Colors.grey),
                                 ),
                               ),
                             ),
@@ -148,10 +183,15 @@ class _CreatePostState extends State<CreatePost> {
                 ],
               ),
             ),
-            Container(
-              height:150,
-              decoration: BoxDecoration(border: Border.all(color:Colors.green)),
-              child:  DetectionTextField(mentionKey: mentionKey,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 108,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    border: Border.all(color: Colors.green)),
+                child: const MentionWidget(),
+              ),
             ),
             Visibility(
               visible: selectedImages.isNotEmpty,
@@ -205,7 +245,7 @@ class _CreatePostState extends State<CreatePost> {
                 const SizedBox(
                   height: 10,
                 ),
-             ],
+              ],
             )
           ],
         ));

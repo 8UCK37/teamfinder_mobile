@@ -18,6 +18,8 @@ import 'services/firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
+import 'services/mention_service.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
@@ -79,6 +81,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) => FriendProfileService()),
         ChangeNotifierProvider<NotificationWizard>(
             create: (context) => NotificationWizard()),
+        ChangeNotifierProvider<MentionService>(
+            create: (context) => MentionService())
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
