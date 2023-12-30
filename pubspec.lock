@@ -473,6 +473,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  diacritic:
+    dependency: "direct main"
+    description:
+      name: diacritic
+      sha256: "96db5db6149cbe4aa3cfcbfd170aca9b7648639be7e48025f9d458517f807fe4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.5"
   diff_match_patch:
     dependency: transitive
     description:
@@ -827,6 +835,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_markdown:
+    dependency: "direct main"
+    description:
+      name: flutter_markdown
+      sha256: "35108526a233cc0755664d445f8a6b4b61e6f8fe993b3658b80b4a26827fc196"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.18+2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1197,6 +1213,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  markdown:
+    dependency: "direct main"
+    description:
+      name: markdown
+      sha256: acf35edccc0463a9d7384e437c015a3535772e09714cf60e07eeef3a15870dcd
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.1.1"
   matcher:
     dependency: transitive
     description:
@@ -1253,6 +1277,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  mock_data:
+    dependency: "direct main"
+    description:
+      name: mock_data
+      sha256: "7b6de66790583ac7373ae9c05d2184b45d51f6d1a2a4fe9491a18b24cb455689"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   motion_toast:
     dependency: "direct main"
     description:
@@ -1621,6 +1653,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.6"
+  simply_mentions:
+    dependency: "direct main"
+    description:
+      name: simply_mentions
+      sha256: "0b323ffc8d85ebcddac94dcf615fb3fede8bc77ed572c0da52780508095c34c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   sky_engine:
     dependency: transitive
     description: flutter

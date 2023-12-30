@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/widgets/mention_widget.dart';
+import 'package:teamfinder_mobile/widgets/simplyMention/simply_mention_interface.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
 import '../services/mention_service.dart';
@@ -81,7 +81,8 @@ class _CreatePostState extends State<CreatePost> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              debugPrint("opsList${mentionService.parseDelta()}");
+                              //debugPrint("opsList${mentionService.parseDelta()}");
+                              //debugPrint("mentionList${mentionService.mentionMapList.toString()}");
                             },
                             child: Card(
                               elevation: 3,
@@ -153,16 +154,7 @@ class _CreatePostState extends State<CreatePost> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 108,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    border: Border.all(color: Colors.green)),
-                child: const MentionWidget(),
-              ),
-            ),
+            const SimplyMentionInterface(),
             Visibility(
               visible: selectedImages.isNotEmpty,
               child: ImageSlideshow(
