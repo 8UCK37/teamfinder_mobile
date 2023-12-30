@@ -73,30 +73,39 @@ class _CreatePostState extends State<CreatePost> {
     );
     try {
       FormData formData = FormData();
+
+      ///IMPORTANT have to  do this map thingy before we foreach append each image file
+      ///or this will overwrite every file added
+      formData = FormData.fromMap({
+        'data': jsonEncode({
+          'data': [],
+          'desc': {
+            'content': {'ops': opsList}
+          }
+        }),
+      });
       int index = 0;
       for (ImageFile image in selectedImages) {
         File compressedImage = await ImageHelper.compressImage(
             image.path!, 25, "compressedPostImageNo$index");
         index = index + 1;
-        formData = FormData.fromMap({
-          'post': await MultipartFile.fromFile(compressedImage.path),
-        });
+        formData.files.add(MapEntry(
+            'post', await MultipartFile.fromFile(compressedImage.path)));
       }
-      // ignore: use_build_context_synchronously
 
-      formData = FormData.fromMap({
-        'data': jsonEncode({
-          'data': [],
-          'desc': {'content': {'ops':opsList}}
-        }),
-      });
+      //TODO change the url to "createPost"
       Response response = await dio.post(
-        'http://${dotenv.env['server_url']}/test',
+        'http://${dotenv.env['server_url']}/testPost',
         data: formData,
         options: options,
       );
       if (response.statusCode == 200) {
         debugPrint("post uploaded with: ${response.statusCode.toString()}");
+        setState(() {
+          //clear images after upload
+          imagePickerController.clearImages();
+          //
+        });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }

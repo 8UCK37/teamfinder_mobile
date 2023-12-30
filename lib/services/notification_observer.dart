@@ -52,13 +52,16 @@ class NotificationWizard extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeNotificationFromList(int index,String userId) {
+  void removeNotificationFromList(int index, String userId) {
     incomingNotificationList.removeAt(index);
     notificationBox.put(userId, incomingNotificationList);
     notifyListeners();
   }
 
-  void parseNotification(dynamic data,String userId) {
+  void parseNotification(dynamic data, String userId) {
+    if (onlineMap == null) {
+      return;
+    }
     if (data['notification'] == "disc") {
       onlineMap![data['sender']] = false;
       notifyListeners();
