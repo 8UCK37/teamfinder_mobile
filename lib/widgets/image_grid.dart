@@ -23,17 +23,20 @@ class ImageGrid extends StatelessWidget {
             ),
           );
         },
-        child: CachedNetworkImage(
-          imageUrl: imageUrls[0],
-          placeholder: (context, url) => const Center(
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: ColorfulCircularProgressIndicator(
-                colors: [Colors.blue, Colors.red, Colors.amber, Colors.green],
-                strokeWidth: 5,
-                indicatorHeight: 5,
-                indicatorWidth: 5,
+        child: Visibility(
+          visible: imageUrls[0]!="",
+          child: CachedNetworkImage(
+            imageUrl: imageUrls[0],
+            placeholder: (context, url) => const Center(
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: ColorfulCircularProgressIndicator(
+                  colors: [Colors.blue, Colors.red, Colors.amber, Colors.green],
+                  strokeWidth: 5,
+                  indicatorHeight: 5,
+                  indicatorWidth: 5,
+                ),
               ),
             ),
           ),

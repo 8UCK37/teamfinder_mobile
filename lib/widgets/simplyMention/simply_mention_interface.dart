@@ -9,6 +9,7 @@ import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/types/mentions.dart';
 
 import '../../pojos/user_pojo.dart';
+import '../../services/data_service.dart';
 import '../../services/mention_service.dart';
 
 List<MentionObject> documentMentions = [];
@@ -36,14 +37,15 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    bool isDark = userService.darkTheme!;
     if (mentionTextEditingController == null) {
       // Create a mention text editing controller and pass in the relevant syntax, then bind to onSuggestionChanged
       mentionTextEditingController = MentionTextEditingController(
           mentionSyntaxes: [DocumentMentionEditableSyntax(context)],
-          mentionBgColor: Colors.white,
+          mentionBgColor: Colors.transparent,
           mentionTextColor: Colors.blue,
-          runTextStyle: const TextStyle(color: Colors.black),
+          runTextStyle: TextStyle(color: isDark? Colors.white:Colors.black),
           mentionTextStyle: const TextStyle(),
           onSugggestionChanged: onSuggestionChanged,
           idToMentionObject: (BuildContext context, String id) =>
@@ -55,9 +57,11 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
       //     context, "Hello <###@ExampleId###>, how are you doing?");
 
       mentionTextEditingController!.addListener(() {
-        final mentionService = Provider.of<MentionService>(context, listen: false);
-        mentionService.updateMarkUpText(mentionTextEditingController!.getMarkupText());
-        
+        final mentionService =
+            Provider.of<MentionService>(context, listen: false);
+        mentionService
+            .updateMarkUpText(mentionTextEditingController!.getMarkupText());
+
         setState(() {});
         if (mentionTextEditingController!.isMentioning()) {
           //debugPrint("search term:${mentionTextEditingController!.getSearchText()}");
@@ -157,7 +161,10 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
           ),
           title: Text(
             element.displayName,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const  TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              ),
           ),
           onTap: () {
             //Tell the mention controller to insert the mention
@@ -170,7 +177,7 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
     return Container(
         decoration: BoxDecoration(
-            color: const Color.fromARGB(67, 255, 255, 255),
+            color: const Color.fromARGB(197, 255, 255, 255),
             borderRadius: BorderRadius.circular(10)),
         child: Scrollbar(
             controller: controller,
@@ -202,7 +209,10 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             decoration: const InputDecoration(
-                border: InputBorder.none, hintText: "Type away..."),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8))
+                ), 
+              hintText: "Type away..."),
             focusNode: focusNode,
             maxLines: null,
             minLines: 3,
