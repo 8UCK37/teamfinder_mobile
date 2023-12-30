@@ -39,7 +39,7 @@ class MentionService extends ChangeNotifier {
         String textBeforeMention =
             markUpTextCopy.substring(currentIndex, match.start).trim();
         if (textBeforeMention.isNotEmpty) {
-          ops.add({'insert': textBeforeMention});
+          ops.add({'insert': "$textBeforeMention "});
         }
 
         // Create the mention map and add it to the ops list
@@ -54,7 +54,7 @@ class MentionService extends ChangeNotifier {
         };
 
         ops.add(mentionMap);
-
+        ops.add({'insert': " "});
         // Update the currentIndex for the next iteration
         currentIndex = match.end;
       }
@@ -70,10 +70,9 @@ class MentionService extends ChangeNotifier {
     for (var ele in ops) {
       debugPrint(ele.toString());
     }
-
+    ops.add({'insert': "\n"});
     return ops;
   }
-
 
   List<dynamic> reference() {
     // List<Operation> opsList = descriptionDelta!.toList();

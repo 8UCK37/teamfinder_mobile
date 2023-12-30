@@ -1,11 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/simply_mention_interface.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 
 import '../services/mention_service.dart';
+import '../utils/image_helper.dart';
 import '../utils/picker.dart';
 
 class CreatePost extends StatefulWidget {
@@ -46,12 +53,56 @@ class _CreatePostState extends State<CreatePost> {
         setState(() {
           selectedImages = imagePickerController.images;
         });
-      } else if(imagePickerController.hasNoImages) {
+      } else if (imagePickerController.hasNoImages) {
         setState(() {
           selectedImages = [];
         });
       }
     });
+  }
+
+  void uploadPostFiles(List<dynamic> opsList) async {
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+        'contentType': 'multipart/form-data'
+      },
+    );
+    try {
+      FormData formData = FormData();
+      int index = 0;
+      for (ImageFile image in selectedImages) {
+        File compressedImage = await ImageHelper.compressImage(
+            image.path!, 25, "compressedPostImageNo$index");
+        index = index + 1;
+        formData = FormData.fromMap({
+          'post': await MultipartFile.fromFile(compressedImage.path),
+        });
+      }
+      // ignore: use_build_context_synchronously
+
+      formData = FormData.fromMap({
+        'data': jsonEncode({
+          'data': [],
+          'desc': {'content': {'ops':opsList}}
+        }),
+      });
+      Response response = await dio.post(
+        'http://${dotenv.env['server_url']}/test',
+        data: formData,
+        options: options,
+      );
+      if (response.statusCode == 200) {
+        debugPrint("post uploaded with: ${response.statusCode.toString()}");
+      } else {
+        debugPrint('failed with: ${response.statusCode.toString()}');
+      }
+    } catch (error) {
+      debugPrint('Error from create_post_page line 91: $error');
+    }
   }
 
   @override
@@ -68,8 +119,9 @@ class _CreatePostState extends State<CreatePost> {
             automaticallyImplyLeading: true,
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
-                statusBarIconBrightness:
-                    userService.darkTheme! ? Brightness.light : Brightness.dark),
+                statusBarIconBrightness: userService.darkTheme!
+                    ? Brightness.light
+                    : Brightness.dark),
             backgroundColor: userService.darkTheme!
                 ? const Color.fromRGBO(46, 46, 46, 1)
                 : Colors.white,
@@ -97,10 +149,11 @@ class _CreatePostState extends State<CreatePost> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 debugPrint(
                                     "markUpText: ${mentionService.markUpText}");
-                                mentionService.deltaParser();
+                                //mentionService.deltaParser();
+                                uploadPostFiles(mentionService.deltaParser());
                               },
                               child: Card(
                                 elevation: 3,
@@ -110,9 +163,11 @@ class _CreatePostState extends State<CreatePost> {
                                   child: Text(
                                     "POST",
                                     style: TextStyle(
-                                        color: mentionService.markUpText.isEmpty && selectedImages.isEmpty
-                                            ? Colors.grey
-                                            : Colors.blue),
+                                        color:
+                                            mentionService.markUpText.isEmpty &&
+                                                    selectedImages.isEmpty
+                                                ? Colors.grey
+                                                : Colors.blue),
                                   ),
                                 ),
                               ),
@@ -185,23 +240,32 @@ class _CreatePostState extends State<CreatePost> {
                           onTap: () {
                             imagePickerController.pickImages();
                           },
-                          child:  Padding(
+                          child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Card(
                               elevation: 5,
                               color: const Color.fromARGB(255, 130, 210, 133),
                               shadowColor: Colors.green,
-                              surfaceTintColor: const Color.fromARGB(255, 130, 210, 133),
+                              surfaceTintColor:
+                                  const Color.fromARGB(255, 130, 210, 133),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.add_photo_alternate_outlined,
-                                        color: userService.darkTheme!? Colors.black:const Color.fromARGB(255, 234, 235, 164),
-                                      ),
-                                    Text("Add Photo",style: TextStyle(
-                                      color: userService.darkTheme!? Colors.black:Colors.white
-                                    ),)
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      color: userService.darkTheme!
+                                          ? Colors.black
+                                          : const Color.fromARGB(
+                                              255, 234, 235, 164),
+                                    ),
+                                    Text(
+                                      "Add Photo",
+                                      style: TextStyle(
+                                          color: userService.darkTheme!
+                                              ? Colors.black
+                                              : Colors.white),
+                                    )
                                   ],
                                 ),
                               ),
