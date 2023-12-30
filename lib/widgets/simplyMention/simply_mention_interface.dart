@@ -4,15 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_portal/flutter_portal.dart';
+import 'package:provider/provider.dart';
 import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/types/mentions.dart';
 
 import '../../pojos/user_pojo.dart';
+import '../../services/mention_service.dart';
 
 List<MentionObject> documentMentions = [];
 
 class SimplyMentionInterface extends StatefulWidget {
-  const SimplyMentionInterface({super.key});
+  const SimplyMentionInterface({
+    super.key,
+  });
 
   @override
   State<SimplyMentionInterface> createState() => _SimplyMentionInterfaceState();
@@ -51,10 +55,14 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
       //     context, "Hello <###@ExampleId###>, how are you doing?");
 
       mentionTextEditingController!.addListener(() {
+        final mentionService = Provider.of<MentionService>(context, listen: false);
+        mentionService.updateMarkUpText(mentionTextEditingController!.getMarkupText());
+        
         setState(() {});
         if (mentionTextEditingController!.isMentioning()) {
           //debugPrint("search term:${mentionTextEditingController!.getSearchText()}");
-          String safeSearch = removeDiacritics(mentionTextEditingController!.getSearchText());
+          String safeSearch =
+              removeDiacritics(mentionTextEditingController!.getSearchText());
           searchUser(safeSearch);
         }
       });
@@ -70,10 +78,12 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
   // When a mention is selected, insert the mention into the text editing controller.
   // This will insert a mention in the current mentioning text, will assert if not currently mentioning
   void onMentionSelected(MentionObject mention) {
+    final mentionService = Provider.of<MentionService>(context, listen: false);
     setState(() {
       mentionTextEditingController!.insertMention(mention);
     });
     debugPrint(mention.toString());
+    mentionService.appendToMentionRepo(mention);
   }
 
   void searchUser(String userInp) async {
@@ -182,7 +192,7 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
   Widget build(BuildContext context) {
     return PortalTarget(
         visible: mentionTextEditingController!.isMentioning(),
-        portalFollower:buildMentionSuggestions(),
+        portalFollower: buildMentionSuggestions(),
         anchor: const Aligned(
           follower: Alignment.topCenter,
           target: Alignment.bottomCenter,

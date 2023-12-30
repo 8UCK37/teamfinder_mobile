@@ -1,48 +1,103 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
+import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 
 class MentionService extends ChangeNotifier {
-  Delta? descriptionDelta;
-  List<Map> mentionMapList = [];
-  String description = '';
-
-  void updateDescDelta(dynamic newValue) {
-    descriptionDelta = newValue;
+  String markUpText = '';
+  List<MentionObject> mentionRepository = [];
+  void updateMarkUpText(String newValue) {
+    markUpText = newValue;
     notifyListeners();
   }
 
-  void updateMentionMapList(dynamic newValue) {
-    mentionMapList = newValue;
+  void appendToMentionRepo(MentionObject newMention) {
+    if (mentionRepository.contains(newMention)) {
+      return;
+    }
+    mentionRepository.add(newMention);
     notifyListeners();
   }
 
-  void updateDescription(dynamic newValue) {
-    description = newValue;
-    notifyListeners();
-  }
-
-  List<dynamic> parseDelta() {
-    List<Operation> opsList = descriptionDelta!.toList();
+  List<dynamic> deltaParser() {
+    String markUpTextCopy = markUpText;
     List<dynamic> ops = [];
-    int i = 0;
-    for (var element in opsList) {
-      if (element.attributes != null &&
-          element.attributes!['color'] == 'blue') {
-        var mapEle = mentionMapList[i];
-        var id = mapEle.keys.toList()[0];
-        ops.add({
-          'insert': {
-            'mention': {'id': id, 'value': element.data.toString()}
-          }
-        });
+    int currentIndex = 0;
 
-        i = i + 1;
-      } else {
-        ops.add({'insert': element.data.toString()});
+    RegExp regex = RegExp(r'<###@([A-Za-z0-9]+)###>');
+
+    Iterable<RegExpMatch> matches = regex.allMatches(markUpTextCopy);
+
+    for (RegExpMatch match in matches) {
+      String id = match.group(1)!;
+
+      // Find the corresponding MentionObject
+      MentionObject? mentionObject = mentionRepository.firstWhere(
+          (mention) => mention.id == id,
+          orElse: () => MentionObject(id: '', displayName: '', avatarUrl: ''));
+
+      if (mentionObject.id.isNotEmpty) {
+        // Add the text before the mention
+        String textBeforeMention =
+            markUpTextCopy.substring(currentIndex, match.start).trim();
+        if (textBeforeMention.isNotEmpty) {
+          ops.add({'insert': textBeforeMention});
+        }
+
+        // Create the mention map and add it to the ops list
+        Map<String, dynamic> mentionMap = {
+          'insert': {
+            'mention': {
+              'denotationChar': '@',
+              'id': id,
+              'value': mentionObject.displayName,
+            }
+          }
+        };
+
+        ops.add(mentionMap);
+
+        // Update the currentIndex for the next iteration
+        currentIndex = match.end;
       }
     }
-    int lastElement = ops.length - 1;
-    ops.removeAt(lastElement);
+
+    // Add the remaining text to ops if any
+    if (currentIndex < markUpTextCopy.length) {
+      ops.add({'insert': markUpTextCopy.substring(currentIndex)});
+    }
+
+    //debugPrint("${ops.length}");
+    // Print the result
+    for (var ele in ops) {
+      debugPrint(ele.toString());
+    }
+
     return ops;
+  }
+
+
+  List<dynamic> reference() {
+    // List<Operation> opsList = descriptionDelta!.toList();
+    // List<dynamic> ops = [];
+    // int i = 0;
+    // for (var element in opsList) {
+    //   if (element.attributes != null &&
+    //       element.attributes!['color'] == 'blue') {
+    //     var mapEle = mentionMapList[i];
+    //     var id = mapEle.keys.toList()[0];
+    //     ops.add({
+    //       'insert': {
+    //         'mention': {'id': id, 'value': element.data.toString()}
+    //       }
+    //     });
+
+    //     i = i + 1;
+    //   } else {
+    //     ops.add({'insert': element.data.toString()});
+    //   }
+    // }
+    // int lastElement = ops.length - 1;
+    // ops.removeAt(lastElement);
+    // return ops;
+    return [];
   }
 }

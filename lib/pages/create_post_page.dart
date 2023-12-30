@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/simply_mention_interface.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
+
 import '../services/mention_service.dart';
 
 class CreatePost extends StatefulWidget {
@@ -81,8 +82,9 @@ class _CreatePostState extends State<CreatePost> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              //debugPrint("opsList${mentionService.parseDelta()}");
-                              //debugPrint("mentionList${mentionService.mentionMapList.toString()}");
+                              debugPrint(
+                                  "markUpText: ${mentionService.markUpText}");
+                              mentionService.deltaParser();
                             },
                             child: Card(
                               elevation: 3,
@@ -92,10 +94,9 @@ class _CreatePostState extends State<CreatePost> {
                                 child: Text(
                                   "POST",
                                   style: TextStyle(
-                                      color:
-                                          mentionService.description.isNotEmpty
-                                              ? Colors.blue
-                                              : Colors.grey),
+                                      color: mentionService.markUpText.isEmpty
+                                          ? Colors.grey
+                                          : Colors.blue),
                                 ),
                               ),
                             ),
