@@ -59,8 +59,6 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_markdown: ^0.6.14
   flutter_flip_card: ^0.0.4
-  flutter_quill: ^8.6.4
-  mentionable_text_field: ^0.0.2
   font_awesome_flutter: ^10.5.0
   get: ^4.6.5
   getwidget: ^3.1.1
@@ -76,7 +74,6 @@ dependencies:
   like_button: ^2.0.5
   markdown: ^7.0.0
   material_dialogs: ^1.1.4
-  mock_data: ^2.0.1
   motion_toast: ^2.7.8
   newsfeed_multiple_imageview: ^1.0.1
   path: ^1.8.3

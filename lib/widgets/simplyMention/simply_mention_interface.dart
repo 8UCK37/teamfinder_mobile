@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:mock_data/mock_data.dart';
 import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/types/mentions.dart';
 
@@ -27,7 +26,6 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
   @override
   void initState() {
-    //mockDataInit();
     super.initState();
   }
 
@@ -63,23 +61,6 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
     }
 
     focusNode.requestFocus();
-  }
-
-  void mockDataInit() {
-    //TODO: remove this
-
-    // documentMentions.add(MentionObject(
-    //     id: "ExampleId",
-    //     displayName: "Jane Doe",
-    //     avatarUrl: "https://placekitten.com/50/50"));
-
-    // Generate 100 random mentions
-    for (int i = 0; i < 100; ++i) {
-      documentMentions.add(MentionObject(
-          id: mockUUID(),
-          displayName: "${mockName()} ${mockName()}",
-          avatarUrl: "https://placekitten.com/50/50"));
-    }
   }
 
   void onSuggestionChanged(MentionSyntax? syntax, String? fullSearchString) {
