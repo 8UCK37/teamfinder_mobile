@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/simply_mention_interface.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+import 'package:teamfinder_mobile/widgets/textfield_tag.dart';
 
 import '../services/mention_service.dart';
 import '../utils/image_helper.dart';
@@ -129,6 +130,7 @@ class _CreatePostState extends State<CreatePost> {
           child: Container(
             height: 100,
             decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 188, 209, 189),
                 borderRadius: const BorderRadius.all(Radius.circular(3)),
                 border: Border.all(color: Colors.green)),
             child: const Center(
@@ -151,7 +153,6 @@ class _CreatePostState extends State<CreatePost> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -198,8 +199,8 @@ class _CreatePostState extends State<CreatePost> {
                           children: <Widget>[
                             GestureDetector(
                               onTap: () async {
-                                debugPrint(
-                                    "markUpText: ${mentionService.markUpText}");
+                                //debugPrint("markUpText: ${mentionService.markUpText}");
+                                debugPrint("tagList:${mentionService.tagList}");
                                 uploadPostFiles(mentionService.deltaParser());
                               },
                               child: Card(
@@ -225,70 +226,86 @@ class _CreatePostState extends State<CreatePost> {
             ),
             elevation: 0.0,
           ),
-          body: Column(
-            children: [
-              const Divider(
-                height: 5,
-                color: Colors.black,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+          body: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Container(
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.transparent)),
+              height: MediaQuery.of(context).size.height * 1.1,
+              child: Column(
+                children: [
+                  const Divider(
+                    height: 5,
+                    color: Colors.black,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
+                        Column(
                           children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(userService
-                                      .user["profilePicture"] ??
-                                  "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userService.user["name"],
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage: NetworkImage(userService
+                                          .user["profilePicture"] ??
+                                      "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        userService.user["name"],
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        "",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ],
                                   ),
-                                  const Text(
-                                    "",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              ],
+                            )
                           ],
-                        )
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              SimplyMentionInterface(key: mentionKey),
-              Expanded(
-                child: MultiImagePickerView(
-                  controller: imagePickerController,
-                  initialWidget: pickImageTapRegion(),
-                  addMoreButton: DefaultAddMoreWidget(
-                    icon: Icon(
-                      color: userService.darkTheme!? Colors.grey:Colors.white,
-                      Icons.add,
-                    ),
-                    backgroundColor: const Color.fromARGB(255, 154, 223, 156),
                   ),
-                  padding: const EdgeInsets.all(10),
-                ),
+                  SimplyMentionInterface(key: mentionKey),
+                  const TextFieldTagInterface(),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Expanded(
+                    child: MultiImagePickerView(
+                      controller: imagePickerController,
+                      initialWidget: pickImageTapRegion(),
+                      addMoreButton: DefaultAddMoreWidget(
+                        icon: Icon(
+                          color: userService.darkTheme!
+                              ? Colors.grey
+                              : Colors.white,
+                          Icons.add,
+                        ),
+                        backgroundColor:
+                            const Color.fromARGB(255, 154, 223, 156),
+                      ),
+                      padding: const EdgeInsets.all(10),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           )),
     );
   }

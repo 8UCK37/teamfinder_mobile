@@ -4,6 +4,9 @@ import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 class MentionService extends ChangeNotifier {
   String markUpText = '';
   List<MentionObject> mentionRepository = [];
+
+  List<String> tagList = [];
+
   void updateMarkUpText(String newValue) {
     markUpText = newValue;
     notifyListeners();
@@ -15,6 +18,10 @@ class MentionService extends ChangeNotifier {
     }
     mentionRepository.add(newMention);
     notifyListeners();
+  }
+
+  void updateTagList(List<String> newValue) {
+    tagList = newValue;
   }
 
   List<dynamic> deltaParser() {
@@ -54,7 +61,6 @@ class MentionService extends ChangeNotifier {
         };
 
         ops.add(mentionMap);
-        ops.add({'insert': " "});
         // Update the currentIndex for the next iteration
         currentIndex = match.end;
       }
@@ -72,31 +78,5 @@ class MentionService extends ChangeNotifier {
     }
     ops.add({'insert': "\n"});
     return ops;
-  }
-
-  List<dynamic> reference() {
-    // List<Operation> opsList = descriptionDelta!.toList();
-    // List<dynamic> ops = [];
-    // int i = 0;
-    // for (var element in opsList) {
-    //   if (element.attributes != null &&
-    //       element.attributes!['color'] == 'blue') {
-    //     var mapEle = mentionMapList[i];
-    //     var id = mapEle.keys.toList()[0];
-    //     ops.add({
-    //       'insert': {
-    //         'mention': {'id': id, 'value': element.data.toString()}
-    //       }
-    //     });
-
-    //     i = i + 1;
-    //   } else {
-    //     ops.add({'insert': element.data.toString()});
-    //   }
-    // }
-    // int lastElement = ops.length - 1;
-    // ops.removeAt(lastElement);
-    // return ops;
-    return [];
   }
 }

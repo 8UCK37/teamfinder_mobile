@@ -69,14 +69,13 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
         setState(() {});
         if (mentionTextEditingController!.isMentioning()) {
           //debugPrint("search term:${mentionTextEditingController!.getSearchText()}");
-          String safeSearch =
-              removeDiacritics(mentionTextEditingController!.getSearchText());
+          String safeSearch = removeDiacritics(mentionTextEditingController!.getSearchText());
           searchUser(safeSearch);
         }
       });
     }
 
-    focusNode.requestFocus();
+    //focusNode.requestFocus();
   }
 
   void onSuggestionChanged(MentionSyntax? syntax, String? fullSearchString) {
