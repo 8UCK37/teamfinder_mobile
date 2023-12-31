@@ -187,6 +187,7 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
     return Container(
         decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
             color: const Color.fromARGB(197, 255, 255, 255),
             borderRadius: BorderRadius.circular(10)),
         child: Scrollbar(

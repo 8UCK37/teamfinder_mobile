@@ -104,7 +104,6 @@ class _CreatePostState extends State<CreatePost> {
         setState(() {
           //clear images after upload
           imagePickerController.clearImages();
-          //TODO:clear textfield
           setState(() {
             mentionKey = GlobalKey();
           });
@@ -116,6 +115,43 @@ class _CreatePostState extends State<CreatePost> {
       debugPrint('Error from create_post_page line 91: $error');
     }
   }
+
+  Widget pickImageTapRegion() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            imagePickerController.pickImages();
+          },
+          child: Container(
+            height: 100,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(3)),
+                border: Border.all(color: Colors.green)),
+            child: const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.add_photo_alternate_outlined,
+                      size: 30, color: Colors.green),
+                  SizedBox(height: 4),
+                  Text('ADD IMAGES',
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14))
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -241,50 +277,13 @@ class _CreatePostState extends State<CreatePost> {
               Expanded(
                 child: MultiImagePickerView(
                   controller: imagePickerController,
-                  initialWidget: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.transparent)),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            imagePickerController.pickImages();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              elevation: 5,
-                              color: const Color.fromARGB(255, 130, 210, 133),
-                              shadowColor: Colors.green,
-                              surfaceTintColor:
-                                  const Color.fromARGB(255, 130, 210, 133),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.add_photo_alternate_outlined,
-                                      color: userService.darkTheme!
-                                          ? Colors.black
-                                          : const Color.fromARGB(
-                                              255, 234, 235, 164),
-                                    ),
-                                    Text(
-                                      "Add Photo",
-                                      style: TextStyle(
-                                          color: userService.darkTheme!
-                                              ? Colors.black
-                                              : Colors.white),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
+                  initialWidget: pickImageTapRegion(),
+                  addMoreButton: DefaultAddMoreWidget(
+                    icon: Icon(
+                      color: userService.darkTheme!? Colors.grey:Colors.white,
+                      Icons.add,
                     ),
+                    backgroundColor: const Color.fromARGB(255, 154, 223, 156),
                   ),
                   padding: const EdgeInsets.all(10),
                 ),
