@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
@@ -21,6 +23,7 @@ import 'comment_widgets/new_bottomSheet_route.dart';
 class PostWidget extends StatefulWidget {
   final PostPojo post;
   final TabController? tabController;
+
   const PostWidget({super.key, required this.post, this.tabController});
 
   @override
@@ -48,6 +51,7 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   List<CircularMenuItem> buildMenuItems() {
+    final userService = Provider.of<ProviderService>(context, listen: false);
     final listForOwnPost = [
       CircularMenuItem(
           iconSize: iconSize,
@@ -65,7 +69,32 @@ class _PostWidgetState extends State<PostWidget>
           icon: Icons.delete,
           color: const Color.fromARGB(255, 221, 61, 50),
           onTap: () {
-            setState(() {});
+            setState(() {
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.warning,
+                text:
+                    'Do you really want to delete this post??\nnote: this is parmanent!!',
+                confirmBtnText: 'Yes',
+                cancelBtnText: 'No',
+                confirmBtnColor: Colors.red,
+                showCancelBtn: true,
+                backgroundColor: Colors.black,
+                confirmBtnTextStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                barrierColor: const Color.fromARGB(107, 0, 0, 0),
+                titleColor: Colors.white,
+                textColor: Colors.white,
+                onConfirmBtnTap: () {
+                  userService.deletePost(widget.post.id);
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    Navigator.of(context).pop();
+                  });
+                },
+              );
+            });
           }),
       CircularMenuItem(
           iconSize: iconSize,
@@ -192,7 +221,8 @@ class _PostWidgetState extends State<PostWidget>
     }
   }
 
-  Widget parseDescriptionWidget(String desc, Mention mentionList,BuildContext context) {
+  Widget parseDescriptionWidget(
+      String desc, Mention mentionList, BuildContext context) {
     String sanitizedDesc = desc.substring(0, desc.length - 1);
     final userService = Provider.of<ProviderService>(context, listen: false);
     Map<String, String> idNameMap = {
@@ -210,14 +240,16 @@ class _PostWidgetState extends State<PostWidget>
                 ..onTap = () {
                   debugPrint(word);
                   if (userService.user['id'] != word) {
-                    AnimatedRouter.slideToPageLeft(context,FriendProfileHome(
-                              friendId: word,
-                              friendName: idNameMap[word],
-                            ));
+                    AnimatedRouter.slideToPageLeft(
+                        context,
+                        FriendProfileHome(
+                          friendId: word,
+                          friendName: idNameMap[word],
+                        ));
                   } else {
                     if (widget.tabController != null) {
-                        widget.tabController!.animateTo(1);
-                      }
+                      widget.tabController!.animateTo(1);
+                    }
                   }
                 },
               style: const TextStyle(
@@ -272,11 +304,13 @@ class _PostWidgetState extends State<PostWidget>
                   onTap: () {
                     debugPrint(widget.post.author);
                     if (userService.user['id'] != widget.post.author) {
-                      AnimatedRouter.slideToPageLeft(context,FriendProfileHome(
-                                friendId: widget.post.author,
-                                friendName: widget.post.name,
-                                friendProfileImage: widget.post.profilePicture,
-                              ));
+                      AnimatedRouter.slideToPageLeft(
+                          context,
+                          FriendProfileHome(
+                            friendId: widget.post.author,
+                            friendName: widget.post.name,
+                            friendProfileImage: widget.post.profilePicture,
+                          ));
                     } else {
                       if (widget.tabController != null) {
                         widget.tabController!.animateTo(1);
@@ -302,8 +336,8 @@ class _PostWidgetState extends State<PostWidget>
             Align(
               alignment: Alignment.centerLeft,
               child: widget.post.description != null
-                  ? parseDescriptionWidget(widget.post.description!,
-                      widget.post.mention!,context)
+                  ? parseDescriptionWidget(
+                      widget.post.description!, widget.post.mention!, context)
                   : const Text(""),
             ),
             if (widget.post.shared != null)

@@ -410,4 +410,38 @@ class ProviderService extends ChangeNotifier {
     //debugPrint(dbString);
     return dbString;
   }
+
+  void deletePost(int postId) async {
+    debugPrint("deleting post with id: $postId");
+    ownPosts!.removeWhere((element) => element.id == postId);
+    notifyListeners();
+
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("deleting post no_internet");
+      return;
+    } else {
+      debugPrint("in terms internet we have internet");
+    }
+
+    Dio dio = Dio();
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/deletePost',
+      data: {'id': postId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("deleted post with id $postId");
+    }
+  }
 }
