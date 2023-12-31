@@ -30,7 +30,7 @@ class _CreatePostState extends State<CreatePost> {
       picker: (allowMultiple) async {
         return await pickImagesUsingImagePicker(allowMultiple);
       });
-
+  GlobalKey mentionKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -104,7 +104,10 @@ class _CreatePostState extends State<CreatePost> {
         setState(() {
           //clear images after upload
           imagePickerController.clearImages();
-          //
+          //TODO:clear textfield
+          setState(() {
+            mentionKey = GlobalKey();
+          });
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
@@ -161,7 +164,6 @@ class _CreatePostState extends State<CreatePost> {
                               onTap: () async {
                                 debugPrint(
                                     "markUpText: ${mentionService.markUpText}");
-                                //mentionService.deltaParser();
                                 uploadPostFiles(mentionService.deltaParser());
                               },
                               child: Card(
@@ -235,7 +237,7 @@ class _CreatePostState extends State<CreatePost> {
                   ],
                 ),
               ),
-              const SimplyMentionInterface(),
+              SimplyMentionInterface(key: mentionKey),
               Expanded(
                 child: MultiImagePickerView(
                   controller: imagePickerController,

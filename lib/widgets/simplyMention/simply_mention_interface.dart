@@ -2,6 +2,7 @@ import 'package:diacritic/diacritic.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
   late List<UserPojo> userList = [];
 
+  late bool isDark;
   @override
   void initState() {
     super.initState();
@@ -38,14 +40,16 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final userService = Provider.of<ProviderService>(context, listen: false);
-    bool isDark = userService.darkTheme!;
+    setState(() {
+      isDark = userService.darkTheme!;
+    });
     if (mentionTextEditingController == null) {
       // Create a mention text editing controller and pass in the relevant syntax, then bind to onSuggestionChanged
       mentionTextEditingController = MentionTextEditingController(
           mentionSyntaxes: [DocumentMentionEditableSyntax(context)],
           mentionBgColor: Colors.transparent,
           mentionTextColor: Colors.blue,
-          runTextStyle: TextStyle(color: isDark? Colors.white:Colors.black),
+          runTextStyle: TextStyle(color: isDark ? Colors.white : Colors.black),
           mentionTextStyle: const TextStyle(),
           onSugggestionChanged: onSuggestionChanged,
           idToMentionObject: (BuildContext context, String id) =>
@@ -77,6 +81,14 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
   void onSuggestionChanged(MentionSyntax? syntax, String? fullSearchString) {
     setState(() {});
+  }
+
+  void clearTextField() {
+    setState(() {
+      if(mentionTextEditingController!=null){
+        mentionTextEditingController!.clear();
+      }
+    });
   }
 
   // When a mention is selected, insert the mention into the text editing controller.
@@ -152,27 +164,25 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
     // Remove diacritics and lowercase the search string so matches are easier found
 
-    documentMentions.forEach((element) {
-      possibleMentions.add(Container(
-        child: ListTile(
-          leading: CircleAvatar(
-            maxRadius: 25,
-            backgroundImage: NetworkImage(element.avatarUrl),
-          ),
-          title: Text(
-            element.displayName,
-            style: const  TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              ),
-          ),
-          onTap: () {
-            //Tell the mention controller to insert the mention
-            onMentionSelected(element);
-          },
+    for (var element in documentMentions) {
+      possibleMentions.add(ListTile(
+        leading: CircleAvatar(
+          maxRadius: 25,
+          backgroundImage: NetworkImage(element.avatarUrl),
         ),
+        title: Text(
+          element.displayName,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onTap: () {
+          //Tell the mention controller to insert the mention
+          onMentionSelected(element);
+        },
       ));
-    });
+    }
     ScrollController controller = ScrollController();
 
     return Container(
@@ -208,14 +218,19 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+            maxLength: 1000,
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
             decoration: const InputDecoration(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8))
-                ), 
-              hintText: "Type away..."),
+                    borderSide: BorderSide(color: Colors.green),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    gapPadding: 5),
+                contentPadding: EdgeInsets.all(8),
+                hintText: "Type away..."),
+            cursorColor: isDark ? Colors.white : const Color.fromARGB(255, 12, 11, 11),
             focusNode: focusNode,
             maxLines: null,
-            minLines: 3,
+            minLines: 5,
             controller: mentionTextEditingController,
           ),
         ));
