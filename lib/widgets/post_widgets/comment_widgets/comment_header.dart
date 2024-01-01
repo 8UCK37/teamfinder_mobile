@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/data_service.dart';
+import '../../../services/data_service.dart';
 
 class CommentHeader extends StatelessWidget {
   const CommentHeader({super.key});

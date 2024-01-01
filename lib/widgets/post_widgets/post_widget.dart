@@ -12,14 +12,14 @@ import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import 'package:teamfinder_mobile/widgets/comment_widgets/comment_header.dart';
-import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_header.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/misc/share_bottomsheet.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 import '../../utils/router_animation.dart';
-import '../comment_widgets/new_bottomSheet_route.dart';
+import 'comment_widgets/new_bottomSheet_route.dart';
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
