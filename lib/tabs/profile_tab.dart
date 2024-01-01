@@ -304,72 +304,66 @@ class _ProfileTabState extends State<ProfileTab>
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: Column(
                     children: [
-                      Row(
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              const Text('Linked accounts',
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Color.fromARGB(255, 60, 159, 209))),
-                              const SizedBox(height: 6.0),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 0.0),
-                                child: Row(
-                                  children: [
-                                    ClipOval(
-                                      clipBehavior: Clip.antiAlias,
-                                      child: ColorFiltered(
-                                        colorFilter: ColorFilter.mode(
-                                          userData['steamId'] != null
-                                              ? Colors.transparent
-                                              : isDark?ThemeData.dark().primaryColor:const Color.fromARGB(
-                                                  255, 81, 80, 80),
-                                          BlendMode.color,
-                                        ),
-                                        child: Image.asset(
-                                          'assets/images/icons8_steam_48.png', // Replace with your PNG image asset path
-                                          width: 32,
-                                          height: 32,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 15.0),
-                                      child: SizedBox(
-                                        child: Icon(
-                                          FontAwesomeIcons.twitch,
-                                          color: twitchData != null &&
-                                                  twitchData != "not logged in"
-                                              ? const Color.fromRGBO(
-                                                  100, 65, 165, 100)
-                                              : const Color.fromARGB(
-                                                  255, 81, 80, 80),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 15.0),
-                                      child: SizedBox(
-                                          child: Icon(
-                                        FontAwesomeIcons.discord,
-                                        color: discordData != null
-                                            ? const Color.fromARGB(
-                                                255, 114, 137, 218)
-                                            : const Color.fromARGB(
-                                                255, 81, 80, 80),
-                                      )),
-                                    )
-                                  ],
+                          const Text(
+                            'Linked accounts',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 60, 159, 209),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              ClipOval(
+                                clipBehavior: Clip.antiAlias,
+                                child: ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    userData['steamId'] != null
+                                        ? Colors.transparent
+                                        : isDark?ThemeData.dark().primaryColor:const Color.fromARGB(
+                                            255, 81, 80, 80),
+                                    BlendMode.color,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/icons8_steam_48.png', // Replace with your PNG image asset path
+                                    width: 32,
+                                    height: 32,
+                                  ),
                                 ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 15.0),
+                                child: SizedBox(
+                                  child: Icon(
+                                    FontAwesomeIcons.twitch,
+                                    color: twitchData != null &&
+                                            twitchData != "not logged in"
+                                        ? const Color.fromRGBO(
+                                            100, 65, 165, 100)
+                                        : const Color.fromARGB(
+                                            255, 81, 80, 80),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 15.0),
+                                child: SizedBox(
+                                    child: Icon(
+                                  FontAwesomeIcons.discord,
+                                  color: discordData != null
+                                      ? const Color.fromARGB(
+                                          255, 114, 137, 218)
+                                      : const Color.fromARGB(
+                                          255, 81, 80, 80),
+                                )),
                               )
                             ],
-                          ),
+                          )
                         ],
                       ),
                     ],
@@ -396,14 +390,30 @@ class _ProfileTabState extends State<ProfileTab>
                             const SizedBox(height: 6.0),
                             if (postList != null)
                               Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(
-                                    'You have ${postList!.length.toString()} posts',
-                                    style: TextStyle(
+                                padding: const EdgeInsets.only(left: 17.0),
+                                child: 
+                                RichText(
+                                  text: TextSpan(
+                                      style: const TextStyle(
+                                        color: Colors.black,
                                         fontSize: 16.0,
-                                        color: userService.darkTheme!
-                                            ? Colors.white
-                                            : Colors.grey[800])),
+                                      ),
+                                      children: [
+                                        const TextSpan(
+                                          text: "You have ",
+                                        ),
+                                        TextSpan(
+                                          text: postList!.length.toString(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        const TextSpan(
+                                          text: " posts",
+                                        )
+                                      ]),
+                                ),
                               ),
                           ],
                         ),

@@ -92,9 +92,9 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   RichText(
-                      text: TextSpan(
-                          style: const TextStyle(color: Colors.black),
-                          children: [
+                    text: TextSpan(
+                      style: const TextStyle(color: Colors.black),
+                      children: [
                         TextSpan(
                             text: widget.notification.senderName,
                             style: const TextStyle(
@@ -103,7 +103,9 @@ class _NotificationOptionsState extends State<NotificationOptions> {
                             text: ' ${notificationTextParser()}',
                             style: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.normal))
-                      ]))
+                      ],
+                    ),
+                  ),
                 ],
               ),
               Padding(
