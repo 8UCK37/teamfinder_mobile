@@ -66,7 +66,6 @@ class _ProfileTabState extends State<ProfileTab>
     postList = userService.ownPosts;
     twitchData = userService.twitchData;
     discordData = userService.discordData;
-    bool isDark = userService.darkTheme!;
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: Scaffold(
@@ -218,26 +217,31 @@ class _ProfileTabState extends State<ProfileTab>
                           const SizedBox(width: 15.0),
                           Row(
                             children: <Widget>[
-                              // const Icon(Icons.record_voice_over,
-                              //     color: Colors.blue, size: 30.0),
                               Image.asset(
                                 "assets/images/speaking_right.png",
                                 scale: 3.5,
                               ),
-
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                child: Text(
-                                    userData['userInfo'] != null
-                                        ? convertlistTolangString(
-                                            userData['userInfo'])
-                                        : 'no internet',
-                                    style: const TextStyle(
-                                        color: Colors.blue, fontSize: 16.0)),
-                              )
+                                child: Container(
+                                  constraints:const BoxConstraints(maxWidth: 248),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Text(
+                                      userData['userInfo'] != null
+                                          ? convertlistTolangString(
+                                              userData['userInfo'])
+                                          : 'no language preference set',
+                                      style: const TextStyle(
+                                          color: Color.fromARGB(255, 3, 67, 120), fontSize: 16.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                          const SizedBox(width: 15.0),
+
+                        const SizedBox(width: 15.0),
                         ],
                       ),
                       const SizedBox(height: 15.0),
@@ -317,22 +321,19 @@ class _ProfileTabState extends State<ProfileTab>
                           ),
                           Row(
                             children: [
-                              ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
-                                    userData['steamId'] != null
-                                        ? Colors.transparent
-                                        : isDark?ThemeData.dark().primaryColor:const Color.fromARGB(
-                                            255, 81, 80, 80),
-                                    BlendMode.color,
-                                  ),
-                                  child: Image.asset(
-                                    'assets/images/icons8_steam_48.png', // Replace with your PNG image asset path
-                                    width: 32,
-                                    height: 32,
-                                  ),
+                              Visibility(
+                                visible: userData['steamId'] != null,
+                                child: Image.asset(
+                                  'assets/images/icons8_steam_48.png', // Replace with your PNG image asset path
+                                  width: 32,
+                                  height: 32,
                                 ),
+                              ),
+                              Visibility(
+                                visible: userData['steamId'] == null,
+                                child: const Icon(
+                                    color: Color.fromARGB(255, 81, 80, 80),
+                                    FontAwesomeIcons.steam),
                               ),
                               Padding(
                                 padding:
@@ -343,7 +344,7 @@ class _ProfileTabState extends State<ProfileTab>
                                     color: twitchData != null &&
                                             twitchData != "not logged in"
                                         ? const Color.fromRGBO(
-                                            100, 65, 165, 100)
+                                            145, 70, 255, 100)
                                         : const Color.fromARGB(
                                             255, 81, 80, 80),
                                   ),
@@ -394,8 +395,8 @@ class _ProfileTabState extends State<ProfileTab>
                                 child: 
                                 RichText(
                                   text: TextSpan(
-                                      style: const TextStyle(
-                                        color: Colors.black,
+                                      style: TextStyle(
+                                        color: userService.darkTheme!? Colors.white:Colors.black,
                                         fontSize: 16.0,
                                       ),
                                       children: [

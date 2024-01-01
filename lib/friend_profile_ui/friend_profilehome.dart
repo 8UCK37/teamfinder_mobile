@@ -26,9 +26,16 @@ class FriendProfileHome extends StatefulWidget {
 }
 
 class _FriendProfileHomeState extends State<FriendProfileHome>
-    with SingleTickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin<FriendProfileHome> {
+
   late PageController _pageController;
   int selectedIndex = 0;
+
+
+  @override
+  bool get wantKeepAlive => true;
+
+  
   @override
   void initState() {
     super.initState();
@@ -107,6 +114,7 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final userService = Provider.of<ProviderService>(context, listen: true);
     final profileService =
         Provider.of<FriendProfileService>(context, listen: true);
@@ -241,4 +249,6 @@ class _FriendProfileHomeState extends State<FriendProfileHome>
       ),
     );
   }
+  
+  
 }

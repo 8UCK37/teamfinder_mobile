@@ -92,7 +92,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             )
                           ]),
                     ),
-                    Visibility(child: Container()),
                     const Padding(
                       padding: EdgeInsets.only(left: 5.0),
                       child: _CustomListTile(

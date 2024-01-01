@@ -8,6 +8,7 @@ import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
+import '../utils/language_chip_helper.dart';
 import '../widgets/separator_widget.dart';
 
 class FriendProfilePosts extends StatefulWidget {
@@ -33,11 +34,11 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
   List<PostPojo>? postList;
   UserPojo? friendProfile;
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _linkedAccWidgetKey = GlobalKey();
   dynamic twitchData;
   dynamic discordData;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  
   @override
   void initState() {
     super.initState();
@@ -105,7 +106,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
     } else {
       return GestureDetector(
           onTap: () {
-            debugPrint("send request to ${widget.friendName} with id ${widget.friendId}");
+            debugPrint(
+                "send request to ${widget.friendName} with id ${widget.friendId}");
             // profileService.updateFriendStatus("pending");
             profileService.sendRequest(widget.friendId);
             MotionToast(
@@ -134,6 +136,23 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
           ));
     }
   }
+  
+
+  String convertlistTolangString(UserInfo userInfo) {
+    String selectedLangString = '';
+    if (userInfo.language != null) {
+      for (String index in userInfo.language!.split(",")) {
+        if (selectedLangString.isEmpty) {
+          selectedLangString = Language.values[int.parse(index) - 1].label;
+        } else {
+          selectedLangString =
+              "$selectedLangString, ${Language.values[int.parse(index) - 1].label}";
+        }
+      }
+    }
+    return selectedLangString;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -226,40 +245,71 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                     child: Column(
                       children: <Widget>[
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Row(
                               children: <Widget>[
-                                const Icon(Icons.person_pin_circle,
-                                    color: Colors.green, size: 32.0),
+                                Image.asset(
+                                  "assets/images/icons8_location.png",
+                                  scale: 3.5,
+                                ),
                                 const SizedBox(width: 10.0),
                                 Text('${friendProfile!.userInfo!.country}',
                                     style: const TextStyle(fontSize: 16.0))
                               ],
                             ),
-                            const SizedBox(height: 15.0),
+                            const SizedBox(width: 15.0),
                             Row(
                               children: <Widget>[
-                                const Icon(Icons.record_voice_over,
-                                    color: Colors.blue, size: 30.0),
+                                Image.asset(
+                                  "assets/images/speaking_right.png",
+                                  scale: 3.5,
+                                ),
                                 const SizedBox(width: 10.0),
-                                Text('${friendProfile!.userInfo!.language}',
-                                    style: const TextStyle(fontSize: 16.0))
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                  child: Container(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 248),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(
+                                        friendProfile!.userInfo != null
+                                            ? convertlistTolangString(
+                                                friendProfile!.userInfo!)
+                                            : 'no language preference set',
+                                        style: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 3, 67, 120),
+                                            fontSize: 16.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ],
                         ),
                         const SizedBox(height: 15.0),
-                        Row(
-                          children: <Widget>[
-                            const Icon(Icons.more_horiz,
-                                color: Colors.grey, size: 30.0),
-                            const SizedBox(width: 10.0),
-                            Text("See ${friendProfile!.name}'s About Info",
-                                style: const TextStyle(fontSize: 16.0))
+                        ExpansionTile(
+                          title: Text("See ${friendProfile!.name}'s About Info",
+                                style: const TextStyle(fontSize: 16.0)),
+                          leading:const Icon(Icons.psychology_alt),
+                          trailing: const Icon(
+                            color: Colors.blue,
+                            Icons.expand_more,
+                          ),
+                          childrenPadding: const EdgeInsets.only(left: 25),
+                          children: const [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
                           ],
                         ),
-                        const SizedBox(height: 15.0),
                       ],
                     ),
                   ),
@@ -272,67 +322,59 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              key: _linkedAccWidgetKey,
-                              children: <Widget>[
-                                const Text('Linked accounts',
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
-                                        color:
-                                            Color.fromARGB(255, 60, 159, 209))),
-                                const SizedBox(height: 6.0),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        child: Icon(
-                                          FontAwesomeIcons.steam,
-                                          color: friendProfile?.steamId != null
-                                              ? const Color.fromRGBO(
-                                                  29, 92, 234, 85)
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15.0),
-                                        child: SizedBox(
-                                          child: Icon(
-                                            FontAwesomeIcons.twitch,
-                                            color: twitchData != "not logged in"
-                                                ? const Color.fromRGBO(
-                                                    145, 70, 250, 100)
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15.0),
-                                        child: SizedBox(
-                                          child: Icon(
-                                            FontAwesomeIcons.discord,
-                                            color: discordData != null
-                                                ? const Color.fromRGBO(
-                                                    114, 137, 218, 1)
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Text(
+                          'Linked accounts',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 60, 159, 209),
+                          ),
                         ),
+                        const SizedBox(height: 6.0),
+                        Row(
+                          children: [
+                            Visibility(
+                              visible: friendProfile?.steamId != null,
+                              child: Image.asset(
+                                'assets/images/icons8_steam_48.png', // Replace with your PNG image asset path
+                                width: 32,
+                                height: 32,
+                              ),
+                            ),
+                            Visibility(
+                              visible: friendProfile?.steamId == null,
+                              child: const Icon(
+                                  color: Color.fromARGB(255, 81, 80, 80),
+                                  FontAwesomeIcons.steam),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: SizedBox(
+                                child: Icon(
+                                  FontAwesomeIcons.twitch,
+                                  color: twitchData != "not logged in"
+                                      ? const Color.fromRGBO(145, 70, 250, 100)
+                                      : const Color.fromARGB(
+                                            255, 81, 80, 80),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: SizedBox(
+                                child: Icon(
+                                  FontAwesomeIcons.discord,
+                                  color: discordData != null
+                                      ? const Color.fromRGBO(114, 137, 218, 1)
+                                      : const Color.fromARGB(
+                                            255, 81, 80, 80),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -355,20 +397,41 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("${friendProfile!.name}'s wall",
-                                      style: const TextStyle(
-                                          fontSize: 22.0,
-                                          fontWeight: FontWeight.bold)),
+                                  Text(
+                                    "${friendProfile!.name}'s wall",
+                                    style: const TextStyle(
+                                        color: Colors.teal,
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                   const SizedBox(height: 6.0),
                                   if (postList != null)
-                                    Text(
-                                        "${friendProfile!.name.split(' ')[0]} has ${postList!.length.toString()} posts",
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: userService.darkTheme!
-                                              ? Colors.white70
-                                              : Colors.grey[800],
-                                        )),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:3),
+                                      child: RichText(
+                                        text: TextSpan(
+                                            style: TextStyle(
+                                              color: userService.darkTheme!? Colors.white:Colors.black,
+                                              fontSize: 16.0,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: "${friendProfile!.name.split(' ')[0]} has ",
+                                              ),
+                                              TextSpan(
+                                                text: postList!.length.toString(),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                              const TextSpan(
+                                                text: " posts",
+                                              )
+                                            ],
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),
@@ -386,7 +449,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                 SeparatorWidget(
                                     color: userService.darkTheme!
                                         ? const Color.fromARGB(255, 74, 74, 74)
-                                        : const Color.fromARGB(255, 182, 182, 182)),
+                                        : const Color.fromARGB(
+                                            255, 182, 182, 182)),
                                 PostWidget(post: post),
                               ],
                             ),
