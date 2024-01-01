@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teamfinder_mobile/utils/theme.dart';
 import 'package:teamfinder_mobile/widgets/custom_appbar.dart';
 import '../services/data_service.dart';
 import '../tabs/friends_tab.dart';
@@ -50,9 +51,9 @@ class _HomePageState extends State<HomePage>
         child: Scaffold(
           appBar: TeamFinderAppBar(
             titleText: "CallOut",
-            titleStyle: const TextStyle(
+            titleStyle: TextStyle(
                 fontFamily: 'caveat',
-                color: Color.fromARGB(255, 200, 66, 72),
+                color: ThemeColor.primaryTheme,
                 fontSize: 35.0,
                 fontWeight: FontWeight.bold),
             isDark: _isDark,

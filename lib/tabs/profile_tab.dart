@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import 'package:teamfinder_mobile/pages/create_post_page.dart';
+import 'package:teamfinder_mobile/utils/theme.dart';
 import 'package:teamfinder_mobile/widgets/post_widget.dart';
+
 import '../pages/edit_profileinfo_page..dart';
 import '../services/data_service.dart';
 import '../widgets/separator_widget.dart';
@@ -20,14 +22,14 @@ class ProfileTab extends StatefulWidget {
   _ProfileTabState createState() => _ProfileTabState();
 }
 
-class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMixin<ProfileTab> {
+class _ProfileTabState extends State<ProfileTab>
+    with AutomaticKeepAliveClientMixin<ProfileTab> {
   List<PostPojo>? postList;
   dynamic twitchData;
   dynamic discordData;
 
   @override
   bool get wantKeepAlive => true;
-
 
   @override
   void dispose() {
@@ -64,6 +66,7 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
     postList = userService.ownPosts;
     twitchData = userService.twitchData;
     discordData = userService.discordData;
+    bool isDark = userService.darkTheme!;
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: Scaffold(
@@ -125,8 +128,8 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                         ),
                         image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                            cacheKey:userService.bannerImagecacheKey,
-                            userData['profileBanner'] ?? ''),
+                              cacheKey: userService.bannerImagecacheKey,
+                              userData['profileBanner'] ?? ''),
                           fit: BoxFit
                               .cover, // Set the fit property to determine how the image should be fitted
                         ),
@@ -141,7 +144,7 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                             padding: const EdgeInsets.only(left: 5.0, top: 150),
                             child: CircleAvatar(
                               backgroundImage: CachedNetworkImageProvider(
-                                  cacheKey:userService.profileImagecacheKey,
+                                  cacheKey: userService.profileImagecacheKey,
                                   userData['profilePicture'] ?? ''),
                               radius: 50.0,
                             ),
@@ -174,6 +177,8 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                 Row(
                                   children: <Widget>[
                                     Image.asset(
+                                      height: 40,
+                                      width: 40,
                                       "assets/images/icons8_share.png",
                                       scale: 3.5,
                                     ),
@@ -227,7 +232,8 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                         ? convertlistTolangString(
                                             userData['userInfo'])
                                         : 'no internet',
-                                    style: const TextStyle(fontSize: 16.0)),
+                                    style: const TextStyle(
+                                        color: Colors.blue, fontSize: 16.0)),
                               )
                             ],
                           ),
@@ -300,7 +306,6 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                     children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Column(
                             children: <Widget>[
@@ -312,16 +317,24 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                           Color.fromARGB(255, 60, 159, 209))),
                               const SizedBox(height: 6.0),
                               Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: Row(
                                   children: [
-                                    SizedBox(
-                                      child: Icon(
-                                        FontAwesomeIcons.steam,
-                                        color: userData['steamId'] != null
-                                            ? const Color.fromRGBO(
-                                                29, 92, 234, 85)
-                                            : Colors.black,
+                                    ClipOval(
+                                      clipBehavior: Clip.antiAlias,
+                                      child: ColorFiltered(
+                                        colorFilter: ColorFilter.mode(
+                                          userData['steamId'] != null
+                                              ? Colors.transparent
+                                              : isDark?ThemeData.dark().primaryColor:const Color.fromARGB(
+                                                  255, 81, 80, 80),
+                                          BlendMode.color,
+                                        ),
+                                        child: Image.asset(
+                                          'assets/images/icons8_steam_48.png', // Replace with your PNG image asset path
+                                          width: 32,
+                                          height: 32,
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -330,10 +343,12 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                       child: SizedBox(
                                         child: Icon(
                                           FontAwesomeIcons.twitch,
-                                          color: twitchData!= null && twitchData != "not logged in" 
+                                          color: twitchData != null &&
+                                                  twitchData != "not logged in"
                                               ? const Color.fromRGBO(
-                                                  145, 70, 250, 100)
-                                              : Colors.black,
+                                                  100, 65, 165, 100)
+                                              : const Color.fromARGB(
+                                                  255, 81, 80, 80),
                                         ),
                                       ),
                                     ),
@@ -346,7 +361,8 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                                         color: discordData != null
                                             ? const Color.fromARGB(
                                                 255, 114, 137, 218)
-                                            : Colors.black,
+                                            : const Color.fromARGB(
+                                                255, 81, 80, 80),
                                       )),
                                     )
                                   ],
@@ -369,12 +385,12 @@ class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMi
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const Padding(
-                              padding: EdgeInsets.only(left: 15.0),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
                               child: Text('Your wall',
                                   style: TextStyle(
                                       fontSize: 22.0,
-                                      color: Colors.cyan,
+                                      color: ThemeColor.primaryTheme,
                                       fontWeight: FontWeight.bold)),
                             ),
                             const SizedBox(height: 6.0),

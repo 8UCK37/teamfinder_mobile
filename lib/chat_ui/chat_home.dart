@@ -5,7 +5,6 @@ import 'package:teamfinder_mobile/pages/home_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
 import '../pages/friend_list.dart';
-import '../pages/search_page.dart';
 import '../utils/router_animation.dart';
 
 
@@ -54,10 +53,7 @@ class _HomeState extends State<ChatHome> with SingleTickerProviderStateMixin {
               GestureDetector(
                   onTap: () {
                     debugPrint('search clicked');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SearchPage()),
-                    );
+                   
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),

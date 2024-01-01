@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
 import '../services/mention_service.dart';
+import '../utils/theme.dart';
 
 class TextFieldTagInterface extends StatefulWidget {
   const TextFieldTagInterface({super.key});
@@ -155,8 +156,8 @@ class _TextFieldTagInterfaceState extends State<TextFieldTagInterface> {
                         ),
                         helperText:
                             "Specify tags to set the topic of this post...",
-                        helperStyle: const TextStyle(
-                            color: Color.fromARGB(255, 200, 66, 72)),
+                        helperStyle:TextStyle(
+                            color: ThemeColor.primaryTheme),
                         hintText: _controller.hasTags ? '' : "Enter tags...",
                         hintStyle: const TextStyle(color: Colors.blue),
                         errorText: error,

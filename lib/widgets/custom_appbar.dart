@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../chat_ui/chat_home.dart';
 import '../pages/search_page.dart';
 import '../services/notification_observer.dart';
+import '../utils/theme.dart';
 
 class TeamFinderAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isDark;
@@ -58,8 +59,8 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                 Container(
                   height: 25,
                   width: 25,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 200, 66, 72),
+                  decoration: BoxDecoration(
+                    color: ThemeColor.primaryTheme,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   child: Center(
