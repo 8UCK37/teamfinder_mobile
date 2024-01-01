@@ -12,7 +12,7 @@ import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/games_screen.dart';
 import 'package:teamfinder_mobile/pages/search_page.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import 'package:teamfinder_mobile/widgets/search_bar.dart';
+import 'package:teamfinder_mobile/widgets/misc/search_bar.dart';
 
 import '../../utils/router_animation.dart';
 

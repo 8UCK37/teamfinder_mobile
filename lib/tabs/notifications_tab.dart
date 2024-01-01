@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import '../pojos/incoming_notification.dart';
 import '../services/data_service.dart';
-import '../widgets/notification_widget.dart';
+import '../widgets/misc/notification_widget.dart';
 
 class NotificationsTab extends StatefulWidget {
   const NotificationsTab({Key? key}) : super(key: key);

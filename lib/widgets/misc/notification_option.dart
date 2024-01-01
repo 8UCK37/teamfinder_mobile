@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pojos/incoming_notification.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 
-import '../services/notification_observer.dart';
+import '../../services/notification_observer.dart';
 
 class NotificationOptions extends StatefulWidget {
   final IncomingNotification notification;

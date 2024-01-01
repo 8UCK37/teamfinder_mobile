@@ -12,13 +12,14 @@ import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
+import 'package:teamfinder_mobile/widgets/comment_widgets/comment_header.dart';
 import 'package:teamfinder_mobile/widgets/comment_widgets/comment_tree.dart';
-import 'package:teamfinder_mobile/widgets/image_grid.dart';
+import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
+import 'package:teamfinder_mobile/widgets/misc/share_bottomsheet.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
-import 'package:teamfinder_mobile/widgets/share_bottomsheet.dart';
-import '../utils/router_animation.dart';
-import 'comment_widgets/new_bottomSheet_route.dart';
+import '../../utils/router_animation.dart';
+import '../comment_widgets/new_bottomSheet_route.dart';
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
@@ -264,16 +265,17 @@ class _PostWidgetState extends State<PostWidget>
 
         // Update currentIndex for the next iteration
         currentIndex = match.end;
-        sanitizedDesc =sanitizedDesc.substring(match.end, sanitizedDesc.length);
+        sanitizedDesc =
+            sanitizedDesc.substring(match.end, sanitizedDesc.length);
       }
     }
     // Add remaining text after the last mention
-      textSpans.add(
-        TextSpan(
-          text: sanitizedDesc,
-          style: const TextStyle(fontSize: 18),
-        ),
-      );
+    textSpans.add(
+      TextSpan(
+        text: sanitizedDesc,
+        style: const TextStyle(fontSize: 18),
+      ),
+    );
     return RichText(
       text: TextSpan(
         children: textSpans,
@@ -281,7 +283,6 @@ class _PostWidgetState extends State<PostWidget>
       ),
     );
   }
-
 
   void newParentComment() {
     debugPrint(widget.post.id.toString());
@@ -528,16 +529,11 @@ class _PostWidgetState extends State<PostWidget>
                               child: ChatMessageBar(
                                 focusNode: chatTextArea,
                                 maxLines: 10,
-                                messageBarColor: userService.darkTheme!
-                                    ? const Color.fromARGB(255, 74, 74, 74)
-                                    : const Color.fromARGB(255, 239, 239, 239),
-                                decoration: BoxDecoration(
-                                    color: userService.darkTheme!
-                                        ? const Color.fromARGB(255, 74, 74, 74)
-                                        : const Color.fromARGB(
-                                            255, 239, 239, 239),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(15))),
+                                messageBarColor: Colors.transparent,
+                                decoration: const BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
                                 hintText: "Write a comment here..",
                                 textController: _textController,
                                 onSend: (String typedMsg) {
@@ -551,99 +547,7 @@ class _PostWidgetState extends State<PostWidget>
                                 : Colors.white,
                             headerBuilder:
                                 (BuildContext context, double offset) {
-                              return Container(
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15))),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 65,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: userService.darkTheme!
-                                                ? const Color.fromRGBO(
-                                                    46, 46, 46, 1)
-                                                : Colors.white,
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(15),
-                                                    topRight:
-                                                        Radius.circular(15))),
-                                        child: Theme(
-                                          data: userService.darkTheme!
-                                              ? ThemeData.dark()
-                                              : ThemeData.light(),
-                                          child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 22.0, right: 22),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 0.0),
-                                                        child: Container(
-                                                          height: 5,
-                                                          width: 60,
-                                                          decoration: const BoxDecoration(
-                                                              color:
-                                                                  Colors.grey,
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          15))),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        const Text(
-                                                          "Comments",
-                                                          style: TextStyle(
-                                                              fontSize: 20),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: const Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    10.0),
-                                                            child: Icon(
-                                                                Icons.close),
-                                                          ),
-                                                        )
-                                                      ]),
-                                                ],
-                                              )),
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(
-                                      height: 0,
-                                      color: userService.darkTheme!
-                                          ? Colors.grey
-                                          : const Color.fromARGB(
-                                              255, 36, 36, 36),
-                                    ),
-                                  ],
-                                ),
-                              );
+                              return const CommentHeader();
                             },
                             bodyBuilder: (BuildContext context, double offset) {
                               return SliverChildListDelegate(

@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/pages/create_post_page.dart';
-import '../services/data_service.dart';
-import '../utils/router_animation.dart';
+import '../../services/data_service.dart';
+import '../../utils/router_animation.dart';
 
 class WriteSomethingWidget extends StatelessWidget {
   const WriteSomethingWidget({super.key});

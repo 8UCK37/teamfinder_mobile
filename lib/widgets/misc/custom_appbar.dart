@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../chat_ui/chat_home.dart';
-import '../pages/search_page.dart';
-import '../services/notification_observer.dart';
-import '../utils/theme.dart';
+import '../../chat_ui/chat_home.dart';
+import '../../pages/search_page.dart';
+import '../../services/notification_observer.dart';
+import '../../utils/theme.dart';
+
+
 
 class TeamFinderAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isDark;
@@ -104,7 +106,7 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChatHome()),
+                    MaterialPageRoute(builder: (context) => const ChatHome()),
                   );
                 },
                 child: const Material(

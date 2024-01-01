@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import '../pojos/post_pojo.dart';
-import '../widgets/online_widget.dart';
-import '../widgets/post_widget.dart';
-import '../widgets/separator_widget.dart';
-import '../widgets/write_something_widget.dart';
+import '../widgets/misc/online_widget.dart';
+import '../widgets/misc/post_widget.dart';
+import '../widgets/misc/separator_widget.dart';
+import '../widgets/misc/write_something_widget.dart';
 
 class HomeTab extends StatefulWidget {
   final TabController tabController;

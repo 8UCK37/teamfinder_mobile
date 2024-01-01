@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:intl/intl.dart';
-import '../../widgets/custom_appbar.dart';
+import '../../widgets/misc/custom_appbar.dart';
 
 class OwnLinkedAccounts extends StatefulWidget {
   const OwnLinkedAccounts({super.key});

@@ -2,8 +2,8 @@ import 'package:colorful_circular_progress_indicator/colorful_circular_progress_
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:newsfeed_multiple_imageview/newsfeed_multiple_imageview.dart';
-import 'package:teamfinder_mobile/widgets/carousel_widget.dart';
-import 'package:teamfinder_mobile/widgets/imageSlideshow.dart';
+import 'package:teamfinder_mobile/widgets/misc/carousel_widget.dart';
+import 'package:teamfinder_mobile/widgets/misc/imageSlideshow.dart';
 
 
 class ImageGrid extends StatelessWidget {

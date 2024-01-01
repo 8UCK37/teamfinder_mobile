@@ -12,7 +12,7 @@ import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import '../../utils/router_animation.dart';
-import '../../widgets/custom_appbar.dart';
+import '../../widgets/misc/custom_appbar.dart';
 
 class GamesPage extends StatefulWidget {
   const GamesPage({super.key});

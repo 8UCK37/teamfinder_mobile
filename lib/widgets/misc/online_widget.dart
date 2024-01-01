@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
-import '../services/notification_observer.dart';
-import '../utils/router_animation.dart';
+import '../../services/notification_observer.dart';
+import '../../utils/router_animation.dart';
 
 class OnlineWidget extends StatefulWidget {
   const OnlineWidget({super.key});

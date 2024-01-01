@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
-import 'package:teamfinder_mobile/widgets/notification_option.dart';
-import '../friend_profile_ui/friend_profilehome.dart';
-import '../pojos/incoming_notification.dart';
+import 'package:teamfinder_mobile/widgets/misc/notification_option.dart';
+import '../../friend_profile_ui/friend_profilehome.dart';
+import '../../pojos/incoming_notification.dart';
 
 class NotificationWidget extends StatelessWidget {
   final IncomingNotification notification;

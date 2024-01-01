@@ -8,11 +8,11 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import 'package:teamfinder_mobile/pages/create_post_page.dart';
 import 'package:teamfinder_mobile/utils/theme.dart';
-import 'package:teamfinder_mobile/widgets/post_widget.dart';
+import 'package:teamfinder_mobile/widgets/misc/post_widget.dart';
 
 import '../pages/edit_profileinfo_page..dart';
 import '../services/data_service.dart';
-import '../widgets/separator_widget.dart';
+import '../widgets/misc/separator_widget.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});

@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/simply_mention_interface.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
-import 'package:teamfinder_mobile/widgets/textfield_tag.dart';
+import 'package:teamfinder_mobile/widgets/misc/textfield_tag.dart';
 
 import '../services/mention_service.dart';
 import '../utils/image_helper.dart';

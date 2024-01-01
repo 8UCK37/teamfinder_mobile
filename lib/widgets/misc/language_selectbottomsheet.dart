@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import '../utils/language_chip_helper.dart';
+
+import '../../utils/language_chip_helper.dart';
 
 // ignore: must_be_immutable
 class LanguageBottomSheet extends StatefulWidget {

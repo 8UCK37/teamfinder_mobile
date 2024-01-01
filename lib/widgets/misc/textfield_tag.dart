@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
-import '../services/mention_service.dart';
-import '../utils/theme.dart';
+import '../../services/mention_service.dart';
+import '../../utils/theme.dart';
 
 class TextFieldTagInterface extends StatefulWidget {
   const TextFieldTagInterface({super.key});

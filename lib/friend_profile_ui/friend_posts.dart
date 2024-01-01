@@ -7,9 +7,9 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
-import 'package:teamfinder_mobile/widgets/post_widget.dart';
+import 'package:teamfinder_mobile/widgets/misc/post_widget.dart';
 import '../utils/language_chip_helper.dart';
-import '../widgets/separator_widget.dart';
+import '../widgets/misc/separator_widget.dart';
 
 class FriendProfilePosts extends StatefulWidget {
   final String? friendName;
@@ -303,11 +303,8 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                           childrenPadding: const EdgeInsets.only(left: 25),
                           children: const [
                             ListTile(
-                              title: Text("item1"),
+                              title: Text("There's really nothing to show here"),
                             ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
                           ],
                         ),
                       ],
