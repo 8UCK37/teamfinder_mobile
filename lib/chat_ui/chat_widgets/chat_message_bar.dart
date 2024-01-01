@@ -51,8 +51,9 @@ class ChatMessageBar extends StatelessWidget {
   /// [MessageBar] constructor
   ///
   ///
-  ChatMessageBar(
-      {this.replying = false,
+  const ChatMessageBar(
+      {super.key, 
+      this.replying = false,
       this.replyingTo = "",
       this.actions = const [],
       required this.textController,

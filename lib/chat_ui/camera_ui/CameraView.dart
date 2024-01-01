@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat%20pages/chat_screen.dart';
 import '../../services/data_service.dart';
 import '../../services/socket_service.dart';
-import '../../widgets/custom_image_editor.dart';
+import '../../widgets/misc/custom_image_editor.dart';
 import '../../utils/image_helper.dart';
 
 class CameraViewPage extends StatefulWidget {

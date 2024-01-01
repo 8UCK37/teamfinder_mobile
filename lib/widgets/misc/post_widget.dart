@@ -524,6 +524,7 @@ class _PostWidgetState extends State<PostWidget>
                             anchors: [0, 0.67, 0.96],
                             headerHeight: 65,
                             context: context,
+                            bottomSheetColor:Colors.transparent,
                             bottomWidget: Theme(
                               data: ThemeData.light(),
                               child: ChatMessageBar(
@@ -542,9 +543,6 @@ class _PostWidgetState extends State<PostWidget>
                                 },
                               ),
                             ),
-                            bottomSheetColor: userService.darkTheme!
-                                ? const Color.fromRGBO(46, 46, 46, 1)
-                                : Colors.white,
                             headerBuilder:
                                 (BuildContext context, double offset) {
                               return const CommentHeader();
