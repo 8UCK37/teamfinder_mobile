@@ -20,15 +20,14 @@ class ProfileTab extends StatefulWidget {
   _ProfileTabState createState() => _ProfileTabState();
 }
 
-class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
+class _ProfileTabState extends State<ProfileTab> with AutomaticKeepAliveClientMixin<ProfileTab> {
   List<PostPojo>? postList;
   dynamic twitchData;
   dynamic discordData;
 
   @override
-  void initState() {
-    super.initState();
-  }
+  bool get wantKeepAlive => true;
+
 
   @override
   void dispose() {
@@ -59,6 +58,7 @@ class _ProfileTabState extends State<ProfileTab> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
     postList = userService.ownPosts;

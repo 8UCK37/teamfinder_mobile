@@ -93,8 +93,7 @@ class _CreatePostState extends State<CreatePost> {
         formData.files.add(MapEntry(
             'post', await MultipartFile.fromFile(compressedImage.path)));
       }
-
-      //TODO change the url to "createPost"
+      
       Response response = await dio.post(
         'http://${dotenv.env['server_url']}/createPost',
         data: formData,
