@@ -291,6 +291,60 @@ class _PostWidgetState extends State<PostWidget>
     userService.updateReplyingTo(null);
   }
 
+  void openComment() {
+    showCustomBottomSheet(
+      minHeight: 0,
+      initHeight: 0.67,
+      maxHeight: 0.96,
+      anchors: [0, 0.67, 0.96],
+      headerHeight: 65,
+      context: context,
+      bottomSheetColor: Colors.transparent,
+      bottomWidget: Theme(
+        data: ThemeData.light(),
+        child: ChatMessageBar(
+          focusNode: chatTextArea,
+          maxLines: 10,
+          messageBarColor: Colors.transparent,
+          decoration: const BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          hintText: "Write a comment here..",
+          textController: _textController,
+          onSend: (String typedMsg) {
+            debugPrint(typedMsg);
+            newParentComment();
+          },
+        ),
+      ),
+      headerBuilder: (BuildContext context, double offset) {
+        return const CommentHeader();
+      },
+      bodyBuilder: (BuildContext context, double offset) {
+        return SliverChildListDelegate(
+          <Widget>[
+            Container(
+              child: Column(
+                children: [
+                  Column(
+                    children: <Widget>[
+                      CommentObj(
+                        postId: widget.post.id,
+                        showLines: false,
+                        chatFocus: chatTextArea,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -517,60 +571,7 @@ class _PostWidgetState extends State<PostWidget>
                               context,
                               listen: false);
                           userService.updateReplyingTo(null);
-                          showCustomBottomSheet(
-                            minHeight: 0,
-                            initHeight: 0.67,
-                            maxHeight: 0.96,
-                            anchors: [0, 0.67, 0.96],
-                            headerHeight: 65,
-                            context: context,
-                            bottomSheetColor:Colors.transparent,
-                            bottomWidget: Theme(
-                              data: ThemeData.light(),
-                              child: ChatMessageBar(
-                                focusNode: chatTextArea,
-                                maxLines: 10,
-                                messageBarColor: Colors.transparent,
-                                decoration: const BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15))),
-                                hintText: "Write a comment here..",
-                                textController: _textController,
-                                onSend: (String typedMsg) {
-                                  debugPrint(typedMsg);
-                                  newParentComment();
-                                },
-                              ),
-                            ),
-                            headerBuilder:
-                                (BuildContext context, double offset) {
-                              return const CommentHeader();
-                            },
-                            bodyBuilder: (BuildContext context, double offset) {
-                              return SliverChildListDelegate(
-                                <Widget>[
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Column(
-                                          children: <Widget>[
-                                            CommentObj(
-                                              postId: widget.post.id,
-                                              showLines: false,
-                                              chatFocus: chatTextArea,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 16),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          openComment();
                         },
                         child: const Row(
                           children: <Widget>[
