@@ -130,7 +130,7 @@ class ProviderService extends ChangeNotifier {
     );
     //debugPrint('fetch post called');
     final response = await dio.get(
-      'http://${dotenv.env['server_url']}/getPost',
+      'http://${dotenv.env['server_url']}/getFeed',
       options: options,
     );
 

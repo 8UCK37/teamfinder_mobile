@@ -373,11 +373,14 @@ class _EditProfileInfoState extends State<EditProfileInfo> {
                   children: <Widget>[
                     Row(
                       children: [
-                        Text('CallOut',
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold)),
+                        Text(
+                          'Edit Profile Info',
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ],
