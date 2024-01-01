@@ -28,7 +28,7 @@ class MentionService extends ChangeNotifier {
     String markUpTextCopy = markUpText;
     List<dynamic> ops = [];
     int currentIndex = 0;
-
+    //debugPrint("from service31:$markUpTextCopy");
     RegExp regex = RegExp(r'<###@([A-Za-z0-9]+)###>');
 
     Iterable<RegExpMatch> matches = regex.allMatches(markUpTextCopy);
@@ -43,10 +43,9 @@ class MentionService extends ChangeNotifier {
 
       if (mentionObject.id.isNotEmpty) {
         // Add the text before the mention
-        String textBeforeMention =
-            markUpTextCopy.substring(currentIndex, match.start).trim();
+        String textBeforeMention = markUpTextCopy.substring(currentIndex, match.start);
         if (textBeforeMention.isNotEmpty) {
-          ops.add({'insert': "$textBeforeMention "});
+          ops.add({'insert': textBeforeMention});
         }
 
         // Create the mention map and add it to the ops list
@@ -63,6 +62,9 @@ class MentionService extends ChangeNotifier {
         ops.add(mentionMap);
         // Update the currentIndex for the next iteration
         currentIndex = match.end;
+
+        // Add a new line character before processing the next line
+        ops.add({'insert': " "});
       }
     }
 
@@ -70,13 +72,7 @@ class MentionService extends ChangeNotifier {
     if (currentIndex < markUpTextCopy.length) {
       ops.add({'insert': markUpTextCopy.substring(currentIndex)});
     }
-
-    //debugPrint("${ops.length}");
-    // Print the result
-    for (var ele in ops) {
-      debugPrint(ele.toString());
-    }
-    ops.add({'insert': "\n"});
+    debugPrint(ops.toString());
     return ops;
   }
 }

@@ -343,7 +343,7 @@ class ProviderService extends ChangeNotifier {
       debugPrint("accepting frnd req no_internet");
       return;
     } else {
-      debugPrint("in terms internet we have internet");
+      debugPrint("in terms of internet we have internet");
     }
 
     Dio dio = Dio();
@@ -373,7 +373,7 @@ class ProviderService extends ChangeNotifier {
       debugPrint("rejecting frnd req no_internet");
       return;
     } else {
-      debugPrint("in terms internet we have internet");
+      debugPrint("in terms of internet we have internet");
     }
 
     Dio dio = Dio();
@@ -421,7 +421,7 @@ class ProviderService extends ChangeNotifier {
       debugPrint("deleting post no_internet");
       return;
     } else {
-      debugPrint("in terms internet we have internet");
+      debugPrint("in terms of internet, we have internet");
     }
 
     Dio dio = Dio();

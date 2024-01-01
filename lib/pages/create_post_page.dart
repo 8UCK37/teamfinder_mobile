@@ -96,7 +96,7 @@ class _CreatePostState extends State<CreatePost> {
 
       //TODO change the url to "createPost"
       Response response = await dio.post(
-        'http://${dotenv.env['server_url']}/testPost',
+        'http://${dotenv.env['server_url']}/createPost',
         data: formData,
         options: options,
       );

@@ -153,18 +153,6 @@ class _PostWidgetState extends State<PostWidget>
     return formattedTime.toString();
   }
 
-  String parseDescription(String desc, Mention mentionList) {
-    String sanitizedDesc = desc.substring(0, desc.length - 1);
-    Map<String, String> idNameMap = {
-      for (var item in mentionList.list) item['id']: item['name']
-    };
-    late String dump = '';
-    for (String key in idNameMap.keys) {
-      dump = sanitizedDesc.replaceAll(key, idNameMap[key].toString());
-    }
-    return (dump);
-  }
-
   Widget userReaction() {
     if (widget.post.noreaction!) {
       return SizedBox(
@@ -228,48 +216,72 @@ class _PostWidgetState extends State<PostWidget>
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };
-    //DateTime now = DateTime.now();
+
     List<TextSpan> textSpans = [];
 
-    for (String word in sanitizedDesc.split(' ')) {
-      if (idNameMap.containsKey(word)) {
+    for (var id in idNameMap.keys) {
+      RegExp regex = RegExp(
+          r'\b' + RegExp.escape(id) + r'\b'); // Using \b for word boundaries
+
+      Iterable<RegExpMatch> matches = regex.allMatches(sanitizedDesc);
+
+      int currentIndex = 0;
+
+      for (RegExpMatch match in matches) {
+        // Add regular text before the mention
         textSpans.add(
           TextSpan(
-              text: '${idNameMap[word]} ',
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  debugPrint(word);
-                  if (userService.user['id'] != word) {
-                    AnimatedRouter.slideToPageLeft(
-                        context,
-                        FriendProfileHome(
-                          friendId: word,
-                          friendName: idNameMap[word],
-                        ));
-                  } else {
-                    if (widget.tabController != null) {
-                      widget.tabController!.animateTo(1);
-                    }
-                  }
-                },
-              style: const TextStyle(
-                  color: Colors.blue,
-                  decorationColor: Colors.blue,
-                  fontSize: 18)),
+            text: sanitizedDesc.substring(currentIndex, match.start),
+            style: const TextStyle(fontSize: 18),
+          ),
         );
-      } else {
+
+        // Add mention with tap gesture
         textSpans.add(
-            TextSpan(text: '$word ', style: const TextStyle(fontSize: 18)));
+          TextSpan(
+            text: '${idNameMap[id]} ',
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                debugPrint(id);
+                if (userService.user['id'] != id) {
+                  AnimatedRouter.slideToPageLeft(
+                    context,
+                    FriendProfileHome(
+                      friendId: id,
+                      friendName: idNameMap[id],
+                    ),
+                  );
+                } else {
+                  if (widget.tabController != null) {
+                    widget.tabController!.animateTo(1);
+                  }
+                }
+              },
+            style: const TextStyle(
+                color: Colors.blue, decorationColor: Colors.blue, fontSize: 18),
+          ),
+        );
+
+        // Update currentIndex for the next iteration
+        currentIndex = match.end;
+        sanitizedDesc =sanitizedDesc.substring(match.end, sanitizedDesc.length);
       }
     }
+    // Add remaining text after the last mention
+      textSpans.add(
+        TextSpan(
+          text: sanitizedDesc,
+          style: const TextStyle(fontSize: 18),
+        ),
+      );
     return RichText(
       text: TextSpan(
         children: textSpans,
-        style:
-            DefaultTextStyle.of(context).style, // Apply the default text style
+        style: DefaultTextStyle.of(context).style,
       ),
     );
   }
+
 
   void newParentComment() {
     debugPrint(widget.post.id.toString());
