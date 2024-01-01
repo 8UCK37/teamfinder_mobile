@@ -519,14 +519,19 @@ class _PostWidgetState extends State<PostWidget>
                       height: 20,
                       color:
                           userService.darkTheme! ? Colors.white : Colors.grey),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      GestureDetector(
-                        key: key,
-                        onLongPress: () {
-                          CustomAnimatedFlutterReaction().showOverlay(
+                  Container(
+                    decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        GestureDetector(
+                          key: key,
+                          onTap: () {
+                            
+                          },
+                          onLongPress: () {
+                            CustomAnimatedFlutterReaction().showOverlay(
                               overlaySize:
                                   MediaQuery.of(context).size.width * .62,
                               context: context,
@@ -535,76 +540,98 @@ class _PostWidgetState extends State<PostWidget>
                                 // ScaffoldMessenger.of(context)
                                 //     .showSnackBar(
                                 //         SnackBar(content: Text("$val")));
-                              });
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            LikeButton(
-                              size: 35,
-                              circleColor: CircleColor(
-                                  start: ColorSplash.getColorPalette(0)
-                                      .circleColorStart,
-                                  end: ColorSplash.getColorPalette(0)
-                                      .circleColorEnd),
-                              bubblesColor: BubblesColor(
-                                  dotPrimaryColor:
-                                      ColorSplash.getColorPalette(0)
-                                          .dotPrimaryColor,
-                                  dotSecondaryColor:
-                                      ColorSplash.getColorPalette(0)
-                                          .dotSecondaryColor),
-                              likeBuilder: (bool isLiked) {
-                                return userReaction();
+                                debugPrint(val.toString());
                               },
-                              likeCount: null,
+                            );
+                          },
+                          child: Container(
+                            width:(MediaQuery.of(context).size.width-32)/3,
+                            decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                LikeButton(
+                                  size: 35,
+                                  circleColor: CircleColor(
+                                      start: ColorSplash.getColorPalette(0)
+                                          .circleColorStart,
+                                      end: ColorSplash.getColorPalette(0)
+                                          .circleColorEnd),
+                                  bubblesColor: BubblesColor(
+                                      dotPrimaryColor:
+                                          ColorSplash.getColorPalette(0)
+                                              .dotPrimaryColor,
+                                      dotSecondaryColor:
+                                          ColorSplash.getColorPalette(0)
+                                              .dotSecondaryColor),
+                                  likeBuilder: (bool isLiked) {
+                                    return userReaction();
+                                  },
+                                  likeCount: null,
+                                ),
+                                const Text('Like',style: TextStyle(fontSize: 14.0),),
+                              ],
                             ),
-                            const SizedBox(width: 5.0),
-                            const Text('Like',
-                                style: TextStyle(fontSize: 14.0)),
-                          ],
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          //debugPrint('open bottom sheet');
-                          final userService = Provider.of<ProviderService>(
-                              context,
-                              listen: false);
-                          userService.updateReplyingTo(null);
-                          openComment();
-                        },
-                        child: const Row(
-                          children: <Widget>[
-                            Icon(FontAwesomeIcons.message, size: 20.0),
-                            SizedBox(width: 5.0),
-                            Text('Comment', style: TextStyle(fontSize: 14.0)),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            //debugPrint('open bottom sheet');
+                            final userService = Provider.of<ProviderService>(
+                                context,
+                                listen: false);
+                            userService.updateReplyingTo(null);
+                            openComment();
+                          },
+                          child: Container(
+                            width:(MediaQuery.of(context).size.width-32)/3,
+                            decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                            child:const Padding(
+                              padding: EdgeInsets.fromLTRB(0,8,0,8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(FontAwesomeIcons.message, size: 20.0),
+                                  SizedBox(width: 5.0),
+                                  Text('Comment', style: TextStyle(fontSize: 14.0)),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet<dynamic>(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (BuildContext context) {
-                              return Wrap(children: [
-                                ShareBottomSheet(
-                                  post: widget.post,
-                                )
-                              ]);
-                            },
-                          );
-                        },
-                        child: const Row(
-                          children: <Widget>[
-                            Icon(FontAwesomeIcons.share, size: 20.0),
-                            SizedBox(width: 5.0),
-                            Text('Share', style: TextStyle(fontSize: 14.0)),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet<dynamic>(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (BuildContext context) {
+                                return Wrap(children: [
+                                  ShareBottomSheet(
+                                    post: widget.post,
+                                  )
+                                ]);
+                              },
+                            );
+                          },
+                          child: Container(
+                            width:(MediaQuery.of(context).size.width-32)/3,
+                            decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                            child: const Padding(
+                              padding: EdgeInsets.fromLTRB(0,8,0,8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(FontAwesomeIcons.share, size: 20.0),
+                                  SizedBox(width: 5.0),
+                                  Text('Share', style: TextStyle(fontSize: 14.0)),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
