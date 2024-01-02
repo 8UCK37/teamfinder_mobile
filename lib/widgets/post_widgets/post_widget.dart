@@ -224,10 +224,13 @@ class _PostWidgetState extends State<PostWidget>
       }
 
       //widget.post.reactiontype
-      return Image(
-        image: AssetImage(path(currentReaction)),
-        width: 45,
-        height: 45,
+      return Container(
+        decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+        child: Image(
+          image: AssetImage(path(currentReaction)),
+          width: 45,
+          height: 45,
+        ),
       );
     }
   }
@@ -381,54 +384,60 @@ class _PostWidgetState extends State<PostWidget>
       toggleButtonColor: Colors.teal,
       items: buildMenuItems(),
       backgroundWidget: Container(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.fromLTRB(0,15,0,15),
         child: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                GestureDetector(
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(widget.post.profilePicture!),
-                    radius: 20.0,
-                  ),
-                  onTap: () {
-                    debugPrint(widget.post.author);
-                    if (userService.user['id'] != widget.post.author) {
-                      AnimatedRouter.slideToPageLeft(
-                          context,
-                          FriendProfileHome(
-                            friendId: widget.post.author,
-                            friendName: widget.post.name,
-                            friendProfileImage: widget.post.profilePicture,
-                          ));
-                    } else {
-                      if (widget.tabController != null) {
-                        widget.tabController!.animateTo(1);
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15,0,15,0),
+              child: Row(
+                children: <Widget>[
+                  GestureDetector(
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.post.profilePicture!),
+                      radius: 20.0,
+                    ),
+                    onTap: () {
+                      debugPrint(widget.post.author);
+                      if (userService.user['id'] != widget.post.author) {
+                        AnimatedRouter.slideToPageLeft(
+                            context,
+                            FriendProfileHome(
+                              friendId: widget.post.author,
+                              friendName: widget.post.name,
+                              friendProfileImage: widget.post.profilePicture,
+                            ));
+                      } else {
+                        if (widget.tabController != null) {
+                          widget.tabController!.animateTo(1);
+                        }
                       }
-                    }
-                  },
-                ),
-                const SizedBox(width: 7.0),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(widget.post.name!,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17.0)),
-                    const SizedBox(height: 5.0),
-                    Text(convertToLocalTime(widget.post.createdAt))
-                  ],
-                ),
-              ],
+                    },
+                  ),
+                  const SizedBox(width: 7.0),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(widget.post.name!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17.0)),
+                      const SizedBox(height: 5.0),
+                      Text(convertToLocalTime(widget.post.createdAt))
+                    ],
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20.0),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: widget.post.description != null
-                  ? parseDescriptionWidget(
-                      widget.post.description!, widget.post.mention!, context)
-                  : const Text(""),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15,0,15,0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: widget.post.description != null
+                    ? parseDescriptionWidget(
+                        widget.post.description!, widget.post.mention!, context)
+                    : const Text(""),
+              ),
             ),
             if (widget.post.shared != null)
               Container(
@@ -488,50 +497,54 @@ class _PostWidgetState extends State<PostWidget>
             //const SizedBox(height: 5.0),
 
             ImageGrid(
-                imageUrls: (widget.post.shared == null)
-                    ? widget.post.photoUrl!.split(',')
-                    : widget.post.parentpost!.photoUrl!.split(',')),
+              imageUrls: (widget.post.shared == null)
+                  ? widget.post.photoUrl!.split(',')
+                  : widget.post.parentpost!.photoUrl!.split(','),
+            ),
             const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      const SizedBox(
-                        width: 25,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 7.5,
-                              child: Image(
-                                image: AssetImage("assets/images/love.gif"),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15,0,15,0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        const SizedBox(
+                          width: 25,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                left: 7.5,
+                                child: Image(
+                                  image: AssetImage("assets/images/love.gif"),
+                                  height: 20,
+                                  width: 20,
+                                ),
+                              ),
+                              Image(
+                                image: AssetImage("assets/images/haha.gif"),
                                 height: 20,
                                 width: 20,
                               ),
-                            ),
-                            Image(
-                              image: AssetImage("assets/images/haha.gif"),
-                              height: 20,
-                              width: 20,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Text(
-                          ' ${int.parse(widget.post.likecount!) + int.parse(widget.post.hahacount!) + int.parse(widget.post.lovecount!) + int.parse(widget.post.sadcount!) + int.parse(widget.post.poopcount!)}'),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(int.parse(widget.post.commentCount!) < 2
-                          ? '${widget.post.commentCount} comment  •  '
-                          : '${widget.post.commentCount} comments  •  '),
-                      Text('${widget.post.sharedCount} shares'),
-                    ],
-                  ),
-                ],
+                        Text(
+                            ' ${int.parse(widget.post.likecount!) + int.parse(widget.post.hahacount!) + int.parse(widget.post.lovecount!) + int.parse(widget.post.sadcount!) + int.parse(widget.post.poopcount!)}'),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(int.parse(widget.post.commentCount!) < 2
+                            ? '${widget.post.commentCount} comment  •  '
+                            : '${widget.post.commentCount} comments  •  '),
+                        Text('${widget.post.sharedCount} shares'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -546,7 +559,7 @@ class _PostWidgetState extends State<PostWidget>
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.transparent)),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         GestureDetector(
@@ -589,16 +602,14 @@ class _PostWidgetState extends State<PostWidget>
                             );
                           },
                           child: Container(
-                            width: (screenWidth - 32) / 3,
+                            width: (screenWidth-2) / 3,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.transparent)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 LikeButton(
-                                  width:
-                                      (screenWidth - 47) /
-                                          3,
+                                  width:(screenWidth -17)/3,
                                   onTap: (isLiked) async {
                                     setState(() {
                                       if (noReaction) {
@@ -643,7 +654,7 @@ class _PostWidgetState extends State<PostWidget>
                             openComment();
                           },
                           child: Container(
-                            width: (screenWidth - 32) / 3,
+                            width: (screenWidth-2) / 3,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.transparent)),
                             child: const Padding(
@@ -676,7 +687,7 @@ class _PostWidgetState extends State<PostWidget>
                             );
                           },
                           child: Container(
-                            width: (screenWidth - 32) / 3,
+                            width: (screenWidth-2) / 3,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.transparent)),
                             child: const Padding(
