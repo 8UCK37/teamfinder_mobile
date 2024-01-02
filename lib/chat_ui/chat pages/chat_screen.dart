@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_home.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_bubbles.dart';
 import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_images_bubbles.dart';
-import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
+import 'package:teamfinder_mobile/chat_ui/chat_widgets/old_chat_message_bar.dart';
 import '../../pojos/chat_model_pojo.dart';
 import '../../services/data_service.dart';
 import '../../services/notification_observer.dart';

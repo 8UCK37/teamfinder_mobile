@@ -17,7 +17,8 @@ class ProviderService extends ChangeNotifier {
   dynamic twitchData;
   dynamic discordData;
   bool? darkTheme = false;
-  int? replyingTo;
+  int? replyingToId;
+  String? replyingToName;
   Map<Language, bool> selectedLang = {};
   SocketService socketService = SocketService();
 
@@ -34,8 +35,9 @@ class ProviderService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateReplyingTo(int? newValue) {
-    replyingTo = newValue;
+  void updateReplyingTo(int? newValue, String? newName) {
+    replyingToId = newValue;
+    replyingToName = newName;
     notifyListeners();
   }
 

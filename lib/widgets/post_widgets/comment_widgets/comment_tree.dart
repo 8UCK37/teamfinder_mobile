@@ -267,7 +267,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                           final userService = Provider.of<ProviderService>(
                               context,
                               listen: false);
-                          userService.updateReplyingTo(comment.id!);
+                          userService.updateReplyingTo(comment.id!,comment.author!.name);
                           if (widget.chatFocus.hasFocus && !KeyboardService.isVisible(context)){
                             widget.chatFocus.unfocus();
                             Future.delayed(Duration.zero, () {

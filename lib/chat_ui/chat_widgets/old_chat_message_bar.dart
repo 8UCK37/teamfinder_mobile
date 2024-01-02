@@ -94,9 +94,10 @@ class ChatMessageBar extends StatelessWidget {
                         size: 24,
                       ),
                       Expanded(
+                        // ignore: avoid_unnecessary_containers
                         child: Container(
                           child: Text(
-                            'Re : ' + replyingTo,
+                            'Re : $replyingTo',
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

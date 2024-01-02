@@ -11,10 +11,10 @@ import 'package:like_button/like_button.dart' hide LikeButton, LikeButtonState;
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:teamfinder_mobile/chat_ui/chat_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/chat_message_bar.dart';
 import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_header.dart';
 import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
@@ -40,6 +40,7 @@ class _PostWidgetState extends State<PostWidget>
     with SingleTickerProviderStateMixin {
   GlobalKey reactionKey = GlobalKey();
   GlobalKey commentKey = GlobalKey();
+
   final TextEditingController _textController = TextEditingController();
   final FocusNode chatTextArea = FocusNode();
 
@@ -63,6 +64,7 @@ class _PostWidgetState extends State<PostWidget>
     _textController.dispose();
     super.dispose();
   }
+
 
   List<CircularMenuItem> buildMenuItems() {
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -369,9 +371,9 @@ class _PostWidgetState extends State<PostWidget>
   void newParentComment(String msg) async {
     debugPrint("commenting on: ${widget.post.id.toString()}");
     final userService = Provider.of<ProviderService>(context, listen: false);
-    debugPrint(userService.replyingTo.toString());
-    var replyIngTo = userService.replyingTo;
-    userService.updateReplyingTo(null);
+    debugPrint(userService.replyingToId.toString());
+    var replyIngTo = userService.replyingToId;
+    userService.updateReplyingTo(null, null);
     NetworkController networkController = NetworkController();
 
     if (await networkController.noInternet()) {
@@ -421,7 +423,7 @@ class _PostWidgetState extends State<PostWidget>
       bottomSheetColor: Colors.transparent,
       bottomWidget: Theme(
         data: ThemeData.light(),
-        child: ChatMessageBar(
+        child: CommentMessageBar(
           focusNode: chatTextArea,
           maxLines: 10,
           messageBarColor: Colors.transparent,
@@ -736,7 +738,7 @@ class _PostWidgetState extends State<PostWidget>
                             final userService = Provider.of<ProviderService>(
                                 context,
                                 listen: false);
-                            userService.updateReplyingTo(null);
+                            userService.updateReplyingTo(null, null);
                             openComment();
                           },
                           child: Container(
