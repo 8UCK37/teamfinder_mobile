@@ -104,9 +104,8 @@ class _CreatePostState extends State<CreatePost> {
         setState(() {
           //clear images after upload
           imagePickerController.clearImages();
-          setState(() {
-            mentionKey = GlobalKey();
-          });
+          //clear textfield
+          mentionKey = GlobalKey();
         });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');

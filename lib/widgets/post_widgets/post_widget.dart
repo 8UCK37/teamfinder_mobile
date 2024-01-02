@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:like_button/like_button.dart';
+import 'package:like_button/like_button.dart' hide LikeButton, LikeButtonState;
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -20,6 +20,7 @@ import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_react
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 import '../../utils/router_animation.dart';
 import 'comment_widgets/new_bottomSheet_route.dart';
+import 'custom_like_button.dart';
 
 class PostWidget extends StatefulWidget {
   final PostPojo post;
@@ -40,8 +41,15 @@ class _PostWidgetState extends State<PostWidget>
   double iconSize = 15;
   double smallerIconPadding = 5;
 
+  late dynamic currentReaction = widget.post.reactiontype.toString();
+  late bool noReaction;
+
   @override
   void initState() {
+    debugPrint("46: ${widget.post.reactiontype.toString()}");
+    debugPrint("46: ${widget.post.noreaction.toString()}");
+    currentReaction = widget.post.reactiontype.toString();
+    noReaction = widget.post.noreaction!;
     super.initState();
   }
 
@@ -154,30 +162,47 @@ class _PostWidgetState extends State<PostWidget>
     return formattedTime.toString();
   }
 
+  String reactionParser(int val) {
+    String path(int i) {
+      switch (i) {
+        case 0:
+          return "like";
+        case 1:
+          return "haha";
+        case 2:
+          return "love";
+        case 3:
+          return "sad";
+        case 4:
+          return "poop";
+        default:
+          return "null";
+      }
+    }
+
+    return path(val);
+  }
+
   Widget userReaction() {
-    if (widget.post.noreaction!) {
-      return SizedBox(
-        height: 45,
-        width: 45,
-        child: ShaderMask(
-          shaderCallback: (Rect bounds) {
-            return const LinearGradient(
-              colors: [
-                Colors.grey,
-                Colors.grey
-              ], // You can change the colors if needed.
-              stops: [0.0, 1.0],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ).createShader(bounds);
-          },
-          blendMode: BlendMode
-              .srcATop, // This preserves the transparency of the image.
-          child: const Image(
-            image: AssetImage("assets/images/fire.gif"),
-            width: 45,
-            height: 45,
-          ),
+    if (noReaction) {
+      return ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return const LinearGradient(
+            colors: [
+              Colors.grey,
+              Colors.grey
+            ], // You can change the colors if needed.
+            stops: [0.0, 1.0],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ).createShader(bounds);
+        },
+        blendMode:
+            BlendMode.srcATop, // This preserves the transparency of the image.
+        child: const Image(
+          image: AssetImage("assets/images/fire.gif"),
+          width: 45,
+          height: 45,
         ),
       );
     } else {
@@ -198,14 +223,11 @@ class _PostWidgetState extends State<PostWidget>
         }
       }
 
-      return SizedBox(
-        height: 45,
+      //widget.post.reactiontype
+      return Image(
+        image: AssetImage(path(currentReaction)),
         width: 45,
-        child: Image(
-          image: AssetImage(path(widget.post.reactiontype)),
-          width: 45,
-          height: 45,
-        ),
+        height: 45,
       );
     }
   }
@@ -348,6 +370,7 @@ class _PostWidgetState extends State<PostWidget>
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: false);
+    final double screenWidth = MediaQuery.of(context).size.width;
     return CircularMenu(
       alignment: Alignment.topRight,
       toggleButtonSize: 15,
@@ -520,37 +543,74 @@ class _PostWidgetState extends State<PostWidget>
                       color:
                           userService.darkTheme! ? Colors.white : Colors.grey),
                   Container(
-                    decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           key: key,
                           onTap: () {
-                            
+                            debugPrint(
+                                "before liked: ${currentReaction.toString()}");
+                            setState(() {
+                              if (noReaction) {
+                                currentReaction = "like";
+                                noReaction = false;
+                              } else {
+                                currentReaction = "null";
+                                noReaction = true;
+                              }
+                            });
+                            debugPrint(
+                                "after liked: ${currentReaction.toString()}");
                           },
                           onLongPress: () {
                             CustomAnimatedFlutterReaction().showOverlay(
                               overlaySize:
-                                  MediaQuery.of(context).size.width * .62,
+                                  screenWidth * .62,
                               context: context,
                               key: key,
                               onReaction: (val) {
-                                // ScaffoldMessenger.of(context)
-                                //     .showSnackBar(
-                                //         SnackBar(content: Text("$val")));
                                 debugPrint(val.toString());
+                                setState(() {
+                                  String reaction = reactionParser(val);
+                                  debugPrint(reaction);
+                                  if (reaction != "null") {
+                                    currentReaction = reaction;
+                                    noReaction = false;
+                                  } else {
+                                    noReaction = true;
+                                  }
+                                });
                               },
                             );
                           },
                           child: Container(
-                            width:(MediaQuery.of(context).size.width-32)/3,
-                            decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                            width: (screenWidth - 32) / 3,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.transparent)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 LikeButton(
+                                  width:
+                                      (screenWidth - 47) /
+                                          3,
+                                  onTap: (isLiked) async {
+                                    setState(() {
+                                      if (noReaction) {
+                                        currentReaction = "like";
+                                        noReaction = false;
+                                      } else {
+                                        currentReaction = "null";
+                                        noReaction = true;
+                                      }
+                                    });
+                                    return !isLiked;
+                                  },
                                   size: 35,
                                   circleColor: CircleColor(
                                       start: ColorSplash.getColorPalette(0)
@@ -564,12 +624,11 @@ class _PostWidgetState extends State<PostWidget>
                                       dotSecondaryColor:
                                           ColorSplash.getColorPalette(0)
                                               .dotSecondaryColor),
-                                  likeBuilder: (bool isLiked) {
+                                  likeBuilder: (isLiked) {
                                     return userReaction();
                                   },
                                   likeCount: null,
                                 ),
-                                const Text('Like',style: TextStyle(fontSize: 14.0),),
                               ],
                             ),
                           ),
@@ -584,16 +643,18 @@ class _PostWidgetState extends State<PostWidget>
                             openComment();
                           },
                           child: Container(
-                            width:(MediaQuery.of(context).size.width-32)/3,
-                            decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
-                            child:const Padding(
-                              padding: EdgeInsets.fromLTRB(0,8,0,8),
+                            width: (screenWidth - 32) / 3,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.transparent)),
+                            child: const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Icon(FontAwesomeIcons.message, size: 20.0),
                                   SizedBox(width: 5.0),
-                                  Text('Comment', style: TextStyle(fontSize: 14.0)),
+                                  Text('Comment',
+                                      style: TextStyle(fontSize: 14.0)),
                                 ],
                               ),
                             ),
@@ -615,16 +676,18 @@ class _PostWidgetState extends State<PostWidget>
                             );
                           },
                           child: Container(
-                            width:(MediaQuery.of(context).size.width-32)/3,
-                            decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                            width: (screenWidth - 32) / 3,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.transparent)),
                             child: const Padding(
-                              padding: EdgeInsets.fromLTRB(0,8,0,8),
+                              padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Icon(FontAwesomeIcons.share, size: 20.0),
                                   SizedBox(width: 5.0),
-                                  Text('Share', style: TextStyle(fontSize: 14.0)),
+                                  Text('Share',
+                                      style: TextStyle(fontSize: 14.0)),
                                 ],
                               ),
                             ),
