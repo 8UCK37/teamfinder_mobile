@@ -1,7 +1,10 @@
 // ignore_for_file: sort_child_properties_last
 import 'package:circular_menu/circular_menu.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart' hide LikeButton, LikeButtonState;
@@ -18,6 +21,7 @@ import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/misc/share_bottomsheet.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
+import '../../controller/network_controller.dart';
 import '../../utils/router_animation.dart';
 import 'comment_widgets/new_bottomSheet_route.dart';
 import 'custom_like_button.dart';
@@ -42,14 +46,16 @@ class _PostWidgetState extends State<PostWidget>
   double smallerIconPadding = 5;
 
   late dynamic currentReaction = widget.post.reactiontype.toString();
-  late bool noReaction;
-
+  late bool noReaction = widget.post.noreaction!;
+  late int reactionCount = int.parse(widget.post.likecount!) +
+      int.parse(widget.post.hahacount!) +
+      int.parse(widget.post.lovecount!) +
+      int.parse(widget.post.sadcount!) +
+      int.parse(widget.post.poopcount!);
   @override
   void initState() {
-    debugPrint("46: ${widget.post.reactiontype.toString()}");
-    debugPrint("46: ${widget.post.noreaction.toString()}");
-    currentReaction = widget.post.reactiontype.toString();
-    noReaction = widget.post.noreaction!;
+    debugPrint("46: ${currentReaction.toString()}");
+    debugPrint("46: ${noReaction.toString()}");
     super.initState();
   }
 
@@ -184,7 +190,7 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   Widget userReaction() {
-    if (noReaction) {
+    if (noReaction || currentReaction == "dislike") {
       return ShaderMask(
         shaderCallback: (Rect bounds) {
           return const LinearGradient(
@@ -225,13 +231,65 @@ class _PostWidgetState extends State<PostWidget>
 
       //widget.post.reactiontype
       return Container(
-        decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+        decoration:
+            BoxDecoration(border: Border.all(color: Colors.transparent)),
         child: Image(
           image: AssetImage(path(currentReaction)),
           width: 45,
           height: 45,
         ),
       );
+    }
+  }
+
+  void reactionBackendCall(String reaction) async {
+    NetworkController networkController = NetworkController();
+    debugPrint("type: $reaction");
+    if (await networkController.noInternet()) {
+      debugPrint("fetchPosts() no_internet");
+      return;
+    } else {
+      debugPrint("fetchPosts() called");
+    }
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    if (reaction == "dislike") {
+      setState(() {
+        reactionCount--;
+      });
+      var response = await dio.post(
+        'http://${dotenv.env['server_url']}/dislikePost',
+        data: {
+          'id': widget.post.id,
+          'type': reaction,
+        },
+        options: options,
+      );
+      if (response.statusCode == 200) {
+        debugPrint("dislike for post id: ${widget.post.id} succ");
+      }
+    } else {
+      setState(() {
+        reactionCount++;
+      });
+      var response = await dio.post(
+        'http://${dotenv.env['server_url']}/likePost',
+        data: {
+          'id': widget.post.id,
+          'type': reaction,
+        },
+        options: options,
+      );
+      if (response.statusCode == 200) {
+        debugPrint("dislike for post id: ${widget.post.id} succ");
+      }
     }
   }
 
@@ -384,16 +442,17 @@ class _PostWidgetState extends State<PostWidget>
       toggleButtonColor: Colors.teal,
       items: buildMenuItems(),
       backgroundWidget: Container(
-        padding: const EdgeInsets.fromLTRB(0,15,0,15),
+        padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(15,0,15,0),
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: Row(
                 children: <Widget>[
                   GestureDetector(
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(widget.post.profilePicture!),
+                      backgroundImage:
+                          NetworkImage(widget.post.profilePicture!),
                       radius: 20.0,
                     ),
                     onTap: () {
@@ -430,7 +489,7 @@ class _PostWidgetState extends State<PostWidget>
             ),
             const SizedBox(height: 20.0),
             Padding(
-              padding: const EdgeInsets.fromLTRB(15,0,15,0),
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: widget.post.description != null
@@ -503,7 +562,7 @@ class _PostWidgetState extends State<PostWidget>
             ),
             const SizedBox(height: 8),
             Padding(
-              padding: const EdgeInsets.fromLTRB(15,0,15,0),
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Row(
@@ -531,8 +590,7 @@ class _PostWidgetState extends State<PostWidget>
                             ],
                           ),
                         ),
-                        Text(
-                            ' ${int.parse(widget.post.likecount!) + int.parse(widget.post.hahacount!) + int.parse(widget.post.lovecount!) + int.parse(widget.post.sadcount!) + int.parse(widget.post.poopcount!)}'),
+                        Text(' $reactionCount'),
                       ],
                     ),
                     Row(
@@ -565,29 +623,13 @@ class _PostWidgetState extends State<PostWidget>
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           key: key,
-                          onTap: () {
-                            debugPrint(
-                                "before liked: ${currentReaction.toString()}");
-                            setState(() {
-                              if (noReaction) {
-                                currentReaction = "like";
-                                noReaction = false;
-                              } else {
-                                currentReaction = "null";
-                                noReaction = true;
-                              }
-                            });
-                            debugPrint(
-                                "after liked: ${currentReaction.toString()}");
-                          },
                           onLongPress: () {
                             CustomAnimatedFlutterReaction().showOverlay(
-                              overlaySize:
-                                  screenWidth * .62,
+                              overlaySize: screenWidth * .62,
                               context: context,
                               key: key,
                               onReaction: (val) {
-                                debugPrint(val.toString());
+                                //debugPrint(val.toString());
                                 setState(() {
                                   String reaction = reactionParser(val);
                                   debugPrint(reaction);
@@ -598,28 +640,35 @@ class _PostWidgetState extends State<PostWidget>
                                     noReaction = true;
                                   }
                                 });
+                                debugPrint(
+                                    "for postid:${widget.post.id}current:$currentReaction,noreac:$noReaction");
+                                reactionBackendCall(currentReaction);
                               },
                             );
                           },
                           child: Container(
-                            width: (screenWidth-2) / 3,
+                            width: (screenWidth - 2) / 3,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.transparent)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 LikeButton(
-                                  width:(screenWidth -17)/3,
+                                  width: (screenWidth - 17) / 3,
                                   onTap: (isLiked) async {
                                     setState(() {
-                                      if (noReaction) {
+                                      if (noReaction ||
+                                          currentReaction == "dislike") {
                                         currentReaction = "like";
                                         noReaction = false;
                                       } else {
-                                        currentReaction = "null";
+                                        currentReaction = "dislike";
                                         noReaction = true;
                                       }
                                     });
+                                    debugPrint(
+                                        "for postid:${widget.post.id}current:$currentReaction,noreac:$noReaction");
+                                    reactionBackendCall(currentReaction);
                                     return !isLiked;
                                   },
                                   size: 35,
@@ -654,7 +703,7 @@ class _PostWidgetState extends State<PostWidget>
                             openComment();
                           },
                           child: Container(
-                            width: (screenWidth-2) / 3,
+                            width: (screenWidth - 2) / 3,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.transparent)),
                             child: const Padding(
@@ -687,7 +736,7 @@ class _PostWidgetState extends State<PostWidget>
                             );
                           },
                           child: Container(
-                            width: (screenWidth-2) / 3,
+                            width: (screenWidth - 2) / 3,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.transparent)),
                             child: const Padding(
