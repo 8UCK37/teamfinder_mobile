@@ -38,7 +38,8 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget>
     with SingleTickerProviderStateMixin {
-  GlobalKey key = GlobalKey();
+  GlobalKey reactionKey = GlobalKey();
+  GlobalKey commentKey = GlobalKey();
   final TextEditingController _textController = TextEditingController();
   final FocusNode chatTextArea = FocusNode();
 
@@ -54,8 +55,6 @@ class _PostWidgetState extends State<PostWidget>
       int.parse(widget.post.poopcount!);
   @override
   void initState() {
-    debugPrint("46: ${currentReaction.toString()}");
-    debugPrint("46: ${noReaction.toString()}");
     super.initState();
   }
 
@@ -246,10 +245,10 @@ class _PostWidgetState extends State<PostWidget>
     NetworkController networkController = NetworkController();
     debugPrint("type: $reaction");
     if (await networkController.noInternet()) {
-      debugPrint("fetchPosts() no_internet");
+      debugPrint("reaction no_internet");
       return;
     } else {
-      debugPrint("fetchPosts() called");
+      debugPrint("reaction called");
     }
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
@@ -367,11 +366,48 @@ class _PostWidgetState extends State<PostWidget>
     );
   }
 
-  void newParentComment() {
-    debugPrint(widget.post.id.toString());
+  void newParentComment(String msg) async {
+    debugPrint("commenting on: ${widget.post.id.toString()}");
     final userService = Provider.of<ProviderService>(context, listen: false);
     debugPrint(userService.replyingTo.toString());
+    var replyIngTo = userService.replyingTo;
     userService.updateReplyingTo(null);
+    NetworkController networkController = NetworkController();
+
+    if (await networkController.noInternet()) {
+      debugPrint("reaction no_internet");
+      return;
+    } else {
+      debugPrint("reaction called");
+    }
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/comment/add',
+      data: {
+        'postId': widget.post.id,
+        "commentOf": replyIngTo,
+        'msg': msg,
+      },
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      commentKey.currentState!.didChangeDependencies();
+      if (chatTextArea.hasFocus) {
+        chatTextArea.unfocus();
+      }
+      debugPrint(
+          "commented on ${widget.post.id}, replying to: ${replyIngTo.toString()},with comment: $msg");
+    }
   }
 
   void openComment() {
@@ -396,7 +432,7 @@ class _PostWidgetState extends State<PostWidget>
           textController: _textController,
           onSend: (String typedMsg) {
             debugPrint(typedMsg);
-            newParentComment();
+            newParentComment(typedMsg);
           },
         ),
       ),
@@ -412,6 +448,7 @@ class _PostWidgetState extends State<PostWidget>
                   Column(
                     children: <Widget>[
                       CommentObj(
+                        key: commentKey,
                         postId: widget.post.id,
                         showLines: false,
                         chatFocus: chatTextArea,
@@ -622,12 +659,12 @@ class _PostWidgetState extends State<PostWidget>
                       children: <Widget>[
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
-                          key: key,
+                          key: reactionKey,
                           onLongPress: () {
                             CustomAnimatedFlutterReaction().showOverlay(
                               overlaySize: screenWidth * .62,
                               context: context,
-                              key: key,
+                              key: reactionKey,
                               onReaction: (val) {
                                 //debugPrint(val.toString());
                                 setState(() {

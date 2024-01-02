@@ -34,6 +34,13 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
     fetchComments();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchComments();
+  }
+
+
   void fetchComments() async {
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
@@ -231,7 +238,10 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                       children: [
                         Text(
                           comment.author!.name,
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(
+                            color: isDark? Color.fromARGB(255, 2, 13, 21):Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,),
                         ),
                         ExpandableText(
                           comment.commentStr!,
