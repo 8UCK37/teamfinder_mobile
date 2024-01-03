@@ -59,6 +59,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_markdown: ^0.6.14
   flutter_flip_card: ^0.0.4
+  flutter_portal: ^1.1.4
   font_awesome_flutter: ^10.5.0
   get: ^4.6.5
   getwidget: ^3.1.1
@@ -79,7 +80,6 @@ dependencies:
   newsfeed_multiple_imageview: ^1.0.1
   path: ^1.8.3
   path_provider: ^2.0.15
-  flutter_portal: ^1.1.4
   progressive_image: ^2.0.1
   provider: ^6.0.0
   quickalert: ^1.0.1
