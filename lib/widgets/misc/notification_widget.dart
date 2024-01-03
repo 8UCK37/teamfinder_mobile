@@ -26,7 +26,7 @@ class NotificationWidget extends StatelessWidget {
       case 'frndReqAcc':
         notificationText = 'has accepted your friend request!!';
         break;
-      case 'new mention':
+      case 'post mention':
         notificationText = 'has mentioned you in a new post!!';
         break;
       case 'new comment':
