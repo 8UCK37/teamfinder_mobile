@@ -613,27 +613,44 @@ class _PostWidgetState extends State<PostWidget>
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        const SizedBox(
-                          width: 25,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                left: 7.5,
-                                child: Image(
-                                  image: AssetImage("assets/images/love.gif"),
+                        Visibility(
+                          visible: reactionCount>0,
+                          child: const SizedBox(
+                            width: 25,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 7.5,
+                                  child: Image(
+                                    image: AssetImage("assets/images/love.gif"),
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                ),
+                                Image(
+                                  image: AssetImage("assets/images/haha.gif"),
                                   height: 20,
                                   width: 20,
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: userService.darkTheme!? Colors.white:Colors.black,
                               ),
-                              Image(
-                                image: AssetImage("assets/images/haha.gif"),
-                                height: 20,
-                                width: 20,
+                            children: [
+                              TextSpan(text: "$reactionCount"),
+                              TextSpan(
+                                text: reactionCount == 1
+                                    ? "  Reaction"
+                                    : "  Reactions",
                               ),
                             ],
                           ),
                         ),
-                        Text(' $reactionCount'),
                       ],
                     ),
                     Row(
