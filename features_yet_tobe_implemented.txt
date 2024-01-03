@@ -6,4 +6,4 @@
 6.  comment counter + Reaction counter✅
 7.  Implement notificaiton mute from a particular user
 8.  add gestureListner to parentpost author dp✅
-9.  different notification for comment mention and post mention
+9.  different notification for comment mention and post mention✅

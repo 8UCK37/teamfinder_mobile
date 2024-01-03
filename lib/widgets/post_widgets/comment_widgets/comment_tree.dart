@@ -209,7 +209,7 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.fromLTRB(0,5,8,8),
                     child: CircleAvatar(
                       radius: radius,
                       backgroundImage:
@@ -224,15 +224,14 @@ class _CommentObjState extends State<CommentObj> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Card(
-                  elevation: 0,
-                  surfaceTintColor:
-                      isDark ? Color.fromARGB(255, 80, 80, 80) : Colors.grey,
-                  color: isDark
-                      ? Color.fromARGB(255, 80, 80, 80)
-                      : Color.fromARGB(255, 241, 239, 239),
+                Container(
+                  constraints: BoxConstraints(minWidth: 125),
+                  decoration: BoxDecoration(
+                    color: isDark ? Color.fromARGB(255, 80, 80, 80) : Color.fromRGBO(231, 231, 229, 1),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.fromLTRB(8.0,5,8,5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

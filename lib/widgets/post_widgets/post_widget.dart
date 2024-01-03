@@ -14,7 +14,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/chat_message_bar.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_message_bar.dart';
 import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_header.dart';
 import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
