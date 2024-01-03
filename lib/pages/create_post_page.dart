@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/simply_mention_interface.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
@@ -63,6 +65,10 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   void uploadPostFiles(List<dynamic> opsList) async {
+    setState(() {
+      //clear textfield
+      mentionKey = GlobalKey();
+    });
     Dio dio = Dio();
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user!.getIdToken();
@@ -93,7 +99,10 @@ class _CreatePostState extends State<CreatePost> {
         formData.files.add(MapEntry(
             'post', await MultipartFile.fromFile(compressedImage.path)));
       }
-      
+      setState(() {
+        //clear images after upload
+      imagePickerController.clearImages();
+      });
       Response response = await dio.post(
         'http://${dotenv.env['server_url']}/createPost',
         data: formData,
@@ -101,12 +110,6 @@ class _CreatePostState extends State<CreatePost> {
       );
       if (response.statusCode == 200) {
         debugPrint("post uploaded with: ${response.statusCode.toString()}");
-        setState(() {
-          //clear images after upload
-          imagePickerController.clearImages();
-          //clear textfield
-          mentionKey = GlobalKey();
-        });
       } else {
         debugPrint('failed with: ${response.statusCode.toString()}');
       }
@@ -199,6 +202,11 @@ class _CreatePostState extends State<CreatePost> {
                               onTap: () async {
                                 //debugPrint("markUpText: ${mentionService.markUpText}");
                                 debugPrint("tagList:${mentionService.tagList}");
+                                QuickAlert.show(
+                                  context: context,
+                                  type: QuickAlertType.success,
+                                  text: 'Posted to your wall Successfully!',
+                                );
                                 uploadPostFiles(mentionService.deltaParser());
                               },
                               child: Card(
