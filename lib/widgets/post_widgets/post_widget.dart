@@ -41,6 +41,8 @@ class _PostWidgetState extends State<PostWidget>
   GlobalKey reactionKey = GlobalKey();
   GlobalKey commentKey = GlobalKey();
 
+  GlobalKey<CircularMenuState> circularMenuKey = GlobalKey<CircularMenuState>();
+
   final TextEditingController _textController = TextEditingController();
   final FocusNode chatTextArea = FocusNode();
 
@@ -54,7 +56,6 @@ class _PostWidgetState extends State<PostWidget>
       int.parse(widget.post.lovecount ?? "0") +
       int.parse(widget.post.sadcount ?? "0") +
       int.parse(widget.post.poopcount ?? "0");
-
 
   @override
   void initState() {
@@ -108,6 +109,7 @@ class _PostWidgetState extends State<PostWidget>
                   userService.deletePost(widget.post.id);
                   Future.delayed(const Duration(milliseconds: 100), () {
                     Navigator.of(context).pop();
+                    circularMenuKey.currentState?.reverseAnimation();
                   });
                 },
               );
@@ -473,6 +475,7 @@ class _PostWidgetState extends State<PostWidget>
     final userService = Provider.of<ProviderService>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     return CircularMenu(
+      key: circularMenuKey,
       alignment: Alignment.topRight,
       toggleButtonSize: 15,
       toggleButtonPadding: 5,
