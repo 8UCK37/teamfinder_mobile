@@ -49,11 +49,13 @@ class _PostWidgetState extends State<PostWidget>
 
   late dynamic currentReaction = widget.post.reactiontype.toString();
   late bool noReaction = widget.post.noreaction!;
-  late int reactionCount = int.parse(widget.post.likecount!) +
-      int.parse(widget.post.hahacount!) +
-      int.parse(widget.post.lovecount!) +
-      int.parse(widget.post.sadcount!) +
-      int.parse(widget.post.poopcount!);
+  late int reactionCount = int.parse(widget.post.likecount ?? "0") +
+      int.parse(widget.post.hahacount ?? "0") +
+      int.parse(widget.post.lovecount ?? "0") +
+      int.parse(widget.post.sadcount ?? "0") +
+      int.parse(widget.post.poopcount ?? "0");
+
+
   @override
   void initState() {
     super.initState();
@@ -64,7 +66,6 @@ class _PostWidgetState extends State<PostWidget>
     _textController.dispose();
     super.dispose();
   }
-
 
   List<CircularMenuItem> buildMenuItems() {
     final userService = Provider.of<ProviderService>(context, listen: false);

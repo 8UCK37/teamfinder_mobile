@@ -18,7 +18,6 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab>
     with AutomaticKeepAliveClientMixin<HomeTab> {
-  List<PostPojo>? postList;
 
   @override
   bool get wantKeepAlive => true;
@@ -33,7 +32,6 @@ class _HomeTabState extends State<HomeTab>
   Widget build(BuildContext context) {
     super.build(context);
     final userService = Provider.of<ProviderService>(context, listen: true);
-    postList = userService.feed;
     return RefreshIndicator(
       onRefresh: _handleRefresh,
       child: SingleChildScrollView(
@@ -50,8 +48,8 @@ class _HomeTabState extends State<HomeTab>
                     ? const Color.fromARGB(255, 74, 74, 74)
                     : Colors.grey),
             const WriteSomethingWidget(),
-            if (postList != null) // Add a null check here
-              for (PostPojo post in postList!) // Add a null check here
+            if (userService.feed != null) // Add a null check here
+              for (PostPojo post in userService.feed!) // Add a null check here
                 Column(
                   children: <Widget>[
                     SeparatorWidget(

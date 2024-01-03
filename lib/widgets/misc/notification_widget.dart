@@ -30,7 +30,7 @@ class NotificationWidget extends StatelessWidget {
         notificationText = 'has mentioned you in a new post!!';
         break;
       case 'new comment':
-        notificationText = 'has mentioned you in a new comment!!';
+        notificationText = 'has commented on you post!!';
         break;
       default:
         notificationText = 'idk wtf this notification is!!';

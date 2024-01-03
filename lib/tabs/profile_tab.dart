@@ -24,7 +24,7 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab>
     with AutomaticKeepAliveClientMixin<ProfileTab> {
-  List<PostPojo>? postList;
+
   dynamic twitchData;
   dynamic discordData;
 
@@ -36,6 +36,7 @@ class _ProfileTabState extends State<ProfileTab>
     // Unsubscribe the listener to avoid memory leaks
     super.dispose();
   }
+
 
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -63,7 +64,6 @@ class _ProfileTabState extends State<ProfileTab>
     super.build(context);
     final userService = Provider.of<ProviderService>(context, listen: true);
     final userData = userService.user;
-    postList = userService.ownPosts;
     twitchData = userService.twitchData;
     discordData = userService.discordData;
     return RefreshIndicator(
@@ -224,7 +224,8 @@ class _ProfileTabState extends State<ProfileTab>
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                                 child: Container(
-                                  constraints:const BoxConstraints(maxWidth: 248),
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 248),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Text(
@@ -233,15 +234,16 @@ class _ProfileTabState extends State<ProfileTab>
                                               userData['userInfo'])
                                           : 'no language preference set',
                                       style: const TextStyle(
-                                          color: Color.fromARGB(255, 3, 67, 120), fontSize: 16.0),
+                                          color:
+                                              Color.fromARGB(255, 3, 67, 120),
+                                          fontSize: 16.0),
                                     ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-
-                        const SizedBox(width: 15.0),
+                          const SizedBox(width: 15.0),
                         ],
                       ),
                       const SizedBox(height: 15.0),
@@ -336,8 +338,7 @@ class _ProfileTabState extends State<ProfileTab>
                                     FontAwesomeIcons.steam),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15.0),
+                                padding: const EdgeInsets.only(left: 15.0),
                                 child: SizedBox(
                                   child: Icon(
                                     FontAwesomeIcons.twitch,
@@ -345,22 +346,18 @@ class _ProfileTabState extends State<ProfileTab>
                                             twitchData != "not logged in"
                                         ? const Color.fromRGBO(
                                             145, 70, 255, 100)
-                                        : const Color.fromARGB(
-                                            255, 81, 80, 80),
+                                        : const Color.fromARGB(255, 81, 80, 80),
                                   ),
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15.0),
+                                padding: const EdgeInsets.only(left: 15.0),
                                 child: SizedBox(
                                     child: Icon(
                                   FontAwesomeIcons.discord,
                                   color: discordData != null
-                                      ? const Color.fromARGB(
-                                          255, 114, 137, 218)
-                                      : const Color.fromARGB(
-                                          255, 81, 80, 80),
+                                      ? const Color.fromARGB(255, 114, 137, 218)
+                                      : const Color.fromARGB(255, 81, 80, 80),
                                 )),
                               )
                             ],
@@ -389,14 +386,15 @@ class _ProfileTabState extends State<ProfileTab>
                                       fontWeight: FontWeight.bold)),
                             ),
                             const SizedBox(height: 6.0),
-                            if (postList != null)
+                            if (userService.ownPosts != null)
                               Padding(
                                 padding: const EdgeInsets.only(left: 17.0),
-                                child: 
-                                RichText(
+                                child: RichText(
                                   text: TextSpan(
                                       style: TextStyle(
-                                        color: userService.darkTheme!? Colors.white:Colors.black,
+                                        color: userService.darkTheme!
+                                            ? Colors.white
+                                            : Colors.black,
                                         fontSize: 16.0,
                                       ),
                                       children: [
@@ -404,7 +402,7 @@ class _ProfileTabState extends State<ProfileTab>
                                           text: "You have ",
                                         ),
                                         TextSpan(
-                                          text: postList!.length.toString(),
+                                          text: userService.ownPosts!.length.toString(),
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.green,
@@ -424,9 +422,9 @@ class _ProfileTabState extends State<ProfileTab>
                       height: 20,
                     ),
                     const SizedBox(height: 25),
-                    if (postList != null) // Add a null check here
+                    if (userService.ownPosts!= null) // Add a null check here
                       for (PostPojo post
-                          in postList!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                          in userService.ownPosts!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                         Column(
                           children: <Widget>[
                             //const SeparatorWidget(),
