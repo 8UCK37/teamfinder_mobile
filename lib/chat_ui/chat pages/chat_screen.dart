@@ -186,7 +186,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     selectedImagePath = pickedImage.path;
 
     // ignore: use_build_context_synchronously
-    await Navigator.pushReplacement(
+    await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (builder) => CameraViewPage(

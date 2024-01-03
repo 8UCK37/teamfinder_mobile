@@ -212,7 +212,7 @@ class _MultiImageEditorState extends State<MultiImageEditor> {
     return Theme(
       data: ImageEditor.theme,
       child: Scaffold(
-        key: scaffoldGlobalKey,
+        //key: scaffoldGlobalKey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           actions: [
@@ -597,7 +597,6 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
     if (widget.image != null) {
       loadImage(widget.image!);
     }
-
     checkPermissions();
 
     super.initState();
@@ -623,18 +622,12 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
   /// obtain image Uint8List by merging layers
   Future<Uint8List?> getMergedImage([int format = o.OutputFormat.png]) async {
     Uint8List? image;
+    ///removed all the bullshit code
+    ///if the image size after edit breaks again
+    ///the fault is the BackgroundLayer of this package where the container size is hard coded
+    ///dumb asf
+    image = await screenshotController.capture(pixelRatio: pixelRatio);
 
-    if (layers.length == 1 && layers.first is BackgroundLayerData) {
-      if (transformed) {
-        image = await screenshotController.capture();
-      } else {
-        image = (layers.first as BackgroundLayerData).image.bytes;
-      }
-    } else if (layers.length == 1 && layers.first is ImageLayerData) {
-      image = (layers.first as ImageLayerData).image.bytes;
-    } else {
-      image = await screenshotController.capture(pixelRatio: pixelRatio);
-    }
     // conversion for non-png
     if (image != null &&
         (format == o.OutputFormat.heic ||
@@ -657,9 +650,9 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
     viewportSize = MediaQuery.of(context).size;
     pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
-    // widthRatio = currentImage.width / viewportSize.width;
-    // heightRatio = currentImage.height / viewportSize.height;
-    // pixelRatio = math.max(heightRatio, widthRatio);
+    //widthRatio = currentImage.width / viewportSize.width;
+    //heightRatio = currentImage.height / viewportSize.height;
+    //pixelRatio = math.max(heightRatio, widthRatio);
 
     return Theme(
       data: ImageEditor.theme,
@@ -692,40 +685,36 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
               lastScaleFactor = scaleFactor;
             },
             child: Center(
-              child: SizedBox(
-                height: currentImage.height / pixelRatio,
-                width: currentImage.width / pixelRatio,
-                child: Screenshot(
-                  controller: screenshotController,
-                  child: RotatedBox(
-                    quarterTurns: rotateValue,
-                    child: Transform(
-                      transform: Matrix4(
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        x,
-                        y,
-                        0,
-                        1 / scaleFactor,
-                      )..rotateY(flipValue),
-                      alignment: FractionalOffset.center,
-                      child: LayersViewer(
-                        layers: layers,
-                        onUpdate: () {
-                          setState(() {});
-                        },
-                        editable: true,
-                      ),
+              child: Screenshot(
+                controller: screenshotController,
+                child: RotatedBox(
+                  quarterTurns: rotateValue,
+                  child: Transform(
+                    transform: Matrix4(
+                      1,
+                      0,
+                      0,
+                      0,
+                      0,
+                      1,
+                      0,
+                      0,
+                      0,
+                      0,
+                      1,
+                      0,
+                      x,
+                      y,
+                      0,
+                      1 / scaleFactor,
+                    )..rotateY(flipValue),
+                    alignment: FractionalOffset.center,
+                    child: LayersViewer(
+                      layers: layers,
+                      onUpdate: () {
+                        setState(() {});
+                      },
+                      editable: true,
                     ),
                   ),
                 ),
@@ -1036,7 +1025,7 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                         setState(() {});
                       },
                       child: Container(
-                       decoration: BoxDecoration(
+                        decoration: BoxDecoration(
                             border: Border.all(color: Colors.transparent)),
                         child: BottomButton(
                           icon: Icons.text_fields,
