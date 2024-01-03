@@ -17,6 +17,8 @@ import 'package:teamfinder_mobile/widgets/misc/textfield_tag.dart';
 import '../services/mention_service.dart';
 import '../utils/image_helper.dart';
 import '../utils/picker.dart';
+import '../widgets/draggable image grid/draggable_image_widget.dart';
+
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -217,6 +219,8 @@ class _CreatePostState extends State<CreatePost> {
                                   child: Text(
                                     "POST",
                                     style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
                                         color:
                                             mentionService.markUpText.isEmpty &&
                                                     selectedImages.isEmpty
@@ -295,6 +299,7 @@ class _CreatePostState extends State<CreatePost> {
                   Expanded(
                     child: MultiImagePickerView(
                       controller: imagePickerController,
+                      padding: const EdgeInsets.all(10),
                       initialWidget: pickImageTapRegion(),
                       addMoreButton: DefaultAddMoreWidget(
                         icon: Icon(
@@ -306,7 +311,10 @@ class _CreatePostState extends State<CreatePost> {
                         backgroundColor:
                             const Color.fromARGB(255, 154, 223, 156),
                       ),
-                      padding: const EdgeInsets.all(10),
+                      builder: (context, imageFile) =>
+                          CustomDraggableItemWidget(
+                        imageFile: imageFile,
+                      ),
                     ),
                   ),
                 ],
