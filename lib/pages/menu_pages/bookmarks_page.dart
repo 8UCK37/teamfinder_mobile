@@ -34,7 +34,7 @@ class _BookMarkedPostsState extends State<BookMarkedPosts> {
       data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         appBar: TeamFinderAppBar(
-          titleText: "Bookmarked Posts",
+          titleText: "Bookmarks",
           isDark: userService.darkTheme!,
           implyLeading: true,
           height: 55,
