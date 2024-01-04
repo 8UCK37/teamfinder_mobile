@@ -12,6 +12,7 @@ import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/misc/textfield_tag.dart';
 
+import '../../services/mention_service.dart';
 import '../simplyMention/simply_mention_interface.dart';
 
 // ignore: must_be_immutable
@@ -26,7 +27,7 @@ class ShareBottomSheet extends StatefulWidget {
 class _ShareBottomSheetState extends State<ShareBottomSheet> {
   double sheetHeight = .82;
   double containerHeight = .28;
-  late TextEditingController textController;
+
   final FocusNode mentionFocusNode = FocusNode();
 
   GlobalKey mentionKey = GlobalKey();
@@ -34,13 +35,11 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    textController.dispose();
   }
 
   @override
@@ -56,57 +55,106 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
     super.didChangeDependencies();
   }
 
-  void sharePost() async {
-    if (textController.text.isNotEmpty) {
-      debugPrint(textController.text);
-    } else {
-      debugPrint("field is empty i.e quick share");
-      debugPrint("immidiate post id:${widget.post.id.toString()}");
-      debugPrint("parent post id: ${widget.post.shared.toString()}");
-      int? idToSend = widget.post.shared ?? widget.post.id;
+  void quickSharePost() async {
+    debugPrint("field is empty i.e quick share");
+    debugPrint("immidiate post id:${widget.post.id.toString()}");
+    debugPrint("parent post id: ${widget.post.shared.toString()}");
+    int? idToSend = widget.post.shared ?? widget.post.id;
 
-      Dio dio = Dio();
-      final user = FirebaseAuth.instance.currentUser;
-      final idToken = await user!.getIdToken();
-      //debugPrint(widget.friendId.toString());
-      Options options = Options(
-        headers: {
-          'Authorization': 'Bearer $idToken',
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    //debugPrint(widget.friendId.toString());
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/quickSharePost',
+      data: {'originalPostId': idToSend},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      final userService =
+          // ignore: use_build_context_synchronously
+          Provider.of<ProviderService>(context, listen: false);
+      userService.getOwnPost();
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: 'Post Shared!!!',
+        onConfirmBtnTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+        //autoCloseDuration: const Duration(seconds: 2),
+      );
+    } else {
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'Sorry, something went wrong',
+        backgroundColor: Colors.black,
+        titleColor: Colors.white,
+        textColor: Colors.white,
+      );
+    }
+  }
+
+  void shareToFeed(List<dynamic> opsList) async {
+    setState(() {
+      mentionKey = GlobalKey();
+    });
+    int? idToSend = widget.post.shared ?? widget.post.id;
+    debugPrint(opsList.toString());
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user!.getIdToken();
+    //debugPrint(widget.friendId.toString());
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/shareToFeed',
+      data: {
+          'data': {
+            'id': idToSend,
+            'tags': [],
+            'desc': {
+              'content': {'ops': opsList},
+            }
+          }
+      },
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.success,
+        text: 'Post Shared!!!',
+        onConfirmBtnTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
         },
       );
-      var response = await dio.post(
-        'http://${dotenv.env['server_url']}/quickSharePost',
-        data: {'originalPostId': idToSend},
-        options: options,
+    } else {
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'Sorry, something went wrong',
+        backgroundColor: Colors.black,
+        titleColor: Colors.white,
+        textColor: Colors.white,
       );
-      if (response.statusCode == 200) {
-        final userService =
-            // ignore: use_build_context_synchronously
-            Provider.of<ProviderService>(context, listen: false);
-        userService.getOwnPost();
-        // ignore: use_build_context_synchronously
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: 'Post Shared!!!',
-          onConfirmBtnTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-          //autoCloseDuration: const Duration(seconds: 2),
-        );
-      } else {
-        // ignore: use_build_context_synchronously
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          title: 'Oops...',
-          text: 'Sorry, something went wrong',
-          backgroundColor: Colors.black,
-          titleColor: Colors.white,
-          textColor: Colors.white,
-        );
-      }
     }
   }
 
@@ -140,9 +188,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
         textSpans.add(
           TextSpan(
             text: '${idNameMap[id]} ',
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-              },
+            recognizer: TapGestureRecognizer()..onTap = () {},
             style: const TextStyle(
                 color: Colors.blue, decorationColor: Colors.blue, fontSize: 18),
           ),
@@ -169,8 +215,6 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
     );
   }
 
-
-
   String convertToLocalTime(DateTime dateTime) {
     DateTime localDateTime = dateTime.toLocal();
     String formattedTime =
@@ -179,7 +223,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
 
     return formattedTime.toString();
   }
-  
+
   Widget postShowcase(PostPojo post) {
     final userService = Provider.of<ProviderService>(context, listen: false);
     return Container(
@@ -288,7 +332,8 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<ProviderService>(context, listen: false);
+    final userService = Provider.of<ProviderService>(context, listen: true);
+    final mentionService = Provider.of<MentionService>(context, listen: true);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -319,7 +364,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15.0,15,15,0),
+            padding: const EdgeInsets.fromLTRB(15.0, 15, 15, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -358,7 +403,13 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    sharePost();
+                    if (mentionService.markUpText.isEmpty) {
+                      debugPrint("empty");
+                      quickSharePost();
+                    } else {
+                      debugPrint("not-empty");
+                      shareToFeed(mentionService.deltaParser());
+                    }
                   },
                   child: Column(
                     children: [
@@ -386,7 +437,9 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
               ],
             ),
           ),
-          const TextFieldTagInterface(showHelperText: false,),
+          const TextFieldTagInterface(
+            showHelperText: false,
+          ),
           SimplyMentionInterface(
             key: mentionKey,
             focusNode: mentionFocusNode,
@@ -397,7 +450,8 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           ),
           AnimatedContainer(
             duration: const Duration(milliseconds: 100),
-            decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+            decoration:
+                BoxDecoration(border: Border.all(color: Colors.transparent)),
             height: MediaQuery.of(context).size.height * containerHeight,
             child: SingleChildScrollView(
               child: postShowcase(widget.post),
