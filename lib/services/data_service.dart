@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import '../controller/network_controller.dart';
@@ -13,6 +14,7 @@ class ProviderService extends ChangeNotifier {
   Map<String, dynamic> user = {}; // Initialize as an empty map
   List<PostPojo>? feed;
   List<PostPojo>? ownPosts;
+
   dynamic steamData;
   dynamic twitchData;
   dynamic discordData;
@@ -24,6 +26,10 @@ class ProviderService extends ChangeNotifier {
 
   String profileImagecacheKey = "dp1";
   String bannerImagecacheKey = "ban1";
+
+  final bookmarkBox = Hive.box('bookmarkBox1');
+  List<dynamic>? bookMarkIds;
+  List<PostPojo> bookMarkedPosts = [];
 
   void updateCurrentUser(Map<String, dynamic> newValue) {
     user = newValue;
@@ -112,6 +118,32 @@ class ProviderService extends ChangeNotifier {
       // User not logged in
       debugPrint('User is not logged in');
     }
+  }
+
+  void addToBookmarkBox(int postId) {
+    debugPrint("userId; ${user['id']},add postId :$postId");
+    List<dynamic>? newList = bookmarkBox.get(user['id']);
+    if (newList != null) {
+      newList.add(postId);
+    } else {
+      newList = [];
+      newList.add(postId);
+    }
+    bookmarkBox.put(user['id'], newList);
+    getBookMarkList(user['id']);
+    //debugPrint(newList.toString());
+  }
+
+  void removeFromBookmarkBox(int postId) {
+    debugPrint("userId; ${user['id']},add postId :$postId");
+    List<dynamic>? newList = bookmarkBox.get(user['id']);
+    
+    newList!.removeWhere((element) => element == postId);
+    bookmarkBox.put(user['id'], newList);
+
+    bookMarkedPosts.removeWhere((element) => element.id == postId);
+    notifyListeners();
+    //debugPrint(newList.toString());
   }
 
   void fetchPosts() async {
@@ -444,6 +476,49 @@ class ProviderService extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       debugPrint("deleted post with id $postId");
+    }
+  }
+
+  void getBookMarkList(String userId) {
+    List<PostPojo> buffer = [];
+    bookMarkIds = bookmarkBox.get(userId);
+    //debugPrint(bookMarkIds.toString());
+    if (bookMarkIds != null) {
+      for (int postId in bookMarkIds!) {
+        fetchMarkedPosts(postId, buffer);
+      }
+      bookMarkedPosts = buffer;
+      notifyListeners();
+    }
+  }
+
+  void fetchMarkedPosts(int postId, List<PostPojo> buffer) async {
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("fetchMarkedPosts() no_internet");
+      return;
+    } else {
+      debugPrint("fetchMarkedPosts() called");
+    }
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/getPostByPostId',
+      data: {'postId': postId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      List<PostPojo> parsedPosts = postPojoFromJson(response.data, false);
+      //debugPrint(parsedPosts[0].toString());
+      buffer.add(parsedPosts[0]);
     }
   }
 }

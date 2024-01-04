@@ -20,7 +20,7 @@ class _TextFieldTagInterfaceState extends State<TextFieldTagInterface> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _distanceToField = MediaQuery.of(context).size.width;
+    _distanceToField = MediaQuery.of(context).size.width-25;
 
     _controller.addListener(() {
       if (_controller.hasTags) {

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/pages/friend_list.dart';
+import 'package:teamfinder_mobile/pages/menu_pages/bookmarks_page.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/games_screen.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/linked_acc.dart';
 import 'package:teamfinder_mobile/pages/menu_pages/settings.dart';
@@ -255,8 +256,7 @@ class MenuTab extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    AnimatedRouter.slideToPageLeft(context, SettingsPage(
-                              isDarkCurrent: userService.darkTheme!));
+                    AnimatedRouter.slideToPageLeft(context, const BookMarkedPosts());
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2 - 30,
@@ -265,13 +265,45 @@ class MenuTab extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border.all(width: 1.0, color: Colors.grey),
                         borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(Icons.collections_bookmark,
+                            color: Color.fromARGB(255, 232, 213, 37),
+                            size: 30.0),
+                        SizedBox(height: 5.0),
+                        Text('Bookmarks',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold))
+                      ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                AnimatedRouter.slideToPageLeft(context,
+                    SettingsPage(isDarkCurrent: userService.darkTheme!));
+              },
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2 - 30,
+                    height: 85.0,
+                    padding: const EdgeInsets.only(left: 20.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1.0, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10.0)),
+                    child:  Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Icon(Icons.settings,
-                            color: Colors.deepPurpleAccent.shade200,
-                            size: 30.0),
+                            color: Colors.deepPurpleAccent.shade200, size: 30.0),
                         const SizedBox(height: 5.0),
                         const Text('Settings',
                             style: TextStyle(
@@ -279,12 +311,12 @@ class MenuTab extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
-              ],
+                ),
+              ),
             ),
-          ),
-        ],
-      )),
+          ],
+        ),
+      ),
     );
   }
 }

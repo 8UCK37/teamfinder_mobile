@@ -26,7 +26,7 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
   bool hasInternet = false;
   String loadingText = "";
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _initializePreferences();
     saveUserInit();
@@ -73,7 +73,8 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
   }
 
   Future<void> loadNotifocationList(String userId) async {
-    final notiObserver =Provider.of<NotificationWizard>(context, listen: false);
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
     notiObserver.readNotificationBox(userId);
   }
 
@@ -112,6 +113,7 @@ class _SplashFuturePageState extends State<SplashFuturePage> {
         var userData = json.decode(response.data);
         //debugPrint(userData.toString());
         userService.updateCurrentUser(userData);
+        userService.getBookMarkList(userData['id']);
         userService.refreashCache();
         // ignore: use_build_context_synchronously
         if (mounted) {

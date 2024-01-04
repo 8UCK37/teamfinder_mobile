@@ -65,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   thickness: 4,
                 ),
                 _SingleSection(
-                  title: "General",
+                  title: "Theme",
                   children: [
                     ListTile(
                       title: Text(_isDark ? "Dark Mode" : "Light Mode"),
@@ -78,7 +78,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         onStateChanged: onStateChanged,
                       ),
                     ),
-                    const Padding(
+                  ],
+                ),
+                const Divider(),
+                const _SingleSection(
+                  title: "Preferences",
+                  children: [
+                    Padding(
                       padding: EdgeInsets.only(left: 5.0),
                       child: _CustomListTile(
                           title: "Notifications",
@@ -91,41 +97,6 @@ class _SettingsPageState extends State<SettingsPage> {
                               title: Text("item2"),
                             )
                           ]),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                          title: "Security Status",
-                          leading: Icon(Icons.lock_outline_rounded),
-                          children: [
-                            ListTile(
-                              title: Text("item1"),
-                            ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
-                          ]),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                const _SingleSection(
-                  title: "App component",
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                        title: "Profile",
-                        leading: Icon(Icons.person_outline_rounded),
-                        children: [
-                            ListTile(
-                              title: Text("item1"),
-                            ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
-                          ]
-                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 5.0),
@@ -141,6 +112,41 @@ class _SettingsPageState extends State<SettingsPage> {
                             )
                           ]),
                     ),
+                  ],
+                ),
+                const Divider(),
+                const _SingleSection(
+                  title: "Privacy & Security",
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "Security Status",
+                          leading: Icon(Icons.lock_outline_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: _CustomListTile(
+                          title: "Profile",
+                          leading: Icon(Icons.person_outline_rounded),
+                          children: [
+                            ListTile(
+                              title: Text("item1"),
+                            ),
+                            ListTile(
+                              title: Text("item2"),
+                            )
+                          ]),
+                    ),
+
                     // _CustomListTile(
                     //     title: "Calling", icon: Icons.phone_outlined),
                     // _CustomListTile(
@@ -169,16 +175,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     Padding(
                       padding: EdgeInsets.only(left: 5.0),
                       child: _CustomListTile(
-                          title: "About",
-                          leading: Icon(Icons.info_outline_rounded),
-                          children: [
-                            ListTile(
-                              title: Text("item1"),
-                            ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
-                          ],),
+                        title: "About",
+                        leading: Icon(Icons.info_outline_rounded),
+                        children: [
+                          ListTile(
+                            title: Text("item1"),
+                          ),
+                          ListTile(
+                            title: Text("item2"),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -200,7 +207,7 @@ class _CustomListTile extends StatelessWidget {
     Key? key,
     required this.title,
     required this.leading,
-    this.trailing, 
+    this.trailing,
     required this.children,
   }) : super(key: key);
 

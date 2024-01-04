@@ -69,7 +69,14 @@ class _PostWidgetState extends State<PostWidget>
   }
 
   List<CircularMenuItem> buildMenuItems() {
-    final userService = Provider.of<ProviderService>(context, listen: false);
+    final userService = Provider.of<ProviderService>(context, listen: true);
+    bool isBookMarked = false;
+    if (userService.bookMarkIds == null) {
+      isBookMarked = false;
+    } else {
+      isBookMarked = userService.bookMarkIds!.contains(widget.post.id);
+    }
+    
     final listForOwnPost = [
       CircularMenuItem(
           iconSize: iconSize,
@@ -131,10 +138,24 @@ class _PostWidgetState extends State<PostWidget>
           iconSize: iconSize,
           padding: smallerIconPadding,
           boxShadow: const [],
-          icon: Icons.collections_bookmark,
-          color: Colors.green,
+          icon:
+              isBookMarked ? Icons.bookmark_remove : Icons.collections_bookmark,
+          color: isBookMarked ? Colors.red : Colors.green,
           onTap: () {
-            setState(() {});
+            setState(() {
+              if (isBookMarked) {
+                userService.removeFromBookmarkBox(widget.post.id);
+                setState(() {
+                  isBookMarked = false;
+                });
+              } else {
+                setState(() {
+                  isBookMarked = true;
+                });
+                userService.addToBookmarkBox(widget.post.id);
+              }
+              circularMenuKey.currentState?.reverseAnimation();
+            });
           }),
       CircularMenuItem(
           iconSize: iconSize,
@@ -614,7 +635,7 @@ class _PostWidgetState extends State<PostWidget>
                     Row(
                       children: <Widget>[
                         Visibility(
-                          visible: reactionCount>0,
+                          visible: reactionCount > 0,
                           child: const SizedBox(
                             width: 25,
                             child: Stack(
@@ -639,8 +660,10 @@ class _PostWidgetState extends State<PostWidget>
                         RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: userService.darkTheme!? Colors.white:Colors.black,
-                              ),
+                              color: userService.darkTheme!
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
                             children: [
                               TextSpan(text: "$reactionCount"),
                               TextSpan(

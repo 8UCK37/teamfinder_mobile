@@ -31,6 +31,7 @@ Future<void> main() async {
   // ignore: unused_local_variable
   Hive.registerAdapter(NotificationAdapter());
   await Hive.openBox('notificationBox');
+  await Hive.openBox('bookmarkBox1');
   //dotenv init
   await dotenv.load(fileName: ".env");
   // ignore: prefer_const_constructors
