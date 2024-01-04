@@ -17,7 +17,6 @@ class BookMarkedPosts extends StatefulWidget {
 class _BookMarkedPostsState extends State<BookMarkedPosts> {
   final bookmarkBox = Hive.box('bookmarkBox1');
 
-
   @override
   void initState() {
     super.initState();
@@ -27,7 +26,6 @@ class _BookMarkedPostsState extends State<BookMarkedPosts> {
   void dispose() {
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +40,63 @@ class _BookMarkedPostsState extends State<BookMarkedPosts> {
           height: 55,
           showNotificationCount: false,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              for (PostPojo post in userService.bookMarkedPosts) // Add a null check here
-              Column(
-                children: <Widget>[
-                  SeparatorWidget(
-                      color: userService.darkTheme!
-                          ? const Color.fromARGB(255, 74, 74, 74)
-                          : Colors.grey),
-                  PostWidget(post: post,),
-                ],
+        body: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 35,
+            title: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width - 50,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  border: Border.all(color: Colors.green),
+                ),
+                child: Center(
+                  child: RichText(
+                      text: TextSpan(
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black),
+                          children: [
+                        const TextSpan(text: "You have "),
+                        TextSpan(
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                            text: "${userService.bookMarkedPosts.length} "),
+                        TextSpan(
+                            text: userService.bookMarkedPosts.length > 1
+                                ? " bookmarked posts"
+                                : " bookmarked post")
+                      ])),
+                ),
               ),
-            ],
+            ),
+            automaticallyImplyLeading: false,
+            surfaceTintColor: Colors.orange,
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                for (PostPojo post
+                    in userService.bookMarkedPosts) // Add a null check here
+                  Column(
+                    children: <Widget>[
+                      SeparatorWidget(
+                          color: userService.darkTheme!
+                              ? const Color.fromARGB(255, 74, 74, 74)
+                              : Colors.grey),
+                      PostWidget(
+                        post: post,
+                      ),
+                    ],
+                  ),
+                SeparatorWidget(
+                    color: userService.darkTheme!
+                        ? const Color.fromARGB(255, 74, 74, 74)
+                        : Colors.grey)
+              ],
+            ),
           ),
         ),
       ),

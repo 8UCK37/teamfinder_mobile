@@ -121,7 +121,7 @@ class ProviderService extends ChangeNotifier {
   }
 
   void addToBookmarkBox(int postId) {
-    debugPrint("userId; ${user['id']},add postId :$postId");
+    //debugPrint("userId; ${user['id']},add postId :$postId");
     List<dynamic>? newList = bookmarkBox.get(user['id']);
     if (newList != null) {
       newList.add(postId);
@@ -135,7 +135,7 @@ class ProviderService extends ChangeNotifier {
   }
 
   void removeFromBookmarkBox(int postId) {
-    debugPrint("userId; ${user['id']},add postId :$postId");
+    //debugPrint("userId; ${user['id']},add postId :$postId");
     List<dynamic>? newList = bookmarkBox.get(user['id']);
     
     newList!.removeWhere((element) => element == postId);

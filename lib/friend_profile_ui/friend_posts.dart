@@ -116,7 +116,7 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
               displaySideBar: false,
               displayBorder: true,
               title: const Text(
-                'Sucess!!',
+                'Success!!',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),

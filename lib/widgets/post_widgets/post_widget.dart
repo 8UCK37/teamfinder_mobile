@@ -21,6 +21,8 @@ import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/misc/share_bottomsheet.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
+import 'package:motion_toast/motion_toast.dart';
+
 import '../../controller/network_controller.dart';
 import '../../utils/router_animation.dart';
 import 'comment_widgets/new_bottomSheet_route.dart';
@@ -143,16 +145,52 @@ class _PostWidgetState extends State<PostWidget>
           color: isBookMarked ? Colors.red : Colors.green,
           onTap: () {
             setState(() {
-              if (isBookMarked) {
-                userService.removeFromBookmarkBox(widget.post.id);
+              if (isBookMarked) {    
                 setState(() {
                   isBookMarked = false;
                 });
+                userService.removeFromBookmarkBox(widget.post.id);
+                MotionToast(
+                    icon: Icons.bookmark_remove,
+                    primaryColor: const Color.fromARGB(255, 171, 132, 129),
+                    displaySideBar: false,
+                    displayBorder: true,
+                    position: MotionToastPosition.top,
+                    animationDuration: const Duration(milliseconds: 200),
+                    toastDuration: const Duration(seconds: 1),
+                    title: const Text(
+                      'Removed!!',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    description: const Text(
+                      'Post removed from bookmarks',
+                    ),
+                  ).show(context);
               } else {
                 setState(() {
                   isBookMarked = true;
                 });
                 userService.addToBookmarkBox(widget.post.id);
+                MotionToast(
+                    icon: Icons.bookmark_added,
+                    primaryColor: Colors.green,
+                    displaySideBar: false,
+                    displayBorder: true,
+                    position: MotionToastPosition.top,
+                    animationDuration: const Duration(milliseconds: 200),
+                    toastDuration: const Duration(seconds: 1),
+                    title: const Text(
+                      'Added!!',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    description: const Text(
+                      'Post saved to bookmarks',
+                    ),
+                  ).show(context);
               }
               circularMenuKey.currentState?.reverseAnimation();
             });
