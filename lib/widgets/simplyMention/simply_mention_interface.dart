@@ -16,8 +16,10 @@ import '../../services/mention_service.dart';
 List<MentionObject> documentMentions = [];
 
 class SimplyMentionInterface extends StatefulWidget {
+  final FocusNode focusNode;
   const SimplyMentionInterface({
     super.key,
+    required this.focusNode,
   });
 
   @override
@@ -26,7 +28,7 @@ class SimplyMentionInterface extends StatefulWidget {
 
 class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
   MentionTextEditingController? mentionTextEditingController;
-  FocusNode focusNode = FocusNode();
+  late FocusNode focusNode = widget.focusNode;
 
   late List<UserPojo> userList = [];
 
@@ -69,7 +71,8 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
         setState(() {});
         if (mentionTextEditingController!.isMentioning()) {
           //debugPrint("search term:${mentionTextEditingController!.getSearchText()}");
-          String safeSearch = removeDiacritics(mentionTextEditingController!.getSearchText());
+          String safeSearch =
+              removeDiacritics(mentionTextEditingController!.getSearchText());
           searchUser(safeSearch);
         }
       });
@@ -80,14 +83,6 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
 
   void onSuggestionChanged(MentionSyntax? syntax, String? fullSearchString) {
     setState(() {});
-  }
-
-  void clearTextField() {
-    setState(() {
-      if(mentionTextEditingController!=null){
-        mentionTextEditingController!.clear();
-      }
-    });
   }
 
   // When a mention is selected, insert the mention into the text editing controller.
@@ -227,7 +222,8 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
                     gapPadding: 5),
                 contentPadding: EdgeInsets.all(8),
                 hintText: "Type away..."),
-            cursorColor: isDark ? Colors.white : const Color.fromARGB(255, 12, 11, 11),
+            cursorColor:
+                isDark ? Colors.white : const Color.fromARGB(255, 12, 11, 11),
             focusNode: focusNode,
             maxLines: null,
             minLines: 5,

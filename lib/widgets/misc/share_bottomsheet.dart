@@ -1,12 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
+import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
+import 'package:teamfinder_mobile/widgets/misc/textfield_tag.dart';
+
+import '../simplyMention/simply_mention_interface.dart';
 
 // ignore: must_be_immutable
 class ShareBottomSheet extends StatefulWidget {
@@ -18,9 +24,13 @@ class ShareBottomSheet extends StatefulWidget {
 }
 
 class _ShareBottomSheetState extends State<ShareBottomSheet> {
-  double height = .68;
+  double sheetHeight = .82;
+  double containerHeight = .28;
   late TextEditingController textController;
-  final FocusNode _focusNode = FocusNode();
+  final FocusNode mentionFocusNode = FocusNode();
+
+  GlobalKey mentionKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +41,19 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
   void dispose() {
     super.dispose();
     textController.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (mounted) {
+      if (mentionFocusNode.hasFocus) {
+        setState(() {
+          sheetHeight = .97;
+          containerHeight = .43;
+        });
+      }
+    }
+    super.didChangeDependencies();
   }
 
   void sharePost() async {
@@ -60,7 +83,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
         final userService =
             // ignore: use_build_context_synchronously
             Provider.of<ProviderService>(context, listen: false);
-            userService.getOwnPost();
+        userService.getOwnPost();
         // ignore: use_build_context_synchronously
         QuickAlert.show(
           context: context,
@@ -87,6 +110,182 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
     }
   }
 
+  Widget parseDescriptionWidget(
+      String desc, Mention mentionList, BuildContext context) {
+    String sanitizedDesc = desc.substring(0, desc.length - 1);
+    Map<String, String> idNameMap = {
+      for (var item in mentionList.list) item['id']: item['name']
+    };
+
+    List<TextSpan> textSpans = [];
+
+    for (var id in idNameMap.keys) {
+      RegExp regex = RegExp(
+          r'\b' + RegExp.escape(id) + r'\b'); // Using \b for word boundaries
+
+      Iterable<RegExpMatch> matches = regex.allMatches(sanitizedDesc);
+
+      int currentIndex = 0;
+
+      for (RegExpMatch match in matches) {
+        // Add regular text before the mention
+        textSpans.add(
+          TextSpan(
+            text: sanitizedDesc.substring(currentIndex, match.start),
+            style: const TextStyle(fontSize: 18),
+          ),
+        );
+
+        // Add mention with tap gesture
+        textSpans.add(
+          TextSpan(
+            text: '${idNameMap[id]} ',
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+              },
+            style: const TextStyle(
+                color: Colors.blue, decorationColor: Colors.blue, fontSize: 18),
+          ),
+        );
+
+        // Update currentIndex for the next iteration
+        currentIndex = match.end;
+        sanitizedDesc =
+            sanitizedDesc.substring(match.end, sanitizedDesc.length);
+      }
+    }
+    // Add remaining text after the last mention
+    textSpans.add(
+      TextSpan(
+        text: sanitizedDesc,
+        style: const TextStyle(fontSize: 18),
+      ),
+    );
+    return RichText(
+      text: TextSpan(
+        children: textSpans,
+        style: DefaultTextStyle.of(context).style,
+      ),
+    );
+  }
+
+
+
+  String convertToLocalTime(DateTime dateTime) {
+    DateTime localDateTime = dateTime.toLocal();
+    String formattedTime =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(localDateTime);
+    //var splicedTime = formattedTime.split(" ")[1].split(":");
+
+    return formattedTime.toString();
+  }
+  
+  Widget postShowcase(PostPojo post) {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: NetworkImage(widget.post.profilePicture!),
+                  radius: 20.0,
+                ),
+                const SizedBox(width: 7.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(widget.post.name!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17.0)),
+                    const SizedBox(height: 5.0),
+                    Text(convertToLocalTime(widget.post.createdAt))
+                  ],
+                ),
+              ],
+            ),
+          ),
+          //const SizedBox(height: 20.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: widget.post.description != null
+                  ? parseDescriptionWidget(
+                      widget.post.description!, widget.post.mention!, context)
+                  : const Text(""),
+            ),
+          ),
+          if (widget.post.shared != null)
+            Container(
+              decoration: BoxDecoration(
+                color: userService.darkTheme!
+                    ? const Color.fromARGB(255, 80, 80, 80)
+                    : const Color.fromARGB(110, 222, 221,
+                        221), // Set the desired background color here
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  topRight: Radius.circular(10.0),
+                ),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 16),
+                    child: Row(
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              widget.post.parentpostauthor.profilePicture!),
+                          radius: 20.0,
+                        ),
+                        const SizedBox(width: 7.0),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(widget.post.parentpostauthor.name!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0)),
+                            const SizedBox(height: 5.0),
+                            Text(convertToLocalTime(
+                                widget.post.parentpost!.createdAt))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 16, bottom: 8),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: parseDescriptionWidget(
+                          widget.post.parentpost!.description!,
+                          widget.post.parentpost!.mention!,
+                          context),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          //const SizedBox(height: 5.0),
+
+          ImageGrid(
+            imageUrls: (widget.post.shared == null)
+                ? widget.post.photoUrl!.split(',')
+                : widget.post.parentpost!.photoUrl!.split(','),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -100,7 +299,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             topLeft: Radius.circular(15), topRight: Radius.circular(15)),
         //border: Border.all(color: Colors.red),
       ),
-      height: MediaQuery.of(context).size.height * height,
+      height: MediaQuery.of(context).size.height * sheetHeight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -120,7 +319,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.fromLTRB(15.0,15,15,0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -145,7 +344,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                                     fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                               const Text(
-                                "Sharing to your feed!!",
+                                "Sharing to your wall!!",
                                 style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
@@ -187,48 +386,27 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
               ],
             ),
           ),
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFieldTapRegion(
-                    onTapInside: (event) {
-                      setState(() {
-                        height = .88;
-                      });
-                    },
-                    onTapOutside: (event) {
-                      setState(() {
-                        _focusNode.unfocus();
-                        height = .68;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      //decoration: BoxDecoration(border: Border.all(color: Colors.orange)),
-                      height: 230,
-                      width: MediaQuery.of(context).size.width - 25,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: TextField(
-                          focusNode: _focusNode,
-                          controller: textController,
-                          maxLines: null,
-                          decoration: const InputDecoration(
-                              hintText: "Add a post description here...",
-                              border: InputBorder.none),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          const TextFieldTagInterface(showHelperText: false,),
+          SimplyMentionInterface(
+            key: mentionKey,
+            focusNode: mentionFocusNode,
           ),
           Divider(
-              height: 0,
-              color: userService.darkTheme! ? Colors.white : Colors.grey),
+            height: 0,
+            color: userService.darkTheme! ? Colors.white : Colors.grey,
+          ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 100),
+            decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+            height: MediaQuery.of(context).size.height * containerHeight,
+            child: SingleChildScrollView(
+              child: postShowcase(widget.post),
+            ),
+          ),
+          Divider(
+            height: 0,
+            color: userService.darkTheme! ? Colors.white : Colors.grey,
+          ),
           Column(
             children: [
               Row(
@@ -241,36 +419,37 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                           color: userService.darkTheme!
                               ? Colors.white
                               : const Color.fromRGBO(46, 46, 46, 1),
-                          fontSize: 18,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
               ),
               const Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.fromLTRB(8.0, 0, 10, 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     CircleAvatar(
-                      radius: 25,
+                      radius: 15,
                       backgroundImage: AssetImage("assets/images/whatsapp.png"),
                     ),
                     CircleAvatar(
-                      radius: 25,
+                      radius: 15,
                       backgroundImage:
                           AssetImage("assets/images/messenger.png"),
                     ),
                     CircleAvatar(
-                      radius: 25,
+                      radius: 15,
                       backgroundImage: AssetImage("assets/images/telegram.png"),
                     ),
                   ],
                 ),
               ),
               Divider(
-                  height: 0,
-                  color: userService.darkTheme! ? Colors.white : Colors.grey),
+                height: 0,
+                color: userService.darkTheme! ? Colors.white : Colors.grey,
+              ),
             ],
           )
         ],

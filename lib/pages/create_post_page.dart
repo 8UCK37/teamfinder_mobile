@@ -19,7 +19,6 @@ import '../utils/image_helper.dart';
 import '../utils/picker.dart';
 import '../widgets/draggable image grid/draggable_image_widget.dart';
 
-
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
 
@@ -36,6 +35,7 @@ class _CreatePostState extends State<CreatePost> {
         return await pickImagesUsingImagePicker(allowMultiple);
       });
   GlobalKey mentionKey = GlobalKey();
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -103,7 +103,7 @@ class _CreatePostState extends State<CreatePost> {
       }
       setState(() {
         //clear images after upload
-      imagePickerController.clearImages();
+        imagePickerController.clearImages();
       });
       Response response = await dio.post(
         'http://${dotenv.env['server_url']}/createPost',
@@ -219,8 +219,8 @@ class _CreatePostState extends State<CreatePost> {
                                   child: Text(
                                     "POST",
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
                                         color:
                                             mentionService.markUpText.isEmpty &&
                                                     selectedImages.isEmpty
@@ -291,7 +291,7 @@ class _CreatePostState extends State<CreatePost> {
                       ],
                     ),
                   ),
-                  SimplyMentionInterface(key: mentionKey),
+                  SimplyMentionInterface(key: mentionKey, focusNode: focusNode,),
                   const TextFieldTagInterface(),
                   const SizedBox(
                     height: 25,

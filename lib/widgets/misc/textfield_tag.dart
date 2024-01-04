@@ -6,7 +6,8 @@ import '../../services/mention_service.dart';
 import '../../utils/theme.dart';
 
 class TextFieldTagInterface extends StatefulWidget {
-  const TextFieldTagInterface({super.key});
+  final bool? showHelperText;
+  const TextFieldTagInterface({super.key, this.showHelperText});
 
   @override
   State<TextFieldTagInterface> createState() => _TextFieldTagInterfaceState();
@@ -154,10 +155,8 @@ class _TextFieldTagInterfaceState extends State<TextFieldTagInterface> {
                           borderSide: BorderSide(color: Colors.blue, width: 3),
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                         ),
-                        helperText:
-                            "Specify tags to set the topic of this post...",
-                        helperStyle:TextStyle(
-                            color: ThemeColor.primaryTheme),
+                        helperText: widget.showHelperText!=false? "Specify tags to set the topic of this post...":null,
+                        helperStyle: TextStyle(color: ThemeColor.primaryTheme),
                         hintText: _controller.hasTags ? '' : "Enter tags...",
                         hintStyle: const TextStyle(color: Colors.blue),
                         errorText: error,
