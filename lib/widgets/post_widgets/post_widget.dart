@@ -672,33 +672,51 @@ class _PostWidgetState extends State<PostWidget>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Visibility(
-                          visible: reactionCount > 0,
-                          child: const SizedBox(
-                            width: 25,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 7.5,
-                                  child: Image(
-                                    image: AssetImage("assets/images/love.gif"),
+                    GestureDetector(
+                      onTap: () {
+                        final reactionService =
+                            Provider.of<ReactionStatService>(context,
+                                listen: false);
+                        reactionService.fetchReactionStat(widget.post.id);
+                        showModalBottomSheet<dynamic>(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext context) {
+                            return Wrap(children: [
+                              ReactionStat(
+                                postId: widget.post.id,
+                              )
+                            ]);
+                          },
+                        );
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Visibility(
+                            visible: reactionCount > 0,
+                            child: const SizedBox(
+                              width: 25,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 7.5,
+                                    child: Image(
+                                      image: AssetImage("assets/images/love.gif"),
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ),
+                                  Image(
+                                    image: AssetImage("assets/images/haha.gif"),
                                     height: 20,
                                     width: 20,
                                   ),
-                                ),
-                                Image(
-                                  image: AssetImage("assets/images/haha.gif"),
-                                  height: 20,
-                                  width: 20,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          child: RichText(
+                          RichText(
                             text: TextSpan(
                               style: TextStyle(
                                 color: userService.darkTheme!
@@ -715,24 +733,8 @@ class _PostWidgetState extends State<PostWidget>
                               ],
                             ),
                           ),
-                          onTap: () {
-                            final reactionService =
-                                Provider.of<ReactionStatService>(context,
-                                    listen: false);
-                            reactionService.fetchReactionStat(widget.post.id);
-                            showModalBottomSheet<dynamic>(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (BuildContext context) {
-                                return  Wrap(children: [
-                                 ReactionStat(postId: widget.post.id,)
-                                ]);
-                              },
-                            );
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Row(
                       children: <Widget>[
