@@ -25,6 +25,7 @@ import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color
 import 'package:motion_toast/motion_toast.dart';
 
 import '../../controller/network_controller.dart';
+import '../../services/reaction_stat_service.dart';
 import '../../utils/router_animation.dart';
 import 'comment_widgets/new_bottomSheet_route.dart';
 import 'custom_like_button.dart';
@@ -715,13 +716,17 @@ class _PostWidgetState extends State<PostWidget>
                             ),
                           ),
                           onTap: () {
+                            final reactionService =
+                                Provider.of<ReactionStatService>(context,
+                                    listen: false);
+                            reactionService.fetchReactionStat(widget.post.id);
                             showModalBottomSheet<dynamic>(
                               context: context,
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
                               builder: (BuildContext context) {
-                                return const Wrap(children: [
-                                 ReactionStat()
+                                return  Wrap(children: [
+                                 ReactionStat(postId: widget.post.id,)
                                 ]);
                               },
                             );

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/fifth_page.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/first_page.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/fourth_page.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/second_page.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/sixth_page.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/third_page.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/all_reaction_list.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/stat_list.dart';
+
 
 import '../../../services/data_service.dart';
+import '../../../services/reaction_stat_service.dart';
 
 class ReactionStat extends StatefulWidget {
-  const ReactionStat({super.key});
+  final int postId;
+  const ReactionStat({super.key, required this.postId});
 
   @override
   State<ReactionStat> createState() => _ReactionStatState();
@@ -27,8 +26,14 @@ class _ReactionStatState extends State<ReactionStat>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
+    final reactionService = Provider.of<ReactionStatService>(context, listen: true);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       height: MediaQuery.of(context).size.height * .97,
@@ -58,8 +63,7 @@ class _ReactionStatState extends State<ReactionStat>
               ],
             ),
           ),
-          Container(
-            decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+          SizedBox(
             height: MediaQuery.of(context).size.height * .939,
             width: MediaQuery.of(context).size.width,
             child: Scaffold(
@@ -68,22 +72,24 @@ class _ReactionStatState extends State<ReactionStat>
                 automaticallyImplyLeading: false,
                 bottom: TabBar(
                   controller: tabController,
-                  indicatorColor: Colors.deepPurple,
+                  indicatorColor: Colors.blue,
                   unselectedLabelColor: Colors.grey,
-                  tabs:   [
+                  tabs: [
                     Container(
-                      decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.transparent)),
                       height: 35,
                       width: 35,
                       child: const Center(
                         child: Text(
                           "All",
                           style: TextStyle(color: Colors.blue),
-                          ),
+                        ),
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.transparent)),
                       height: 35,
                       width: 35,
                       child: const Image(
@@ -93,7 +99,8 @@ class _ReactionStatState extends State<ReactionStat>
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.transparent)),
                       height: 35,
                       width: 35,
                       child: const Image(
@@ -103,7 +110,8 @@ class _ReactionStatState extends State<ReactionStat>
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.transparent)),
                       height: 35,
                       width: 35,
                       child: const Image(
@@ -113,7 +121,8 @@ class _ReactionStatState extends State<ReactionStat>
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.transparent)),
                       height: 35,
                       width: 35,
                       child: const Image(
@@ -123,7 +132,8 @@ class _ReactionStatState extends State<ReactionStat>
                       ),
                     ),
                     Container(
-                      decoration: BoxDecoration(border: Border.all(color:Colors.red)),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.transparent)),
                       height: 35,
                       width: 35,
                       child: const Image(
@@ -137,13 +147,13 @@ class _ReactionStatState extends State<ReactionStat>
               ),
               body: TabBarView(
                 controller: tabController,
-                children: const [
-                  FirstStat(),
-                  SecondStat(),
-                  ThirdStat(),
-                  FourthPage(),
-                  FifthStat(),
-                  SixthStat()
+                children:  [
+                  const FirstStat(),
+                  ReactionList(reactionList: reactionService.fireList, type: "fire"),
+                  ReactionList(reactionList: reactionService.hahaList, type: "haha"),
+                  ReactionList(reactionList: reactionService.loveList, type: "love"),
+                  ReactionList(reactionList: reactionService.sadList, type: "sad"),
+                  ReactionList(reactionList: reactionService.shitList, type: "poop"),
                 ],
               ),
             ),

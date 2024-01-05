@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
+import 'package:teamfinder_mobile/services/reaction_stat_service.dart';
 import 'chat_ui/camera_ui/CameraScreen.dart';
 import 'dependency_injection.dart';
 import 'global.dart';
@@ -83,7 +84,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<NotificationWizard>(
             create: (context) => NotificationWizard()),
         ChangeNotifierProvider<MentionService>(
-            create: (context) => MentionService())
+            create: (context) => MentionService()),
+        ChangeNotifierProvider<ReactionStatService>(
+            create: (context) => ReactionStatService())
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
