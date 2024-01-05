@@ -365,7 +365,7 @@ class _PostWidgetState extends State<PostWidget>
 
   Widget parseDescriptionWidget(
       String desc, Mention mentionList, BuildContext context) {
-    String sanitizedDesc = desc.substring(0, desc.length - 1);
+    String sanitizedDesc = desc;
     final userService = Provider.of<ProviderService>(context, listen: false);
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
