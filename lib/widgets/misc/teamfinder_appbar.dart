@@ -56,28 +56,6 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                     fontSize: 25.0,
                     fontWeight: FontWeight.bold)),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-              if (widget.showNotificationCount &&
-                  notiObserver.incomingNotificationList.isNotEmpty)
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                    color: ThemeColor.primaryTheme,
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      notiObserver.incomingNotificationList.length
-                          .toString(), // Your superscript text
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
               GestureDetector(
                 onTap: () {
                   debugPrint('search clicked');
@@ -131,31 +109,87 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
               controller: widget.tabController,
               unselectedLabelColor: Colors.grey,
               //labelColor: Colors.deepPurple,
-              tabs: const [
-                Tab(
-                    icon: Icon(
-                  Icons.receipt_long,
-                  size: 28.0,
-                  color: Colors.blue,
-                )),
-                Tab(
-                    icon: Icon(
-                  Icons.co_present,
-                  size: 28.0,
-                  color: Colors.green,
-                )),
-                Tab(
-                    icon: Icon(Icons.diversity_3,
-                        size: 32.0, color: Colors.purple)),
-                Tab(
-                    icon: Icon(
-                  FontAwesomeIcons.bell,
-                  size: 25.0,
-                  color: Colors.red,
-                )),
-                Tab(
-                    icon: Icon(Icons.menu,
-                        size: 30.0, color: Colors.orange, key: Key('menuTab')))
+              tabs:  [
+                const Tab(
+                  icon: Icon(
+                    Icons.receipt_long,
+                    size: 28.0,
+                    color: Colors.blue,
+                  ),
+                ),
+                const Tab(
+                  icon: Icon(
+                    Icons.co_present,
+                    size: 28.0,
+                    color: Colors.green,
+                  ),
+                ),
+                const Tab(
+                  icon: Icon(
+                    Icons.diversity_3,
+                    size: 32.0,
+                    color: Colors.purple,
+                  ),
+                ),
+                // Tab(
+                //   icon: Icon(
+                //     FontAwesomeIcons.bell,
+                //     size: 25.0,
+                //     color: Colors.red,
+                //   ),
+                // ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(border: Border.all(color:Colors.transparent)),
+                  child:  Stack(
+                    children: [
+                      const Center(
+                        child: Icon(
+                          FontAwesomeIcons.bell,
+                          size: 25.0,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Visibility(
+                          visible: widget.showNotificationCount &&
+                              notiObserver.incomingNotificationList.isNotEmpty,
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            decoration:  BoxDecoration(
+                              color: ThemeColor.primaryTheme,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(50)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                notiObserver.incomingNotificationList.length
+                                    .toString(), // Your superscript text
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Tab(
+                  icon: Icon(
+                    Icons.menu,
+                    size: 30.0,
+                    color: Colors.orange,
+                    key: Key('menuTab'),
+                  ),
+                )
               ],
             )
           : null,
