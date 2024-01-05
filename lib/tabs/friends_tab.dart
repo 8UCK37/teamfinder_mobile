@@ -320,7 +320,10 @@ class _FriendsTabState extends State<FriendsTab>
                             setState(() {
                               pendingInc.remove(user["id"]);
                             });
-                            notiObserver.getFriendList();
+                            Future.delayed(const Duration(seconds: 1), () {
+                              notiObserver.getFriendList();
+                            });
+                            
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(

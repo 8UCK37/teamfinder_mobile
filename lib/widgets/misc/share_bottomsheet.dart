@@ -9,6 +9,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
+import 'package:teamfinder_mobile/services/notification_observer.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/misc/textfield_tag.dart';
 
@@ -334,6 +335,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
     final mentionService = Provider.of<MentionService>(context, listen: true);
+    final notiObserver =Provider.of<NotificationWizard>(context, listen: true);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       decoration: BoxDecoration(
@@ -443,6 +445,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           SimplyMentionInterface(
             key: mentionKey,
             focusNode: mentionFocusNode,
+            mentionableList: notiObserver.mentionAbleList,
           ),
           Divider(
             height: 0,

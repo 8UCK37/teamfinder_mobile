@@ -1,15 +1,12 @@
 import 'package:diacritic/diacritic.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:provider/provider.dart';
 import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 import 'package:teamfinder_mobile/widgets/simplyMention/types/mentions.dart';
 
-import '../../pojos/user_pojo.dart';
+
 import '../../services/data_service.dart';
 import '../../services/mention_service.dart';
 
@@ -17,9 +14,13 @@ List<MentionObject> documentMentions = [];
 
 class SimplyMentionInterface extends StatefulWidget {
   final FocusNode focusNode;
+  final String? markUptext;
+  final List<MentionObject> mentionableList;
   const SimplyMentionInterface({
     super.key,
     required this.focusNode,
+    this.markUptext,
+    required this.mentionableList,
   });
 
   @override
@@ -27,12 +28,11 @@ class SimplyMentionInterface extends StatefulWidget {
 }
 
 class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
+
   MentionTextEditingController? mentionTextEditingController;
   late FocusNode focusNode = widget.focusNode;
-
-  late List<UserPojo> userList = [];
-
   late bool isDark;
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +45,11 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
     setState(() {
       isDark = userService.darkTheme!;
     });
+
     if (mentionTextEditingController == null) {
+
+      documentMentions = widget.mentionableList;
+
       // Create a mention text editing controller and pass in the relevant syntax, then bind to onSuggestionChanged
       mentionTextEditingController = MentionTextEditingController(
           mentionSyntaxes: [DocumentMentionEditableSyntax(context)],
@@ -58,9 +62,11 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
               documentMentions.firstWhere((element) => element.id == id));
 
       /// Set markup text, any text that is the raw text that will be saved
-
-      // mentionTextEditingController!.setMarkupText(
-      //     context, "Hello <###@ExampleId###>, how are you doing?");
+      if (widget.markUptext != null) {
+        ///<###@ExampleId###>
+        mentionTextEditingController!
+            .setMarkupText(context, widget.markUptext!);
+      }
 
       mentionTextEditingController!.addListener(() {
         final mentionService =
@@ -69,12 +75,6 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
             .updateMarkUpText(mentionTextEditingController!.getMarkupText());
 
         setState(() {});
-        if (mentionTextEditingController!.isMentioning()) {
-          //debugPrint("search term:${mentionTextEditingController!.getSearchText()}");
-          String safeSearch =
-              removeDiacritics(mentionTextEditingController!.getSearchText());
-          searchUser(safeSearch);
-        }
       });
     }
 
@@ -96,87 +96,43 @@ class _SimplyMentionInterfaceState extends State<SimplyMentionInterface> {
     mentionService.appendToMentionRepo(mention);
   }
 
-  void searchUser(String userInp) async {
-    //debugPrint("called");
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user!.getIdToken();
-    //ignore: prefer_is_empty
-    if (userInp.length == 0) {
-      setState(() {
-        userList = [];
-      });
-      return;
-    }
-    //debugPrint('from search userinp: $userInp');
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/searchFriend',
-      data: {'searchTerm': userInp},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      //debugPrint('user data searched');
-      //debugPrint(response.data);
-      setState(() {
-        userList = userPojoListFromJson(response.data)
-            .where((userPojo) => userPojo.id != user.uid)
-            .toList();
-
-        parseSearchResultIntoPossibleMentionList(userList);
-      });
-    }
-  }
-
-  void parseSearchResultIntoPossibleMentionList(List<UserPojo> searchResult) {
-    if (searchResult.isEmpty) {
-      return;
-    }
-    setState(() {
-      documentMentions = [];
-    });
-    for (var element in searchResult) {
-      documentMentions.add(MentionObject(
-          id: element.id,
-          displayName: element.name,
-          avatarUrl: element.profilePicture));
-    }
-  }
-
   // Create any widget of your choosing to make a list of possible mentions using the search string
   Widget buildMentionSuggestions() {
     if (!mentionTextEditingController!.isMentioning()) {
       return const SizedBox.shrink();
     }
-
+    // final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
+    // List<MentionObject> mentionAbleList = notiObserver.mentionAbleList;
     List<Widget> possibleMentions = [];
-
     // Remove diacritics and lowercase the search string so matches are easier found
+    String safeSearch =
+        removeDiacritics(mentionTextEditingController!.getSearchText());
 
-    for (var element in documentMentions) {
-      possibleMentions.add(ListTile(
-        leading: CircleAvatar(
-          maxRadius: 25,
-          backgroundImage: NetworkImage(element.avatarUrl),
-        ),
-        title: Text(
-          element.displayName,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+    for (MentionObject element in documentMentions) {
+      String safeName = removeDiacritics(element.displayName.toLowerCase());
+      if (safeSearch.isNotEmpty && safeName.contains(safeSearch)) {
+        possibleMentions.add(
+          ListTile(
+            leading: CircleAvatar(
+              maxRadius: 25,
+              backgroundImage: NetworkImage(element.avatarUrl),
+            ),
+            title: Text(
+              element.displayName,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              //Tell the mention controller to insert the mention
+              onMentionSelected(element);
+            },
           ),
-        ),
-        onTap: () {
-          //Tell the mention controller to insert the mention
-          onMentionSelected(element);
-        },
-      ));
+        );
+      }
     }
+
     ScrollController controller = ScrollController();
 
     return Container(

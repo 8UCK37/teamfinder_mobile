@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:simply_mentions/text/mention_text_editing_controller.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import '../controller/network_controller.dart';
 import 'package:hive/hive.dart';
@@ -14,6 +15,7 @@ class NotificationWizard extends ChangeNotifier {
   Map<String, bool>? onlineMap;
   List<UserPojo>? friendList = [];
 
+  List<MentionObject> mentionAbleList = [];
   final notificationBox = Hive.box('notificationBox');
 
   void writeTonotificationBox(String userId) {
@@ -178,8 +180,18 @@ class NotificationWizard extends ChangeNotifier {
       onlineMap = {for (var obj in parsedFriendList) obj.id: obj.isConnected};
       updateOnlineMap(onlineMap);
       updateFriendList(parsedFriendList);
+      initMentionableList(parsedFriendList);
       //friendList = parsedFriendList; // Update the state variable with the parsed list
     }
+  }
+
+  void initMentionableList(List<UserPojo> list) {
+    mentionAbleList = [];
+    for (UserPojo user in list) {
+      mentionAbleList.add(MentionObject(
+          id: user.id, displayName: user.name, avatarUrl: user.profilePicture));
+    }
+    notifyListeners();
   }
 
   void addToNotificationList(IncomingNotification newValue) {
