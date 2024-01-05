@@ -449,7 +449,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             color: userService.darkTheme! ? Colors.white : Colors.grey,
           ),
           AnimatedContainer(
-            duration: const Duration(milliseconds: 100),
+            duration: const Duration(milliseconds: 150),
             decoration:
                 BoxDecoration(border: Border.all(color: Colors.transparent)),
             height: MediaQuery.of(context).size.height * containerHeight,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
-import '../../widgets/misc/custom_appbar.dart';
+import '../../widgets/misc/teamfinder_appbar.dart';
 
 // ignore: must_be_immutable
 class SettingsPage extends StatefulWidget {

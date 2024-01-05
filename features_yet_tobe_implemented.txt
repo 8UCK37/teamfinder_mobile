@@ -1,9 +1,5 @@
-1.  Reaction for both posts ✅ and Comments❗
-2.  Post and mention system ✅
-3.  Share with mention
+1.  Reaction for  and Comments❗
 4.  profile share options ❓
 5.  Standalone post viewer widget
-6.  comment counter + Reaction counter✅
 7.  Implement notificaiton mute from a particular user
-8.  add gestureListner to parentpost author dp✅
-9.  different notification for comment mention and post mention✅
+8.  manage the reactive height for share bottomsheet

@@ -19,6 +19,7 @@ import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_h
 import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/comment_tree.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_grid.dart';
 import 'package:teamfinder_mobile/widgets/misc/share_bottomsheet.dart';
+import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/reaction_stat.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/custom_animated_reaction.dart';
 import 'package:teamfinder_mobile/widgets/reaction_widgets/reaction_splash_color.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -78,7 +79,7 @@ class _PostWidgetState extends State<PostWidget>
     } else {
       isBookMarked = userService.bookMarkIds!.contains(widget.post.id);
     }
-    
+
     final listForOwnPost = [
       CircularMenuItem(
           iconSize: iconSize,
@@ -145,52 +146,52 @@ class _PostWidgetState extends State<PostWidget>
           color: isBookMarked ? Colors.red : Colors.green,
           onTap: () {
             setState(() {
-              if (isBookMarked) {    
+              if (isBookMarked) {
                 setState(() {
                   isBookMarked = false;
                 });
                 userService.removeFromBookmarkBox(widget.post.id);
                 MotionToast(
-                    icon: Icons.bookmark_remove,
-                    primaryColor: const Color.fromARGB(255, 171, 132, 129),
-                    displaySideBar: false,
-                    displayBorder: true,
-                    position: MotionToastPosition.top,
-                    animationDuration: const Duration(milliseconds: 200),
-                    toastDuration: const Duration(seconds: 1),
-                    title: const Text(
-                      'Removed!!',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  icon: Icons.bookmark_remove,
+                  primaryColor: const Color.fromARGB(255, 171, 132, 129),
+                  displaySideBar: false,
+                  displayBorder: true,
+                  position: MotionToastPosition.top,
+                  animationDuration: const Duration(milliseconds: 200),
+                  toastDuration: const Duration(seconds: 1),
+                  title: const Text(
+                    'Removed!!',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    description: const Text(
-                      'Post removed from bookmarks',
-                    ),
-                  ).show(context);
+                  ),
+                  description: const Text(
+                    'Post removed from bookmarks',
+                  ),
+                ).show(context);
               } else {
                 setState(() {
                   isBookMarked = true;
                 });
                 userService.addToBookmarkBox(widget.post.id);
                 MotionToast(
-                    icon: Icons.bookmark_added,
-                    primaryColor: Colors.green,
-                    displaySideBar: false,
-                    displayBorder: true,
-                    position: MotionToastPosition.top,
-                    animationDuration: const Duration(milliseconds: 200),
-                    toastDuration: const Duration(seconds: 1),
-                    title: const Text(
-                      'Added!!',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  icon: Icons.bookmark_added,
+                  primaryColor: Colors.green,
+                  displaySideBar: false,
+                  displayBorder: true,
+                  position: MotionToastPosition.top,
+                  animationDuration: const Duration(milliseconds: 200),
+                  toastDuration: const Duration(seconds: 1),
+                  title: const Text(
+                    'Added!!',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    description: const Text(
-                      'Post saved to bookmarks',
-                    ),
-                  ).show(context);
+                  ),
+                  description: const Text(
+                    'Post saved to bookmarks',
+                  ),
+                ).show(context);
               }
               circularMenuKey.currentState?.reverseAnimation();
             });
@@ -695,22 +696,36 @@ class _PostWidgetState extends State<PostWidget>
                             ),
                           ),
                         ),
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: userService.darkTheme!
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                            children: [
-                              TextSpan(text: "$reactionCount"),
-                              TextSpan(
-                                text: reactionCount == 1
-                                    ? "  Reaction"
-                                    : "  Reactions",
+                        GestureDetector(
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                color: userService.darkTheme!
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
-                            ],
+                              children: [
+                                TextSpan(text: "$reactionCount"),
+                                TextSpan(
+                                  text: reactionCount == 1
+                                      ? "  Reaction"
+                                      : "  Reactions",
+                                ),
+                              ],
+                            ),
                           ),
+                          onTap: () {
+                            showModalBottomSheet<dynamic>(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (BuildContext context) {
+                                return const Wrap(children: [
+                                 ReactionStat()
+                                ]);
+                              },
+                            );
+                          },
                         ),
                       ],
                     ),

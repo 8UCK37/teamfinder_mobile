@@ -7,7 +7,7 @@ import 'package:teamfinder_mobile/friend_profile_ui/friend_posts.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_games_showcase.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
-import '../widgets/misc/custom_appbar.dart';
+import '../widgets/misc/teamfinder_appbar.dart';
 
 class FriendProfileHome extends StatefulWidget {
   final String? friendName;

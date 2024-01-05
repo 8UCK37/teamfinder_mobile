@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/utils/theme.dart';
-import 'package:teamfinder_mobile/widgets/misc/custom_appbar.dart';
+import 'package:teamfinder_mobile/widgets/misc/teamfinder_appbar.dart';
 import '../services/data_service.dart';
 import '../tabs/friends_tab.dart';
 import '../tabs/home_tab.dart';

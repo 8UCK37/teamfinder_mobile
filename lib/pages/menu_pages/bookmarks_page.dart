@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../pojos/post_pojo.dart';
 import '../../services/data_service.dart';
-import '../../widgets/misc/custom_appbar.dart';
+import '../../widgets/misc/teamfinder_appbar.dart';
 import '../../widgets/misc/separator_widget.dart';
 import '../../widgets/post_widgets/post_widget.dart';
 
