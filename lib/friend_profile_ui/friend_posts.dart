@@ -7,7 +7,7 @@ import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/pojos/user_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/services/friend_profile_service.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/post_widget.dart';
+import 'package:teamfinder_mobile/widgets/post/post_widget.dart';
 import '../utils/language_chip_helper.dart';
 import '../widgets/misc/separator_widget.dart';
 

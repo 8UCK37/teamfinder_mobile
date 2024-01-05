@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import '../pojos/post_pojo.dart';
 import '../widgets/misc/online_widget.dart';
-import '../widgets/post_widgets/post_widget.dart';
+import '../widgets/post/post_widget.dart';
 import '../widgets/misc/separator_widget.dart';
 import '../widgets/misc/write_something_widget.dart';
 

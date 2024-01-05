@@ -5,7 +5,7 @@ import '../../pojos/post_pojo.dart';
 import '../../services/data_service.dart';
 import '../../widgets/misc/teamfinder_appbar.dart';
 import '../../widgets/misc/separator_widget.dart';
-import '../../widgets/post_widgets/post_widget.dart';
+import '../../widgets/post/post_widget.dart';
 
 class BookMarkedPosts extends StatefulWidget {
   const BookMarkedPosts({super.key});

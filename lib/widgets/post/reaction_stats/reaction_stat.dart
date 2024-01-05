@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/all_reaction_list.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/reaction_stats/pages/stat_list.dart';
+import 'package:teamfinder_mobile/widgets/post/reaction_stats/pages/all_reaction_list.dart';
+import 'package:teamfinder_mobile/widgets/post/reaction_stats/pages/stat_list.dart';
 
 
 import '../../../services/data_service.dart';

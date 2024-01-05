@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:teamfinder_mobile/widgets/misc/carousel_widget.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_viewer.dart';
 
-import '../post_widgets/image_collage.dart';
+import '../post/image_collage.dart';
 
 class ImageGrid extends StatelessWidget {
   final List<String> imageUrls;

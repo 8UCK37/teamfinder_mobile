@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teamfinder_mobile/widgets/post_widgets/comment_widgets/custom_bottom_sheet.dart';
+import 'package:teamfinder_mobile/widgets/post/comment_widgets/custom_bottom_sheet.dart';
 
 const Duration _bottomSheetDuration = Duration(milliseconds: 500);
 
