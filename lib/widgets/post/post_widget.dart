@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
+import 'package:teamfinder_mobile/pages/edit_post.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/post/comment_widgets/comment_message_bar.dart';
@@ -89,6 +90,10 @@ class _PostWidgetState extends State<PostWidget>
           icon: Icons.edit_note,
           color: Colors.green,
           onTap: () {
+            AnimatedRouter.slideToPageLeft(
+              context,
+              EditPost(post: widget.post)
+            );
             setState(() {});
           }),
       CircularMenuItem(
@@ -702,7 +707,8 @@ class _PostWidgetState extends State<PostWidget>
                                   Positioned(
                                     left: 7.5,
                                     child: Image(
-                                      image: AssetImage("assets/images/love.gif"),
+                                      image:
+                                          AssetImage("assets/images/love.gif"),
                                       height: 20,
                                       width: 20,
                                     ),
