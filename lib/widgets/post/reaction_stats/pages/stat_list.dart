@@ -39,99 +39,102 @@ class _ReactionListState extends State<ReactionList> {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 20,
-        automaticallyImplyLeading: false,
-        title: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                style: TextStyle(
-                    color:
-                        userService.darkTheme! ? Colors.white : Colors.black),
-                text: widget.type!=null? "${widget.type}: ":"All: ",
-              ),
-              TextSpan(
-                  style: const TextStyle(color: Colors.blue),
-                  text: "${widget.reactionList.length}"),
-            ],
+    return Theme(
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 20,
+          automaticallyImplyLeading: false,
+          title: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  style: TextStyle(
+                      color:
+                          userService.darkTheme! ? Colors.white : Colors.black),
+                  text: widget.type!=null? "${widget.type}: ":"All: ",
+                ),
+                TextSpan(
+                    style: const TextStyle(color: Colors.blue),
+                    text: "${widget.reactionList.length}"),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 15, 5),
-          child: ListView.builder(
-            itemCount: widget.reactionList.length,
-            itemBuilder: (context, i) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  debugPrint(widget.reactionList[i]['author']);
-                  if (userService.user['id'] !=
-                      widget.reactionList[i]['author']) {
-                    AnimatedRouter.slideToPageLeft(
-                        context,
-                        FriendProfileHome(
-                          friendId: widget.reactionList[i]['author'],
-                          friendName: widget.reactionList[i]['name'],
-                          friendProfileImage: widget.reactionList[i]
-                              ['profilePicture'],
-                        ));
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.transparent)),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.transparent)),
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundImage: CachedNetworkImageProvider(
-                                    widget.reactionList[i]['profilePicture']),
+        body: Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 15, 5),
+            child: ListView.builder(
+              itemCount: widget.reactionList.length,
+              itemBuilder: (context, i) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    debugPrint(widget.reactionList[i]['author']);
+                    if (userService.user['id'] !=
+                        widget.reactionList[i]['author']) {
+                      AnimatedRouter.slideToPageLeft(
+                          context,
+                          FriendProfileHome(
+                            friendId: widget.reactionList[i]['author'],
+                            friendName: widget.reactionList[i]['name'],
+                            friendProfileImage: widget.reactionList[i]
+                                ['profilePicture'],
+                          ));
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent)),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.transparent)),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      widget.reactionList[i]['profilePicture']),
+                                ),
                               ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Image(
-                                image: AssetImage(widget.type != null
-                                    ? "assets/images/${widget.type}.gif"
-                                    : reactionPathFromType(
-                                        widget.reactionList[i]['type'])),
-                                height: 28,
-                                width: 28,
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Image(
+                                  image: AssetImage(widget.type != null
+                                      ? "assets/images/${widget.type}.gif"
+                                      : reactionPathFromType(
+                                          widget.reactionList[i]['type'])),
+                                  height: 28,
+                                  width: 28,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                                color: userService.darkTheme!
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.w500),
-                            text: userService.user['id'] ==
-                                    widget.reactionList[i]['author']
-                                ? "You"
-                                : widget.reactionList[i]['name'],
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                  color: userService.darkTheme!
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w500),
+                              text: userService.user['id'] ==
+                                      widget.reactionList[i]['author']
+                                  ? "You"
+                                  : widget.reactionList[i]['name'],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

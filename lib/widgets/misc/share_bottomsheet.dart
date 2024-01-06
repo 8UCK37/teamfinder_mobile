@@ -336,180 +336,183 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
     final userService = Provider.of<ProviderService>(context, listen: true);
     final mentionService = Provider.of<MentionService>(context, listen: true);
     final notiObserver =Provider.of<NotificationWizard>(context, listen: true);
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      decoration: BoxDecoration(
-        color: userService.darkTheme!
-            ? const Color.fromRGBO(46, 46, 46, 1)
-            : Colors.white,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-        //border: Border.all(color: Colors.red),
-      ),
-      height: MediaQuery.of(context).size.height * sheetHeight,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 5,
-                  width: 60,
-                  decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                )
-              ],
+    return Theme(
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        decoration: BoxDecoration(
+          color: userService.darkTheme!
+              ? const Color.fromRGBO(46, 46, 46, 1)
+              : Colors.white,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+          //border: Border.all(color: Colors.red),
+        ),
+        height: MediaQuery.of(context).size.height * sheetHeight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 5,
+                    width: 60,
+                    decoration: const BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                  )
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 15, 15, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: NetworkImage(userService
-                                  .user["profilePicture"] ??
-                              "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                userService.user["name"],
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                              const Text(
-                                "Sharing to your wall!!",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (mentionService.markUpText.isEmpty) {
-                      debugPrint("empty");
-                      quickSharePost();
-                    } else {
-                      debugPrint("not-empty");
-                      shareToFeed(mentionService.deltaParser());
-                    }
-                  },
-                  child: Column(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15.0, 15, 15, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/launch.png"))),
-                          )
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(userService
+                                    .user["profilePicture"] ??
+                                "https://cdn-icons-png.flaticon.com/512/1985/1985782.png"),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userService.user["name"],
+                                  style: const TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  "Sharing to your wall!!",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                      const Text(
-                        "Share Now",
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
                       )
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
-          const TextFieldTagInterface(
-            showHelperText: false,
-          ),
-          SimplyMentionInterface(
-            key: mentionKey,
-            focusNode: mentionFocusNode,
-            mentionableList: notiObserver.mentionAbleList,
-          ),
-          Divider(
-            height: 0,
-            color: userService.darkTheme! ? Colors.white : Colors.grey,
-          ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            decoration:
-                BoxDecoration(border: Border.all(color: Colors.transparent)),
-            height: MediaQuery.of(context).size.height * containerHeight,
-            child: SingleChildScrollView(
-              child: postShowcase(widget.post),
-            ),
-          ),
-          Divider(
-            height: 0,
-            color: userService.darkTheme! ? Colors.white : Colors.grey,
-          ),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Or Share via...",
-                      style: TextStyle(
-                          color: userService.darkTheme!
-                              ? Colors.white
-                              : const Color.fromRGBO(46, 46, 46, 1),
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
+                  GestureDetector(
+                    onTap: () {
+                      if (mentionService.markUpText.isEmpty) {
+                        debugPrint("empty");
+                        quickSharePost();
+                      } else {
+                        debugPrint("not-empty");
+                        shareToFeed(mentionService.deltaParser());
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 50,
+                              width: 50,
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/launch.png"))),
+                            )
+                          ],
+                        ),
+                        const Text(
+                          "Share Now",
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
                   )
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(8.0, 0, 10, 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            ),
+            const TextFieldTagInterface(
+              showHelperText: false,
+            ),
+            SimplyMentionInterface(
+              key: mentionKey,
+              focusNode: mentionFocusNode,
+              mentionableList: notiObserver.mentionAbleList,
+            ),
+            Divider(
+              height: 0,
+              color: userService.darkTheme! ? Colors.white : Colors.grey,
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.transparent)),
+              height: MediaQuery.of(context).size.height * containerHeight,
+              child: SingleChildScrollView(
+                child: postShowcase(widget.post),
+              ),
+            ),
+            Divider(
+              height: 0,
+              color: userService.darkTheme! ? Colors.white : Colors.grey,
+            ),
+            Column(
+              children: [
+                Row(
                   children: [
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundImage: AssetImage("assets/images/whatsapp.png"),
-                    ),
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundImage:
-                          AssetImage("assets/images/messenger.png"),
-                    ),
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundImage: AssetImage("assets/images/telegram.png"),
-                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Or Share via...",
+                        style: TextStyle(
+                            color: userService.darkTheme!
+                                ? Colors.white
+                                : const Color.fromRGBO(46, 46, 46, 1),
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
                   ],
                 ),
-              ),
-              Divider(
-                height: 0,
-                color: userService.darkTheme! ? Colors.white : Colors.grey,
-              ),
-            ],
-          )
-        ],
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 0, 10, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundImage: AssetImage("assets/images/whatsapp.png"),
+                      ),
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundImage:
+                            AssetImage("assets/images/messenger.png"),
+                      ),
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundImage: AssetImage("assets/images/telegram.png"),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: 0,
+                  color: userService.darkTheme! ? Colors.white : Colors.grey,
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

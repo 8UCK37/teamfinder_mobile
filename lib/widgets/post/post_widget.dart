@@ -13,6 +13,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/pages/edit_post_page.dart';
+import 'package:teamfinder_mobile/pages/individual_post_page.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/post/comment_widgets/comment_message_bar.dart';
@@ -92,9 +93,7 @@ class _PostWidgetState extends State<PostWidget>
           onTap: () {
             circularMenuKey.currentState?.reverseAnimation();
             AnimatedRouter.slideToPageLeft(
-              context,
-              EditPost(post: widget.post)
-            );
+                context, EditPost(post: widget.post));
             setState(() {});
           }),
       CircularMenuItem(
@@ -140,6 +139,14 @@ class _PostWidgetState extends State<PostWidget>
           color: Colors.orange,
           onTap: () {
             circularMenuKey.currentState?.reverseAnimation();
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => IndividualPostPage(post: widget.post),
+              ),
+            );
+            
             setState(() {});
           }),
     ];
@@ -222,6 +229,14 @@ class _PostWidgetState extends State<PostWidget>
           color: const Color.fromARGB(255, 58, 136, 199),
           onTap: () {
             circularMenuKey.currentState?.reverseAnimation();
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => IndividualPostPage(post: widget.post),
+              ),
+            );
+
             setState(() {});
           }),
     ];
@@ -667,7 +682,6 @@ class _PostWidgetState extends State<PostWidget>
                 ),
               ),
             //const SizedBox(height: 5.0),
-
             ImageGrid(
               imageUrls: (widget.post.shared == null)
                   ? widget.post.photoUrl!.split(',')
