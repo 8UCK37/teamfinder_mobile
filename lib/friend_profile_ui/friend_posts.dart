@@ -249,10 +249,6 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                           title: Text("See ${friendProfile!.name}'s About Info",
                                 style: const TextStyle(fontSize: 16.0)),
                           leading:const Icon(Icons.psychology_alt),
-                          trailing: const Icon(
-                            color: Colors.blue,
-                            Icons.expand_more,
-                          ),
                           childrenPadding: const EdgeInsets.only(left: 25),
                           children: [
                             Padding(

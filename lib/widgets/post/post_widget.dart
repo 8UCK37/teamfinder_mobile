@@ -74,6 +74,41 @@ class _PostWidgetState extends State<PostWidget>
     super.dispose();
   }
 
+  void navigateToParentPost(int postId) async {
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("getPostbyId no_internet");
+      return;
+    } else {
+      debugPrint("getPostbyId called");
+    }
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/getPostByPostId',
+      data: {'postId': postId},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      PostPojo parsedPosts = postPojoFromJson(response.data, false)[0];
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => IndividualPostPage(post: parsedPosts),
+        ),
+      );
+    }
+  }
+
   List<CircularMenuItem> buildMenuItems() {
     final userService = Provider.of<ProviderService>(context, listen: true);
     bool isBookMarked = false;
@@ -143,10 +178,12 @@ class _PostWidgetState extends State<PostWidget>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => IndividualPostPage(post: widget.post),
+                builder: (context) => IndividualPostPage(
+                  post: widget.post,
+                ),
               ),
             );
-            
+
             setState(() {});
           }),
     ];
@@ -233,7 +270,9 @@ class _PostWidgetState extends State<PostWidget>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => IndividualPostPage(post: widget.post),
+                builder: (context) => IndividualPostPage(
+                  post: widget.post,
+                ),
               ),
             );
 
@@ -631,8 +670,7 @@ class _PostWidgetState extends State<PostWidget>
                 decoration: BoxDecoration(
                   color: userService.darkTheme!
                       ? const Color.fromARGB(255, 80, 80, 80)
-                      : const Color.fromARGB(110, 222, 221,
-                          221), // Set the desired background color here
+                      : const Color.fromARGB(110, 222, 221, 221),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10.0),
                     topRight: Radius.circular(10.0),
@@ -640,42 +678,66 @@ class _PostWidgetState extends State<PostWidget>
                 ),
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8, left: 16),
-                      child: Row(
-                        children: <Widget>[
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                widget.post.parentpostauthor.profilePicture!),
-                            radius: 20.0,
-                          ),
-                          const SizedBox(width: 7.0),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(widget.post.parentpostauthor.name!,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17.0)),
-                              const SizedBox(height: 5.0),
-                              Text(convertToLocalTime(
-                                  widget.post.parentpost!.createdAt))
-                            ],
-                          ),
-                        ],
+                    GestureDetector(
+                      onTap: () {
+                        if (userService.user['id'] !=
+                            widget.post.parentpost!.author) {
+                          AnimatedRouter.slideToPageLeft(
+                              context,
+                              FriendProfileHome(
+                                friendId: widget.post.parentpost!.author,
+                                friendName: widget.post.parentpostauthor.name,
+                                friendProfileImage:
+                                    widget.post.parentpostauthor.profilePicture,
+                              ));
+                        } else {
+                          if (widget.tabController != null) {
+                            widget.tabController!.animateTo(1);
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8, left: 16),
+                        child: Row(
+                          children: <Widget>[
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  widget.post.parentpostauthor.profilePicture!),
+                              radius: 20.0,
+                            ),
+                            const SizedBox(width: 7.0),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(widget.post.parentpostauthor.name!,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17.0)),
+                                const SizedBox(height: 5.0),
+                                Text(convertToLocalTime(
+                                    widget.post.parentpost!.createdAt))
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20.0),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 8, left: 16, bottom: 8),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: parseDescriptionWidget(
-                            widget.post.parentpost!.description!,
-                            widget.post.parentpost!.mention!,
-                            context),
+                    GestureDetector(
+                      onTap: () {
+                        navigateToParentPost(widget.post.parentpost!.id);
+                      },
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 8, left: 16, bottom: 8),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: parseDescriptionWidget(
+                              widget.post.parentpost!.description!,
+                              widget.post.parentpost!.mention!,
+                              context),
+                        ),
                       ),
                     ),
                   ],
