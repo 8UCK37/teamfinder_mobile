@@ -138,208 +138,226 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Theme(
       data: _isDark ? ThemeData.dark() : ThemeData.light(),
-      child: Scaffold(
-        appBar: TeamFinderAppBar(
-          titleText: "Settings",
-          isDark: _isDark,
-          implyLeading: true,
-          height: 55,
-          showNotificationCount: false,
-        ),
-        body: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: ListView(
-              children: [
-                const Divider(
-                  thickness: 4,
-                ),
-                _SingleSection(
-                  title: "Theme",
-                  children: [
-                    ListTile(
-                      title: Text(_isDark ? "Dark Mode" : "Light Mode"),
-                      leading: DayNightSwitcherIcon(
-                        isDarkModeEnabled: _isDark,
-                        onStateChanged: onStateChanged,
+      child: RefreshIndicator(
+        onRefresh:refreshUser,
+        child: Scaffold(
+          appBar: TeamFinderAppBar(
+            titleText: "Settings",
+            isDark: _isDark,
+            implyLeading: true,
+            height: 55,
+            showNotificationCount: false,
+          ),
+          body: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: ListView(
+                children: [
+                  const Divider(
+                    thickness: 4,
+                  ),
+                  _SingleSection(
+                    title: "Theme",
+                    children: [
+                      ListTile(
+                        title: Text(_isDark ? "Dark Mode" : "Light Mode"),
+                        leading: DayNightSwitcherIcon(
+                          isDarkModeEnabled: _isDark,
+                          onStateChanged: onStateChanged,
+                        ),
+                        trailing: DayNightSwitcher(
+                          isDarkModeEnabled: _isDark,
+                          onStateChanged: onStateChanged,
+                        ),
                       ),
-                      trailing: DayNightSwitcher(
-                        isDarkModeEnabled: _isDark,
-                        onStateChanged: onStateChanged,
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                const _SingleSection(
-                  title: "Preferences",
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                          title: "Notifications",
-                          leading: Icon(Icons.notifications_none_rounded),
-                          children: [
-                            ListTile(
-                              title: Text("item1"),
-                            ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
-                          ]),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                          title: "Chat",
-                          leading: Icon(Icons.messenger_outline_rounded),
-                          children: [
-                            ListTile(
-                              title: Text("item1"),
-                            ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
-                          ]),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                _SingleSection(
-                  title: "Privacy & Security",
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                        title: "Privacy",
-                        leading:
-                            const Icon(Icons.admin_panel_settings_outlined),
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                  const Divider(),
+                  const _SingleSection(
+                    title: "Preferences",
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                            title: "Notifications",
+                            leading: Icon(Icons.notifications_none_rounded),
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(8.0, 0, 0, 2),
-                                child: Text("Friend List privacy"),
+                              ListTile(
+                                title: Text("item1"),
                               ),
-                              CustomDropdown<String>(
-                                decoration: CustomDropdownDecoration(
-                                  closedFillColor: _isDark
-                                      ? const Color.fromARGB(255, 231, 231, 231)
-                                      : const Color.fromARGB(
-                                          255, 243, 232, 232),
-                                  expandedFillColor:
-                                      const Color.fromARGB(255, 255, 249, 222),
-                                  listItemStyle:
-                                      const TextStyle(color: Colors.black),
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black),
-                                  headerStyle: TextStyle(
-                                      color: privacyOptions[
-                                          currentFriendListPrivacy]),
-                                ),
-                                hintText: 'Select Privacy mode',
-                                items: privacyOptions.keys.toList(),
-                                initialItem: currentFriendListPrivacy,
-                                excludeSelected: true,
-                                onChanged: (value) {
-                                  //debugPrint(value);
-                                  setState(() {
-                                    currentFriendListPrivacy = value;
-                                  });
-                                  updateFriendListVis();
-                                },
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(8.0, 0, 0, 2),
-                                child: Text("Linked Account privacy"),
-                              ),
-                              CustomDropdown<String>(
-                                decoration: CustomDropdownDecoration(
-                                  closedFillColor: _isDark
-                                      ? const Color.fromARGB(255, 231, 231, 231)
-                                      : const Color.fromARGB(
-                                          255, 243, 232, 232),
-                                  expandedFillColor:
-                                      const Color.fromARGB(255, 255, 249, 222),
-                                  listItemStyle:
-                                      const TextStyle(color: Colors.black),
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black),
-                                  headerStyle: TextStyle(
-                                      color:
-                                          privacyOptions[currentLinkedPrivacy]),
-                                ),
-                                hintText: 'Select Privacy mode',
-                                items: privacyOptions.keys.toList(),
-                                initialItem: currentLinkedPrivacy,
-                                excludeSelected: true,
-                                onChanged: (value) {
-                                  //debugPrint(value);
-                                  setState(() {
-                                    currentLinkedPrivacy = value;
-                                  });
-                                  updateLinkedAccVis();
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          )
-                        ],
+                              ListTile(
+                                title: Text("item2"),
+                              )
+                            ]),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                          title: "Security",
-                          leading: Icon(Icons.lock_outline_rounded),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                            title: "Chat",
+                            leading: Icon(Icons.messenger_outline_rounded),
+                            children: [
+                              ListTile(
+                                title: Text("item1"),
+                              ),
+                              ListTile(
+                                title: Text("item2"),
+                              )
+                            ]),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  _SingleSection(
+                    title: "Privacy & Security",
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                          title: "Privacy",
+                          leading:
+                              const Icon(Icons.admin_panel_settings_outlined),
                           children: [
-                            ListTile(
-                              title: Text("item1"),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(8.0, 0, 0, 2),
+                                  child: Text("Friend List privacy"),
+                                ),
+                                CustomDropdown<String>(
+                                  decoration: CustomDropdownDecoration(
+                                    closedFillColor: _isDark
+                                        ? const Color.fromARGB(
+                                            255, 231, 231, 231)
+                                        : const Color.fromARGB(
+                                            255, 243, 232, 232),
+                                    expandedFillColor: const Color.fromARGB(
+                                        255, 255, 249, 222),
+                                    listItemStyle:
+                                        const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
+                                    headerStyle: TextStyle(
+                                        color: privacyOptions[
+                                            currentFriendListPrivacy]),
+                                  ),
+                                  hintText: 'Select Privacy mode',
+                                  items: privacyOptions.keys.toList(),
+                                  initialItem: currentFriendListPrivacy,
+                                  excludeSelected: true,
+                                  onChanged: (value) {
+                                    //debugPrint(value);
+                                    setState(() {
+                                      currentFriendListPrivacy = value;
+                                    });
+                                    updateFriendListVis();
+                                  },
+                                ),
+                              ],
                             ),
-                            ListTile(
-                              title: Text("item2"),
-                            )
-                          ]),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                          title: "Profile",
-                          leading: Icon(Icons.person_outline_rounded),
-                          children: [
-                            ListTile(
-                              title: Text("item1"),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(8.0, 0, 0, 2),
+                                  child: Text("Linked Account privacy"),
+                                ),
+                                CustomDropdown<String>(
+                                  decoration: CustomDropdownDecoration(
+                                    closedFillColor: _isDark
+                                        ? const Color.fromARGB(
+                                            255, 231, 231, 231)
+                                        : const Color.fromARGB(
+                                            255, 243, 232, 232),
+                                    expandedFillColor: const Color.fromARGB(
+                                        255, 255, 249, 222),
+                                    listItemStyle:
+                                        const TextStyle(color: Colors.black),
+                                    hintStyle:
+                                        const TextStyle(color: Colors.black),
+                                    headerStyle: TextStyle(
+                                        color: privacyOptions[
+                                            currentLinkedPrivacy]),
+                                  ),
+                                  hintText: 'Select Privacy mode',
+                                  items: privacyOptions.keys.toList(),
+                                  initialItem: currentLinkedPrivacy,
+                                  excludeSelected: true,
+                                  onChanged: (value) {
+                                    //debugPrint(value);
+                                    setState(() {
+                                      currentLinkedPrivacy = value;
+                                    });
+                                    updateLinkedAccVis();
+                                  },
+                                ),
+                              ],
                             ),
-                            ListTile(
-                              title: Text("item2"),
+                            const SizedBox(
+                              height: 10,
                             )
-                          ]),
-                    ),
+                          ],
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                            title: "Security",
+                            leading: Icon(Icons.lock_outline_rounded),
+                            children: [
+                              ListTile(
+                                title: Text("item1"),
+                              ),
+                              ListTile(
+                                title: Text("item2"),
+                              )
+                            ]),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                            title: "Profile",
+                            leading: Icon(Icons.person_outline_rounded),
+                            children: [
+                              ListTile(
+                                title: Text("item1"),
+                              ),
+                              ListTile(
+                                title: Text("item2"),
+                              )
+                            ]),
+                      ),
 
-                    // _CustomListTile(
-                    //     title: "Calling", icon: Icons.phone_outlined),
-                    // _CustomListTile(
-                    //     title: "People", icon: Icons.contacts_outlined),
-                    // _CustomListTile(
-                    //     title: "Calendar", icon: Icons.calendar_today_rounded)
-                  ],
-                ),
-                const Divider(),
-                const _SingleSection(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                          title: "Help & Feedback",
-                          leading: Icon(Icons.help_outline_rounded),
+                      // _CustomListTile(
+                      //     title: "Calling", icon: Icons.phone_outlined),
+                      // _CustomListTile(
+                      //     title: "People", icon: Icons.contacts_outlined),
+                      // _CustomListTile(
+                      //     title: "Calendar", icon: Icons.calendar_today_rounded)
+                    ],
+                  ),
+                  const Divider(),
+                  const _SingleSection(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                            title: "Help & Feedback",
+                            leading: Icon(Icons.help_outline_rounded),
+                            children: [
+                              ListTile(
+                                title: Text("item1"),
+                              ),
+                              ListTile(
+                                title: Text("item2"),
+                              )
+                            ]),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                        child: _CustomListTile(
+                          title: "About",
+                          leading: Icon(Icons.info_outline_rounded),
                           children: [
                             ListTile(
                               title: Text("item1"),
@@ -347,26 +365,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             ListTile(
                               title: Text("item2"),
                             )
-                          ]),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: _CustomListTile(
-                        title: "About",
-                        leading: Icon(Icons.info_outline_rounded),
-                        children: [
-                          ListTile(
-                            title: Text("item1"),
-                          ),
-                          ListTile(
-                            title: Text("item2"),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
