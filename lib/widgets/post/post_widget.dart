@@ -90,6 +90,7 @@ class _PostWidgetState extends State<PostWidget>
           icon: Icons.edit_note,
           color: Colors.green,
           onTap: () {
+            circularMenuKey.currentState?.reverseAnimation();
             AnimatedRouter.slideToPageLeft(
               context,
               EditPost(post: widget.post)
@@ -138,6 +139,7 @@ class _PostWidgetState extends State<PostWidget>
           icon: Icons.open_in_new,
           color: Colors.orange,
           onTap: () {
+            circularMenuKey.currentState?.reverseAnimation();
             setState(() {});
           }),
     ];
@@ -209,6 +211,7 @@ class _PostWidgetState extends State<PostWidget>
           icon: Icons.report,
           color: const Color.fromARGB(255, 172, 47, 38),
           onTap: () {
+            circularMenuKey.currentState?.reverseAnimation();
             setState(() {});
           }),
       CircularMenuItem(
@@ -218,6 +221,7 @@ class _PostWidgetState extends State<PostWidget>
           icon: Icons.open_in_new,
           color: const Color.fromARGB(255, 58, 136, 199),
           onTap: () {
+            circularMenuKey.currentState?.reverseAnimation();
             setState(() {});
           }),
     ];
