@@ -39,6 +39,11 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
+  Future<void> refreshUser() async {
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    userService.reloadUser(context);
+  }
+
   void updateFriendListVis() async {
     int id = privacyOptions.keys.toList().indexOf(currentFriendListPrivacy!);
     NetworkController networkController = NetworkController();
@@ -65,6 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
     if (response.statusCode == 200) {
       debugPrint("");
+      refreshUser();
     }
   }
 
@@ -94,6 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
     if (response.statusCode == 200) {
       debugPrint("");
+      refreshUser();
     }
   }
 
