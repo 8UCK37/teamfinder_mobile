@@ -1,7 +1,7 @@
+import 'package:carousel_images/carousel_images.dart';
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:teamfinder_mobile/widgets/misc/carousel_widget.dart';
 import 'package:teamfinder_mobile/widgets/misc/image_viewer.dart';
 
 import '../post/image_collage.dart';
@@ -52,7 +52,25 @@ class ImageGrid extends StatelessWidget {
               ),
             );
           },
-          child: CustomCarousel(images: imageUrls));
+          child: CarouselImages(
+                scaleFactor: 0.6,
+                listImages: imageUrls,
+                height: 300.0,
+                borderRadius: 5.0,
+                cachedNetworkImage: true,
+                verticalAlignment: Alignment.topCenter,
+                onTap: (index) {
+                  //debugPrint('Tapped on page $index');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CustomImageViewer(imageUrls: imageUrls),
+                    ),
+                  );
+                },
+              ),
+          );
     } else {
       return _advancedGrid(imageUrls);
     }
