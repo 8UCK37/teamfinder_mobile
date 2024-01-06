@@ -237,39 +237,48 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                     ],
                   ),
                   Divider(
+                    height: 5,
                       color: userService.darkTheme!
                           ? const Color.fromARGB(255, 74, 74, 74)
                           : Colors.grey),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    padding: const EdgeInsets.fromLTRB(15.0,0,15,0),
                     child: Column(
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        ExpansionTile(
+                          title: Text("See ${friendProfile!.name}'s About Info",
+                                style: const TextStyle(fontSize: 16.0)),
+                          leading:const Icon(Icons.psychology_alt),
+                          trailing: const Icon(
+                            color: Colors.blue,
+                            Icons.expand_more,
+                          ),
+                          childrenPadding: const EdgeInsets.only(left: 25),
                           children: [
-                            Row(
-                              children: <Widget>[
-                                Image.asset(
-                                  "assets/images/icons8_location.png",
-                                  scale: 3.5,
-                                ),
-                                const SizedBox(width: 10.0),
-                                Text('${friendProfile!.userInfo!.country}',
-                                    style: const TextStyle(fontSize: 16.0))
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Image.asset(
+                                    "assets/images/icons8_location.png",
+                                    scale: 3.5,
+                                  ),
+                                  const SizedBox(width: 10.0),
+                                  Text('${friendProfile!.userInfo!.country}',
+                                      style: const TextStyle(fontSize: 16.0))
+                                ],
+                              ),
                             ),
-                            const SizedBox(width: 15.0),
-                            Row(
-                              children: <Widget>[
-                                Image.asset(
-                                  "assets/images/speaking_right.png",
-                                  scale: 3.5,
-                                ),
-                                const SizedBox(width: 10.0),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                  child: Container(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Image.asset(
+                                    "assets/images/speaking_right.png",
+                                    scale: 3.5,
+                                  ),
+                                  const SizedBox(width: 10.0),
+                                  Container(
                                     constraints:
                                         const BoxConstraints(maxWidth: 248),
                                     child: SingleChildScrollView(
@@ -286,25 +295,12 @@ class _FriendProfilePostsState extends State<FriendProfilePosts>
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 15.0),
-                        ExpansionTile(
-                          title: Text("See ${friendProfile!.name}'s About Info",
-                                style: const TextStyle(fontSize: 16.0)),
-                          leading:const Icon(Icons.psychology_alt),
-                          trailing: const Icon(
-                            color: Colors.blue,
-                            Icons.expand_more,
-                          ),
-                          childrenPadding: const EdgeInsets.only(left: 25),
-                          children: const [
-                            ListTile(
-                              title: Text("There's really nothing to show here"),
-                            ),
+                            // ListTile(
+                            //   title: Text("There's really nothing to show here"),
+                            // ),
                           ],
                         ),
                       ],
