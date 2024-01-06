@@ -42,33 +42,35 @@ class _BookMarkedPostsState extends State<BookMarkedPosts> {
         ),
         body: Scaffold(
           appBar: AppBar(
-            toolbarHeight: 35,
+            toolbarHeight: 55,
             title: Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width - 50,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  border: Border.all(color: Colors.green),
-                ),
-                child: Center(
-                  child: RichText(
-                      text: TextSpan(
-                          style: const TextStyle(
-                              fontSize: 15, color: Colors.black),
-                          children: [
-                        const TextSpan(text: "You have "),
-                        TextSpan(
+              child: Card(
+                elevation: 10,
+                child: Container(
+                  height: 45,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.pinkAccent, Color.fromARGB(255, 18, 206, 206)]),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Center(
+                    child: RichText(
+                        text: TextSpan(
                             style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            ),
-                            text: "${userService.bookMarkedPosts.length} "),
-                        TextSpan(
-                            text: userService.bookMarkedPosts.length > 1
-                                ? " bookmarked posts"
-                                : " bookmarked post")
-                      ])),
+                                fontSize: 15, color: Colors.white),
+                            children: [
+                          const TextSpan(text: "You have "),
+                          TextSpan(
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              ),
+                              text: "${userService.bookMarkedPosts.length} "),
+                          TextSpan(
+                              text: userService.bookMarkedPosts.length > 1
+                                  ? " bookmarked posts"
+                                  : " bookmarked post")
+                        ])),
+                  ),
                 ),
               ),
             ),

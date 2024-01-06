@@ -269,8 +269,8 @@ class MenuTab extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Icon(Icons.collections_bookmark,
-                            color: Color.fromARGB(255, 232, 213, 37),
+                        Icon(Icons.collections_bookmark_rounded,
+                            color: Colors.blue,
                             size: 30.0),
                         SizedBox(height: 5.0),
                         Text('Bookmarks',
