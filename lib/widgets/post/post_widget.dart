@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
-import 'package:teamfinder_mobile/pages/edit_post.dart';
+import 'package:teamfinder_mobile/pages/edit_post_page.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/widgets/post/comment_widgets/comment_message_bar.dart';

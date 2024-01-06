@@ -273,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.2+3"
+  carousel_images:
+    dependency: "direct main"
+    description:
+      name: carousel_images
+      sha256: "1580ab44b81cda92d8bafebad73e3f56c683f5b75efe2a1c7ab4ce04a8311b11"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   characters:
     dependency: transitive
     description:

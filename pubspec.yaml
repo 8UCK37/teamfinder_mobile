@@ -38,6 +38,7 @@ dependencies:
   audioplayers: ^5.2.1
   bottom_sheet: ^3.1.2
   cached_network_image: ^3.3.0
+  carousel_images: ^1.1.2
   camera: ^0.10.5+2
   chat_bubbles: ^1.4.1
   circular_menu: ^2.0.1
