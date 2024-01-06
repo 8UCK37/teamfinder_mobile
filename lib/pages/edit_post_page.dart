@@ -102,80 +102,83 @@ class _EditPostState extends State<EditPost> {
     final List<String> imageList = (widget.post.shared == null)
         ? widget.post.photoUrl!.split(',')
         : widget.post.parentpost!.photoUrl!.split(',');
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: TeamFinderAppBar(
-        titleText: "Edit Post",
-        isDark: userService.darkTheme!,
-        implyLeading: true,
-        height: 55,
-        showNotificationCount: false,
-      ),
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          editPost(mentionService.deltaParser());
-          QuickAlert.show(
-            context: context,
-            type: QuickAlertType.success,
-            text: 'Post has been edited!!',
-            onConfirmBtnTap: () {
-              Future.delayed(const Duration(milliseconds: 500), () {
-                userService.getOwnPost();
-                Navigator.of(context).pop();
-              });
-            },
-          );
-        },
-        child: const Material(
-          elevation: 20,
-          shape: CircleBorder(),
-          child: ClipOval(
-            child: CircleAvatar(
-              backgroundColor: Colors.deepPurpleAccent,
-              radius: 25,
-              child: Icon(
-                Icons.save,
-                color: Colors.white,
+    return Theme(
+      data: userService.darkTheme! ? ThemeData.dark() : ThemeData.light(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: TeamFinderAppBar(
+          titleText: "Edit Post",
+          isDark: userService.darkTheme!,
+          implyLeading: true,
+          height: 55,
+          showNotificationCount: false,
+        ),
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            editPost(mentionService.deltaParser());
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.success,
+              text: 'Post has been edited!!',
+              onConfirmBtnTap: () {
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  userService.getOwnPost();
+                  Navigator.of(context).pop();
+                });
+              },
+            );
+          },
+          child: const Material(
+            elevation: 20,
+            shape: CircleBorder(),
+            child: ClipOval(
+              child: CircleAvatar(
+                backgroundColor: Colors.deepPurpleAccent,
+                radius: 25,
+                child: Icon(
+                  Icons.save,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration:
-            BoxDecoration(border: Border.all(color: Colors.transparent)),
-        child: Column(
-          children: [
-            SimplyMentionInterface(
-              key: mentionKey,
-              focusNode: focusNode,
-              markUptext: convertIntoMarkUp(),
-              mentionableList: notiObserver.mentionAbleList,
-            ),
-            const TextFieldTagInterface(),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: CarouselImages(
-                scaleFactor: 0.6,
-                listImages: imageList,
-                height: 300.0,
-                borderRadius: 5.0,
-                cachedNetworkImage: true,
-                verticalAlignment: Alignment.topCenter,
-                onTap: (index) {
-                  //debugPrint('Tapped on page $index');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CustomImageViewer(imageUrls: [imageList[index]]),
-                    ),
-                  );
-                },
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration:
+              BoxDecoration(border: Border.all(color: Colors.transparent)),
+          child: Column(
+            children: [
+              SimplyMentionInterface(
+                key: mentionKey,
+                focusNode: focusNode,
+                markUptext: convertIntoMarkUp(),
+                mentionableList: notiObserver.mentionAbleList,
               ),
-            ),
-          ],
+              const TextFieldTagInterface(),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: CarouselImages(
+                  scaleFactor: 0.6,
+                  listImages: imageList,
+                  height: 300.0,
+                  borderRadius: 5.0,
+                  cachedNetworkImage: true,
+                  verticalAlignment: Alignment.topCenter,
+                  onTap: (index) {
+                    //debugPrint('Tapped on page $index');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CustomImageViewer(imageUrls: [imageList[index]]),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
