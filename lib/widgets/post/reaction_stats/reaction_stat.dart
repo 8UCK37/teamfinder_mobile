@@ -69,6 +69,9 @@ class _ReactionStatState extends State<ReactionStat>
               appBar: AppBar(
                 toolbarHeight: 0,
                 automaticallyImplyLeading: false,
+                backgroundColor: userService.darkTheme!
+                    ? const Color.fromRGBO(46, 46, 46, 1)
+                    : Colors.white,
                 bottom: TabBar(
                   controller: tabController,
                   indicatorColor: Colors.blue,
