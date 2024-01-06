@@ -8,14 +8,34 @@ import '../../../../utils/router_animation.dart';
 
 class ReactionList extends StatefulWidget {
   final List<dynamic> reactionList;
-  final String type;
-  const ReactionList({super.key, required this.reactionList, required this.type});
+  final String? type;
+  const ReactionList({super.key, required this.reactionList, this.type});
 
   @override
   State<ReactionList> createState() => _ReactionListState();
 }
 
 class _ReactionListState extends State<ReactionList> {
+
+  String reactionPathFromType(String type) {
+        switch (type) {
+          case "like":
+            return "assets/images/fire.gif";
+          case "haha":
+            return "assets/images/haha.gif";
+          case "sad":
+            return "assets/images/sad.gif";
+          case "love":
+            return "assets/images/love.gif";
+          case "poop":
+            return "assets/images/poop.gif";
+          default:
+            return "null";
+        }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<ProviderService>(context, listen: true);
@@ -30,7 +50,7 @@ class _ReactionListState extends State<ReactionList> {
                 style: TextStyle(
                     color:
                         userService.darkTheme! ? Colors.white : Colors.black),
-                text: "${widget.type}: ",
+                text: widget.type!=null? "${widget.type}: ":"All: ",
               ),
               TextSpan(
                   style: const TextStyle(color: Colors.blue),
@@ -84,7 +104,10 @@ class _ReactionListState extends State<ReactionList> {
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Image(
-                                image: AssetImage("assets/images/${widget.type}.gif"),
+                                image: AssetImage(widget.type != null
+                                    ? "assets/images/${widget.type}.gif"
+                                    : reactionPathFromType(
+                                        widget.reactionList[i]['type'])),
                                 height: 28,
                                 width: 28,
                               ),
