@@ -601,7 +601,7 @@ class _PostWidgetState extends State<PostWidget>
     return CircularMenu(
       key: circularMenuKey,
       alignment: Alignment.topRight,
-      toggleButtonSize: 15,
+      toggleButtonSize: 20,
       toggleButtonPadding: 5,
       toggleButtonBoxShadow: const [],
       radius: 35,
