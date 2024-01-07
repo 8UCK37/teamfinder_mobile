@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_scanner_with_effect/qr_scanner_with_effect.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/utils/crypto.dart';
@@ -53,20 +55,44 @@ class _QrScannerState extends State<QrScanner> {
   }
 
   void navigator(String myQrCode) {
-    dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
     //debugPrint(decoded.toString());
-
-    final userService = Provider.of<ProviderService>(context, listen: false);
-    if (userService.user['id'] != decoded['id']) {
-      controller!.dispose();
-      AnimatedRouter.slideToPageLeftReplace(
-          context,
-          FriendProfileHome(
-            friendId: decoded['id'],
-            friendName: decoded['name'],
-            friendProfileImage: decoded['profilePicture'],
-          ));
-    } else {}
+    try {
+      dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
+      final userService = Provider.of<ProviderService>(context, listen: false);
+      if (userService.user['id'] != decoded['id']) {
+        controller!.dispose();
+        AnimatedRouter.slideToPageLeftReplace(
+            context,
+            FriendProfileHome(
+              friendId: decoded['id'],
+              friendName: decoded['name'],
+              friendProfileImage: decoded['profilePicture'],
+            ));
+      } else {}
+    } catch (error) {
+      debugPrint("caught: ${error.toString()}");
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        showConfirmBtn: true,
+        confirmBtnText: "New Scan",
+        onConfirmBtnTap: () {
+          setState(() {
+            isComplete = false;
+          });
+          controller?.resumeCamera();
+          Navigator.of(context).pop();
+        },
+        showCancelBtn: true,
+        cancelBtnText: "Go Back!",
+        onCancelBtnTap: () {
+          controller?.dispose();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+        text: 'There is something wrong with the QR!',
+      );
+    }
   }
 
   @override
