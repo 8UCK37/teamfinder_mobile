@@ -166,6 +166,30 @@ class _QrScannerState extends State<QrScanner> {
     debugPrint('scanned: $result');
     if (result != 'error') {
       navigator(result);
+    } else {
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        showConfirmBtn: true,
+        confirmBtnText: "New Scan",
+        onConfirmBtnTap: () {
+          setState(() {
+            isComplete = false;
+          });
+          controller?.resumeCamera();
+          Navigator.of(context).pop();
+        },
+        showCancelBtn: true,
+        cancelBtnText: "Go Back!",
+        onCancelBtnTap: () {
+          controller?.stopCamera();
+          controller?.dispose();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+        text: 'Does the image even contain a QR?!',
+      );
     }
   }
 
