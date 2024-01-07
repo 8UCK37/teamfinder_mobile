@@ -89,7 +89,7 @@ dependencies:
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
   qr_scanner_with_effect: ^1.0.5
-  zxing2: ^0.2.1
+  scan: ^1.6.0
   quickalert: ^1.0.1
   rxdart: ^0.27.7
   searchbar_animation: ^0.0.4

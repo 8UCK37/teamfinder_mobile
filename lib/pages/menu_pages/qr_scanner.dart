@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:image/image.dart' as img;
-import 'package:zxing2/qrcode.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +12,7 @@ import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/utils/crypto.dart';
 import 'package:teamfinder_mobile/utils/router_animation.dart';
+import 'package:scan/scan.dart';
 
 class QrScanner extends StatefulWidget {
   const QrScanner({super.key});
@@ -74,7 +73,30 @@ class _QrScannerState extends State<QrScanner> {
               friendName: decoded['name'],
               friendProfileImage: decoded['profilePicture'],
             ));
-      } else {}
+      } else {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.warning,
+          showConfirmBtn: true,
+          confirmBtnText: "Honto?",
+          onConfirmBtnTap: () {
+            setState(() {
+              isComplete = false;
+            });
+            controller?.resumeCamera();
+            Navigator.of(context).pop();
+          },
+          showCancelBtn: true,
+          cancelBtnText: "Go Back!",
+          onCancelBtnTap: () {
+            controller?.stopCamera();
+            controller?.dispose();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          text: 'This is you own profile !!',
+        );
+      }
     } catch (error) {
       debugPrint("caught: ${error.toString()}");
       QuickAlert.show(
@@ -138,60 +160,13 @@ class _QrScannerState extends State<QrScanner> {
     // Check the file extension to determine the image type
     String fileExtension = pickedImage.path.split('.').last.toLowerCase();
     debugPrint('CurrentfileType: $fileExtension');
-    if (fileExtension == 'jpg' || fileExtension == 'jpeg') {
-      var image = img.decodeJpg(File(pickedImage.path).readAsBytesSync())!;
-      processImage(image);
-    } else if (fileExtension == 'png') {
-      var image = img.decodePng(File(pickedImage.path).readAsBytesSync())!;
-      processImage(image);
-    } else {
-      // Handle unsupported image types or show an error message
-      debugPrint('Unsupported image type: $fileExtension');
-      // ignore: use_build_context_synchronously
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.warning,
-        showConfirmBtn: true,
-        confirmBtnText: "New Scan",
-        onConfirmBtnTap: () {
-          setState(() {
-            isComplete = false;
-          });
-          controller?.resumeCamera();
-          Navigator.of(context).pop();
-        },
-        showCancelBtn: true,
-        cancelBtnText: "Go Back!",
-        onCancelBtnTap: () {
-          controller?.stopCamera();
-          controller?.dispose();
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-        text: 'Unsupported File Type ".$fileExtension"',
-      );
+    controller?.stopCamera();
+
+    String result = await Scan.parse(pickedImage.path) ?? 'error';
+    debugPrint('scanned: $result');
+    if (result != 'error') {
+      navigator(result);
     }
-
-  }
-
-  void processImage(img.Image image) {
-    controller?.stopCamera();
-    LuminanceSource source = RGBLuminanceSource(
-      image.width,
-      image.height,
-      image
-          .convert(numChannels: 4)
-          .getBytes(order: img.ChannelOrder.abgr)
-          .buffer
-          .asInt32List(),
-    );
-    var bitmap = BinaryBitmap(GlobalHistogramBinarizer(source));
-
-    var reader = QRCodeReader();
-    var result = reader.decode(bitmap);
-    debugPrint("154: ${result.text}");
-    controller?.stopCamera();
-    navigator(result.text);
   }
 
   @override
