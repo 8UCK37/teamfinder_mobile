@@ -7,6 +7,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_scanner_with_effect/qr_scanner_with_effect.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
+import 'package:teamfinder_mobile/utils/crypto.dart';
 import 'package:teamfinder_mobile/utils/router_animation.dart';
 
 class QrScanner extends StatefulWidget {
@@ -46,18 +47,19 @@ class _QrScannerState extends State<QrScanner> {
     controller?.stopCamera();
     setState(() {
       isComplete = true;
-      debugPrint(myQrCode);
+      //debugPrint(myQrCode);
       navigator(myQrCode);
     });
   }
 
   void navigator(String myQrCode) {
-    dynamic decoded = jsonDecode(myQrCode);
-    debugPrint(decoded.toString());
+    dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
+    //debugPrint(decoded.toString());
 
     final userService = Provider.of<ProviderService>(context, listen: false);
     if (userService.user['id'] != decoded['id']) {
-      AnimatedRouter.slideToPageLeft(
+      controller!.dispose();
+      AnimatedRouter.slideToPageLeftReplace(
           context,
           FriendProfileHome(
             friendId: decoded['id'],

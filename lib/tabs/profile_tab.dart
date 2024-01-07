@@ -8,6 +8,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
+import 'package:teamfinder_mobile/utils/crypto.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import 'package:teamfinder_mobile/pages/create_post_page.dart';
 import 'package:teamfinder_mobile/utils/theme.dart';
@@ -176,19 +177,22 @@ class _ProfileTabState extends State<ProfileTab>
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    String encryptedProfile = CryptoBro.encrypt(jsonEncode({
+                                              'id': userService.user['id'],
+                                              'name': userService.user['name'],
+                                              'profilePicture': userService
+                                                  .user['profilePicture']
+                                            }));
+                                    debugPrint(encryptedProfile);
+                                    debugPrint("187: ${CryptoBro.decrypt(encryptedProfile)}");
                                     showModalBottomSheet<dynamic>(
                                       context: context,
                                       isScrollControlled: true,
                                       backgroundColor: Colors.white,
                                       builder: (BuildContext context) {
                                         return Wrap(children: [
-                                         QrImageView(
-                                            data: jsonEncode({
-                                              'id': userService.user['id'],
-                                              'name': userService.user['name'],
-                                              'profilePicture': userService
-                                                  .user['profilePicture']
-                                            }),
+                                          QrImageView(
+                                            data: encryptedProfile,
                                             version: QrVersions.auto,
                                             size: 320,
                                             gapless: false,

@@ -292,7 +292,7 @@ class FriendProfileService extends ChangeNotifier {
     if (response.statusCode == 200) {
       debugPrint('line 290 ${response.data.length.toString()}');
       friendList = userPojoListFromJson(jsonEncode(response.data));
-      debugPrint('line 292 ${friendList.toString()}');
+      //debugPrint('line 292 ${friendList.toString()}');
       notifyListeners();
     }
   }

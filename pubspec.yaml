@@ -49,6 +49,7 @@ dependencies:
   concentric_transition: ^1.0.3
   connectivity_plus: ^5.0.2
   cropperx: ^1.1.1
+  encrypt_decrypt_plus: ^1.1.0
   cupertino_icons: ^1.0.6
   day_night_switcher: ^0.2.0+1
   dio: ^5.2.1+1
