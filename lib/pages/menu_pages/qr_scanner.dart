@@ -1,8 +1,11 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'dart:io';
+
+import 'package:image/image.dart' as img;
+import 'package:zxing2/qrcode.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_scanner_with_effect/qr_scanner_with_effect.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -25,6 +28,8 @@ class _QrScannerState extends State<QrScanner> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   bool isComplete = false;
+
+  String? imagePath;
 
   void onQrScannerViewCreated(QRViewController controller) {
     this.controller = controller;
@@ -60,6 +65,7 @@ class _QrScannerState extends State<QrScanner> {
       dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
       final userService = Provider.of<ProviderService>(context, listen: false);
       if (userService.user['id'] != decoded['id']) {
+        controller?.stopCamera();
         controller!.dispose();
         AnimatedRouter.slideToPageLeftReplace(
             context,
@@ -86,6 +92,7 @@ class _QrScannerState extends State<QrScanner> {
         showCancelBtn: true,
         cancelBtnText: "Go Back!",
         onCancelBtnTap: () {
+          controller?.stopCamera();
           controller?.dispose();
           Navigator.of(context).pop();
           Navigator.of(context).pop();
@@ -121,6 +128,72 @@ class _QrScannerState extends State<QrScanner> {
     }
   }
 
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) {
+      return;
+    }
+
+    // Check the file extension to determine the image type
+    String fileExtension = pickedImage.path.split('.').last.toLowerCase();
+    debugPrint('CurrentfileType: $fileExtension');
+    if (fileExtension == 'jpg' || fileExtension == 'jpeg') {
+      var image = img.decodeJpg(File(pickedImage.path).readAsBytesSync())!;
+      processImage(image);
+    } else if (fileExtension == 'png') {
+      var image = img.decodePng(File(pickedImage.path).readAsBytesSync())!;
+      processImage(image);
+    } else {
+      // Handle unsupported image types or show an error message
+      debugPrint('Unsupported image type: $fileExtension');
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.warning,
+        showConfirmBtn: true,
+        confirmBtnText: "New Scan",
+        onConfirmBtnTap: () {
+          setState(() {
+            isComplete = false;
+          });
+          controller?.resumeCamera();
+          Navigator.of(context).pop();
+        },
+        showCancelBtn: true,
+        cancelBtnText: "Go Back!",
+        onCancelBtnTap: () {
+          controller?.stopCamera();
+          controller?.dispose();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+        text: 'Unsupported File Type ".$fileExtension"',
+      );
+    }
+
+  }
+
+  void processImage(img.Image image) {
+    controller?.stopCamera();
+    LuminanceSource source = RGBLuminanceSource(
+      image.width,
+      image.height,
+      image
+          .convert(numChannels: 4)
+          .getBytes(order: img.ChannelOrder.abgr)
+          .buffer
+          .asInt32List(),
+    );
+    var bitmap = BinaryBitmap(GlobalHistogramBinarizer(source));
+
+    var reader = QRCodeReader();
+    var result = reader.decode(bitmap);
+    debugPrint("154: ${result.text}");
+    controller?.stopCamera();
+    navigator(result.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -129,6 +202,25 @@ class _QrScannerState extends State<QrScanner> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            pickImage();
+          },
+          child: const Material(
+            elevation: 20,
+            shape: CircleBorder(),
+            child: ClipOval(
+              child: CircleAvatar(
+                backgroundColor: Colors.green,
+                radius: 25,
+                child: Icon(
+                  Icons.photo_library,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           return QrScannerWithEffect(
