@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_scanner_with_effect/qr_scanner_with_effect.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:teamfinder_mobile/controller/network_controller.dart';
 import 'package:teamfinder_mobile/friend_profile_ui/friend_profilehome.dart';
 import 'package:teamfinder_mobile/services/data_service.dart';
 import 'package:teamfinder_mobile/utils/crypto.dart';
@@ -54,14 +58,14 @@ class _QrScannerState extends State<QrScanner> {
     setState(() {
       isComplete = true;
       //debugPrint(myQrCode);
-      navigator(myQrCode);
+      //navigator(myQrCode);
+      checkIfUserExists(myQrCode);
     });
   }
 
-  void navigator(String myQrCode) {
+  void navigator(dynamic decoded) {
     //debugPrint(decoded.toString());
     try {
-      dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
       final userService = Provider.of<ProviderService>(context, listen: false);
       if (userService.user['id'] != decoded['id']) {
         controller?.stopCamera();
@@ -76,7 +80,7 @@ class _QrScannerState extends State<QrScanner> {
       } else {
         QuickAlert.show(
           context: context,
-          type: QuickAlertType.warning,
+          type: QuickAlertType.info,
           showConfirmBtn: true,
           confirmBtnText: "Honto?",
           onConfirmBtnTap: () {
@@ -101,7 +105,7 @@ class _QrScannerState extends State<QrScanner> {
       debugPrint("caught: ${error.toString()}");
       QuickAlert.show(
         context: context,
-        type: QuickAlertType.warning,
+        type: QuickAlertType.error,
         showConfirmBtn: true,
         confirmBtnText: "New Scan",
         onConfirmBtnTap: () {
@@ -158,14 +162,16 @@ class _QrScannerState extends State<QrScanner> {
     }
 
     // Check the file extension to determine the image type
+    // ignore: unused_local_variable
     String fileExtension = pickedImage.path.split('.').last.toLowerCase();
-    debugPrint('CurrentfileType: $fileExtension');
+    //debugPrint('CurrentfileType: $fileExtension');
     controller?.stopCamera();
 
     String result = await Scan.parse(pickedImage.path) ?? 'error';
-    debugPrint('scanned: $result');
+    //debugPrint('scanned: $result');
     if (result != 'error') {
-      navigator(result);
+      //navigator(result);
+      checkIfUserExists(result);
     } else {
       // ignore: use_build_context_synchronously
       QuickAlert.show(
@@ -189,6 +195,64 @@ class _QrScannerState extends State<QrScanner> {
           Navigator.of(context).pop();
         },
         text: 'Does the image even contain a QR?!',
+      );
+    }
+  }
+
+  void checkIfUserExists(String myQrCode) async {
+    dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
+    NetworkController networkController = NetworkController();
+    if (await networkController.noInternet()) {
+      debugPrint("checkIfUserExists() no_internet");
+      return;
+    } else {
+      debugPrint("checkIfUserExists() called");
+    }
+    if (decoded['id'].length != 28) {
+      return;
+    }
+    Dio dio = Dio();
+    final user = FirebaseAuth.instance.currentUser;
+
+    final idToken = await user!.getIdToken();
+    Options options = Options(
+      headers: {
+        'Authorization': 'Bearer $idToken',
+      },
+    );
+
+    var response = await dio.post(
+      'http://${dotenv.env['server_url']}/checkIfUserExists',
+      data: {'userId': decoded['id']},
+      options: options,
+    );
+    if (response.statusCode == 200) {
+      debugPrint("user exists");
+      navigator(decoded);
+    } else if (response.statusCode == 404) {
+      debugPrint("user doesn't exists");
+      // ignore: use_build_context_synchronously
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        showConfirmBtn: true,
+        confirmBtnText: "New Scan",
+        onConfirmBtnTap: () {
+          setState(() {
+            isComplete = false;
+          });
+          controller?.resumeCamera();
+          Navigator.of(context).pop();
+        },
+        showCancelBtn: true,
+        cancelBtnText: "Go Back!",
+        onCancelBtnTap: () {
+          controller?.stopCamera();
+          controller?.dispose();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+        text: "Apparently this user doesn't exist!",
       );
     }
   }
