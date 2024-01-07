@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // ignore: unused_import
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:teamfinder_mobile/pojos/post_pojo.dart';
 import 'package:teamfinder_mobile/utils/language_chip_helper.dart';
 import 'package:teamfinder_mobile/pages/create_post_page.dart';
@@ -24,7 +27,6 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab>
     with AutomaticKeepAliveClientMixin<ProfileTab> {
-
   dynamic twitchData;
   dynamic discordData;
 
@@ -36,7 +38,6 @@ class _ProfileTabState extends State<ProfileTab>
     // Unsubscribe the listener to avoid memory leaks
     super.dispose();
   }
-
 
   Future<void> _handleRefresh() async {
     final userService = Provider.of<ProviderService>(context, listen: false);
@@ -173,15 +174,45 @@ class _ProfileTabState extends State<ProfileTab>
                                             fontWeight: FontWeight.normal))
                                   ],
                                 ),
-                                Row(
-                                  children: <Widget>[
-                                    Image.asset(
-                                      height: 40,
-                                      width: 40,
-                                      "assets/images/icons8_share.png",
-                                      scale: 3.5,
-                                    ),
-                                  ],
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet<dynamic>(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.white,
+                                      builder: (BuildContext context) {
+                                        return Wrap(children: [
+                                         QrImageView(
+                                            data: jsonEncode({
+                                              'id': userService.user['id'],
+                                              'name': userService.user['name'],
+                                              'profilePicture': userService
+                                                  .user['profilePicture']
+                                            }),
+                                            version: QrVersions.auto,
+                                            size: 320,
+                                            gapless: false,
+                                            embeddedImage: const AssetImage(
+                                                'assets/images/megaphone.png'),
+                                            embeddedImageStyle:
+                                                const QrEmbeddedImageStyle(
+                                              size: Size(80, 80),
+                                            ),
+                                          )
+                                        ]);
+                                      },
+                                    );
+                                  },
+                                  child: Row(
+                                    children: <Widget>[
+                                      Image.asset(
+                                        height: 40,
+                                        width: 40,
+                                        "assets/images/icons8_share.png",
+                                        scale: 3.5,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -402,7 +433,8 @@ class _ProfileTabState extends State<ProfileTab>
                                           text: "You have ",
                                         ),
                                         TextSpan(
-                                          text: userService.ownPosts!.length.toString(),
+                                          text: userService.ownPosts!.length
+                                              .toString(),
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.green,
@@ -422,9 +454,9 @@ class _ProfileTabState extends State<ProfileTab>
                       height: 20,
                     ),
                     const SizedBox(height: 25),
-                    if (userService.ownPosts!= null) // Add a null check here
-                      for (PostPojo post
-                          in userService.ownPosts!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
+                    if (userService.ownPosts != null) // Add a null check here
+                      for (PostPojo post in userService
+                          .ownPosts!) // Add a null check here i sound like cypher 'a trip here,this goes there' lol
                         Column(
                           children: <Widget>[
                             //const SeparatorWidget(),
