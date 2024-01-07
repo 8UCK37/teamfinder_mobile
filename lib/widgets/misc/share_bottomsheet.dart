@@ -27,7 +27,6 @@ class ShareBottomSheet extends StatefulWidget {
 
 class _ShareBottomSheetState extends State<ShareBottomSheet> {
   double sheetHeight = .82;
-  double containerHeight = .28;
 
   final FocusNode mentionFocusNode = FocusNode();
 
@@ -49,7 +48,6 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       if (mentionFocusNode.hasFocus) {
         setState(() {
           sheetHeight = .97;
-          containerHeight = .43;
         });
       }
     }
@@ -161,7 +159,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
 
   Widget parseDescriptionWidget(
       String desc, Mention mentionList, BuildContext context) {
-    String sanitizedDesc = desc.substring(0, desc.length - 1);
+    String sanitizedDesc = desc;
     Map<String, String> idNameMap = {
       for (var item in mentionList.list) item['id']: item['name']
     };
@@ -346,7 +344,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
               : Colors.white,
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-          //border: Border.all(color: Colors.red),
+          //border: Border.all(color: Colors.blue),
         ),
         height: MediaQuery.of(context).size.height * sheetHeight,
         child: Column(
@@ -453,25 +451,28 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
               height: 0,
               color: userService.darkTheme! ? Colors.white : Colors.grey,
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.transparent)),
-              height: MediaQuery.of(context).size.height * containerHeight,
-              child: SingleChildScrollView(
-                child: postShowcase(widget.post),
+            Expanded(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.transparent)),
+                child: SingleChildScrollView(
+                  child: postShowcase(widget.post),
+                ),
               ),
             ),
-            Divider(
-              height: 0,
-              color: userService.darkTheme! ? Colors.white : Colors.grey,
-            ),
+           
             Column(
               children: [
+                Divider(
+                  height: 0,
+                  color: userService.darkTheme! ? Colors.white : Colors.grey,
+                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.fromLTRB(8.0,8,0,0),
                       child: Text(
                         "Or Share via...",
                         style: TextStyle(
@@ -485,7 +486,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                   ],
                 ),
                 const Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0, 10, 8),
+                  padding: EdgeInsets.fromLTRB(8.0, 0, 10, 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
