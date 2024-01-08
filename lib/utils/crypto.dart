@@ -4,7 +4,7 @@ import 'package:encrypt_decrypt_plus/cipher/cipher.dart';
 
 class CryptoBro {
 
-  static Cipher cipher = Cipher(secretKey: "datadirr");
+  static Cipher cipher = Cipher(secretKey: "aneekendu@161198");
   
   
 

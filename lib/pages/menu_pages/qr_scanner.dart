@@ -78,53 +78,11 @@ class _QrScannerState extends State<QrScanner> {
               friendProfileImage: decoded['profilePicture'],
             ));
       } else {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.info,
-          showConfirmBtn: true,
-          confirmBtnText: "Honto?",
-          onConfirmBtnTap: () {
-            setState(() {
-              isComplete = false;
-            });
-            controller?.resumeCamera();
-            Navigator.of(context).pop();
-          },
-          showCancelBtn: true,
-          cancelBtnText: "Go Back!",
-          onCancelBtnTap: () {
-            controller?.stopCamera();
-            controller?.dispose();
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-          text: 'This is you own profile !!',
-        );
+        infoAlert();
       }
     } catch (error) {
       debugPrint("caught: ${error.toString()}");
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        showConfirmBtn: true,
-        confirmBtnText: "New Scan",
-        onConfirmBtnTap: () {
-          setState(() {
-            isComplete = false;
-          });
-          controller?.resumeCamera();
-          Navigator.of(context).pop();
-        },
-        showCancelBtn: true,
-        cancelBtnText: "Go Back!",
-        onCancelBtnTap: () {
-          controller?.stopCamera();
-          controller?.dispose();
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-        text: 'There is something wrong with the QR!',
-      );
+      errorAlert("Something went wrong!!");
     }
   }
 
@@ -170,91 +128,131 @@ class _QrScannerState extends State<QrScanner> {
     String result = await Scan.parse(pickedImage.path) ?? 'error';
     //debugPrint('scanned: $result');
     if (result != 'error') {
-      //navigator(result);
+      debugPrint(result);
+
       checkIfUserExists(result);
     } else {
       // ignore: use_build_context_synchronously
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.warning,
-        showConfirmBtn: true,
-        confirmBtnText: "New Scan",
-        onConfirmBtnTap: () {
-          setState(() {
-            isComplete = false;
-          });
-          controller?.resumeCamera();
-          Navigator.of(context).pop();
-        },
-        showCancelBtn: true,
-        cancelBtnText: "Go Back!",
-        onCancelBtnTap: () {
-          controller?.stopCamera();
-          controller?.dispose();
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-        text: 'Does the image even contain a QR?!',
-      );
+      errorAlert("There is something wrong witht the QR!!");
     }
   }
 
   void checkIfUserExists(String myQrCode) async {
-    dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
-    NetworkController networkController = NetworkController();
-    if (await networkController.noInternet()) {
-      debugPrint("checkIfUserExists() no_internet");
-      return;
-    } else {
-      debugPrint("checkIfUserExists() called");
-    }
-    if (decoded['id'].length != 28) {
-      return;
-    }
-    Dio dio = Dio();
-    final user = FirebaseAuth.instance.currentUser;
+    try {
+      dynamic decoded = jsonDecode(CryptoBro.decrypt(myQrCode));
+      NetworkController networkController = NetworkController();
+      if (await networkController.noInternet()) {
+        debugPrint("checkIfUserExists() no_internet");
+        errorAlert("No interner");
+        return;
+      } else {
+        debugPrint("checkIfUserExists() called");
+      }
+      if (decoded['id'] == null || decoded['id'].length != 28) {
+        errorAlert("There is something wrong witht the QR!!");
+        return;
+      }
+      Dio dio = Dio();
+      final user = FirebaseAuth.instance.currentUser;
 
-    final idToken = await user!.getIdToken();
-    Options options = Options(
-      headers: {
-        'Authorization': 'Bearer $idToken',
-      },
-    );
-
-    var response = await dio.post(
-      'http://${dotenv.env['server_url']}/checkIfUserExists',
-      data: {'userId': decoded['id']},
-      options: options,
-    );
-    if (response.statusCode == 200) {
-      debugPrint("user exists");
-      navigator(decoded);
-    } else if (response.statusCode == 404) {
-      debugPrint("user doesn't exists");
-      // ignore: use_build_context_synchronously
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        showConfirmBtn: true,
-        confirmBtnText: "New Scan",
-        onConfirmBtnTap: () {
-          setState(() {
-            isComplete = false;
-          });
-          controller?.resumeCamera();
-          Navigator.of(context).pop();
+      final idToken = await user!.getIdToken();
+      Options options = Options(
+        headers: {
+          'Authorization': 'Bearer $idToken',
         },
-        showCancelBtn: true,
-        cancelBtnText: "Go Back!",
-        onCancelBtnTap: () {
-          controller?.stopCamera();
-          controller?.dispose();
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-        text: "Apparently this user doesn't exist!",
       );
+
+      var response = await dio.post(
+        'http://${dotenv.env['server_url']}/checkIfUserExists',
+        data: {'userId': decoded['id']},
+        options: options,
+      );
+      if (response.statusCode == 200) {
+        debugPrint("user exists");
+        navigator(decoded);
+      } else if (response.statusCode == 404) {
+        debugPrint("user doesn't exists");
+        // ignore: use_build_context_synchronously
+        errorAlert("Apparently the user doesn't exiat");
+      }
+    } catch (error) {
+      errorAlert("the qr is invalid");
     }
+  }
+
+  void errorAlert(String error) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      showConfirmBtn: true,
+      confirmBtnText: "New Scan",
+      onConfirmBtnTap: () {
+        setState(() {
+          isComplete = false;
+        });
+        controller?.resumeCamera();
+        Navigator.of(context).pop();
+      },
+      showCancelBtn: true,
+      cancelBtnText: "Go Back!",
+      onCancelBtnTap: () {
+        controller?.stopCamera();
+        controller?.dispose();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      text: error,
+    );
+  }
+
+  void warningAlert() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.warning,
+      showConfirmBtn: true,
+      confirmBtnText: "New Scan",
+      onConfirmBtnTap: () {
+        setState(() {
+          isComplete = false;
+        });
+        controller?.resumeCamera();
+        Navigator.of(context).pop();
+      },
+      showCancelBtn: true,
+      cancelBtnText: "Go Back!",
+      onCancelBtnTap: () {
+        controller?.stopCamera();
+        controller?.dispose();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      text: 'Does the image even contain a QR?!',
+    );
+  }
+
+  void infoAlert() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.info,
+      showConfirmBtn: true,
+      confirmBtnText: "Honto?",
+      onConfirmBtnTap: () {
+        setState(() {
+          isComplete = false;
+        });
+        controller?.resumeCamera();
+        Navigator.of(context).pop();
+      },
+      showCancelBtn: true,
+      cancelBtnText: "Go Back!",
+      onCancelBtnTap: () {
+        controller?.stopCamera();
+        controller?.dispose();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      text: 'This is you own profile !!',
+    );
   }
 
   @override
