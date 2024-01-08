@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import '../pojos/incoming_notification.dart';
@@ -60,26 +58,45 @@ class _NotificationsTabState extends State<NotificationsTab>
   void removeAll() {
     final notiObserver =
         Provider.of<NotificationWizard>(context, listen: false);
-    for (int i = notiObserver.incomingNotificationList.length-1; i >=0; i--) {
-
+    final userService = Provider.of<ProviderService>(context, listen: false);
+    var notificationListCopy = notiObserver.incomingNotificationList;
+    int count = notiObserver.incomingNotificationList.length-1;
+    for (int i = count;
+        i >= 0;
+        i--) {
       listKey.currentState!.removeItem(
-        i,
-        duration: Duration(milliseconds: 150 + (i * 20)),
-        (context, animation) => NotificationWidget(
-              notification: notiObserver.incomingNotificationList[i],
-              animation: animation,
-            ));
+          i,
+          duration: Duration(milliseconds: 150 + (i * 20)),
+          (context, animation) => NotificationWidget(
+                notification: notiObserver.incomingNotificationList[i],
+                animation: animation,
+              ));
     }
-   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Yay! A SnackBar!'),
-    ));
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: "Undo",
+          onPressed: () {
+            notiObserver.updateNotiList(notificationListCopy);
+          },
+        ),
+        content: const Text('All notification cleared!'),
+      ),
+    );
+    int delay=0;
+    for(int i=0;i<count;i++){
+      delay=delay+(150+(i*20));
+    }
+    Future.delayed(Duration(milliseconds: delay), () {
+      notiObserver.deleteAllNotification(userService.user['id']);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final notiObserver =
-        Provider.of<NotificationWizard>(context, listen: true);
+    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
     final userService = Provider.of<ProviderService>(context, listen: true);
     bool isDark = userService.darkTheme!;
     animateInsert();
@@ -107,7 +124,6 @@ class _NotificationsTabState extends State<NotificationsTab>
               actions: [
                 IconButton(
                   onPressed: () {
-                    //notiObserver.deleteAllNotification(userService.user['id']);
                     removeAll();
                   },
                   icon: const Icon(Icons.clear_all),
