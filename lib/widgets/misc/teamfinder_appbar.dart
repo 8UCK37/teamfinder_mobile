@@ -165,14 +165,17 @@ class _TeamFinderAppBarState extends State<TeamFinderAppBar> {
                                   const BorderRadius.all(Radius.circular(50)),
                             ),
                             child: Center(
-                              child: Text(
-                                notiObserver.incomingNotificationList.length
-                                    .toString(), // Your superscript text
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.bold,
+                              child: FittedBox(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: Text(notiObserver.incomingNotificationList.length<=99? notiObserver.incomingNotificationList.length.toString():"99+", 
+                                    style:const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

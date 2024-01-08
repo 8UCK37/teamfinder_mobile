@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:teamfinder_mobile/services/notification_observer.dart';
 import '../pojos/incoming_notification.dart';
@@ -55,9 +57,29 @@ class _NotificationsTabState extends State<NotificationsTab>
             ));
   }
 
+  void removeAll() {
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: false);
+    for (int i = notiObserver.incomingNotificationList.length-1; i >=0; i--) {
+
+      listKey.currentState!.removeItem(
+        i,
+        duration: Duration(milliseconds: 150 + (i * 20)),
+        (context, animation) => NotificationWidget(
+              notification: notiObserver.incomingNotificationList[i],
+              animation: animation,
+            ));
+    }
+   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Yay! A SnackBar!'),
+    ));
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    final notiObserver = Provider.of<NotificationWizard>(context, listen: true);
+    final notiObserver =
+        Provider.of<NotificationWizard>(context, listen: true);
     final userService = Provider.of<ProviderService>(context, listen: true);
     bool isDark = userService.darkTheme!;
     animateInsert();
@@ -85,8 +107,8 @@ class _NotificationsTabState extends State<NotificationsTab>
               actions: [
                 IconButton(
                   onPressed: () {
-                    //TODO maybe add a undo logic and maybe animate the removal
-                    notiObserver.deleteAllNotification(userService.user['id']);
+                    //notiObserver.deleteAllNotification(userService.user['id']);
+                    removeAll();
                   },
                   icon: const Icon(Icons.clear_all),
                 ),
@@ -110,7 +132,7 @@ class _NotificationsTabState extends State<NotificationsTab>
                   } else {
                     return Container(
                       decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: Colors.transparent,
                           border: Border.all(color: Colors.transparent)),
                       height: MediaQuery.of(context).size.height - 185,
                       child: AnimatedList(
@@ -122,14 +144,11 @@ class _NotificationsTabState extends State<NotificationsTab>
                           IncomingNotification notification = notiObserver
                               .incomingNotificationList.reversed
                               .toList()[index];
-                          return FadeTransition(
-                            opacity: animation,
-                            child: NotificationWidget(
-                              notification: notification,
-                              animation: animation,
-                              removeClicked: () =>
-                                  removeItem(notification, index),
-                            ),
+                          return NotificationWidget(
+                            notification: notification,
+                            animation: animation,
+                            removeClicked: () =>
+                                removeItem(notification, index),
                           );
                         },
                       ),
