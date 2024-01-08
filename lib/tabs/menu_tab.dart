@@ -182,7 +182,7 @@ class MenuTab extends StatelessWidget {
                           context, const GamesPage());
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      width: MediaQuery.of(context).size.width / 2 - 30,
                       height: 85.0,
                       padding: const EdgeInsets.only(left: 20.0),
                       decoration: BoxDecoration(
@@ -195,9 +195,11 @@ class MenuTab extends StatelessWidget {
                           Icon(Icons.sports_esports,
                               color: Colors.red, size: 30.0),
                           SizedBox(height: 5.0),
-                          Text('Games',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold))
+                          Text(
+                            'Games',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),
@@ -221,9 +223,11 @@ class MenuTab extends StatelessWidget {
                           Icon(Icons.account_tree,
                               color: Colors.orange, size: 30.0),
                           SizedBox(height: 5.0),
-                          Text('Linked accounts',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold))
+                          Text(
+                            'Linked accounts',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),
@@ -243,7 +247,7 @@ class MenuTab extends StatelessWidget {
                           context, const FriendList());
                     },
                     child: Container(
-                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      width: MediaQuery.of(context).size.width / 2 - 30,
                       height: 85.0,
                       padding: const EdgeInsets.only(left: 20.0),
                       decoration: BoxDecoration(
@@ -255,9 +259,11 @@ class MenuTab extends StatelessWidget {
                         children: <Widget>[
                           Icon(Icons.person, color: Colors.green, size: 30.0),
                           SizedBox(height: 5.0),
-                          Text('Friends',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold))
+                          Text(
+                            'Friends',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),
@@ -281,9 +287,11 @@ class MenuTab extends StatelessWidget {
                           Icon(Icons.collections_bookmark_rounded,
                               color: Colors.blue, size: 30.0),
                           SizedBox(height: 5.0),
-                          Text('Bookmarks',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold))
+                          Text(
+                            'Bookmarks',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),
@@ -300,41 +308,33 @@ class MenuTab extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       AnimatedRouter.slideToPageLeft(context,
-                          SettingsPage(isDarkCurrent: userService.darkTheme!));
+                           SettingsPage(isDarkCurrent: userService.darkTheme!));
                     },
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 2 - 30,
-                          height: 85.0,
-                          padding: const EdgeInsets.only(left: 20.0),
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 1.0, color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(Icons.settings,
-                                  color: Colors.deepPurpleAccent.shade200,
-                                  size: 30.0),
-                              const SizedBox(height: 5.0),
-                              const Text('Settings',
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold))
-                            ],
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2 - 30,
+                      height: 85.0,
+                      padding: const EdgeInsets.only(left: 20.0),
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1.0, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child:  Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Icon(Icons.settings, color: Colors.deepPurpleAccent.shade200, size: 30.0),
+                          const SizedBox(height: 5.0),
+                          const Text(
+                            'Settings',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      AnimatedRouter.slideToPageLeft(
-                          context, const QrScanner());
+                        AnimatedRouter.slideToPageLeft(context, const QrScanner());
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 2 - 30,
@@ -348,12 +348,13 @@ class MenuTab extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Icon(Icons.qr_code_2_outlined,
-                              size: 28,
-                              color: ThemeColor.primaryTheme),
+                              color: ThemeColor.primaryTheme, size: 30.0),
                           const SizedBox(height: 5.0),
-                          const Text('Scan',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold))
+                          const Text(
+                            'Scan',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),

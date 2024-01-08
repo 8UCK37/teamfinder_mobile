@@ -183,8 +183,8 @@ class _ProfileTabState extends State<ProfileTab>
                                               'profilePicture': userService
                                                   .user['profilePicture']
                                             }));
-                                    debugPrint(encryptedProfile);
-                                    debugPrint("187: ${CryptoBro.decrypt(encryptedProfile)}");
+                                    //debugPrint(encryptedProfile);
+                                    //debugPrint("187: ${CryptoBro.decrypt(encryptedProfile)}");
                                     showModalBottomSheet<dynamic>(
                                       context: context,
                                       isScrollControlled: true,
