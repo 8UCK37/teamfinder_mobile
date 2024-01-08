@@ -191,16 +191,19 @@ class _ProfileTabState extends State<ProfileTab>
                                       backgroundColor: Colors.white,
                                       builder: (BuildContext context) {
                                         return Wrap(children: [
-                                          QrImageView(
-                                            data: encryptedProfile,
-                                            version: QrVersions.auto,
-                                            size: 320,
-                                            gapless: false,
-                                            embeddedImage: const AssetImage(
-                                                'assets/images/megaphone.png'),
-                                            embeddedImageStyle:
-                                                const QrEmbeddedImageStyle(
-                                              size: Size(80, 80),
+                                          Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: QrImageView(
+                                              data: encryptedProfile,
+                                              version: QrVersions.auto,
+                                              size: 320,
+                                              gapless: false,
+                                              embeddedImage: const AssetImage(
+                                                  'assets/images/megaphone.png'),
+                                              embeddedImageStyle:
+                                                  const QrEmbeddedImageStyle(
+                                                size: Size(80, 80),
+                                              ),
                                             ),
                                           )
                                         ]);
