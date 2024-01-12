@@ -2404,27 +2404,30 @@ class _ImageEditorDrawingState extends State<ImageEditorDrawing> {
             ),
           ],
         ),
-        body: Screenshot(
-          controller: screenshotController,
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color:
-                  widget.options.showBackground ? null : currentBackgroundColor,
-              image: widget.options.showBackground
-                  ? DecorationImage(
-                      image: Image.memory(widget.image.bytes).image,
-                      fit: BoxFit.contain,
-                    )
-                  : null,
-            ),
-            child: HandSignature(
-              control: control,
-              color: currentColor,
-              width: 1.0,
-              maxWidth: 7.0,
-              type: SignatureDrawType.shape,
+        body: Center(
+          child: Screenshot(
+            controller: screenshotController,
+            child: Container(
+              //had to set the height to 300 manually or after selecting color height was expanding
+              height: 300-22,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color:
+                    widget.options.showBackground ? null : currentBackgroundColor,
+                image: widget.options.showBackground
+                    ? DecorationImage(
+                        image: Image.memory(widget.image.bytes).image,
+                        fit: BoxFit.contain,
+                      )
+                    : null,
+              ),
+              child: HandSignature(
+                control: control,
+                color: currentColor,
+                width: 1.0,
+                maxWidth: 7.0,
+                type: SignatureDrawType.shape,
+              ),
             ),
           ),
         ),

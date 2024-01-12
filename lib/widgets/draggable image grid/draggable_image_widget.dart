@@ -63,17 +63,18 @@ class _CustomDraggableItemWidgetState extends State<CustomDraggableItemWidget> {
             extension: widget.imageFile.extension,
             bytes: editedImage,
             path: newImagePath);
-        imageFile = newImageFile;
+        
+
         ///if this fails
-        ///add 
+        ///add
         ///      void insertImage(ImageFile oldimage,ImageFile newImage) {
         ///             int index=_images.indexOf(oldimage);
         ///               _images[index]=newImage;
         ///           }
         /// in MultiImagePickerController
-        MultiImagePickerControllerWrapper.of(context)
-            .controller
-            .insertImage(widget.imageFile, newImageFile);
+        ///
+        MultiImagePickerControllerWrapper.of(context).controller.insertImage(imageFile, newImageFile);
+        imageFile = newImageFile;
       });
     }
   }
